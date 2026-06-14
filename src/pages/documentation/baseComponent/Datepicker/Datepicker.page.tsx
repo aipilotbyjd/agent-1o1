@@ -15,10 +15,10 @@ import {
 	RangeKeyDict,
 } from 'react-date-range';
 import PreviewComponent from '@/components/utils/PreviewComponent';
-import daterangeMd from './_md/daterange.md';
-import daterangepickerMd from './_md/daterangepicker.md';
-import calendarMd from './_md/calendar.md';
-import definedMd from './_md/defined.md';
+import daterangeMd from './_md/daterange.md?url';
+import daterangepickerMd from './_md/daterangepicker.md?url';
+import calendarMd from './_md/calendar.md?url';
+import definedMd from './_md/defined.md?url';
 import colors from '@/tailwindcss/colors.tailwind';
 
 const DatepickerPage = () => {

@@ -19,7 +19,7 @@ import { Placement } from '@floating-ui/react';
 import extractSnippetUtil from '@/utils/extractSnippet.util';
 import sourceCode from './Tooltip.page.tsx?raw'; // eslint-disable-line import/extensions
 import tooltipSource from '@/components/ui/Tooltip.tsx?raw'; // eslint-disable-line import/extensions
-import placementMd from './_md/placement.md';
+import placementMd from './_md/placement.md?url';
 
 const TooltipPage = () => {
 	return (

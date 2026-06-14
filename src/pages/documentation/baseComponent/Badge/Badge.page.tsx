@@ -19,17 +19,17 @@ import Button from '@/components/ui/Button';
 import Avatar from '@/components/ui/Avatar';
 import { Avatar1, Avatar3 } from '@/assets/images';
 import MdViewer from '@/components/utils/MdViewer';
-import variantMd from './_md/variant.md';
-import colorSolidMd from './_md/colorSolid.md';
-import colorOutlineMd from './_md/colorOutline.md';
-import colorDefaultMd from './_md/colorDefault.md';
-import colorSoftMd from './_md/colorSoft.md';
-import roundedMd from './_md/rounded.md';
-import borderWidthMd from './_md/borderWidth.md';
-import withIconMd from './_md/withIcon.md';
-import withButtonMd from './_md/withButton.md';
-import withAvatarMd from './_md/withAvatar.md';
-import positionedMd from './_md/positioned.md';
+import variantMd from './_md/variant.md?url';
+import colorSolidMd from './_md/colorSolid.md?url';
+import colorOutlineMd from './_md/colorOutline.md?url';
+import colorDefaultMd from './_md/colorDefault.md?url';
+import colorSoftMd from './_md/colorSoft.md?url';
+import roundedMd from './_md/rounded.md?url';
+import borderWidthMd from './_md/borderWidth.md?url';
+import withIconMd from './_md/withIcon.md?url';
+import withButtonMd from './_md/withButton.md?url';
+import withAvatarMd from './_md/withAvatar.md?url';
+import positionedMd from './_md/positioned.md?url';
 import extractSnippetUtil from '@/utils/extractSnippet.util';
 import badgeSource from '@/components/ui/Badge.tsx?raw'; // eslint-disable-line import/extensions
 

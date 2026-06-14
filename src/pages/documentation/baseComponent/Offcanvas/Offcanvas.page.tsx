@@ -21,10 +21,10 @@ import Offcanvas, {
 	TOffcanvasPosition,
 } from '@/components/ui/Offcanvas';
 import MdViewer from '@/components/utils/MdViewer';
-import basicUsageMd from './_md/basicUsage.md';
-import withoutAnimationMd from './_md/withoutAnimation.md';
-import staticBackMd from './_md/staticBack.md';
-import positionMd from './_md/position.md';
+import basicUsageMd from './_md/basicUsage.md?url';
+import withoutAnimationMd from './_md/withoutAnimation.md?url';
+import staticBackMd from './_md/staticBack.md?url';
+import positionMd from './_md/position.md?url';
 import extractSnippetUtil from '@/utils/extractSnippet.util';
 import offcanvasSource from '@/components/ui/Offcanvas.tsx?raw'; // eslint-disable-line import/extensions
 

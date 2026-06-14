@@ -14,8 +14,8 @@ import PreviewComponent from '@/components/utils/PreviewComponent';
 import Spinner from '@/components/ui/Spinner';
 import { arrColors } from '@/types/colors.type';
 import MdViewer from '@/components/utils/MdViewer';
-import basicUsageMd from './_md/basicUsage.md';
-import colorUsageMd from './_md/colorUsage.md';
+import basicUsageMd from './_md/basicUsage.md?url';
+import colorUsageMd from './_md/colorUsage.md?url';
 import spinnerSource from '@/components/ui/Spinner.tsx?raw'; // eslint-disable-line import/extensions
 import extractSnippetUtil from '@/utils/extractSnippet.util';
 

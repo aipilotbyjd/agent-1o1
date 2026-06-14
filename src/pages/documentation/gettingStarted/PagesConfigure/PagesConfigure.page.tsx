@@ -5,8 +5,8 @@ import Icon from '@/components/icon/Icon';
 import Container from '@/components/layout/Container';
 import Card, { CardBody } from '@/components/ui/Card';
 import MdViewer from '@/components/utils/MdViewer';
-import usage1MD from '@/pages/documentation/gettingStarted/PagesConfigure/usage1.md';
-import usage2MD from '@/pages/documentation/gettingStarted/PagesConfigure/usage2.md';
+import usage1MD from '@/pages/documentation/gettingStarted/PagesConfigure/usage1.md?url';
+import usage2MD from '@/pages/documentation/gettingStarted/PagesConfigure/usage2.md?url';
 
 const PagesConfigurePage = () => {
 	return (

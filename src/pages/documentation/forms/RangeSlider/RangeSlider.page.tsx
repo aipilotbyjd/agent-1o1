@@ -6,7 +6,7 @@ import Container from '@/components/layout/Container';
 import Card, { CardBody, CardHeader, CardHeaderChild, CardTitle } from '@/components/ui/Card';
 import PreviewComponent from '@/components/utils/PreviewComponent';
 import RangeSlider from '@/components/form/RangeSlider';
-import exampleMd from './_md/example.md';
+import exampleMd from './_md/example.md?url';
 import MdViewer from '@/components/utils/MdViewer';
 import extractSnippetUtil from '@/utils/extractSnippet.util';
 import rangeSliderSource from '@/components/form/RangeSlider.tsx?raw'; // eslint-disable-line import/extensions
