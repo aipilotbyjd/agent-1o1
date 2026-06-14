@@ -17,8 +17,8 @@ import MdViewer from '@/components/utils/MdViewer';
 import Button from '@/components/ui/Button';
 import Popover from '@/components/ui/Popover';
 import { Image } from '@/assets/images';
-import basicUsageMd from './_md/basicUsage.md';
-import placemantMd from './_md/placemant.md';
+import basicUsageMd from './_md/basicUsage.md?url';
+import placemantMd from './_md/placemant.md?url';
 import extractSnippetUtil from '@/utils/extractSnippet.util';
 import popoverSource from '@/components/ui/Popover.tsx?raw'; // eslint-disable-line import/extensions
 

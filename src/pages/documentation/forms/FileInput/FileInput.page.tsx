@@ -18,16 +18,16 @@ import fileInputSource from '@/components/form/FileInput.tsx?raw'; // eslint-dis
 import Description from '@/components/form/Description';
 import Label from '@/components/form/Label';
 import Tooltip from '@/components/ui/Tooltip';
-import labelMd from './_md/label.md';
-import variantDefaultMd from './_md/variantDefault.md';
-import variantGrayMd from './_md/variantGray.md';
-import variantSolidMd from './_md/variantSolid.md';
-import variantUnderlineMd from './_md/variantUnderline.md';
-import dimensionMd from './_md/dimension.md';
-import disableMd from './_md/disable.md';
-import helperBasicMd from './_md/helperBasic.md';
-import helperLineMd from './_md/helperLine.md';
-import helperHintMd from './_md/helperHint.md';
+import labelMd from './_md/label.md?url';
+import variantDefaultMd from './_md/variantDefault.md?url';
+import variantGrayMd from './_md/variantGray.md?url';
+import variantSolidMd from './_md/variantSolid.md?url';
+import variantUnderlineMd from './_md/variantUnderline.md?url';
+import dimensionMd from './_md/dimension.md?url';
+import disableMd from './_md/disable.md?url';
+import helperBasicMd from './_md/helperBasic.md?url';
+import helperLineMd from './_md/helperLine.md?url';
+import helperHintMd from './_md/helperHint.md?url';
 
 const FileInputPage = () => {
 	return (

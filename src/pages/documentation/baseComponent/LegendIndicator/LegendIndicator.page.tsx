@@ -14,7 +14,7 @@ import PreviewComponent from '@/components/utils/PreviewComponent';
 import { arrColors } from '@/types/colors.type';
 import LegendIndicator from '@/components/ui/LegendIndicator';
 import MdViewer from '@/components/utils/MdViewer';
-import colorsMd from './_md/colors.md';
+import colorsMd from './_md/colors.md?url';
 import extractSnippetUtil from '@/utils/extractSnippet.util';
 import legendIndicatorSource from '@/components/ui/LegendIndicator.tsx?raw'; // eslint-disable-line import/extensions
 

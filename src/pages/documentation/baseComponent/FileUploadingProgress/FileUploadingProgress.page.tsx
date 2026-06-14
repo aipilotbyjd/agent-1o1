@@ -14,11 +14,11 @@ import Card, {
 } from '@/components/ui/Card';
 import PreviewComponent from '@/components/utils/PreviewComponent';
 import Button from '@/components/ui/Button';
-import basicProgressMd from './_md/basicProgress.md';
-import basicPause from './_md/basicPause.md';
-import basicError from './_md/basicError.md';
-import basicCompleted from './_md/basicCompleted.md';
-import multipleMd from './_md/multiple.md';
+import basicProgressMd from './_md/basicProgress.md?url';
+import basicPause from './_md/basicPause.md?url';
+import basicError from './_md/basicError.md?url';
+import basicCompleted from './_md/basicCompleted.md?url';
+import multipleMd from './_md/multiple.md?url';
 import MdViewer from '@/components/utils/MdViewer';
 import extractSnippetUtil from '@/utils/extractSnippet.util';
 import progressSource from '@/components/ui/Progress.tsx?raw'; // eslint-disable-line import/extensions

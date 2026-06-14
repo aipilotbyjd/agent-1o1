@@ -15,17 +15,17 @@ import { useFormik } from 'formik';
 import Checkbox, { CheckboxGroup } from '@/components/form/Checkbox';
 import Label from '@/components/form/Label';
 import { useEffect, useRef } from 'react';
-import indeterminateMd from './_md/indeterminate.md';
+import indeterminateMd from './_md/indeterminate.md?url';
 import checkboxSource from '@/components/form/Checkbox.tsx?raw'; // eslint-disable-line import/extensions
 import MdViewer from '@/components/utils/MdViewer';
 import extractSnippetUtil from '@/utils/extractSnippet.util';
-import labelMd from './_md/label.md';
-import variantDefaultMd from './_md/variandDefault.md';
-import variantSwitch from './_md/variantSwitch.md';
-import defaultDimensionMd from './_md/defaultDimension.md';
-import switchDimensionMd from './_md/switchDimension.md';
-import disabledMd from './_md/disabled.md';
-import descMd from './_md/desc.md';
+import labelMd from './_md/label.md?url';
+import variantDefaultMd from './_md/variandDefault.md?url';
+import variantSwitch from './_md/variantSwitch.md?url';
+import defaultDimensionMd from './_md/defaultDimension.md?url';
+import switchDimensionMd from './_md/switchDimension.md?url';
+import disabledMd from './_md/disabled.md?url';
+import descMd from './_md/desc.md?url';
 
 const CheckboxPage = () => {
 	const options: string[] = ['Option 1', 'Option 2', 'Option 3', 'Option 4'];

@@ -17,14 +17,14 @@ import { arrRounded } from '@/types/rounded.type';
 import MdViewer from '@/components/utils/MdViewer';
 import extractSnippetUtil from '@/utils/extractSnippet.util';
 import accordionSource from '@/components/ui/Accordion.tsx?raw'; // eslint-disable-line import/extensions
-import basicMd from './_md/basic.md';
-import nestedMd from './_md/nested.md';
-import plusMd from './_md/plus.md';
-import arrowMd from './_md/arrow.md';
-import nowMd from './_md/no.md';
-import rightMd from './_md/right.md';
-import colorMd from './_md/color.md';
-import roundedMd from './_md/rounded.md';
+import basicMd from './_md/basic.md?url';
+import nestedMd from './_md/nested.md?url';
+import plusMd from './_md/plus.md?url';
+import arrowMd from './_md/arrow.md?url';
+import nowMd from './_md/no.md?url';
+import rightMd from './_md/right.md?url';
+import colorMd from './_md/color.md?url';
+import roundedMd from './_md/rounded.md?url';
 
 const AccordionPage = () => {
 	return (

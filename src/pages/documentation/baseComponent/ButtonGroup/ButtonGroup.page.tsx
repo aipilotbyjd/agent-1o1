@@ -14,8 +14,8 @@ import PreviewComponent from '@/components/utils/PreviewComponent';
 import Button, { TButtonVariants } from '@/components/ui/Button';
 import ButtonGroup from '@/components/ui/ButtonGroup';
 import MdViewer from '@/components/utils/MdViewer';
-import variantMd from './_md/variant.md';
-import verticalMd from './_md/vertical.md';
+import variantMd from './_md/variant.md?url';
+import verticalMd from './_md/vertical.md?url';
 import extractSnippetUtil from '@/utils/extractSnippet.util';
 import buttonGroupSource from '@/components/ui/ButtonGroup.tsx?raw'; // eslint-disable-line import/extensions
 

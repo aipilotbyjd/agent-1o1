@@ -9,9 +9,9 @@ import Card, { CardBody, CardHeader, CardHeaderChild, CardTitle } from '@/compon
 import PreviewComponent from '@/components/utils/PreviewComponent';
 import { Logo } from '@/assets/images';
 import MdViewer from '@/components/utils/MdViewer';
-import interfaceMd from './_md/interface.md';
-import basicUsageMd from './_md/basicUsage.md';
-import customUsageMd from './_md/customUsage.md';
+import interfaceMd from './_md/interface.md?url';
+import basicUsageMd from './_md/basicUsage.md?url';
+import customUsageMd from './_md/customUsage.md?url';
 
 const ToastsPage = () => {
 	const notify = () =>

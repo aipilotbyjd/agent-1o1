@@ -13,8 +13,8 @@ import Card, {
 import MdViewer from '@/components/utils/MdViewer';
 import extractSnippetUtil from '@/utils/extractSnippet.util';
 import asideSource from '@/components/layout/Aside.tsx?raw'; // eslint-disable-line import/extensions
-import usageMD from './usage.md';
-import usage2MD from './usage2.md';
+import usageMD from './usage.md?url';
+import usage2MD from './usage2.md?url';
 
 const AsidePage = () => {
 	return (

@@ -15,7 +15,7 @@ import PreviewComponent from '@/components/utils/PreviewComponent';
 import Button from '@/components/ui/Button';
 import Collapse from '@/components/ui/Collapse';
 import MdViewer from '@/components/utils/MdViewer';
-import usageMd from './_md/usage.md';
+import usageMd from './_md/usage.md?url';
 import extractSnippetUtil from '@/utils/extractSnippet.util';
 import collapseSource from '@/components/ui/Collapse.tsx?raw'; // eslint-disable-line import/extensions
 

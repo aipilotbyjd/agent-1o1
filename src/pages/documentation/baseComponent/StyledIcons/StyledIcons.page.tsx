@@ -15,13 +15,13 @@ import StyledIcon, { TStyledIconVariants } from '@/components/ui/StyledIcon';
 import { arrColors } from '@/types/colors.type';
 import { arrRounded } from '@/types/rounded.type';
 import MdViewer from '@/components/utils/MdViewer';
-import basicUsageMD from './_md/basicUsage.md';
-import solidColorMd from './_md/solidColor.md';
-import outlineColorMd from './_md/outlineColor.md';
-import ghostColorMd from './_md/ghostColor.md';
-import softColorMd from './_md/softColor.md';
-import softOutlineColorMd from './_md/softOutlineColor.md';
-import roundedMd from './_md/rounded.md';
+import basicUsageMD from './_md/basicUsage.md?url';
+import solidColorMd from './_md/solidColor.md?url';
+import outlineColorMd from './_md/outlineColor.md?url';
+import ghostColorMd from './_md/ghostColor.md?url';
+import softColorMd from './_md/softColor.md?url';
+import softOutlineColorMd from './_md/softOutlineColor.md?url';
+import roundedMd from './_md/rounded.md?url';
 import styledIconSource from '@/components/ui/StyledIcon.tsx?raw'; // eslint-disable-line import/extensions
 import extractSnippetUtil from '@/utils/extractSnippet.util';
 

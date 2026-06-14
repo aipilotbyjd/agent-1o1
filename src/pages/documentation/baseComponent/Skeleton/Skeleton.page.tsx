@@ -7,8 +7,8 @@ import Card, { CardBody, CardHeader, CardHeaderChild, CardTitle } from '@/compon
 import PreviewComponent from '@/components/utils/PreviewComponent';
 import Skeleton from '@/components/ui/Skeleton';
 import MdViewer from '@/components/utils/MdViewer';
-import basicUsageMd from './_md/basicUsage.md';
-import complexUsageMd from './_md/complexUsage.md';
+import basicUsageMd from './_md/basicUsage.md?url';
+import complexUsageMd from './_md/complexUsage.md?url';
 import skeletonSource from '@/components/ui/Skeleton.tsx?raw'; // eslint-disable-line import/extensions
 import extractSnippetUtil from '@/utils/extractSnippet.util';
 

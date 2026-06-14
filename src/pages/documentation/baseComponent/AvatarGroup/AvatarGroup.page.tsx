@@ -15,8 +15,8 @@ import PreviewComponent from '@/components/utils/PreviewComponent';
 import Avatar from '@/components/ui/Avatar';
 import AvatarGroup from '@/components/ui/AvatarGroup';
 import MdViewer from '@/components/utils/MdViewer';
-import sample1Md from './_md/sample1.md';
-import sample2Md from './_md/sample2.md';
+import sample1Md from './_md/sample1.md?url';
+import sample2Md from './_md/sample2.md?url';
 import extractSnippetUtil from '@/utils/extractSnippet.util';
 import avatarGroupSource from '@/components/ui/AvatarGroup.tsx?raw'; // eslint-disable-line import/extensions
 

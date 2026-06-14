@@ -14,13 +14,13 @@ import PreviewComponent from '@/components/utils/PreviewComponent';
 import { Li, ListGroup } from '@/components/ui/List';
 import Button from '@/components/ui/Button';
 import MdViewer from '@/components/utils/MdViewer';
-import defaultUsageMd from './_md/defaultUsage.md';
-import withIconMd from './_md/withIcon.md';
-import withButtonMd from './_md/withButton.md';
-import stripedMd from './_md/striped.md';
-import flushMd from './_md/flush.md';
-import gutterMd from './_md/gutter.md';
-import horizontalMd from './_md/horizontal.md';
+import defaultUsageMd from './_md/defaultUsage.md?url';
+import withIconMd from './_md/withIcon.md?url';
+import withButtonMd from './_md/withButton.md?url';
+import stripedMd from './_md/striped.md?url';
+import flushMd from './_md/flush.md?url';
+import gutterMd from './_md/gutter.md?url';
+import horizontalMd from './_md/horizontal.md?url';
 import extractSnippetUtil from '@/utils/extractSnippet.util';
 import listSource from '@/components/ui/List.tsx?raw'; // eslint-disable-line import/extensions
 

@@ -14,9 +14,9 @@ import Card, {
 import PreviewComponent from '@/components/utils/PreviewComponent';
 import Ratings, { RatingValues } from '@/components/ui/Ratings';
 import MdViewer from '@/components/utils/MdViewer';
-import basicUsageMd from './_md/basicUsage.md';
-import typeMd from './_md/type.md';
-import disableMd from './_md/disable.md';
+import basicUsageMd from './_md/basicUsage.md?url';
+import typeMd from './_md/type.md?url';
+import disableMd from './_md/disable.md?url';
 import ratingsSource from '@/components/ui/Ratings.tsx?raw'; // eslint-disable-line import/extensions
 import extractSnippetUtil from '@/utils/extractSnippet.util';
 

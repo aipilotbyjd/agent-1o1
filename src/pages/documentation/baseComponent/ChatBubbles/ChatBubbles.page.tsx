@@ -14,11 +14,11 @@ import PreviewComponent from '@/components/utils/PreviewComponent';
 import ChatBubbles, { ChatBubblesItem, ChatBubblesSeparate } from '@/components/ui/ChatBubbles';
 import user from '@/mocks/users.mock';
 import MdViewer from '@/components/utils/MdViewer';
-import childrenMd from './_md/children.md';
-import isMyContentMd from './_md/isMyContent.md';
-import isAvatarMd from './_md/isAvatar.md';
-import imageMd from './_md/image.md';
-import footerMd from './_md/footer.md';
+import childrenMd from './_md/children.md?url';
+import isMyContentMd from './_md/isMyContent.md?url';
+import isAvatarMd from './_md/isAvatar.md?url';
+import imageMd from './_md/image.md?url';
+import footerMd from './_md/footer.md?url';
 import extractSnippetUtil from '@/utils/extractSnippet.util';
 import chatBubblesSource from '@/components/ui/ChatBubbles.tsx?raw'; // eslint-disable-line import/extensions
 

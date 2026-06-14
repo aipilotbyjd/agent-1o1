@@ -17,15 +17,15 @@ import { arrColors } from '@/types/colors.type';
 import { arrRounded } from '@/types/rounded.type';
 import { arrBorderWidth } from '@/types/borderWidth.type';
 import MdViewer from '@/components/utils/MdViewer';
-import srcMd from './_md/src.md';
-import nameMd from './_md/name.md';
-import variantImageMd from './_md/variantImage.md';
-import variantNameMd from './_md/variantName.md';
-import imageColorMd from './_md/imageColor.md';
-import nameColorMd from './_md/nameColor.md';
-import borderWidthMd from './_md/borderWidth.md';
-import roundedMd from './_md/rounded.md';
-import sizeMd from './_md/size.md';
+import srcMd from './_md/src.md?url';
+import nameMd from './_md/name.md?url';
+import variantImageMd from './_md/variantImage.md?url';
+import variantNameMd from './_md/variantName.md?url';
+import imageColorMd from './_md/imageColor.md?url';
+import nameColorMd from './_md/nameColor.md?url';
+import borderWidthMd from './_md/borderWidth.md?url';
+import roundedMd from './_md/rounded.md?url';
+import sizeMd from './_md/size.md?url';
 import extractSnippetUtil from '@/utils/extractSnippet.util';
 import avatarSource from '@/components/ui/Avatar.tsx?raw'; // eslint-disable-line import/extensions
 

@@ -13,8 +13,8 @@ import Card, {
 import PreviewComponent from '@/components/utils/PreviewComponent';
 import List, { Li } from '@/components/ui/List';
 import MdViewer from '@/components/utils/MdViewer';
-import typesMd from './_md/types.md';
-import withIconMd from './_md/withIcon.md';
+import typesMd from './_md/types.md?url';
+import withIconMd from './_md/withIcon.md?url';
 import extractSnippetUtil from '@/utils/extractSnippet.util';
 import listSource from '@/components/ui/List.tsx?raw'; // eslint-disable-line import/extensions
 
