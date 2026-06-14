@@ -7,7 +7,7 @@ import Container from '@/components/layout/Container';
 import Card, { CardBody, CardHeader, CardHeaderChild, CardTitle } from '@/components/ui/Card';
 import PreviewComponent from '@/components/utils/PreviewComponent';
 import Tree, { TreeProps } from 'rc-tree';
-import basicUsage from './_md/basicUsage.md';
+import basicUsage from './_md/basicUsage.md?url';
 
 const TreeViewPage = () => {
 	const treeData = [

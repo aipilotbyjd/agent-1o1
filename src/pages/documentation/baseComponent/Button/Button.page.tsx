@@ -4,20 +4,20 @@ import Breadcrumb from '@/components/layout/Breadcrumb';
 import pages from '@/Routes/pages';
 import Icon from '@/components/icon/Icon';
 import Button, { TButtonDimensions, TButtonVariants } from '@/components/ui/Button';
-import variantMD from './_md/variant.md';
-import sizeMD from './_md/size.md';
-import colorSolidMd from './_md/colorSolid.md';
-import colorOutlineMd from './_md/colorOutline.md';
-import colorDefaultMd from './_md/colorDefault.md';
-import colorSoftMd from './_md/colorSoft.md';
-import borderWidthMd from './_md/borderWidth.md';
-import roundedMd from './_md/rounded.md';
-import iconMd from './_md/icon.md';
-import rightIconMd from './_md/rightIcon.md';
-import onlyIconMd from './_md/onlyIcon.md';
-import activeMd from './_md/active.md';
-import disableMd from './_md/disable.md';
-import loadingMd from './_md/loading.md';
+import variantMD from './_md/variant.md?url';
+import sizeMD from './_md/size.md?url';
+import colorSolidMd from './_md/colorSolid.md?url';
+import colorOutlineMd from './_md/colorOutline.md?url';
+import colorDefaultMd from './_md/colorDefault.md?url';
+import colorSoftMd from './_md/colorSoft.md?url';
+import borderWidthMd from './_md/borderWidth.md?url';
+import roundedMd from './_md/rounded.md?url';
+import iconMd from './_md/icon.md?url';
+import rightIconMd from './_md/rightIcon.md?url';
+import onlyIconMd from './_md/onlyIcon.md?url';
+import activeMd from './_md/active.md?url';
+import disableMd from './_md/disable.md?url';
+import loadingMd from './_md/loading.md?url';
 import Card, {
 	CardBody,
 	CardHeader,

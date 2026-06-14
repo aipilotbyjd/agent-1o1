@@ -22,13 +22,13 @@ import Button from '@/components/ui/Button';
 import { arrColors } from '@/types/colors.type';
 import { Image } from '@/assets/images';
 import MdViewer from '@/components/utils/MdViewer';
-import basicUsageMd from './_md/basicUsage.md';
-import withoutIconMd from './_md/withoutIcon.md';
-import closeAfterLeaveMd from './_md/closeAfterLeave.md';
-import placementMd from './_md/placement.md';
-import textColorMd from './_md/textColor.md';
-import customContentMd from './_md/customContent.md';
-import multipleMd from './_md/multiple.md';
+import basicUsageMd from './_md/basicUsage.md?url';
+import withoutIconMd from './_md/withoutIcon.md?url';
+import closeAfterLeaveMd from './_md/closeAfterLeave.md?url';
+import placementMd from './_md/placement.md?url';
+import textColorMd from './_md/textColor.md?url';
+import customContentMd from './_md/customContent.md?url';
+import multipleMd from './_md/multiple.md?url';
 import extractSnippetUtil from '@/utils/extractSnippet.util';
 import dropdownSource from '@/components/ui/Dropdown.tsx?raw'; // eslint-disable-line import/extensions
 

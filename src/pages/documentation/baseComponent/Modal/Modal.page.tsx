@@ -22,12 +22,12 @@ import Modal, {
 } from '@/components/ui/Modal';
 import { arrScreens, TScreens } from '@/types/screens.type';
 import MdViewer from '@/components/utils/MdViewer';
-import basicUsageMd from './_md/basicUsage.md';
-import centeredMd from './_md/centered.md';
-import scrollableMd from './_md/scrollable.md';
-import staticBackMd from './_md/staticBack.md';
-import sizeMd from './_md/size.md';
-import fullscreenMd from './_md/fullscreen.md';
+import basicUsageMd from './_md/basicUsage.md?url';
+import centeredMd from './_md/centered.md?url';
+import scrollableMd from './_md/scrollable.md?url';
+import staticBackMd from './_md/staticBack.md?url';
+import sizeMd from './_md/size.md?url';
+import fullscreenMd from './_md/fullscreen.md?url';
 import extractSnippetUtil from '@/utils/extractSnippet.util';
 import modalSource from '@/components/ui/Modal.tsx?raw'; // eslint-disable-line import/extensions
 

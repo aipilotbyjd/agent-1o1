@@ -16,13 +16,13 @@ import { arrColors } from '@/types/colors.type';
 import MdViewer from '@/components/utils/MdViewer';
 import extractSnippetUtil from '@/utils/extractSnippet.util';
 import alertSource from '@/components/ui/Alert.tsx?raw'; // eslint-disable-line import/extensions
-import variantMd from './_md/variant.md';
-import colorSolidMd from './_md/colorSolid.md';
-import colorOutlineMd from './_md/colorOutline.md';
-import colorDefaultMd from './_md/colorDefault.md';
-import colorSoftMd from './_md/colorSoft.md';
-import iconMd from './_md/icon.md';
-import closeableMd from './_md/closeable.md';
+import variantMd from './_md/variant.md?url';
+import colorSolidMd from './_md/colorSolid.md?url';
+import colorOutlineMd from './_md/colorOutline.md?url';
+import colorDefaultMd from './_md/colorDefault.md?url';
+import colorSoftMd from './_md/colorSoft.md?url';
+import iconMd from './_md/icon.md?url';
+import closeableMd from './_md/closeable.md?url';
 
 const AlertsPage = () => {
 	const ALERT_VARIANT: TAlertVariants[] = ['solid', 'outline', 'default', 'soft'];

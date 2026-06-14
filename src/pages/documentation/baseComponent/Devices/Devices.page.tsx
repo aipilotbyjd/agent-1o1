@@ -14,7 +14,7 @@ import PreviewComponent from '@/components/utils/PreviewComponent';
 import Devices from '@/components/ui/Devices';
 import { Image } from '@/assets/images';
 import MdViewer from '@/components/utils/MdViewer';
-import basicUsageMd from './_md/basicUsage.md';
+import basicUsageMd from './_md/basicUsage.md?url';
 import extractSnippetUtil from '@/utils/extractSnippet.util';
 import devicesSource from '@/components/ui/Devices.tsx?raw'; // eslint-disable-line import/extensions
 

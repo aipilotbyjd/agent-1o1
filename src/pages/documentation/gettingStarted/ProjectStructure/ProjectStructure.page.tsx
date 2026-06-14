@@ -5,7 +5,7 @@ import Icon from '@/components/icon/Icon';
 import Container from '@/components/layout/Container';
 import MdViewer from '@/components/utils/MdViewer';
 import Card, { CardBody } from '@/components/ui/Card';
-import projectStructureMd from '@/pages/documentation/gettingStarted/ProjectStructure/projectStructure.md';
+import projectStructureMd from '@/pages/documentation/gettingStarted/ProjectStructure/projectStructure.md?url';
 
 const ProjectStructurePage = () => {
 	return (

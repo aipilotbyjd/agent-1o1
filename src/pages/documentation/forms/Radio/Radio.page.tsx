@@ -17,10 +17,10 @@ import Radio, { RadioGroup, TRadioDimension } from '@/components/form/Radio';
 import MdViewer from '@/components/utils/MdViewer';
 import extractSnippetUtil from '@/utils/extractSnippet.util';
 import radioSource from '@/components/form/Radio.tsx?raw'; // eslint-disable-line import/extensions
-import labelMd from './_md/label.md';
-import dimensionMd from './_md/dimension.md';
-import disabledMd from './_md/disabled.md';
-import descMd from './_md/desc.md';
+import labelMd from './_md/label.md?url';
+import dimensionMd from './_md/dimension.md?url';
+import disabledMd from './_md/disabled.md?url';
+import descMd from './_md/desc.md?url';
 
 const RadioPage = () => {
 	const options: string[] = ['Option 1', 'Option 2', 'Option 3', 'Option 4'];

@@ -14,7 +14,7 @@ import Dropdown, {
 	DropdownToggle,
 } from '@/components/ui/Dropdown';
 import MdViewer from '@/components/utils/MdViewer';
-import usageMd from './_md/usage.md';
+import usageMd from './_md/usage.md?url';
 import extractSnippetUtil from '@/utils/extractSnippet.util';
 import dropdownSource from '@/components/ui/Dropdown.tsx?raw'; // eslint-disable-line import/extensions
 import contextMenuSource from '@/components/ui/ContextMenu.tsx?raw'; // eslint-disable-line import/extensions

@@ -17,11 +17,11 @@ import PreviewComponent from '@/components/utils/PreviewComponent';
 import Button from '@/components/ui/Button';
 import { Image } from '@/assets/images';
 import MdViewer from '@/components/utils/MdViewer';
-import childrenMd from './_md/children.md';
-import basicMd from './_md/basic.md';
-import imagePlaceholderMd from './_md/imagePlaceholder.md';
-import groupMd from './_md/group.md';
-import onlyMd from './_md/only.md';
+import childrenMd from './_md/children.md?url';
+import basicMd from './_md/basic.md?url';
+import imagePlaceholderMd from './_md/imagePlaceholder.md?url';
+import groupMd from './_md/group.md?url';
+import onlyMd from './_md/only.md?url';
 import extractSnippetUtil from '@/utils/extractSnippet.util';
 import cardSource from '@/components/ui/Card.tsx?raw'; // eslint-disable-line import/extensions
 

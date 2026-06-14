@@ -9,8 +9,8 @@ import Timeline, { TimelineHeader, TimelineItem } from '@/components/ui/Timeline
 import MdViewer from '@/components/utils/MdViewer';
 import Avatar from '@/components/ui/Avatar';
 import { Avatar1, Avatar4 } from '@/assets/images';
-import basicUsageMd from './_md/basicUsage.md';
-import withTimeMd from './_md/withTime.md';
+import basicUsageMd from './_md/basicUsage.md?url';
+import withTimeMd from './_md/withTime.md?url';
 import timelineSource from '@/components/ui/Timeline.tsx?raw'; // eslint-disable-line import/extensions
 import extractSnippetUtil from '@/utils/extractSnippet.util';
 
