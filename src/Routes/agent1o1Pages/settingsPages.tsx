@@ -90,28 +90,28 @@ const SettingsPages = [
 	{
 		path: pages.settings.subPages.profile.to,
 		element: <ProfileLayout />,
-		children: [{ path: pages.settings.subPages.profile.to, element: <ProfilePage /> }],
+		children: [{ index: true, element: <ProfilePage /> }],
 	},
 
 	// /settings/workspace
 	{
 		path: pages.settings.subPages.workspace.to,
 		element: <WorkspaceLayout />,
-		children: [{ path: pages.settings.subPages.workspace.to, element: <WorkspacePage /> }],
+		children: [{ index: true, element: <WorkspacePage /> }],
 	},
 
 	// /settings/members
 	{
 		path: pages.settings.subPages.members.to,
 		element: <MembersLayout />,
-		children: [{ path: pages.settings.subPages.members.to, element: <MembersPage /> }],
+		children: [{ index: true, element: <MembersPage /> }],
 	},
 
 	// /settings/secrets
 	{
 		path: pages.settings.subPages.secrets.to,
 		element: <SecretsLayout />,
-		children: [{ path: pages.settings.subPages.secrets.to, element: <SecretsPage /> }],
+		children: [{ index: true, element: <SecretsPage /> }],
 	},
 
 	// /settings/notifications
@@ -119,7 +119,7 @@ const SettingsPages = [
 		path: pages.settings.subPages.notifications.to,
 		element: <NotificationsLayout />,
 		children: [
-			{ path: pages.settings.subPages.notifications.to, element: <NotificationsPage /> },
+			{ index: true, element: <NotificationsPage /> },
 		],
 	},
 
@@ -129,7 +129,7 @@ const SettingsPages = [
 		element: <NotificationChannelsLayout />,
 		children: [
 			{
-				path: pages.settings.subPages.notificationChannels.to,
+				index: true,
 				element: <NotificationChannelsPage />,
 			},
 		],
@@ -140,7 +140,7 @@ const SettingsPages = [
 		path: pages.settings.subPages.environments.to,
 		element: <EnvironmentsLayout />,
 		children: [
-			{ path: pages.settings.subPages.environments.to, element: <EnvironmentsPage /> },
+			{ index: true, element: <EnvironmentsPage /> },
 		],
 	},
 ];

@@ -1253,9 +1253,9 @@ const app = {
 		},
 		apps: {
 			id: 'apps',
-			to: '/apps',
+			to: '/integrations',
 			text: 'Apps',
-			icon: 'DashboardSquare03' as TIcons,
+			icon: 'Plug01' as TIcons,
 		},
 		files: {
 			id: 'files',

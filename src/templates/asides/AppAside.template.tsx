@@ -263,11 +263,6 @@ const AppAsideTemplate = () => {
 						isActiveOverwrite={location.pathname.startsWith('/templates')}
 					/>
 					<NavItem
-						icon='Plug01'
-						to='/under-construction'
-						text='Integrations'
-					/>
-					<NavItem
 						icon='Settings01'
 						to='/settings/profile'
 						text='Settings'
