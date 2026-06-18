@@ -1,18 +1,32 @@
-import { createBrowserRouter, RouterProvider } from 'react-router';
+import { createBrowserRouter, RouterProvider, Navigate } from 'react-router';
 import { lazy } from 'react';
-import LoginPage from '@/pages/Login.page';
+import LoginPage from '@/pages/auth/Login.page';
 import Protected from '@/Protected/Protected';
 import Root from '@/Root';
 import DefaultLayout from '@/layouts/Default.layout';
 import Providers from '@/Providers/Providers';
-import LandingPage from '@/pages/LandingPage/Landing.page';
+
 import pages from './pages';
 import MailLayout from '@/layouts/Mail.layout';
 import Page404Page from '@/pages/Page404.page';
 import UnderConstructionPage from '@/pages/UnderConstruction.page';
 import DocumentationPages from '@/Routes/infoPages/documentationPages';
 import ExamplePages from '@/Routes/infoPages/examplePages';
-import RegisterPage from '@/pages/Register.page';
+import RegisterPage from '@/pages/auth/Register.page';
+import AppLayout from '@/layouts/App.layout';
+import OnboardingLayout from '@/layouts/Onboarding.layout';
+
+const PricingPage = lazy(() => import('@/pages/onboarding/Pricing.page'));
+const OnboardingPage = lazy(() => import('@/pages/onboarding/Onboarding.page'));
+const CreateWorkspacePage = lazy(
+	() => import('@/pages/onboarding/standalone/CreateWorkspace.page'),
+);
+const InviteTeamPage = lazy(() => import('@/pages/onboarding/standalone/InviteTeam.page'));
+const WorkspacesPage = lazy(() => import('@/pages/settings/Workspaces/Workspaces.page'));
+const WorkspaceListPage = lazy(() => import('@/pages/settings/Workspaces/WorkspaceList.page'));
+
+const DashboardLayout = lazy(() => import('@/pages/app/Dashboard/_layouts/Dashboard.layout'));
+const DashboardPage = lazy(() => import('@/pages/app/Dashboard/Dashboard.page'));
 
 // Lazily loaded components for routes
 const SalesLayout = lazy(() => import('@/pages/apps/sales/_layouts/Sales.layout'));
@@ -61,7 +75,7 @@ const router = createBrowserRouter([
 				children: [
 					{
 						path: '/',
-						element: <LandingPage />,
+						element: <Navigate to={pages.app.subPages.dashboard.to} replace />,
 					},
 					// Public routes
 					{
@@ -71,6 +85,35 @@ const router = createBrowserRouter([
 					{
 						path: pages.pagesExamples.signup.to,
 						element: <RegisterPage />,
+					},
+					{
+						element: <OnboardingLayout />,
+						children: [
+							{
+								path: pages.onboarding.subPages.pricing.to,
+								element: <PricingPage />,
+							},
+							{
+								path: pages.onboarding.to,
+								element: <OnboardingPage />,
+							},
+							{
+								path: pages.onboarding.subPages.createWorkspace.to,
+								element: <CreateWorkspacePage />,
+							},
+							{
+								path: pages.onboarding.subPages.inviteTeam.to,
+								element: <InviteTeamPage />,
+							},
+							{
+								path: '/workspaces',
+								element: <WorkspacesPage />,
+							},
+							{
+								path: '/workspace-list',
+								element: <WorkspaceListPage />,
+							},
+						],
 					},
 					{
 						element: <DefaultLayout />,
@@ -88,6 +131,49 @@ const router = createBrowserRouter([
 					{
 						element: <Protected role='admin' />,
 						children: [
+							{
+								element: <AppLayout />,
+								children: [
+									{
+										path: pages.app.subPages.dashboard.to,
+										element: <DashboardLayout />,
+										children: [
+											{
+												path: pages.app.subPages.dashboard.to,
+												element: <DashboardPage />,
+											},
+										],
+									},
+									{
+										path: '/workflows',
+										element: <UnderConstructionPage />,
+									},
+									{
+										path: '/agents',
+										element: <UnderConstructionPage />,
+									},
+									{
+										path: '/apps',
+										element: <UnderConstructionPage />,
+									},
+									{
+										path: '/files',
+										element: <UnderConstructionPage />,
+									},
+									{
+										path: '/history',
+										element: <UnderConstructionPage />,
+									},
+									{
+										path: '/templates',
+										element: <UnderConstructionPage />,
+									},
+									{
+										path: '/settings/profile',
+										element: <UnderConstructionPage />,
+									},
+								],
+							},
 							{
 								element: <DefaultLayout />,
 								children: [

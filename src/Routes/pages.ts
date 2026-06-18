@@ -1156,5 +1156,311 @@ const documentation = {
 	},
 };
 
-const pages = { apps, pagesExamples, documentation, examples };
+const auth = {
+	login: pagesExamples.login,
+	signup: pagesExamples.signup,
+	forgotPassword: {
+		id: 'forgotPassword',
+		to: '/forgot-password',
+		text: 'Forgot Password',
+		icon: 'AiMail' as TIcons,
+	},
+	resetPassword: {
+		id: 'resetPassword',
+		to: '/reset-password',
+		text: 'Reset Password',
+		icon: 'AiLock' as TIcons,
+	},
+	verifyEmail: {
+		id: 'verifyEmail',
+		to: '/verify-email',
+		text: 'Verify Email',
+		icon: 'AiMail' as TIcons,
+	},
+	twoFactor: {
+		id: 'twoFactor',
+		to: '/two-factor',
+		text: 'Two-Factor Auth',
+		icon: 'AiSecurity01' as TIcons,
+	},
+	twoFactorSetup: {
+		id: 'twoFactorSetup',
+		to: '/two-factor-setup',
+		text: '2FA Setup',
+		icon: 'AiSecurity01' as TIcons,
+	},
+	magicLink: {
+		id: 'magicLink',
+		to: '/magic-link',
+		text: 'Magic Link',
+		icon: 'AiMail' as TIcons,
+	},
+	oauthCallback: {
+		id: 'oauthCallback',
+		to: '/oauth/callback',
+		text: 'OAuth Callback',
+		icon: 'Login03' as TIcons,
+	},
+	oauthComplete: {
+		id: 'oauthComplete',
+		to: '/oauth/complete',
+		text: 'OAuth Complete',
+		icon: 'Login03' as TIcons,
+	},
+	accountLocked: {
+		id: 'accountLocked',
+		to: '/account-locked',
+		text: 'Account Locked',
+		icon: 'AiLock' as TIcons,
+	},
+	sessionExpired: {
+		id: 'sessionExpired',
+		to: '/session-expired',
+		text: 'Session Expired',
+		icon: 'Clock01' as TIcons,
+	},
+};
+
+const app = {
+	id: 'app',
+	to: '/app',
+	text: 'App',
+	icon: 'Home09' as TIcons,
+	subPages: {
+		dashboard: {
+			id: 'dashboard',
+			to: '/dashboard',
+			text: 'Dashboard',
+			icon: 'Home09' as TIcons,
+		},
+		myWorkspace: {
+			id: 'myWorkspace',
+			to: '/my-workspace',
+			text: 'My Workspace',
+			icon: 'Layout3Column' as TIcons,
+		},
+		workflows: {
+			id: 'workflows',
+			to: '/workflows',
+			text: 'Workflows',
+			icon: 'GitMerge' as TIcons,
+		},
+		agents: {
+			id: 'agents',
+			to: '/agents',
+			text: 'Agents',
+			icon: 'Robot01' as TIcons,
+		},
+		apps: {
+			id: 'apps',
+			to: '/apps',
+			text: 'Apps',
+			icon: 'DashboardSquare03' as TIcons,
+		},
+		files: {
+			id: 'files',
+			to: '/files',
+			text: 'Files',
+			icon: 'Folder01' as TIcons,
+		},
+		history: {
+			id: 'history',
+			to: '/history',
+			text: 'History',
+			icon: 'Clock01' as TIcons,
+		},
+		templates: {
+			id: 'templates',
+			to: '/templates',
+			text: 'Templates',
+			icon: 'Layers01' as TIcons,
+		},
+	},
+};
+
+const settings = {
+	id: 'settings',
+	to: '/settings',
+	text: 'Settings',
+	icon: 'Settings01' as TIcons,
+	subPages: {
+		profile: {
+			id: 'profileSettings',
+			to: '/settings/profile',
+			text: 'Profile',
+			icon: 'UserCircle' as TIcons,
+		},
+		workspace: {
+			id: 'workspaceSettings',
+			to: '/settings/workspace',
+			text: 'Workspace',
+			icon: 'Settings01' as TIcons,
+		},
+		plan: {
+			id: 'planSettings',
+			to: '/settings/plan',
+			text: 'Plan',
+			icon: 'Layers01' as TIcons,
+			subPages: {
+				upgrade: {
+					id: 'planUpgrade',
+					to: '/settings/plan/upgrade',
+					text: 'Upgrade',
+					icon: 'Layers01' as TIcons,
+				},
+			},
+		},
+		usage: {
+			id: 'usageSettings',
+			to: '/settings/usage',
+			text: 'Usage',
+			icon: 'PieChart09' as TIcons,
+		},
+		billing: {
+			id: 'billingSettings',
+			to: '/settings/billing',
+			text: 'Billing',
+			icon: 'CreditCard' as TIcons,
+			subPages: {
+				credits: {
+					id: 'billingCredits',
+					to: '/settings/billing/credits',
+					text: 'Buy Credits',
+					icon: 'CreditCard' as TIcons,
+				},
+				history: {
+					id: 'billingHistory',
+					to: '/settings/billing/history',
+					text: 'History',
+					icon: 'BarChart3' as TIcons,
+				},
+			},
+		},
+		members: {
+			id: 'membersSettings',
+			to: '/settings/members',
+			text: 'Members',
+			icon: 'UserGroup' as TIcons,
+		},
+		secrets: {
+			id: 'secretsSettings',
+			to: '/settings/secrets',
+			text: 'Secrets',
+			icon: 'Lock' as TIcons,
+		},
+		notifications: {
+			id: 'notificationsSettings',
+			to: '/settings/notifications',
+			text: 'Notifications',
+			icon: 'Notification03' as TIcons,
+		},
+		notificationChannels: {
+			id: 'notificationChannelsSettings',
+			to: '/settings/notification-channels',
+			text: 'Notification Channels',
+			icon: 'Notification01' as TIcons,
+		},
+		environments: {
+			id: 'environmentsSettings',
+			to: '/settings/environments',
+			text: 'Environments',
+			icon: 'Container01' as TIcons,
+		},
+	},
+};
+
+const editor = {
+	id: 'editor',
+	to: '/editor',
+	text: 'Editor',
+	icon: 'PencilEdit01' as TIcons,
+	subPages: {
+		addWorkflow: {
+			id: 'addWorkflow',
+			to: '/editor/add-workflow',
+			text: 'Add Workflow',
+			icon: 'PencilEdit01' as TIcons,
+		},
+		editWorkflow: {
+			id: 'editWorkflow',
+			to: '/editor/edit-workflow',
+			text: 'Edit Workflow',
+			icon: 'PencilEdit01' as TIcons,
+		},
+		viewWorkflow: {
+			id: 'viewWorkflow',
+			to: '/editor/view-workflow',
+			text: 'View Workflow',
+			icon: 'PencilEdit01' as TIcons,
+		},
+	},
+};
+
+const agent = {
+	id: 'agent',
+	to: '/agent',
+	text: 'Agent',
+	icon: 'Robot01' as TIcons,
+	subPages: {
+		addAgent: {
+			id: 'addAgent',
+			to: '/agent/add',
+			text: 'Add Agent',
+			icon: 'Robot01' as TIcons,
+		},
+		editAgent: {
+			id: 'editAgent',
+			to: '/agent/edit',
+			text: 'Edit Agent',
+			icon: 'Robot01' as TIcons,
+		},
+	},
+};
+
+const onboarding = {
+	id: 'onboarding',
+	to: '/onboarding',
+	text: 'Onboarding',
+	icon: 'Rocket01' as TIcons,
+	subPages: {
+		pricing: {
+			id: 'pricing',
+			to: '/pricing',
+			text: 'Pricing',
+			icon: 'CreditCard' as TIcons,
+		},
+		createWorkspace: {
+			id: 'createWorkspace',
+			to: '/onboarding/create-workspace',
+			text: 'Create Workspace',
+			icon: 'DashboardSquare03' as TIcons,
+		},
+		inviteTeam: {
+			id: 'inviteTeam',
+			to: '/onboarding/invite-team',
+			text: 'Invite Team',
+			icon: 'UserAdd01' as TIcons,
+		},
+		workspaceList: {
+			id: 'workspaceList',
+			to: '/workspaces',
+			text: 'Workspaces',
+			icon: 'DashboardSquare03' as TIcons,
+		},
+	},
+};
+
+const pages = {
+	apps,
+	app,
+	auth,
+	settings,
+	editor,
+	agent,
+	onboarding,
+	pagesExamples,
+	documentation,
+	examples,
+};
+
 export default pages;
