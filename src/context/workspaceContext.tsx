@@ -34,17 +34,69 @@ export interface IWorkspaceContextProps {
 
 const WorkspaceContext = createContext<IWorkspaceContextProps>({} as IWorkspaceContextProps);
 
+const IS_MOCK_AUTH = import.meta.env.VITE_MOCK_AUTH === 'true';
+
+const MOCK_WORKSPACE_DETAIL: TWorkspaceDetail = {
+	id: 'mock-ws-1',
+	name: 'Sahil Studio',
+	slug: 'sahil-studio',
+	created_at: new Date().toISOString(),
+	role: 'owner',
+	settings: {
+		timezone: 'UTC',
+		execution_retention_days: 30,
+		default_max_retries: 3,
+		default_timeout_seconds: 300,
+		auto_activate_workflows: true,
+		allow_public_sharing: false,
+		error_workflow_id: null,
+		allowed_ip_ranges: [],
+		notification_preferences: null,
+		git_repo_url: null,
+		git_branch: null,
+		git_auto_sync: false,
+		last_git_sync_at: null,
+	},
+	owner: {
+		id: 'mock-1',
+		name: 'Dev User',
+		email: 'dev@localhost',
+		avatar: null,
+	},
+	members_count: 1,
+	workflows_count: 8,
+};
+
+const MOCK_WORKSPACES: TWorkspace[] = [
+	{
+		id: 'mock-ws-1',
+		name: 'Sahil Studio',
+		slug: 'sahil-studio',
+		created_at: new Date().toISOString(),
+		role: 'owner',
+		owner: {
+			id: 'mock-1',
+			name: 'Dev User',
+			email: 'dev@localhost',
+			avatar: null,
+		},
+	},
+];
+
 export const WorkspaceProvider = ({ children }: { children: React.ReactNode }) => {
 	const { isAuthenticated, userData } = useAuth();
 	const activeWorkspaceKey = useWorkflowShellStore((store) => store.activeWorkspaceId);
 	const setActiveWorkspaceId = useWorkflowShellStore((store) => store.setActiveWorkspaceId);
 
-	// Get all workspaces (only enabled when authenticated)
+	// Get all workspaces (only enabled when authenticated and not mocked)
 	const { data: workspacesResponse, isLoading: isWorkspacesLoading } = useWorkspaces({
-		enabled: isAuthenticated,
+		enabled: isAuthenticated && !IS_MOCK_AUTH,
 	});
 
-	const workspaces = useMemo(() => workspacesResponse?.data ?? [], [workspacesResponse?.data]);
+	const workspaces = useMemo(() => {
+		if (IS_MOCK_AUTH) return MOCK_WORKSPACES;
+		return workspacesResponse?.data ?? [];
+	}, [workspacesResponse?.data]);
 
 	// Find workspace matched by active key in Zustand store
 	const selectedWorkspace = useMemo(() => {
@@ -69,6 +121,7 @@ export const WorkspaceProvider = ({ children }: { children: React.ReactNode }) =
 
 	// Determine active workspace ID
 	const workspaceId = useMemo(() => {
+		if (IS_MOCK_AUTH) return 'mock-ws-1';
 		if (!isAuthenticated || isWorkspacesLoading) return '';
 		if (
 			activeWorkspaceKey &&
@@ -101,22 +154,28 @@ export const WorkspaceProvider = ({ children }: { children: React.ReactNode }) =
 		}
 	}, [workspaceId, activeWorkspaceKey, setActiveWorkspaceId]);
 
-	// Fetch detailed active workspace details
+	// Fetch detailed active workspace details (disabled in mock mode)
 	const {
 		data: activeWorkspaceDetails,
 		isLoading: isActiveWorkspaceLoading,
 		isError: isActiveWorkspaceError,
 		error: activeWorkspaceError,
 		refetch: refetchActiveWorkspace,
-	} = useWorkspace(workspaceId);
+	} = useWorkspace(IS_MOCK_AUTH ? '' : workspaceId);
 
-	// Fetch active workspace members
-	const { data: members = [], isLoading: isMembersLoading } = useFetchMembers(workspaceId);
+	// Fetch active workspace members (disabled in mock mode)
+	const { data: membersResponse = [], isLoading: isMembersLoading } = useFetchMembers(
+		IS_MOCK_AUTH ? '' : workspaceId,
+	);
 
-	const activeWorkspace = useMemo(() => activeWorkspaceDetails || null, [activeWorkspaceDetails]);
+	const activeWorkspace = useMemo(() => {
+		if (IS_MOCK_AUTH) return MOCK_WORKSPACE_DETAIL;
+		return activeWorkspaceDetails || null;
+	}, [activeWorkspaceDetails]);
 
 	// Determine user's role in active workspace
 	const role = useMemo<TWorkspaceRole | null>(() => {
+		if (IS_MOCK_AUTH) return 'owner';
 		if (activeWorkspace?.role) {
 			return activeWorkspace.role;
 		}
@@ -130,11 +189,29 @@ export const WorkspaceProvider = ({ children }: { children: React.ReactNode }) =
 		return null;
 	}, [activeWorkspace, selectedWorkspace, userData]);
 
+	const members = useMemo<TWorkspaceMember[]>(() => {
+		if (IS_MOCK_AUTH) {
+			return [
+				{
+					id: 'mock-member-1',
+					user_id: 'mock-1',
+					name: 'Sahil User',
+					email: 'dev@localhost',
+					avatar: null,
+					role: 'owner',
+					joined_at: new Date().toISOString(),
+				},
+			];
+		}
+		return membersResponse;
+	}, [membersResponse]);
+
 	const switchWorkspaceMutation = useSwitchWorkspace();
 
 	// Callback to switch workspaces
 	const switchWorkspace = useCallback(
 		(idOrSlug: string) => {
+			if (IS_MOCK_AUTH) return;
 			const workspace = workspaces.find((w) => w.id === idOrSlug || w.slug === idOrSlug);
 			const targetId = workspace?.id ?? idOrSlug;
 
@@ -150,15 +227,15 @@ export const WorkspaceProvider = ({ children }: { children: React.ReactNode }) =
 	const value: IWorkspaceContextProps = useMemo(
 		() => ({
 			workspaces,
-			isWorkspacesLoading,
+			isWorkspacesLoading: IS_MOCK_AUTH ? false : isWorkspacesLoading,
 			activeWorkspaceId: workspaceId,
 			activeWorkspace,
-			isActiveWorkspaceLoading: isWorkspacesLoading || isActiveWorkspaceLoading,
-			isActiveWorkspaceError,
-			activeWorkspaceError: activeWorkspaceError as Error | null,
+			isActiveWorkspaceLoading: IS_MOCK_AUTH ? false : (isWorkspacesLoading || isActiveWorkspaceLoading),
+			isActiveWorkspaceError: IS_MOCK_AUTH ? false : isActiveWorkspaceError,
+			activeWorkspaceError: IS_MOCK_AUTH ? null : (activeWorkspaceError as Error | null),
 			role,
 			members,
-			isMembersLoading,
+			isMembersLoading: IS_MOCK_AUTH ? false : isMembersLoading,
 			switchWorkspace,
 			refetchActiveWorkspace,
 		}),

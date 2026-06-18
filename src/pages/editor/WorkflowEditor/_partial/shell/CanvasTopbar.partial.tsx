@@ -1,0 +1,145 @@
+import {
+	Play,
+	Square,
+	ChevronDown,
+	Share,
+	Save,
+	LayoutGrid,
+	GitBranch,
+} from 'lucide-react';
+import { motion } from 'framer-motion';
+import { useCreateWorkflowVersion } from '@/api/modules/workflows';
+import { useWorkflowEditor } from '../../_context/WorkflowEditorProvider.context';
+import { buildVersionPayload } from '../../_helper/workflowApiTransform.helper';
+import { useRunWorkflow } from '../../_hooks/useRunWorkflow.hook';
+
+export const CanvasTopbar = () => {
+	const { state, dispatch } = useWorkflowEditor();
+	const { runWorkflow, stopRun } = useRunWorkflow();
+	const saveVersion = useCreateWorkflowVersion(state.workflow.workspaceId ?? '');
+	const isRunning = state.run.status === 'running';
+	const isRunDisabled = state.nodes.length === 0 && state.ui.emptyCanvasView !== 'chat-started';
+
+	const handleSave = () => {
+		if (!state.workflow.workspaceId || !state.workflow.apiId) {
+			dispatch({ type: 'SET_SAVE_STATE', savingState: 'dirty' });
+			return;
+		}
+
+		dispatch({ type: 'SET_SAVE_STATE', savingState: 'saving' });
+		saveVersion.mutate(
+			{
+				id: state.workflow.apiId,
+				body: buildVersionPayload(state),
+			},
+			{
+				onSuccess: (version) => {
+					dispatch({
+						type: 'SET_WORKFLOW_META',
+						patch: {
+							currentVersionId: version.id,
+							currentVersionNumber: version.version_number,
+							savingState: 'saved',
+						},
+					});
+				},
+				onError: () => dispatch({ type: 'SET_SAVE_STATE', savingState: 'error' }),
+			},
+		);
+	};
+
+	return (
+		<div className="flex h-14 shrink-0 items-center justify-between border-b border-zinc-200 bg-white px-5 dark:border-white/10 dark:bg-[#07080b] select-none z-10">
+			{/* Left side actions */}
+			<div className="flex items-center gap-2">
+				<button
+					type="button"
+					onClick={() => dispatch({ type: 'TOGGLE_LEFT_PANEL' })}
+					className="flex h-9 items-center gap-2 rounded-xl border border-violet-200 bg-violet-50/50 px-3.5 text-xs font-bold text-violet-600 shadow-xs transition hover:bg-violet-100/70 dark:border-violet-850 dark:bg-violet-950/20 dark:text-violet-400"
+				>
+					<span className="text-sm font-extrabold">+</span>
+					<span>Add Interface</span>
+				</button>
+				<button
+					type="button"
+					title="Toggle Left Panel"
+					onClick={() => dispatch({ type: 'TOGGLE_LEFT_PANEL' })}
+					className="flex h-9 w-9 items-center justify-center rounded-xl border border-zinc-200 bg-white text-zinc-500 shadow-xs transition hover:bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-400"
+				>
+					<GitBranch size={15} />
+				</button>
+				<button
+					type="button"
+					title="View Code"
+					className="flex h-9 px-3 items-center justify-center rounded-xl border border-zinc-200 bg-white text-zinc-650 shadow-xs transition hover:bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-400 font-mono text-xs font-extrabold"
+				>
+					{"{}"}
+				</button>
+			</div>
+
+			{/* Right side actions */}
+			<div className="flex items-center gap-2.5">
+				<button
+					type="button"
+					className="flex h-9 items-center gap-1.5 rounded-xl border border-zinc-200 bg-white px-3.5 text-xs font-bold text-zinc-600 shadow-xs transition hover:bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-300"
+				>
+					<Share size={14} className="text-zinc-500" />
+					<span>Share</span>
+				</button>
+
+				<div className="flex items-center shadow-xs rounded-xl overflow-hidden border border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900">
+					<button
+						type="button"
+						onClick={handleSave}
+						disabled={saveVersion.isPending}
+						className="flex h-9 items-center gap-1.5 px-3.5 text-xs font-bold text-zinc-600 hover:bg-zinc-50 disabled:opacity-40 dark:text-zinc-300"
+					>
+						<Save size={14} className="text-zinc-500" />
+						<span>{saveVersion.isPending ? 'Saving' : 'Save'}</span>
+					</button>
+					<button
+						type="button"
+						className="flex h-9 items-center justify-center border-l border-zinc-200 px-2 text-zinc-500 hover:bg-zinc-50 dark:border-zinc-800"
+					>
+						<ChevronDown size={13} />
+					</button>
+				</div>
+
+				<div className={[
+					"flex items-center shadow-md rounded-xl overflow-hidden transition",
+					isRunDisabled
+						? "bg-violet-600 opacity-40 cursor-not-allowed"
+						: "bg-violet-600 hover:bg-violet-700"
+				].join(' ')}>
+					<motion.button
+						whileTap={!isRunDisabled ? { scale: 0.98 } : undefined}
+						type="button"
+						disabled={isRunDisabled}
+						onClick={isRunning ? stopRun : runWorkflow}
+						className={[
+							"flex h-9 items-center gap-1.5 px-4 text-xs font-bold text-white",
+							isRunDisabled ? "cursor-not-allowed" : "cursor-pointer"
+						].join(' ')}
+					>
+						{isRunning ? (
+							<Square size={11} fill="currentColor" />
+						) : (
+							<Play size={11} fill="currentColor" className="fill-white" />
+						)}
+						<span>Run</span>
+					</motion.button>
+					<button
+						type="button"
+						disabled={isRunDisabled}
+						className={[
+							"flex h-9 items-center justify-center border-l border-white/20 px-2.5 text-white",
+							isRunDisabled ? "cursor-not-allowed" : "hover:bg-violet-700"
+						].join(' ')}
+					>
+						<ChevronDown size={13} />
+					</button>
+				</div>
+			</div>
+		</div>
+	);
+};
