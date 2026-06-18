@@ -2,10 +2,18 @@ import { motion } from 'framer-motion';
 import { Check } from 'lucide-react';
 import { useOnboardingStore } from '../../_context/OnboardingStore.context';
 import { ROLES } from '../../_helper/onboarding.constants';
+import { useOnboardingState } from '@/api/modules/onboarding';
 
 const RoleSelectionStep = () => {
 	const { state, dispatch } = useOnboardingStore();
-	const { selectedRoleIndex } = state;
+	const { selectedJobRole } = state;
+	const { data: onboardingData } = useOnboardingState(false); // fetch from react-query cache
+
+	const rolesList = onboardingData?.meta?.job_roles || ROLES.map((r) => ({
+		value: r.name.toLowerCase(),
+		label: r.name,
+		description: r.description,
+	}));
 
 	return (
 		<>
@@ -20,14 +28,17 @@ const RoleSelectionStep = () => {
 			</div>
 
 			<div className='no-scrollbar max-h-[300px] space-y-2 overflow-y-auto pr-1'>
-				{ROLES.map((role, idx) => {
-					const isSelected = selectedRoleIndex === idx;
+				{rolesList.map((role, idx) => {
+					const isSelected = selectedJobRole === role.value;
 					return (
 						<motion.button
 							whileTap={{ scale: 0.98 }}
-							key={role.name}
+							key={role.value}
 							onClick={() =>
-								dispatch({ type: 'SET_FIELD', payload: { selectedRoleIndex: idx } })
+								dispatch({
+									type: 'SET_FIELD',
+									payload: { selectedJobRole: role.value, selectedRoleIndex: idx },
+								})
 							}
 							className={`flex w-full flex-col rounded-xl border p-3 px-4 text-left transition-all ${
 								isSelected
@@ -37,7 +48,7 @@ const RoleSelectionStep = () => {
 							<div className='flex items-center justify-between'>
 								<span
 									className={`text-sm font-bold ${isSelected ? 'text-violet-600 dark:text-violet-400' : 'text-slate-900 dark:text-zinc-100'}`}>
-									{role.name}
+									{role.label}
 								</span>
 								{isSelected && (
 									<span className='flex h-5 w-5 items-center justify-center rounded-full bg-violet-500 text-white'>

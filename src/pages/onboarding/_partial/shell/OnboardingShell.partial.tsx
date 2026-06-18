@@ -18,8 +18,43 @@ import PlanSelectionStep from '../steps/PlanSelectionStep.partial';
 import ConnectAppsStep from '../steps/ConnectAppsStep.partial';
 import DiscoveryStep from '../steps/DiscoveryStep.partial';
 
+import { useOnboardingState } from '@/api/modules/onboarding';
+import { useEffect } from 'react';
+import type { TOnboardingStep } from '../../_types/onboarding.type';
+
+const mapStepKeyToIndex = (key: string): TOnboardingStep => {
+	switch (key) {
+		case 'profile_picture': return 0;
+		case 'create_workspace': return 1;
+		case 'invite_team': return 2;
+		case 'role_selection': return 3;
+		case 'choose_plan': return 4;
+		case 'connect_apps': return 5;
+		case 'discovery_survey': return 6;
+		default: return 0;
+	}
+};
+
 const OnboardingShellInner = () => {
-	const { state } = useOnboardingStore();
+	const { state, dispatch } = useOnboardingStore();
+	const { data: onboardingData, isLoading } = useOnboardingState();
+	const [initialized, setInitialized] = useState(false);
+
+	useEffect(() => {
+		if (onboardingData && !initialized) {
+			const stepIndex = mapStepKeyToIndex(onboardingData.current_step);
+			dispatch({ type: 'SET_STEP', payload: stepIndex });
+			dispatch({
+				type: 'SET_FIELD',
+				payload: {
+					workspaceSlug: onboardingData.meta.workspace_slug_suggestion,
+					workspaceInput: onboardingData.meta.workspace_slug_suggestion,
+				},
+			});
+			setInitialized(true);
+		}
+	}, [onboardingData, initialized, dispatch]);
+
 	const {
 		currentStep: step,
 		selectedRoleIndex,
@@ -35,7 +70,7 @@ const OnboardingShellInner = () => {
 	const [workspaceError, setWorkspaceError] = useState('');
 	const [workspaceSlugTouched, setWorkspaceSlugTouched] = useState(false);
 
-	const { handlePrevStep, handleSkip } = useOnboardingNavigation();
+	const { handlePrevStep, handleSkip, handleDismissAll } = useOnboardingNavigation();
 	const { handleNextStep, isWorkspaceLoading, sendInvitationPending } = useOnboardingSubmit();
 
 	const isDualColumn = step >= 1;
@@ -64,6 +99,19 @@ const OnboardingShellInner = () => {
 		return ['slack', 'github', 'gmail'];
 	}, [step, selectedRoleIndex, connectedApps]);
 
+	if (isLoading) {
+		return (
+			<div className='flex min-h-screen items-center justify-center bg-gradient-to-br from-indigo-50/80 via-slate-50/90 to-rose-50/80 dark:from-zinc-950 dark:via-zinc-900 dark:to-zinc-950'>
+				<div className='flex flex-col items-center gap-4'>
+					<div className='flex h-16 w-16 animate-pulse items-center justify-center rounded-[2rem] bg-gradient-to-tr from-violet-600 to-indigo-600 text-white shadow-lg shadow-violet-500/25'>
+						<span className='text-xl font-extrabold tracking-tighter'>A1</span>
+					</div>
+					<div className='text-sm font-semibold text-slate-500 dark:text-zinc-400'>Loading your onboarding...</div>
+				</div>
+			</div>
+		);
+	}
+
 	return (
 		<main className='relative flex min-h-screen w-full flex-col justify-between overflow-x-hidden bg-gradient-to-br from-indigo-50/80 via-slate-50/90 to-rose-50/80 text-slate-950 transition-colors duration-300 dark:from-zinc-950 dark:via-zinc-900 dark:to-zinc-950 dark:text-zinc-50'>
 			{/* Animated background blobs */}
@@ -83,9 +131,8 @@ const OnboardingShellInner = () => {
 				/>
 			</div>
 
-			{/* Header */}
 			<header className='relative z-10 w-full px-6 py-5'>
-				<div className='mx-auto flex max-w-7xl items-center'>
+				<div className='mx-auto flex max-w-7xl items-center justify-between'>
 					<div className='flex items-center gap-3'>
 						<div className='flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-tr from-violet-600 to-indigo-600 text-white shadow-lg shadow-violet-500/25'>
 							<span className='text-base font-extrabold tracking-tighter'>A1</span>
@@ -94,6 +141,13 @@ const OnboardingShellInner = () => {
 							Agent1o1
 						</span>
 					</div>
+					<button
+						type='button'
+						onClick={handleDismissAll}
+						className='text-xs font-black text-slate-400 hover:text-slate-600 dark:hover:text-zinc-200 transition-colors'
+					>
+						Skip Onboarding
+					</button>
 				</div>
 			</header>
 

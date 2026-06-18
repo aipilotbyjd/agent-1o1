@@ -13,6 +13,7 @@ export interface IOnboardingData {
 	inviteMessage: string;
 	invitesSent: boolean;
 	selectedRoleIndex: number | null;
+	selectedJobRole: string;
 	selectedPlan: string;
 	appSearch: string;
 	connectedApps: string[];

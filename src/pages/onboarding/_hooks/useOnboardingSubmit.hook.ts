@@ -1,32 +1,50 @@
 import { useAuth } from '@/context/authContext';
 import { useUploadAvatar } from '@/api/modules/auth';
 import { useCreateWorkspace, useSwitchWorkspace } from '@/api/modules/workspaces';
-import { useSendInvitation } from '@/api/modules/workspace-members';
+import {
+	useOnboardingInviteTeam,
+	useOnboardingSelectRole,
+	useOnboardingSelectPlan,
+	useOnboardingStripeCheckout,
+	useOnboardingSubmitDiscovery,
+	useOnboardingComplete,
+} from '@/api/modules/onboarding';
 import { useOnboardingStore } from '../_context/OnboardingStore.context';
 import { parseEmails, isValidEmail } from '../_helper/onboarding.helper';
 import { useOnboardingNavigation } from './useOnboardingNavigation.hook';
+import { useNavigate } from 'react-router';
 
 export const useOnboardingSubmit = () => {
+	const navigate = useNavigate();
 	const { userData, refreshCurrentUser } = useAuth();
 	const uploadAvatar = useUploadAvatar();
 	const createWorkspace = useCreateWorkspace();
 	const switchWorkspace = useSwitchWorkspace();
+	const inviteTeamMutation = useOnboardingInviteTeam();
+	const selectRoleMutation = useOnboardingSelectRole();
+	const selectPlanMutation = useOnboardingSelectPlan();
+	const submitDiscoveryMutation = useOnboardingSubmitDiscovery();
+	const completeMutation = useOnboardingComplete();
+	
 	const { state, dispatch } = useOnboardingStore();
 	const { advanceStep } = useOnboardingNavigation();
 
 	const {
 		currentStep,
 		workspaceName,
+		workspaceSlug,
 		workspaceCreated,
 		inviteEmails,
 		inviteRole,
 		inviteMessage,
 		invitesSent,
 		createdWorkspaceId,
-		avatarUrl,
+		selectedJobRole,
+		selectedPlan,
+		selectedSurvey,
 	} = state;
 
-	const sendInvitation = useSendInvitation(createdWorkspaceId);
+	const stripeCheckoutMutation = useOnboardingStripeCheckout(createdWorkspaceId);
 
 	const parsedInviteEmails = parseEmails(inviteEmails);
 	const validInviteEmails = parsedInviteEmails.filter(isValidEmail);
@@ -41,7 +59,6 @@ export const useOnboardingSubmit = () => {
 				dispatch({ type: 'SET_FIELD', payload: { avatarUrl: e.target.result as string } });
 		};
 		reader.readAsDataURL(file);
-		dispatch({ type: 'SET_FIELD', payload: { avatarUrl: state.avatarUrl } });
 		try {
 			await uploadAvatar.mutateAsync(file);
 			await refreshCurrentUser();
@@ -51,16 +68,18 @@ export const useOnboardingSubmit = () => {
 	};
 
 	const handleNextStep = async () => {
-		// Step 2: Create workspace (required)
+		// Step 2: Create workspace
 		if (currentStep === 1) {
 			if (workspaceCreated) {
 				advanceStep();
 				return;
 			}
 			if (!workspaceName.trim()) return;
-			dispatch({ type: 'SET_FIELD', payload: {} });
 			try {
-				const workspace = await createWorkspace.mutateAsync({ name: workspaceName.trim() });
+				const workspace = await createWorkspace.mutateAsync({
+					name: workspaceName.trim(),
+					slug: workspaceSlug.trim(),
+				});
 				await switchWorkspace.mutateAsync(workspace.id);
 				await refreshCurrentUser();
 				dispatch({
@@ -72,21 +91,57 @@ export const useOnboardingSubmit = () => {
 			}
 		}
 
-		// Step 3: Invite team (optional — send if emails present, then advance)
+		// Step 3: Invite team
 		if (currentStep === 2 && hasValidEmails && !invitesSent) {
 			try {
-				await Promise.all(
-					validInviteEmails.map((email) =>
-						sendInvitation.mutateAsync({
-							email,
-							role: inviteRole,
-							message: inviteMessage,
-						}),
-					),
-				);
+				await inviteTeamMutation.mutateAsync({
+					emails: validInviteEmails,
+					role: inviteRole,
+					personal_note: inviteMessage,
+				});
 				dispatch({ type: 'SET_FIELD', payload: { invitesSent: true } });
 			} catch {
-				// Non-blocking — advance even if some invites failed
+				// Non-blocking
+			}
+		}
+
+		// Step 4: Role selection
+		if (currentStep === 3) {
+			try {
+				if (selectedJobRole) {
+					await selectRoleMutation.mutateAsync({ job_role: selectedJobRole });
+				}
+			} catch {
+				// Non-blocking
+			}
+		}
+
+		// Step 5: Choose plan
+		if (currentStep === 4) {
+			try {
+				if (selectedPlan === 'free') {
+					await selectPlanMutation.mutateAsync({ plan_slug: 'free' });
+				} else {
+					await stripeCheckoutMutation.mutateAsync({ plan_slug: selectedPlan });
+					return; // Redirecting, don't advance
+				}
+			} catch {
+				// Non-blocking
+			}
+		}
+
+		// Step 7: Discovery survey & complete
+		if (currentStep === 6) {
+			try {
+				if (selectedSurvey) {
+					await submitDiscoveryMutation.mutateAsync({ discovery_source: selectedSurvey });
+				}
+				await completeMutation.mutateAsync();
+				await refreshCurrentUser();
+				navigate('/dashboard');
+				return;
+			} catch {
+				// Non-blocking
 			}
 		}
 
@@ -99,7 +154,7 @@ export const useOnboardingSubmit = () => {
 		handleFileSelect,
 		handleNextStep,
 		isWorkspaceLoading,
-		sendInvitationPending: sendInvitation.isPending,
+		sendInvitationPending: inviteTeamMutation.isPending,
 		uploadAvatarPending: uploadAvatar.isPending,
 	};
 };

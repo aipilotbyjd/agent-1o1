@@ -8,6 +8,7 @@ import { useAuth } from '@/context/authContext';
 import AuthShell from './_partial/AuthShell.partial';
 import Icon from '@/components/icon/Icon';
 import * as Yup from 'yup';
+import { Loader2 } from 'lucide-react';
 
 interface IFormValues {
 	email: string;
@@ -206,11 +207,20 @@ const LoginPage = () => {
 					type='submit'
 					disabled={!formik.isValid || isLoading}
 					className='group bg-primary-700 hover:bg-primary-800 relative flex w-full items-center justify-center gap-3 rounded-[32px] px-6 py-4 text-center text-sm font-black tracking-[0.1em] text-white uppercase transition-all duration-300 hover:shadow-[0_20px_50px_-20px_rgba(48,119,41,0.45)] active:scale-[0.98] disabled:pointer-events-none disabled:opacity-60'>
-					<span>{isLoading ? 'Signing in...' : 'Sign in to dashboard'}</span>
-					<Icon
-						icon='ArrowRight01'
-						className='h-5 w-5 transition-transform duration-300 group-hover:translate-x-1'
-					/>
+					{isLoading ? (
+						<>
+							<Loader2 className='h-5 w-5 animate-spin text-white' />
+							<span>Signing in...</span>
+						</>
+					) : (
+						<>
+							<span>Sign in to dashboard</span>
+							<Icon
+								icon='ArrowRight01'
+								className='h-5 w-5 transition-transform duration-300 group-hover:translate-x-1'
+							/>
+						</>
+					)}
 				</button>
 			</form>
 		</AuthShell>
