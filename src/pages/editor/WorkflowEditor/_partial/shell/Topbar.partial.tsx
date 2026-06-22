@@ -18,6 +18,7 @@ import {
 	Library,
 } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { useState } from 'react';
 import type { ReactNode } from 'react';
 import DARK_MODE from '@/constants/darkMode.constant';
 import useDarkMode from '@/hooks/useDarkMode';
@@ -26,6 +27,7 @@ import { useWorkflowEditor } from '../../_context/WorkflowEditorProvider.context
 import { buildVersionPayload } from '../../_helper/workflowApiTransform.helper';
 import { useRunWorkflow } from '../../_hooks/useRunWorkflow.hook';
 import { useAiChatStore } from '@/store/aiChat.store';
+import { useWorkflowShellStore } from '@/store/workflowShell.store';
 
 const PurpleOutlineButton = ({
 	children,
@@ -80,6 +82,9 @@ const Topbar = () => {
 	const { isDarkTheme, setDarkModeStatus } = useDarkMode();
 	const { runWorkflow, stopRun } = useRunWorkflow();
 	const saveVersion = useCreateWorkflowVersion(state.workflow.workspaceId ?? '');
+	const setGovModalOpen = useWorkflowShellStore((store) => store.setGovModalOpen);
+	const setGovModalTab = useWorkflowShellStore((store) => store.setGovModalTab);
+	const [isSaveDropdownOpen, setIsSaveDropdownOpen] = useState(false);
 	const isRunning = state.run.status === 'running';
 
 	const handleSave = () => {
@@ -249,12 +254,16 @@ const Topbar = () => {
 					<Library size={14} className='text-violet-600 dark:text-violet-400' />
 					<span>Templates</span>
 				</PurpleOutlineButton>
-				<PurpleOutlineButton>
+				<PurpleOutlineButton
+					onClick={() => {
+						setGovModalTab('sharing');
+						setGovModalOpen(true);
+					}}>
 					<Share size={14} className='text-violet-600 dark:text-violet-400' />
 					<span>Share</span>
 				</PurpleOutlineButton>
 
-				<div className='flex items-center shadow-xs'>
+				<div className='relative flex items-center shadow-xs'>
 					<button
 						type='button'
 						onClick={handleSave}
@@ -265,9 +274,65 @@ const Topbar = () => {
 					</button>
 					<button
 						type='button'
+						onClick={() => setIsSaveDropdownOpen(!isSaveDropdownOpen)}
 						className='flex h-9 items-center justify-center rounded-r-lg border border-zinc-200 bg-white px-2 text-violet-600 shadow-xs transition hover:bg-zinc-50 dark:border-zinc-800/40 dark:bg-zinc-900 dark:text-violet-400'>
 						<ChevronDown size={14} />
 					</button>
+
+					{isSaveDropdownOpen && (
+						<>
+							<div
+								className="fixed inset-0 z-10"
+								onClick={() => setIsSaveDropdownOpen(false)}
+							/>
+							<div className="absolute right-0 top-11 z-20 w-52 rounded-xl border border-zinc-200 bg-white p-1 text-zinc-900 shadow-xl dark:border-white/10 dark:bg-zinc-950">
+								<button
+									type="button"
+									onClick={() => {
+										setIsSaveDropdownOpen(false);
+										setGovModalTab('versions');
+										setGovModalOpen(true);
+									}}
+									className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-xs font-semibold hover:bg-zinc-50 hover:text-violet-600 dark:text-zinc-300 dark:hover:bg-white/[0.04] dark:hover:text-violet-400"
+								>
+									<span>Version History</span>
+								</button>
+								<button
+									type="button"
+									onClick={() => {
+										setIsSaveDropdownOpen(false);
+										setGovModalTab('approvals');
+										setGovModalOpen(true);
+									}}
+									className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-xs font-semibold hover:bg-zinc-50 hover:text-violet-600 dark:text-zinc-300 dark:hover:bg-white/[0.04] dark:hover:text-violet-400"
+								>
+									<span>Request Approval</span>
+								</button>
+								<button
+									type="button"
+									onClick={() => {
+										setIsSaveDropdownOpen(false);
+										setGovModalTab('releases');
+										setGovModalOpen(true);
+									}}
+									className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-xs font-semibold hover:bg-zinc-50 hover:text-violet-600 dark:text-zinc-300 dark:hover:bg-white/[0.04] dark:hover:text-violet-400"
+								>
+									<span>Deploy Release</span>
+								</button>
+								<button
+									type="button"
+									onClick={() => {
+										setIsSaveDropdownOpen(false);
+										setGovModalTab('contracts');
+										setGovModalOpen(true);
+									}}
+									className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-xs font-semibold hover:bg-zinc-50 hover:text-violet-600 dark:text-zinc-300 dark:hover:bg-white/[0.04] dark:hover:text-violet-400"
+								>
+									<span>Contracts Verification</span>
+								</button>
+							</div>
+						</>
+					)}
 				</div>
 
 				<motion.button

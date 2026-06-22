@@ -1,9 +1,12 @@
 import { useRef } from 'react';
 import { WorkflowService } from '@/api/modules/workflows';
+import { ExecutionService } from '@/api/modules/executions';
 import { createId } from '../_context/WorkflowEditorStore.context';
 import { useWorkflowEditor } from '../_context/WorkflowEditorProvider.context';
 import { createMockNodeOutput, getRunOrder } from '../_helper/runGraph.helper';
 import { getNodeDefinition } from '../_helper/nodeCatalog.constants';
+import type { TRunLog } from '../_types/run.type';
+import type { TNodeRunStatus } from '../_types/node.type';
 
 const wait = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
 
@@ -43,14 +46,13 @@ export const useRunWorkflow = () => {
 		dispatch({ type: 'RUN_START', id: createId('run') });
 
 		if (state.workflow.workspaceId && state.workflow.apiId) {
+			const ws = state.workflow.workspaceId;
+			const wfId = state.workflow.apiId;
 			try {
-				const execution = await WorkflowService.execute(
-					state.workflow.workspaceId,
-					state.workflow.apiId,
-					{
-						trigger_data: {},
-					},
-				);
+				const execution = await WorkflowService.execute(ws, wfId, {
+					trigger_data: {},
+				});
+				dispatch({ type: 'RUN_START', id: execution.id });
 				dispatch({
 					type: 'APPEND_LOG',
 					log: {
@@ -58,7 +60,87 @@ export const useRunWorkflow = () => {
 						message: `Execution ${execution.id} started with status ${execution.status}`,
 					},
 				});
-				dispatch({ type: 'RUN_FINISH', status: 'success' });
+
+				let status = execution.status;
+				const poll = async () => {
+					if (stopped.current) return;
+					try {
+						const detail = await ExecutionService.detail(ws, execution.id);
+						status = detail.status;
+
+						const nodesData = await ExecutionService.nodes(ws, execution.id) as any;
+						const nodesList = Array.isArray(nodesData) ? nodesData : (nodesData?.data ?? []);
+
+						for (const nodeRes of nodesList) {
+							const nodeRunKey = nodeRes.node_run_key;
+							if (nodeRunKey) {
+								let nodeStatus: TNodeRunStatus = 'idle';
+								if (nodeRes.status === 'completed') {
+									nodeStatus = 'success';
+								} else if (nodeRes.status === 'failed') {
+									nodeStatus = 'error';
+								} else if (nodeRes.status === 'running') {
+									nodeStatus = 'running';
+								} else if (nodeRes.status === 'pending') {
+									nodeStatus = 'queued';
+								} else if (nodeRes.status === 'skipped') {
+									nodeStatus = 'skipped';
+								}
+
+								dispatch({
+									type: 'SET_NODE_STATUS',
+									id: nodeRunKey,
+									status: nodeStatus,
+									durationMs: nodeRes.duration_ms,
+									error: nodeRes.error?.message,
+									outputPreview: nodeRes.output_data,
+								});
+
+								if (nodeRes.status === 'running') {
+									dispatch({ type: 'RUN_CURRENT_NODE', nodeId: nodeRunKey });
+								}
+							}
+						}
+
+						const logsData = await ExecutionService.logs(ws, execution.id);
+						if (Array.isArray(logsData)) {
+							const mappedLogs: TRunLog[] = logsData.map((log, idx) => ({
+								id: `log_${idx}`,
+								nodeId: log.node_id,
+								level: log.level === 'warning' ? 'warn' : log.level === 'error' ? 'error' : 'info',
+								message: log.message,
+								at: new Date(log.timestamp).getTime(),
+							}));
+							dispatch({ type: 'SET_LOGS', logs: mappedLogs });
+						}
+					} catch (e) {
+						console.error('Error polling execution:', e);
+					}
+				};
+
+				while ((status === 'running' || status === 'queued' || status === 'pending') && !stopped.current) {
+					await wait(2000);
+					await poll();
+				}
+
+				if (stopped.current) {
+					try {
+						await ExecutionService.cancel(ws, execution.id);
+					} catch (e) {
+						console.error('Failed to cancel execution on backend:', e);
+					}
+					dispatch({ type: 'RUN_FINISH', status: 'stopped' });
+				} else {
+					const finalStatus: 'success' | 'error' = status === 'completed' ? 'success' : 'error';
+					dispatch({ type: 'RUN_FINISH', status: finalStatus });
+					dispatch({
+						type: 'APPEND_LOG',
+						log: {
+							level: finalStatus === 'success' ? 'info' : 'error',
+							message: `Execution finished with status: ${status}`,
+						},
+					});
+				}
 			} catch (error) {
 				dispatch({
 					type: 'APPEND_LOG',

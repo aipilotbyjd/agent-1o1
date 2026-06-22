@@ -4,8 +4,10 @@
  */
 
 export type TExecutionStatus =
+	| 'pending'
 	| 'queued'
 	| 'running'
+	| 'waiting'
 	| 'completed'
 	| 'failed'
 	| 'cancelled'

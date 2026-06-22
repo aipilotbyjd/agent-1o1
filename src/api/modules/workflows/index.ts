@@ -6,3 +6,7 @@ export * from './editor.service';
 export * from './editor.hooks';
 export * from './shares.service';
 export * from './shares.hooks';
+export * from './trigger-events.service';
+export * from './trigger-events.hooks';
+export * from './governance.service';
+export * from './governance.hooks';

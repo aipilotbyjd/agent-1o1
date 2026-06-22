@@ -61,11 +61,24 @@ export const usePublishWorkflowVersion = (ws: string) => {
 	});
 };
 
-export const useCompareWorkflowVersions = (ws: string, id: string, v1: number, v2: number) =>
+export const useCompareWorkflowVersions = (
+	ws: string,
+	id: string,
+	v1: string | number,
+	v2: string | number,
+) =>
 	useQuery({
 		queryKey: workflowKeys.compareVersions(ws, id, v1, v2),
 		queryFn: ({ signal }) => WorkflowEditorService.compareVersions(ws, id, v1, v2, signal),
 		enabled: !!ws && !!id && !!v1 && !!v2,
+	});
+
+// ── Node Output Schema (wire node A → node B inputs) ─
+export const useNodeOutputSchema = (ws: string, id: string, nodeId: string) =>
+	useQuery({
+		queryKey: workflowKeys.nodeOutputSchema(ws, id, nodeId),
+		queryFn: ({ signal }) => WorkflowEditorService.getNodeOutputSchema(ws, id, nodeId, signal),
+		enabled: !!ws && !!id && !!nodeId,
 	});
 
 // ── Validate / Test Node ─────────────────────────────

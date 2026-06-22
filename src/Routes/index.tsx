@@ -20,8 +20,6 @@ import pages from './pages';
 import MailLayout from '@/layouts/Mail.layout';
 import Page404Page from '@/pages/Page404.page';
 import UnderConstructionPage from '@/pages/UnderConstruction.page';
-import DocumentationPages from '@/Routes/infoPages/documentationPages';
-import ExamplePages from '@/Routes/infoPages/examplePages';
 import AppLayout from '@/layouts/App.layout';
 import SettingsLayout from '@/layouts/Settings.layout';
 import SettingsPages from './agent1o1Pages/settingsPages';
@@ -178,10 +176,7 @@ const router = createBrowserRouter([
 							},
 						],
 					},
-					{
-						element: <DefaultLayout />,
-						children: [...DocumentationPages, ...ExamplePages],
-					},
+
 					{
 						path: pages.pagesExamples.underConstruction.to,
 						element: <UnderConstructionPage />,

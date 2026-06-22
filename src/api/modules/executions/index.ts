@@ -2,3 +2,7 @@ export * from './executions.endpoints';
 export * from './executions.keys';
 export * from './executions.service';
 export * from './executions.hooks';
+export * from './autofix.service';
+export * from './autofix.hooks';
+export * from './replay-packs.service';
+export * from './replay-packs.hooks';

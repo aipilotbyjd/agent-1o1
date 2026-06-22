@@ -8,4 +8,6 @@ export const executionKeys = {
 	nodes: (ws: string, id: string) => ['executions', ws, 'nodes', id] as const,
 	stats: (ws: string, params?: TListParams) => ['executions', ws, 'stats', params] as const,
 	compare: (ws: string, ids: string[]) => ['executions', ws, 'compare', ...ids] as const,
+	autofix: (ws: string, id: string) => ['executions', ws, 'autofix', id] as const,
+	replayPacks: (ws: string) => ['executions', ws, 'replayPacks'] as const,
 };

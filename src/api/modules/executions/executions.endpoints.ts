@@ -15,3 +15,22 @@ export const ExecutionEndpoints = {
 	stream: (ws: string, id: string) => `/workspaces/${ws}/executions/${id}/stream`,
 	streamAll: (ws: string) => `/workspaces/${ws}/executions/stream-all`,
 } as const;
+
+export const AutofixEndpoints = {
+	list: (ws: string, executionId: string) =>
+		`/workspaces/${ws}/executions/${executionId}/autofix`,
+	diagnose: (ws: string, executionId: string) =>
+		`/workspaces/${ws}/executions/${executionId}/autofix`,
+	apply: (ws: string, executionId: string, fixId: string) =>
+		`/workspaces/${ws}/executions/${executionId}/autofix/${fixId}/apply`,
+	dismiss: (ws: string, executionId: string, fixId: string) =>
+		`/workspaces/${ws}/executions/${executionId}/autofix/${fixId}/dismiss`,
+} as const;
+
+export const ReplayPackEndpoints = {
+	create: (ws: string, executionId: string) =>
+		`/workspaces/${ws}/executions/${executionId}/replay-pack`,
+	list: (ws: string) => `/workspaces/${ws}/replay-packs`,
+	replay: (ws: string, replayPackId: string) =>
+		`/workspaces/${ws}/replay-packs/${replayPackId}/replay`,
+} as const;

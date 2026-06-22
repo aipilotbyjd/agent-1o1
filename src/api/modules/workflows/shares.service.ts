@@ -37,10 +37,8 @@ export const WorkflowShareService = {
 			})
 			.then(unwrap<IPublicShareView>),
 
-	clonePublic: (ws: string, token: string, password?: string) =>
+	clonePublic: (_ws: string, token: string, password?: string) =>
 		axiosClient
-			.post<
-				TApiResponse<TWorkflow>
-			>(E.clonePublic(ws, token), password ? { password } : undefined)
+			.post<TApiResponse<TWorkflow>>(E.clonePublic(token), password ? { password } : undefined)
 			.then(unwrap<TWorkflow>),
 };

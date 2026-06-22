@@ -11,6 +11,7 @@ import TemplateLibraryDialog from '../_partial/dialogs/TemplateLibraryDialog.par
 import VersionDiffViewer from '../_partial/dialogs/VersionDiffViewer.partial';
 import NodeLibrary from '../_partial/library/NodeLibrary.partial';
 import LinkCredentialsDialog from '../_partial/dialogs/LinkCredentialsDialog.partial';
+import WorkflowGovernanceModal from '../_partial/dialogs/WorkflowGovernanceModal.partial';
 import RunPanel from '../_partial/run/RunPanel.partial';
 import ActionBar from '../_partial/shell/ActionBar.partial';
 import AgentBuilderPage from '@/pages/agent/AgentBuilder/AgentBuilder.page';
@@ -196,6 +197,7 @@ const BuildPage = () => {
 			<TemplateLibraryDialog />
 			<VersionDiffViewer />
 			<LinkCredentialsDialog />
+			<WorkflowGovernanceModal />
 		</div>
 	);
 };

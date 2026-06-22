@@ -112,7 +112,8 @@ export type TCreateWorkflowDto = {
 export type TUpdateWorkflowDto = {
 	name?: string;
 	description?: string;
-	nodes?: IWorkflowNode[];
+	nodes?: any[];
+	edges?: any[];
 	connections?: IWorkflowConnection[];
 	settings?: IWorkflowSettings;
 	tags?: string[];
@@ -121,6 +122,8 @@ export type TUpdateWorkflowDto = {
 	category?: string;
 	is_favorite?: boolean;
 	folder_id?: string | null;
+	error_workflow_id?: string | null;
+	max_concurrent_executions?: number;
 };
 
 // Execute workflow request

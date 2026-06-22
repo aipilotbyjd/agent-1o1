@@ -59,13 +59,23 @@ export const WorkflowEditorService = {
 			.post<TApiResponse<IWorkflowVersion>>(E.rollback(ws, id, version))
 			.then(unwrap<IWorkflowVersion>),
 
-	compareVersions: (ws: string, id: string, from: number, to: number, signal?: AbortSignal) =>
+	compareVersions: (
+		ws: string,
+		id: string,
+		from: string | number,
+		to: string | number,
+		signal?: AbortSignal,
+	) =>
 		axiosClient
-			.get<TApiResponse<IWorkflowVersionComparison>>(E.compareVersions(ws, id), {
-				params: { from, to },
+			.get<TApiResponse<IWorkflowVersionComparison>>(E.compareVersions(ws, id, from, to), {
 				signal,
 			})
 			.then(unwrap<IWorkflowVersionComparison>),
+
+	getNodeOutputSchema: (ws: string, id: string, nodeId: string, signal?: AbortSignal) =>
+		axiosClient
+			.get<TApiResponse<Record<string, unknown>>>(E.nodeOutputSchema(ws, id, nodeId), { signal })
+			.then(unwrap<Record<string, unknown>>),
 
 	listPinnedData: (ws: string, workflowId: string, signal?: AbortSignal) =>
 		axiosClient

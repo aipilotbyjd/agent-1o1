@@ -26,8 +26,12 @@ type TWorkflowShellState = {
 		| 'settings'
 		| 'editor';
 	isCreateFlowModalOpen: boolean;
+	isGovModalOpen: boolean;
+	govModalTab: string;
 	setActiveWorkspaceView: (view: TWorkflowShellState['activeWorkspaceView']) => void;
 	setCreateFlowModalOpen: (open: boolean) => void;
+	setGovModalOpen: (open: boolean) => void;
+	setGovModalTab: (tab: string) => void;
 	closeMobileSidebar: () => void;
 	toggleMobileSidebar: () => void;
 	toggleSidebar: () => void;
@@ -45,8 +49,12 @@ export const useWorkflowShellStore = create<TWorkflowShellState>((set) => ({
 	mobileSidebarOpen: false,
 	activeWorkspaceView: 'workflows',
 	isCreateFlowModalOpen: false,
+	isGovModalOpen: false,
+	govModalTab: 'versions',
 	setActiveWorkspaceView: (view) => set({ activeWorkspaceView: view }),
 	setCreateFlowModalOpen: (open) => set({ isCreateFlowModalOpen: open }),
+	setGovModalOpen: (open) => set({ isGovModalOpen: open }),
+	setGovModalTab: (tab) => set({ govModalTab: tab }),
 	closeMobileSidebar: () => set({ mobileSidebarOpen: false }),
 	toggleMobileSidebar: () => set((state) => ({ mobileSidebarOpen: !state.mobileSidebarOpen })),
 	toggleSidebar: () => set((state) => ({ sidebarCollapsed: !state.sidebarCollapsed })),

@@ -67,10 +67,19 @@ const Search = () => {
 		setInputValue(e.target.value);
 	};
 
-	const flattenDocPages = getFlattenPages(pages.documentation as TPages);
-	const flattenExamplesPages = getFlattenPages(pages.examples as TPages);
-
-	const flattenPages = [...flattenDocPages, ...flattenExamplesPages];
+	const flattenPages = [
+		...getFlattenPages(pages.apps as TPages),
+		pages.app as TPage,
+		...getFlattenPages(pages.app.subPages as TPages, pages.app.id),
+		pages.settings as TPage,
+		...getFlattenPages(pages.settings.subPages as TPages, pages.settings.id),
+		pages.editor as TPage,
+		...getFlattenPages(pages.editor.subPages as TPages, pages.editor.id),
+		pages.agent as TPage,
+		...getFlattenPages(pages.agent.subPages as TPages, pages.agent.id),
+		pages.onboarding as TPage,
+		...getFlattenPages(pages.onboarding.subPages as TPages, pages.onboarding.id),
+	];
 	const result = flattenPages.filter((item: TPage) =>
 		item.text.toLowerCase().includes(inputValue.toLowerCase()),
 	);

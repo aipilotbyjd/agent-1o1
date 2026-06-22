@@ -61,6 +61,7 @@ export type TWorkflowEditorAction =
 	| { type: 'RUN_FINISH'; status: 'success' | 'error' | 'stopped' }
 	| { type: 'RUN_CURRENT_NODE'; nodeId: string | null }
 	| { type: 'APPEND_LOG'; log: Omit<TRunLog, 'id' | 'at'> }
+	| { type: 'SET_LOGS'; logs: TRunLog[] }
 	| {
 			type: 'SET_NODE_STATUS';
 			id: string;
@@ -451,6 +452,14 @@ export const workflowEditorReducer = (
 						...state.run.logs,
 						{ ...action.log, id: createId('log'), at: Date.now() },
 					],
+				},
+			};
+		case 'SET_LOGS':
+			return {
+				...state,
+				run: {
+					...state.run,
+					logs: action.logs,
 				},
 			};
 		case 'SET_NODE_STATUS':
