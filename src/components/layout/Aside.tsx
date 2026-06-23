@@ -37,9 +37,9 @@ export const AsideBody: FC<IAsideBodyProps> = (props) => {
 			data-component-name='Aside/AsideBody'
 			className={classNames('h-full overflow-x-scroll px-4', 'no-scrollbar', className)}
 			{...rest}>
-			<div className='sticky top-0 h-4 bg-linear-to-b from-zinc-100 to-zinc-900/0 dark:from-zinc-900'></div>
+			<div className='sticky top-0 h-4 bg-linear-to-b from-white to-zinc-900/0 dark:from-zinc-900'></div>
 			{children}
-			<div className='sticky bottom-0 h-4 bg-linear-to-t from-zinc-100 to-zinc-900/0 dark:from-zinc-900'></div>
+			<div className='sticky bottom-0 h-4 bg-linear-to-t from-white to-zinc-900/0 dark:from-zinc-900'></div>
 		</div>
 	);
 };
@@ -139,9 +139,10 @@ const Aside: FC<IAsideProps> = (props) => {
 				'peer',
 				'fixed top-0 bottom-0 z-40 md:z-20',
 				'flex flex-col',
-				'bg-zinc-100',
+				'bg-white',
 				'py-2',
 				'z-[100]',
+				'border-e border-zinc-500/10 dark:border-zinc-800/50',
 				'dark:bg-zinc-900 dark:text-white',
 				'transition-all duration-300 ease-in-out',
 				className,

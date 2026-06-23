@@ -74,10 +74,19 @@ const Search = () => {
 		setInputValue(e.target.value);
 	};
 
-	const flattenDocPages = getFlattenPages(pages.documentation as TPages);
-	const flattenExamplesPages = getFlattenPages(pages.examples as TPages);
-
-	const flattenPages = [...flattenDocPages, ...flattenExamplesPages];
+	const flattenPages = [
+		...getFlattenPages(pages.apps as TPages),
+		pages.app as TPage,
+		...getFlattenPages(pages.app.subPages as TPages, pages.app.id),
+		pages.settings as TPage,
+		...getFlattenPages(pages.settings.subPages as TPages, pages.settings.id),
+		pages.editor as TPage,
+		...getFlattenPages(pages.editor.subPages as TPages, pages.editor.id),
+		pages.agent as TPage,
+		...getFlattenPages(pages.agent.subPages as TPages, pages.agent.id),
+		pages.onboarding as TPage,
+		...getFlattenPages(pages.onboarding.subPages as TPages, pages.onboarding.id),
+	];
 	const result = flattenPages.filter((item: TPage) =>
 		item.text.toLowerCase().includes(inputValue.toLowerCase()),
 	);
@@ -242,16 +251,6 @@ const DefaultAsideTemplate = () => {
 			title: 'Apps',
 			icon: 'GridView',
 		},
-		documentation: {
-			id: 'documentation',
-			title: 'Documentation',
-			icon: 'BookBookmark02',
-		},
-		examples: {
-			id: 'examples',
-			title: 'Examples',
-			icon: 'Star',
-		},
 	};
 	const [activeTab, setActiveTab] = useState<string>(
 		localStorage.getItem('bolt_activeTab') || tabs.dashboard.id,
@@ -260,17 +259,8 @@ const DefaultAsideTemplate = () => {
 		setActiveTab(id);
 		localStorage.setItem('bolt_activeTab', id);
 
-		if (id === tabs.examples.id) navigate(pages.examples.exampleMain.to);
 		if (id === tabs.dashboard.id) navigate(pages.apps.sales.to);
 	};
-
-	useEffect(() => {
-		if ([tabs.examples.id, tabs.documentation.id].includes(location.pathname.split('/')[1])) {
-			setActiveTab(location.pathname.split('/')[1]);
-			localStorage.setItem('bolt_activeTab', location.pathname.split('/')[1]);
-		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [location.pathname.split('/')[1]]);
 
 	return (
 		<Aside>
@@ -365,158 +355,6 @@ const DefaultAsideTemplate = () => {
 							</NavCollapse>
 							<NavItem {...pages.apps.chat} />
 							<NavSeparator />
-						</>
-					)}
-					{[tabs.dashboard.id].includes(activeTab as string) && (
-						<>
-							<NavTitle>Pages Examples</NavTitle>
-							<NavCollapse {...pages.pagesExamples.list}>
-								<NavItem {...pages.pagesExamples.list.subPages?.example1} />
-								<NavItem {...pages.pagesExamples.list.subPages?.example2} />
-							</NavCollapse>
-							<NavCollapse {...pages.pagesExamples.grid}>
-								<NavItem {...pages.pagesExamples.grid.subPages?.example1} />
-							</NavCollapse>
-							<NavCollapse {...pages.pagesExamples.edit}>
-								<NavItem {...pages.pagesExamples.edit.subPages?.example1} />
-								<NavItem {...pages.pagesExamples.edit.subPages?.example2} />
-							</NavCollapse>
-							<NavItem {...pages.pagesExamples.login} />
-							<NavItem {...pages.pagesExamples.signup} />
-							<NavItem {...pages.pagesExamples.notFound} />
-							<NavItem {...pages.pagesExamples.underConstruction} />
-						</>
-					)}
-					{[tabs.documentation.id].includes(activeTab as string) && (
-						<>
-							<NavTitle>Documentation</NavTitle>
-							<NavCollapse {...pages.documentation.gettingStarted}>
-								<NavItem
-									{...pages.documentation.gettingStarted.subPages?.installation}
-								/>
-								<NavItem
-									{...pages.documentation.gettingStarted.subPages?.changelog}
-								/>
-								<NavItem
-									{...pages.documentation.gettingStarted.subPages
-										?.projectStructure}
-								/>
-								<NavItem
-									{...pages.documentation.gettingStarted.subPages?.pagesConfigure}
-								/>
-							</NavCollapse>
-							<NavCollapse {...pages.documentation.layout}>
-								{Object.values(pages.documentation.layout.subPages).map((item) => (
-									<NavItem key={item.id} {...item} />
-								))}
-							</NavCollapse>
-							<NavCollapse {...pages.documentation.content}>
-								{Object.values(pages.documentation.content.subPages).map((item) => (
-									<NavItem key={item.id} {...item} />
-								))}
-							</NavCollapse>
-							<NavCollapse {...pages.documentation.baseComponent}>
-								{Object.values(pages.documentation.baseComponent.subPages).map(
-									(item) => (
-										<NavItem key={item.id} {...item}>
-											{['blockquote', 'carousel'].includes(item.id) && (
-												<Badge variant='soft' className='scale-90'>
-													Soon
-												</Badge>
-											)}
-										</NavItem>
-									),
-								)}
-							</NavCollapse>
-							<NavCollapse {...pages.documentation.forms}>
-								{Object.values(pages.documentation.forms.subPages).map((item) => (
-									<NavItem key={item.id} {...item}>
-										{['blockquote', 'carousel'].includes(item.id) && (
-											<Badge variant='soft' className='scale-90'>
-												Soon
-											</Badge>
-										)}
-									</NavItem>
-								))}
-							</NavCollapse>
-							<NavItem {...pages.documentation.icon} />
-						</>
-					)}
-					{[tabs.examples.id].includes(activeTab as string) && (
-						<>
-							<NavTitle>Examples</NavTitle>
-							<NavCollapse {...pages.examples.exampleMain.subPages.dataVisualization}>
-								{Object.values(
-									pages.examples.exampleMain.subPages.dataVisualization.subPages,
-								).map((item) => (
-									<NavItem key={item.id} {...item} />
-								))}
-							</NavCollapse>
-							<NavCollapse {...pages.examples.exampleMain.subPages.cards}>
-								{Object.values(
-									pages.examples.exampleMain.subPages.cards.subPages,
-								).map((item) => (
-									<NavItem key={item.id} {...item} />
-								))}
-							</NavCollapse>
-							<NavCollapse {...pages.examples.exampleMain.subPages.overlays}>
-								{Object.values(
-									pages.examples.exampleMain.subPages.overlays.subPages,
-								).map((item) => (
-									<NavItem key={item.id} {...item} />
-								))}
-							</NavCollapse>
-							<NavCollapse {...pages.examples.exampleMain.subPages.tables}>
-								{Object.values(
-									pages.examples.exampleMain.subPages.tables.subPages,
-								).map((item) => (
-									<NavItem key={item.id} {...item} />
-								))}
-							</NavCollapse>
-							<NavCollapse {...pages.examples.exampleMain.subPages.forms}>
-								{Object.values(
-									pages.examples.exampleMain.subPages.forms.subPages,
-								).map((item) => (
-									<NavItem key={item.id} {...item} />
-								))}
-							</NavCollapse>
-							<NavCollapse
-								{...pages.examples.exampleMain.subPages.searchAndCommandPalettes}>
-								{Object.values(
-									pages.examples.exampleMain.subPages.searchAndCommandPalettes
-										.subPages,
-								).map((item) => (
-									<NavItem key={item.id} {...item} />
-								))}
-							</NavCollapse>
-							<NavCollapse {...pages.examples.exampleMain.subPages.navigations}>
-								{Object.values(
-									pages.examples.exampleMain.subPages.navigations.subPages,
-								).map((item) => (
-									<NavItem key={item.id} {...item} />
-								))}
-							</NavCollapse>
-							<NavCollapse {...pages.examples.exampleMain.subPages.pageSections}>
-								{Object.values(
-									pages.examples.exampleMain.subPages.pageSections.subPages,
-								).map((item) => (
-									<NavItem key={item.id} {...item} />
-								))}
-							</NavCollapse>
-							<NavCollapse {...pages.examples.exampleMain.subPages.contactAndFooters}>
-								{Object.values(
-									pages.examples.exampleMain.subPages.contactAndFooters.subPages,
-								).map((item) => (
-									<NavItem key={item.id} {...item} />
-								))}
-							</NavCollapse>
-							<NavCollapse {...pages.examples.exampleMain.subPages.userInterface}>
-								{Object.values(
-									pages.examples.exampleMain.subPages.userInterface.subPages,
-								).map((item) => (
-									<NavItem key={item.id} {...item} />
-								))}
-							</NavCollapse>
 						</>
 					)}
 				</Nav>
