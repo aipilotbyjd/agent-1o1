@@ -7,7 +7,6 @@ import { WorkspaceProvider } from '@/context/workspaceContext';
 
 const LOGIN_REDIRECT_PATH = '/workspaces';
 const REGISTER_REDIRECT_PATH = '/verify-email';
-const IS_MOCK_AUTH = import.meta.env.VITE_MOCK_AUTH === 'true';
 
 export interface IAuthContextProps {
 	isLoading: boolean;
@@ -20,51 +19,6 @@ export interface IAuthContextProps {
 }
 const AuthContext = createContext<IAuthContextProps>({} as IAuthContextProps);
 
-// ─── Mock Auth (used when VITE_MOCK_AUTH=true) ───────────────
-const MOCK_USER: TUser = {
-	id: 'mock-1',
-	name: 'Dev User',
-	email: 'dev@localhost',
-	avatar: null,
-	email_verified_at: new Date().toISOString(),
-	current_workspace_id: null,
-	current_workspace: null,
-	created_at: new Date().toISOString(),
-	updated_at: new Date().toISOString(),
-	firstName: 'Dev',
-	lastName: 'User',
-	role: 'Administrator',
-	isVerified: true,
-	image: { org: undefined },
-};
-
-const MockAuthProvider = () => {
-	const navigate = useNavigate();
-	const onLogin = useCallback(async () => {
-		navigate(LOGIN_REDIRECT_PATH, { replace: true });
-	}, [navigate]);
-	const value = useMemo<IAuthContextProps>(
-		() => ({
-			isLoading: false,
-			isAuthenticated: true,
-			userData: MOCK_USER,
-			onLogin,
-			onRegister: async () => {},
-			onLogout: async () => {},
-			refreshCurrentUser: async () => {},
-		}),
-		[onLogin],
-	);
-	return (
-		<AuthContext.Provider value={value}>
-			<WorkspaceProvider>
-				<Outlet />
-			</WorkspaceProvider>
-		</AuthContext.Provider>
-	);
-};
-
-// ─── Real Auth ───────────────────────────────────────────────
 const RealAuthProvider = () => {
 	const navigate = useNavigate();
 	const [accessToken, setAccessToken] = useState<string | null>(() => getAccessToken());
@@ -183,7 +137,7 @@ const RealAuthProvider = () => {
 	);
 };
 
-export const AuthProvider = IS_MOCK_AUTH ? MockAuthProvider : RealAuthProvider;
+export const AuthProvider = RealAuthProvider;
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const useAuth = () => {

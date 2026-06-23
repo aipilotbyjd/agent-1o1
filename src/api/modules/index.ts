@@ -16,6 +16,7 @@ export {
 	useUpdateWorkspaceSettings,
 } from './workspace-members/workspace-members.hooks';
 export * from './workflows';
+export * from './workflow-builder';
 export * from './folders';
 export * from './tags';
 export * from './executions';
