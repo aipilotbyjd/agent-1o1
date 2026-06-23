@@ -21,10 +21,7 @@ const processQueue = (error: Error | null, token: string | null = null) => {
 	failedQueue = [];
 };
 
-const IS_MOCK_AUTH = import.meta.env.VITE_MOCK_AUTH === 'true';
-
 const redirectToLogin = () => {
-	if (IS_MOCK_AUTH) return;
 	if (!window.location.pathname.includes('/login')) {
 		window.location.href = '/login';
 	}
