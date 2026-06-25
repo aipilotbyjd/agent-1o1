@@ -23,99 +23,19 @@ import {
 } from 'lucide-react';
 import useDarkMode from '@/hooks/useDarkMode';
 import DARK_MODE from '@/constants/darkMode.constant';
+import { LogoLight, LogoDark } from '@/assets/images';
 import { useAuth } from '@/context/authContext';
 import type { TWorkspace } from '@/types/workspace.type';
 import { useWorkflowShellStore } from '@/store/workflowShell.store';
 
-// Mock workspaces hooks for local operation
-const useWorkspaces = () => {
-	const { workspaces } = useWorkflowShellStore();
-	const mappedData: TWorkspace[] = workspaces.map(ws => ({
-		id: ws.id,
-		name: ws.name,
-		slug: ws.id,
-		role: 'owner',
-		created_at: new Date().toISOString(),
-	}));
-	return { data: { data: mappedData }, isLoading: false };
-};
-
-const useCreateWorkspace = () => {
-	const { addWorkspace } = useWorkflowShellStore();
-	return {
-		isPending: false,
-		mutateAsync: async (body: { name: string; slug?: string }) => {
-			const newId = body.name.toLowerCase().replace(/[^a-z0-9]+/g, '-');
-			addWorkspace({
-				id: newId,
-				name: body.name,
-				description: 'Created from settings',
-				initials: body.name.slice(0, 2).toUpperCase(),
-				color: 'bg-violet-600',
-			});
-			return { id: newId };
-		}
-	};
-};
-
-const useUpdateWorkspace = () => {
-	const { updateWorkspace } = useWorkflowShellStore();
-	return {
-		isPending: false,
-		mutateAsync: async (payload: { id: string; body: { name: string } }) => {
-			updateWorkspace(payload.id, payload.body.name);
-			return {};
-		}
-	};
-};
-
-const useDeleteWorkspace = () => {
-	const { deleteWorkspace } = useWorkflowShellStore();
-	return {
-		isPending: false,
-		mutateAsync: async (id: string) => {
-			deleteWorkspace(id);
-			return {};
-		}
-	};
-};
-
-const useLeaveWorkspace = () => {
-	const { deleteWorkspace } = useWorkflowShellStore();
-	return {
-		isPending: false,
-		mutateAsync: async (id: string) => {
-			deleteWorkspace(id);
-			return {};
-		}
-	};
-};
+import {
+	useWorkspaces,
+	useCreateWorkspace,
+	useUpdateWorkspace,
+	useDeleteWorkspace,
+	useLeaveWorkspace,
+} from '@/api/modules/workspaces';
 import Spinner from '@/components/ui/Spinner';
-
-// ─── count-up hook ─────────────────────────────────────────────────────────────
-function useCountUp(target: number, duration = 1300, delay = 250) {
-	const [count, setCount] = useState(0);
-	useEffect(() => {
-		let raf: number;
-		const timer = setTimeout(() => {
-			const start = performance.now();
-			const tick = (now: number) => {
-				const p = Math.min((now - start) / duration, 1);
-				const e = 1 - Math.pow(1 - p, 3);
-				setCount(Math.round(target * e));
-				if (p < 1) raf = requestAnimationFrame(tick);
-			};
-			raf = requestAnimationFrame(tick);
-		}, delay);
-		return () => {
-			clearTimeout(timer);
-			cancelAnimationFrame(raf);
-		};
-	}, [target, duration, delay]);
-	return count;
-}
-
-const SPARK_DATA = [40, 55, 35, 70, 50, 85, 60, 95, 75, 100];
 
 // ─── helpers ───────────────────────────────────────────────────────────────────
 const getInitials = (name: string) =>
@@ -176,26 +96,6 @@ interface Theme {
 	isDark: boolean;
 }
 
-// ─── constants ─────────────────────────────────────────────────────────────────
-const initialInvitations: IInvitation[] = [
-	{
-		id: 'invite-1',
-		name: 'Marketing Automations',
-		inviter: 'David Kim',
-		membersCount: 4,
-		gradientFrom: '#ff4d8d',
-		gradientTo: '#ff7a59',
-	},
-	{
-		id: 'invite-2',
-		name: 'Development Sandbox',
-		inviter: 'Sarah Connor',
-		membersCount: 2,
-		gradientFrom: '#16d6c5',
-		gradientTo: '#3b82f6',
-	},
-];
-
 const GRADIENTS = [
 	{ from: '#ff7a59', to: '#ff4d8d', accent: 'oklch(0.7 0.2 25)' },
 	{ from: '#ff6a3d', to: '#ff9a3d', accent: 'oklch(0.72 0.2 30)' },
@@ -242,7 +142,15 @@ const mapApiWorkspaceToCard = (w: TWorkspace, currentUserId?: string): IWorkspac
 
 	const tier: TierName = role === 'Owner' ? 'Enterprise' : role === 'Admin' ? 'Pro' : 'Free';
 
-	const members: ITeammate[] = [{ name: 'Amaan', initials: 'AM', color: 'bg-pink-500' }];
+	const members: ITeammate[] = w.owner
+		? [
+				{
+					name: w.owner.name,
+					initials: getInitials(w.owner.name),
+					color: 'bg-indigo-600',
+				},
+			]
+		: [];
 
 	let lastActive = 'Active now';
 	if (w.created_at) {
@@ -263,15 +171,15 @@ const mapApiWorkspaceToCard = (w: TWorkspace, currentUserId?: string): IWorkspac
 		name: w.name,
 		tier,
 		role,
-		activeFlowsCount: role === 'Owner' ? 4 : role === 'Admin' ? 2 : 0,
-		totalNodes: role === 'Owner' ? 12 : role === 'Admin' ? 5 : 0,
-		activeAgentsCount: role === 'Owner' ? 1 : 0,
+		activeFlowsCount: (w as any).workflows_count ?? 0,
+		totalNodes: (w as any).nodes_count ?? 0,
+		activeAgentsCount: (w as any).agents_count ?? 0,
 		members,
 		gradientFrom: g.from,
 		gradientTo: g.to,
 		accentColor: g.accent,
 		lastActive,
-		hasActiveRuns: role === 'Owner',
+		hasActiveRuns: (w as any).has_active_runs ?? false,
 	};
 };
 
@@ -290,7 +198,7 @@ const WorkspacesPage = () => {
 	const deleteWorkspaceMutation = useDeleteWorkspace();
 	const leaveWorkspaceMutation = useLeaveWorkspace();
 
-	const [invitations, setInvitations] = useState<IInvitation[]>(initialInvitations);
+	const [invitations, setInvitations] = useState<IInvitation[]>([]);
 	const [searchQuery, setSearchQuery] = useState('');
 	const [selectedCategory, setSelectedCategory] = useState<TabId>('all');
 	const [activeMenuId, setActiveMenuId] = useState<string | null>(null);
@@ -310,7 +218,6 @@ const WorkspacesPage = () => {
 
 	const [toast, setToast] = useState<{ message: string; type: 'success' | 'info' } | null>(null);
 	const searchInputRef = useRef<HTMLInputElement>(null);
-	const creditBarRef = useRef<HTMLDivElement>(null);
 
 	// Clean ?create=true from the URL after reading it into state on mount
 	useEffect(() => {
@@ -319,13 +226,6 @@ const WorkspacesPage = () => {
 		newParams.delete('create');
 		setSearchParams(newParams, { replace: true });
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
-
-	useEffect(() => {
-		const t = setTimeout(() => {
-			if (creditBarRef.current) creditBarRef.current.style.width = '85.6%';
-		}, 500);
-		return () => clearTimeout(t);
 	}, []);
 
 	useEffect(() => {
@@ -361,15 +261,6 @@ const WorkspacesPage = () => {
 			result = result.filter((w: IWorkspaceCard) => w.tier === 'Pro' || w.tier === 'Enterprise');
 		return result;
 	}, [workspaces, searchQuery, selectedCategory]);
-
-	const totalFlows = useMemo(
-		() => workspaces.reduce((sum: number, w: IWorkspaceCard) => sum + w.activeFlowsCount, 0),
-		[workspaces],
-	);
-
-	const wsCount = useCountUp(workspaces.length, 1000, 300);
-	const flowCountUp = useCountUp(totalFlows, 1000, 450);
-	const creditCountUp = useCountUp(4280, 1300, 350);
 
 	const handleNameChange = (val: string) => {
 		setNewWspName(val);
@@ -594,20 +485,11 @@ const WorkspacesPage = () => {
 							className='flex cursor-pointer items-center gap-3'
 							onClick={() => navigate('/my-workspace')}
 							onKeyDown={(e) => e.key === 'Enter' && navigate('/my-workspace')}>
-							<div
-								className='flex h-[38px] w-[38px] items-center justify-center rounded-xl text-lg font-bold text-white'
-								style={{
-									background: 'linear-gradient(140deg, #7c5cff, #9955ff)',
-									boxShadow: '0 6px 20px -6px rgba(124,92,255,0.8)',
-								}}>
-								a
-							</div>
-							<span
-								className='text-[19px] font-bold tracking-tight'
-								style={{ fontFamily: 'Space Grotesk, sans-serif' }}>
-								<span style={{ color: textColor }}>agent</span>
-								<span style={{ color: '#7c5cff' }}>1o1</span>
-							</span>
+							<img
+								src={isDarkTheme ? LogoDark : LogoLight}
+								alt='agent1o1'
+								className='h-[38px] w-auto'
+							/>
 							<span
 								className='ml-1 rounded-full px-2.5 py-1 text-[11px] font-semibold'
 								style={{
@@ -729,89 +611,6 @@ const WorkspacesPage = () => {
 						<Plus size={18} strokeWidth={2.4} />
 						Create Workspace
 					</button>
-				</section>
-
-				{/* STAT CARDS */}
-				<section className='mb-10 grid grid-cols-1 gap-[18px] sm:grid-cols-3'>
-					<StatCard theme={theme}>
-						<div className='flex items-start justify-between'>
-							<StatLabel theme={theme}>Total Workspaces</StatLabel>
-							<StatIcon theme={theme}>
-								<Grid size={20} style={{ color: '#7c5cff' }} />
-							</StatIcon>
-						</div>
-						<StatNumber theme={theme}>{wsCount}</StatNumber>
-						<div
-							className='mt-3.5 flex items-center gap-1.5 text-[13px]'
-							style={{ color: mutedColor }}>
-							<span className='font-bold' style={{ color: '#34d399' }}>
-								+1
-							</span>
-							active environment this week
-						</div>
-					</StatCard>
-
-					<StatCard theme={theme}>
-						<div className='flex items-start justify-between'>
-							<StatLabel theme={theme}>Flows Running</StatLabel>
-							<StatIcon theme={theme}>
-								<Zap size={20} className='fill-amber-400 text-amber-400' />
-							</StatIcon>
-						</div>
-						<StatNumber theme={theme}>{flowCountUp}</StatNumber>
-						<div className='mt-3.5 flex h-[26px] items-end gap-[3px]'>
-							{SPARK_DATA.map((v, i) => (
-								<div
-									key={i}
-									className='ws-spark-bar'
-									style={{
-										height: `${v}%`,
-										animationDelay: `${0.3 + i * 0.05}s`,
-									}}
-								/>
-							))}
-						</div>
-					</StatCard>
-
-					<StatCard theme={theme}>
-						<div className='flex items-start justify-between'>
-							<StatLabel theme={theme}>Available Credits</StatLabel>
-							<StatIcon theme={theme}>
-								<Info size={20} style={{ color: '#34d399' }} />
-							</StatIcon>
-						</div>
-						<div
-							className='mt-4 leading-none tracking-[-0.02em]'
-							style={{
-								fontFamily: 'Space Grotesk, sans-serif',
-								fontSize: 42,
-								fontWeight: 700,
-								color: textColor,
-							}}>
-							{creditCountUp.toLocaleString()}
-							<span
-								className='ml-1 text-[21px] font-medium'
-								style={{ color: faintColor }}>
-								/ 5,000
-							</span>
-						</div>
-						<div
-							className='mt-[18px] h-2 overflow-hidden rounded-full'
-							style={{ background: surface2, border: `1px solid ${lineSoft}` }}>
-							<div
-								ref={creditBarRef}
-								className='h-full rounded-full transition-all duration-[1400ms]'
-								style={{
-									width: 0,
-									background: 'linear-gradient(90deg, #7c5cff, #9955ff)',
-									boxShadow: '0 0 14px rgba(124,92,255,0.6)',
-								}}
-							/>
-						</div>
-						<div className='mt-2.5 text-[13px]' style={{ color: mutedColor }}>
-							85.6% of monthly quota remaining
-						</div>
-					</StatCard>
 				</section>
 
 				{/* TOOLBAR */}

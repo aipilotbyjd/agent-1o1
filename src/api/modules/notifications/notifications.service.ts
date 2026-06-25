@@ -5,21 +5,20 @@ import type { TNotification, TNotificationFilters, TUnreadCount } from '@/types/
 import { NotificationEndpoints as E } from './notifications.endpoints';
 
 export const NotificationService = {
-	list: (filters?: TNotificationFilters, signal?: AbortSignal) =>
+	list: (ws: string, filters?: TNotificationFilters, signal?: AbortSignal) =>
 		axiosClient
-			.get<TPaginatedResponse<TNotification>>(E.list, { params: filters, signal })
+			.get<TPaginatedResponse<TNotification>>(E.list(ws), { params: filters, signal })
 			.then((r) => r.data),
 
-	unreadCount: (signal?: AbortSignal) =>
+	unreadCount: (ws: string, signal?: AbortSignal) =>
 		axiosClient
-			.get<TApiResponse<TUnreadCount>>(E.unreadCount, { signal })
+			.get<TApiResponse<TUnreadCount>>(E.unreadCount(ws), { signal })
 			.then(unwrap<TUnreadCount>),
 
-	markRead: (id: string) => axiosClient.post(E.read(id)).then(() => undefined),
+	markRead: (ws: string, id: string) => axiosClient.post(E.read(ws, id)).then(() => undefined),
 
-	markAllRead: () => axiosClient.post(E.readAll).then(() => undefined),
+	markAllRead: (ws: string) => axiosClient.post(E.readAll(ws)).then(() => undefined),
 
-	remove: (id: string) => axiosClient.delete(E.delete(id)).then(() => undefined),
-
-	removeAll: () => axiosClient.delete(E.deleteAll).then(() => undefined),
+	remove: (ws: string, id: string) => axiosClient.delete(E.delete(ws, id)).then(() => undefined),
 };
+

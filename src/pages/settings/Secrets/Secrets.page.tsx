@@ -412,7 +412,7 @@ const SecretsPage = () => {
 
 			{/* Table */}
 			{!isLoading && secrets.length > 0 && (
-				<div className='overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-sm dark:border-zinc-700 dark:bg-zinc-800'>
+				<div className='overflow-x-auto rounded-2xl border border-zinc-200 bg-white shadow-sm dark:border-zinc-700 dark:bg-zinc-800'>
 					<Table>
 						<THead>
 							<Tr>

@@ -1,7 +1,8 @@
 export const NotificationChannelEndpoints = {
-	list: '/notification-channels',
-	create: '/notification-channels',
-	update: (id: string) => `/notification-channels/${id}`,
-	delete: (id: string) => `/notification-channels/${id}`,
-	test: (id: string) => `/notification-channels/${id}/test`,
+	list: (ws: string) => `/workspaces/${ws}/notification-channels`,
+	create: (ws: string) => `/workspaces/${ws}/notification-channels`,
+	update: (ws: string, id: string) => `/workspaces/${ws}/notification-channels/${id}`,
+	delete: (ws: string, id: string) => `/workspaces/${ws}/notification-channels/${id}`,
+	test: (ws: string, id: string) => `/workspaces/${ws}/notification-channels/${id}/test`,
 } as const;
+

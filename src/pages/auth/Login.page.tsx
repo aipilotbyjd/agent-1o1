@@ -22,7 +22,7 @@ const validationSchema = Yup.object().shape({
 });
 
 const LoginPage = () => {
-	const { onLogin, isLoading } = useAuth();
+	const { onLogin, isLoginLoading } = useAuth();
 	const [showPassword, setShowPassword] = useState(false);
 
 	const formik = useFormik<IFormValues>({
@@ -205,9 +205,9 @@ const LoginPage = () => {
 
 				<button
 					type='submit'
-					disabled={!formik.isValid || isLoading}
+					disabled={!formik.isValid || isLoginLoading}
 					className='group bg-primary-700 hover:bg-primary-800 relative flex w-full items-center justify-center gap-3 rounded-[32px] px-6 py-4 text-center text-sm font-black tracking-[0.1em] text-white uppercase transition-all duration-300 hover:shadow-[0_20px_50px_-20px_rgba(48,119,41,0.45)] active:scale-[0.98] disabled:pointer-events-none disabled:opacity-60'>
-					{isLoading ? (
+					{isLoginLoading ? (
 						<>
 							<Loader2 className='h-5 w-5 animate-spin text-white' />
 							<span>Signing in...</span>

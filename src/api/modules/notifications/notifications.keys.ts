@@ -1,7 +1,8 @@
 import type { TListParams } from '@/api/core';
 
 export const notificationKeys = {
-	all: () => ['notifications'] as const,
-	list: (params?: TListParams) => ['notifications', 'list', params] as const,
-	unreadCount: () => ['notifications', 'unread-count'] as const,
+	all: (ws?: string) => (ws ? ['notifications', ws] as const : ['notifications'] as const),
+	list: (ws: string, params?: TListParams) => ['notifications', ws, 'list', params] as const,
+	unreadCount: (ws: string) => ['notifications', ws, 'unread-count'] as const,
 };
+

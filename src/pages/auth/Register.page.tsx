@@ -47,7 +47,7 @@ const validationSchema = Yup.object().shape({
 });
 
 const RegisterPage = () => {
-	const { onRegister, isLoading } = useAuth();
+	const { onRegister, isRegisterLoading } = useAuth();
 
 	const formikRegister = useFormik<IRegisterFormValues>({
 		initialValues: {
@@ -372,9 +372,9 @@ const RegisterPage = () => {
 
 				<button
 					type='submit'
-					disabled={!formikRegister.isValid || isLoading}
+					disabled={!formikRegister.isValid || isRegisterLoading}
 					className='group bg-primary-700 hover:bg-primary-800 relative flex w-full items-center justify-center gap-3 rounded-[32px] px-6 py-4 text-center text-sm font-black tracking-[0.1em] text-white uppercase transition-all duration-300 hover:shadow-[0_20px_50px_-20px_rgba(48,119,41,0.45)] active:scale-[0.98] disabled:pointer-events-none disabled:opacity-60'>
-					{isLoading ? (
+					{isRegisterLoading ? (
 						<>
 							<Loader2 className='h-5 w-5 animate-spin text-white' />
 							<span>Creating account...</span>

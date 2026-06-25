@@ -17,10 +17,16 @@ import {
 	Timer,
 	Database,
 	Calendar,
+	XCircle,
+	RotateCcw,
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useWorkspaceContext } from '@/context/workspaceContext';
-import { useSubscription } from '@/api/modules/plans';
+import {
+	useSubscription,
+	useCancelSubscription,
+	useResumeSubscription,
+} from '@/api/modules/plans';
 import { useCreditBalance } from '@/api/modules/credits';
 import { useBillingPortal } from '@/api/modules/billing';
 import pages from '@/Routes/pages';
@@ -110,6 +116,8 @@ const PlanPage = () => {
 	const { data: subscription, isLoading: subLoading } = useSubscription(activeWorkspaceId);
 	const { data: balance, isLoading: balanceLoading } = useCreditBalance(activeWorkspaceId);
 	const portal = useBillingPortal(activeWorkspaceId);
+	const cancelSubscription = useCancelSubscription(activeWorkspaceId);
+	const resumeSubscription = useResumeSubscription(activeWorkspaceId);
 
 	const canManage = role === 'admin' || role === 'owner';
 
@@ -142,6 +150,26 @@ const PlanPage = () => {
 	const trialEnd = subscription?.trial_ends_at;
 	const canceledAt = subscription?.canceled_at;
 	const billingInterval = subscription?.billing_interval;
+
+	const periodEndInFuture = periodEnd ? new Date(periodEnd).getTime() > Date.now() : false;
+	const isPaidPlan = !!plan && plan.slug !== 'free';
+	// Cancel is available on a usable, paid, non-lifetime plan that isn't already canceled.
+	const canCancel =
+		isPaidPlan && !isLifetime && (status === 'active' || status === 'trialing');
+	// Resume is available while a canceled subscription is still within its paid period.
+	const canResume = status === 'canceled' && periodEndInFuture;
+
+	const handleCancel = () => {
+		if (
+			window.confirm(
+				'Cancel your subscription? You will keep access until the end of the current billing period.',
+			)
+		) {
+			cancelSubscription.mutate();
+		}
+	};
+
+	const handleResume = () => resumeSubscription.mutate();
 
 	const isLoading = subLoading || balanceLoading;
 
@@ -221,7 +249,7 @@ const PlanPage = () => {
 					</motion.button>
 				</motion.div>
 			)}
-			{(status === 'canceled' || status === 'expired') && (
+			{(status === 'expired' || (status === 'canceled' && !periodEndInFuture)) && (
 				<motion.div
 					variants={itemVariants}
 					className='flex items-center gap-3 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 dark:border-red-800/40 dark:bg-red-955/20 backdrop-blur-md'
@@ -238,6 +266,36 @@ const PlanPage = () => {
 							Upgrade now
 						</Link>
 					</motion.div>
+				</motion.div>
+			)}
+			{canResume && (
+				<motion.div
+					variants={itemVariants}
+					className='flex flex-wrap items-center gap-3 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 dark:border-amber-800/40 dark:bg-amber-955/20 backdrop-blur-md'
+				>
+					<AlertTriangle size={18} className='shrink-0 text-amber-600 dark:text-amber-400' />
+					<p className='text-sm font-semibold text-amber-700 dark:text-amber-300'>
+						Your subscription is scheduled to cancel
+						{periodEnd
+							? ` on ${new Date(periodEnd).toLocaleDateString(undefined, {
+									month: 'short',
+									day: 'numeric',
+									year: 'numeric',
+								})}`
+							: ''}
+						. Resume to keep your plan active.
+					</p>
+					<motion.button
+						whileHover={{ scale: 1.02 }}
+						whileTap={{ scale: 0.98 }}
+						type='button'
+						onClick={handleResume}
+						disabled={resumeSubscription.isPending}
+						className='ml-auto flex shrink-0 items-center gap-1.5 rounded-lg bg-amber-500 px-3 py-1.5 text-xs font-bold text-white shadow-md shadow-amber-500/10 transition-all hover:bg-amber-600 disabled:opacity-60'
+					>
+						<RotateCcw size={13} />
+						{resumeSubscription.isPending ? 'Resuming…' : 'Resume subscription'}
+					</motion.button>
 				</motion.div>
 			)}
 
@@ -278,6 +336,19 @@ const PlanPage = () => {
 							Upgrade plan
 						</Link>
 					</motion.div>
+					{canCancel && (
+						<motion.button
+							whileHover={{ scale: 1.02, translateY: -1 }}
+							whileTap={{ scale: 0.98 }}
+							type='button'
+							onClick={handleCancel}
+							disabled={cancelSubscription.isPending}
+							className='flex h-10 items-center gap-2 rounded-xl border border-red-200 bg-white px-4 text-sm font-bold text-red-600 shadow-sm transition hover:bg-red-50 disabled:opacity-60 dark:border-red-900/40 dark:bg-zinc-955 dark:text-red-400 dark:hover:bg-red-950/20'
+						>
+							<XCircle size={14} />
+							{cancelSubscription.isPending ? 'Canceling…' : 'Cancel plan'}
+						</motion.button>
+					)}
 				</div>
 			</motion.div>
 

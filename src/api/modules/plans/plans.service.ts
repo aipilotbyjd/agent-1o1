@@ -14,6 +14,16 @@ export const PlanService = {
 			.get<TApiResponse<TSubscription>>(E.subscription(ws), { signal })
 			.then(unwrap<TSubscription>),
 
+	cancelSubscription: (ws: string) =>
+		axiosClient
+			.post<TApiResponse<TSubscription>>(E.cancelSubscription(ws))
+			.then(unwrap<TSubscription>),
+
+	resumeSubscription: (ws: string) =>
+		axiosClient
+			.post<TApiResponse<TSubscription>>(E.resumeSubscription(ws))
+			.then(unwrap<TSubscription>),
+
 	usageSnapshots: (ws: string, params?: { from?: string; to?: string }, signal?: AbortSignal) =>
 		axiosClient
 			.get<TApiResponse<TUsageSnapshots>>(E.usageSnapshots(ws), { params, signal })

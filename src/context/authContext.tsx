@@ -4,12 +4,15 @@ import { clearTokens, getAccessToken, hasValidToken, TOKEN_CHANGE_EVENT } from '
 import { useCurrentUser, useLogin, useLogout, useRegister } from '@/api/modules/auth';
 import type { TLoginDto, TRegisterDto, TUser } from '@/types/auth.type';
 import { WorkspaceProvider } from '@/context/workspaceContext';
+import { RealtimeProvider } from '@/context/realtimeContext';
 
 const LOGIN_REDIRECT_PATH = '/workspaces';
 const REGISTER_REDIRECT_PATH = '/verify-email';
 
 export interface IAuthContextProps {
 	isLoading: boolean;
+	isLoginLoading: boolean;
+	isRegisterLoading: boolean;
 	isAuthenticated: boolean;
 	userData: TUser | null;
 	onLogin: (email: string, password: string, rememberMe: boolean) => Promise<void>;
@@ -86,11 +89,9 @@ const RealAuthProvider = () => {
 		await refetchCurrentUser();
 	}, [refetchCurrentUser]);
 
-	const isLoading =
-		isCurrentUserLoading ||
-		loginMutation.isPending ||
-		registerMutation.isPending ||
-		logoutMutation.isPending;
+	const isLoading = isCurrentUserLoading;
+	const isLoginLoading = loginMutation.isPending;
+	const isRegisterLoading = registerMutation.isPending;
 	const isAuthenticated = hasActiveToken && !!userData;
 
 	const enrichedUserData = useMemo(() => {
@@ -111,6 +112,8 @@ const RealAuthProvider = () => {
 	const value: IAuthContextProps = useMemo(
 		() => ({
 			isLoading,
+			isLoginLoading,
+			isRegisterLoading,
 			isAuthenticated,
 			onLogout,
 			onLogin,
@@ -120,6 +123,8 @@ const RealAuthProvider = () => {
 		}),
 		[
 			isLoading,
+			isLoginLoading,
+			isRegisterLoading,
 			isAuthenticated,
 			onLogout,
 			onLogin,
@@ -131,7 +136,9 @@ const RealAuthProvider = () => {
 	return (
 		<AuthContext.Provider value={value}>
 			<WorkspaceProvider>
-				<Outlet />
+				<RealtimeProvider>
+					<Outlet />
+				</RealtimeProvider>
 			</WorkspaceProvider>
 		</AuthContext.Provider>
 	);

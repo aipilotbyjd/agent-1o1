@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useWorkspaceContext } from '@/context/workspaceContext';
 import {
 	Plus,
 	Trash2,
@@ -179,9 +180,10 @@ type TEditState = {
 };
 
 const ChannelRow = ({ channel }: { channel: TNotificationChannel }) => {
-	const updateChannel = useUpdateNotificationChannel();
-	const deleteChannel = useDeleteNotificationChannel();
-	const testChannel = useTestNotificationChannel();
+	const { activeWorkspaceId } = useWorkspaceContext();
+	const updateChannel = useUpdateNotificationChannel(activeWorkspaceId);
+	const deleteChannel = useDeleteNotificationChannel(activeWorkspaceId);
+	const testChannel = useTestNotificationChannel(activeWorkspaceId);
 	const [editState, setEditState] = useState<TEditState | null>(null);
 
 	const startEdit = () => {
@@ -368,7 +370,8 @@ const ChannelRow = ({ channel }: { channel: TNotificationChannel }) => {
 };
 
 const CreateChannelForm = ({ onCancel }: { onCancel: () => void }) => {
-	const createChannel = useCreateNotificationChannel();
+	const { activeWorkspaceId } = useWorkspaceContext();
+	const createChannel = useCreateNotificationChannel(activeWorkspaceId);
 	const [form, setForm] = useState<TCreateForm>(defaultCreateForm);
 	const [errors, setErrors] = useState<TFormErrors>({});
 
@@ -525,7 +528,8 @@ const CreateChannelForm = ({ onCancel }: { onCancel: () => void }) => {
 };
 
 const NotificationChannelsPage = () => {
-	const { data: channels, isLoading } = useNotificationChannels();
+	const { activeWorkspaceId } = useWorkspaceContext();
+	const { data: channels, isLoading } = useNotificationChannels(activeWorkspaceId);
 	const [showCreateForm, setShowCreateForm] = useState(false);
 
 	return (
