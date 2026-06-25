@@ -1300,7 +1300,7 @@ const WorkflowsListPage = () => {
 													))}
 												</div>
 											) : (
-												<div className='overflow-hidden rounded-2xl border border-slate-200/60 bg-white/80 shadow-2xs backdrop-blur-md dark:border-zinc-800/60 dark:bg-zinc-950/40'>
+												<div className='overflow-x-auto rounded-2xl border border-slate-200/60 bg-white/80 shadow-2xs backdrop-blur-md dark:border-zinc-800/60 dark:bg-zinc-950/40'>
 													<table className='w-full min-w-[820px] border-collapse text-left text-xs'>
 														<thead>
 															<tr className='dark:border-zinc-800/40 border-b border-slate-200/60 bg-slate-50/50 text-[10px] font-black tracking-widest text-slate-400 uppercase dark:bg-zinc-900/20 dark:text-zinc-500'>

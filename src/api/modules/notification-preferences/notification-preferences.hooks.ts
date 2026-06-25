@@ -4,21 +4,23 @@ import type { TUpdateNotificationPreferencesDto } from '@/types/notification.typ
 import { NotificationPreferenceService } from './notification-preferences.service';
 import { notificationPreferenceKeys } from './notification-preferences.keys';
 
-export const useNotificationPreferences = () =>
+export const useNotificationPreferences = (ws: string) =>
 	useQuery({
-		queryKey: notificationPreferenceKeys.all(),
-		queryFn: ({ signal }) => NotificationPreferenceService.get(signal),
+		queryKey: notificationPreferenceKeys.all(ws),
+		queryFn: ({ signal }) => NotificationPreferenceService.get(ws, signal),
+		enabled: !!ws,
 	});
 
-export const useUpdateNotificationPreferences = () => {
+export const useUpdateNotificationPreferences = (ws: string) => {
 	const qc = useQueryClient();
 	return useMutation({
 		mutationFn: (body: TUpdateNotificationPreferencesDto) =>
-			NotificationPreferenceService.update(body),
+			NotificationPreferenceService.update(ws, body),
 		onSuccess: () => {
-			qc.invalidateQueries({ queryKey: notificationPreferenceKeys.all() });
+			qc.invalidateQueries({ queryKey: notificationPreferenceKeys.all(ws) });
 			notify.success('Preferences updated');
 		},
 		onError: notify.fromError('Failed to update preferences'),
 	});
 };
+

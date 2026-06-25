@@ -1,8 +1,8 @@
 export const NotificationEndpoints = {
-	list: '/notifications',
-	unreadCount: '/notifications/unread-count',
-	readAll: '/notifications/read-all',
-	deleteAll: '/notifications',
-	read: (id: string) => `/notifications/${id}/read`,
-	delete: (id: string) => `/notifications/${id}`,
+	list: (ws: string) => `/workspaces/${ws}/notifications`,
+	unreadCount: (ws: string) => `/workspaces/${ws}/notifications/unread-count`,
+	readAll: (ws: string) => `/workspaces/${ws}/notifications/mark-all-read`,
+	read: (ws: string, id: string) => `/workspaces/${ws}/notifications/${id}/read`,
+	delete: (ws: string, id: string) => `/workspaces/${ws}/notifications/${id}`,
 } as const;
+

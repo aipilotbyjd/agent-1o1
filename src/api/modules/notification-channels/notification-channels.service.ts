@@ -9,22 +9,23 @@ import type {
 import { NotificationChannelEndpoints as E } from './notification-channels.endpoints';
 
 export const NotificationChannelService = {
-	list: (signal?: AbortSignal) =>
+	list: (ws: string, signal?: AbortSignal) =>
 		axiosClient
-			.get<TApiResponse<TNotificationChannel[]>>(E.list, { signal })
+			.get<TApiResponse<TNotificationChannel[]>>(E.list(ws), { signal })
 			.then(unwrap<TNotificationChannel[]>),
 
-	create: (body: TCreateNotificationChannelDto) =>
+	create: (ws: string, body: TCreateNotificationChannelDto) =>
 		axiosClient
-			.post<TApiResponse<TNotificationChannel>>(E.create, body)
+			.post<TApiResponse<TNotificationChannel>>(E.create(ws), body)
 			.then(unwrap<TNotificationChannel>),
 
-	update: (id: string, body: TUpdateNotificationChannelDto) =>
+	update: (ws: string, id: string, body: TUpdateNotificationChannelDto) =>
 		axiosClient
-			.put<TApiResponse<TNotificationChannel>>(E.update(id), body)
+			.put<TApiResponse<TNotificationChannel>>(E.update(ws, id), body)
 			.then(unwrap<TNotificationChannel>),
 
-	remove: (id: string) => axiosClient.delete(E.delete(id)).then(() => undefined),
+	remove: (ws: string, id: string) => axiosClient.delete(E.delete(ws, id)).then(() => undefined),
 
-	test: (id: string) => axiosClient.post<TMessageResponse>(E.test(id)).then((r) => r.data),
+	test: (ws: string, id: string) => axiosClient.post<TMessageResponse>(E.test(ws, id)).then((r) => r.data),
 };
+

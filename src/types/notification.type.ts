@@ -1,26 +1,24 @@
 import type { TListParams } from './api.type';
 
-export type TNotificationType =
-	| 'execution_failed'
-	| 'execution_succeeded'
-	| 'workflow_shared'
-	| 'invitation_received'
-	| 'credit_low'
-	| 'system';
+// Event `type` key on a notification, e.g. `execution.failed`. Kept as a
+// loose string since the backend can introduce new event keys at any time.
+export type TNotificationType = string;
 
 export type TNotification = {
 	id: string;
+	workspace_id?: string;
 	type: TNotificationType;
 	title: string;
-	message: string;
+	body: string | null;
 	data: Record<string, unknown>;
 	read_at: string | null;
+	is_read: boolean;
 	created_at: string;
 };
 
 export type TNotificationFilters = TListParams & {
-	read?: boolean;
-	type?: TNotificationType;
+	/** When `true`, only unread notifications are returned. */
+	unread?: boolean;
 };
 
 export type TUnreadCount = { count: number };

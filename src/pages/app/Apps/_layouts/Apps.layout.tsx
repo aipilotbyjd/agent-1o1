@@ -4,6 +4,7 @@ import { Dispatch, ReactNode, SetStateAction, useState } from 'react';
 import ChangeDarkModeTemplate from '@/templates/header/ChangeDarkMode.template';
 import ChangeLanguageTemplate from '@/templates/header/ChangeLanguage.template';
 import EXAMPLE from '@/examples/_index';
+import NotificationsDropdown from '@/components/notifications/NotificationsDropdown';
 
 export interface OutletContextType {
 	headerLeft?: ReactNode;
@@ -20,7 +21,7 @@ const AppsLayout = () => {
 				<HeaderRight>
 					<ChangeDarkModeTemplate />
 					<ChangeLanguageTemplate />
-					<EXAMPLE.Ui.Dropdown.Notifications />
+					<NotificationsDropdown />
 					<EXAMPLE.Ui.Dropdown.WorkspaceSwitcher />
 				</HeaderRight>
 			</Header>

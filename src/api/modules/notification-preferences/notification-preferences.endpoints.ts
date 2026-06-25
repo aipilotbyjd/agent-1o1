@@ -1,4 +1,5 @@
 export const NotificationPreferenceEndpoints = {
-	get: '/notification-preferences',
-	update: '/notification-preferences',
+	get: (ws: string) => `/workspaces/${ws}/notification-preferences`,
+	update: (ws: string) => `/workspaces/${ws}/notification-preferences`,
 } as const;
+

@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useWorkspaceContext } from '@/context/workspaceContext';
 import { Bell, ExternalLink, Save } from 'lucide-react';
 import { Link } from 'react-router';
 import {
@@ -159,9 +160,10 @@ const PreferenceRow = ({
 };
 
 const NotificationsPage = () => {
-	const { data, isLoading } = useNotificationPreferences();
-	const { data: configuredChannels } = useNotificationChannels();
-	const updatePreferences = useUpdateNotificationPreferences();
+	const { activeWorkspaceId } = useWorkspaceContext();
+	const { data, isLoading } = useNotificationPreferences(activeWorkspaceId);
+	const { data: configuredChannels } = useNotificationChannels(activeWorkspaceId);
+	const updatePreferences = useUpdateNotificationPreferences(activeWorkspaceId);
 
 	const [pendingChanges, setPendingChanges] = useState<Record<string, TPendingChange>>({});
 

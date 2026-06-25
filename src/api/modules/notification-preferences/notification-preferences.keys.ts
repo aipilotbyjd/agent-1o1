@@ -1,3 +1,4 @@
 export const notificationPreferenceKeys = {
-	all: () => ['notification-preferences'] as const,
+	all: (ws?: string) => (ws ? ['notification-preferences', ws] as const : ['notification-preferences'] as const),
 };
+

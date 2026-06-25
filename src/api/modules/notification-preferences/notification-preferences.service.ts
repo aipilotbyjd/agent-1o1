@@ -9,13 +9,14 @@ import type {
 import { NotificationPreferenceEndpoints as E } from './notification-preferences.endpoints';
 
 export const NotificationPreferenceService = {
-	get: (signal?: AbortSignal) =>
+	get: (ws: string, signal?: AbortSignal) =>
 		axiosClient
-			.get<TApiResponse<TNotificationPreferencesResponse>>(E.get, { signal })
+			.get<TApiResponse<TNotificationPreferencesResponse>>(E.get(ws), { signal })
 			.then(unwrap<TNotificationPreferencesResponse>),
 
-	update: (body: TUpdateNotificationPreferencesDto) =>
+	update: (ws: string, body: TUpdateNotificationPreferencesDto) =>
 		axiosClient
-			.put<TApiResponse<TNotificationPreference[]>>(E.update, body)
+			.put<TApiResponse<TNotificationPreference[]>>(E.update(ws), body)
 			.then(unwrap<TNotificationPreference[]>),
 };
+
