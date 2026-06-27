@@ -23,8 +23,9 @@ export const RealtimeProvider = ({ children }: { children: React.ReactNode }) =>
 	const [echo, setEcho] = useState<Echo<any> | null>(null);
 	const qc = useQueryClient();
 
+	const token = getAccessToken();
+
 	useEffect(() => {
-		const token = getAccessToken();
 		if (!token || !activeWorkspaceId) {
 			if (echo) {
 				echo.disconnect();
@@ -33,17 +34,34 @@ export const RealtimeProvider = ({ children }: { children: React.ReactNode }) =>
 			return;
 		}
 
-		const apiBase = (import.meta.env.VITE_API_URL || 'https://agent1o1.test/api/v1').replace(
-			'/api/v1',
-			'',
-		);
+		const apiUrl = import.meta.env.VITE_API_URL || 'https://agent1o1.test/api/v1';
+		const apiBase = apiUrl.replace('/api/v1', '');
 
-		const reverbAppKey = import.meta.env.VITE_REVERB_APP_KEY || 'agent1o1-key';
-		const reverbHost = import.meta.env.VITE_REVERB_HOST || window.location.hostname;
+		// Default the Reverb host to the API host (not window.location) so it never
+		// falls back to `localhost`, which has no WebSocket server.
+		let apiHostname = window.location.hostname;
+		try {
+			apiHostname = new URL(apiUrl).hostname;
+		} catch {
+			/* keep window hostname */
+		}
+
+		const reverbAppKey = import.meta.env.VITE_REVERB_APP_KEY;
+		const reverbHost = import.meta.env.VITE_REVERB_HOST || apiHostname;
 		const reverbPort = import.meta.env.VITE_REVERB_PORT
 			? parseInt(import.meta.env.VITE_REVERB_PORT, 10)
 			: 443;
 		const reverbScheme = import.meta.env.VITE_REVERB_SCHEME || 'https';
+
+		// Without a real app key the connection can never authenticate — skip it so
+		// we don't spam failed WebSocket attempts. Notifications still refresh via
+		// polling + query invalidation until Reverb is configured.
+		if (!reverbAppKey) {
+			console.warn(
+				'[realtime] VITE_REVERB_APP_KEY is not set — skipping WebSocket connection.',
+			);
+			return;
+		}
 
 		const newEcho = new Echo({
 			broadcaster: 'reverb',
@@ -65,8 +83,7 @@ export const RealtimeProvider = ({ children }: { children: React.ReactNode }) =>
 
 		const channel = newEcho.private(`workspace.${activeWorkspaceId}`);
 
-		channel.listen('notification.created', (notification: any) => {
-			console.info('Real-time notification received:', notification);
+		channel.listen('.notification.created', (notification: any) => {
 			// Display a toast/notification
 			notify.success(notification.title || 'New notification received');
 			// Invalidate every notification query (lists across filters + unread count)
@@ -76,7 +93,7 @@ export const RealtimeProvider = ({ children }: { children: React.ReactNode }) =>
 		return () => {
 			newEcho.disconnect();
 		};
-	}, [activeWorkspaceId]);
+	}, [activeWorkspaceId, token]);
 
 	return <RealtimeContext.Provider value={{ echo }}>{children}</RealtimeContext.Provider>;
 };

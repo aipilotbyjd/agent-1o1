@@ -36,6 +36,7 @@ const NodeFields = ({ nodeId, fields, values }: Props) => {
 					</div>
 					<FieldInput
 						compact
+						nodeId={nodeId}
 						field={field}
 						value={values[field.key]}
 						onChange={(value) =>

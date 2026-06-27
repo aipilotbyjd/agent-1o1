@@ -656,6 +656,26 @@ export const NODE_CATALOG: TNodeDefinition[] = [
 		],
 	},
 	{
+		key: 'utility.code',
+		category: 'utility',
+		label: 'Code',
+		description: 'Run custom JavaScript to transform incoming data.',
+		icon: '{}',
+		color: 'zinc',
+		inputs: [{ id: 'in', name: 'input', type: 'any' }],
+		outputs: [{ id: 'out', name: 'output', type: 'any' }],
+		fields: [
+			{
+				key: 'code',
+				label: 'JavaScript',
+				kind: 'code',
+				rows: 8,
+				default: '// `input` = upstream output, `items` = all inputs\nreturn input;',
+				help: 'Write JS that returns the node output. `input`, `items` and `$json` are available.',
+			},
+		],
+	},
+	{
 		key: 'loop.each',
 		category: 'loop',
 		label: 'Loop List',

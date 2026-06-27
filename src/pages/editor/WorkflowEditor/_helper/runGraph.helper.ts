@@ -1,4 +1,3 @@
-import { getNodeDefinition } from './nodeCatalog.constants';
 import type { TCanvasEdge, TCanvasNode } from '../_types/canvas.type';
 
 export const getRunOrder = (nodes: TCanvasNode[], edges: TCanvasEdge[]): TCanvasNode[] => {
@@ -26,16 +25,4 @@ export const getRunOrder = (nodes: TCanvasNode[], edges: TCanvasEdge[]): TCanvas
 		...orderedIds.map((id) => byId.get(id)).filter(Boolean),
 		...unresolved,
 	] as TCanvasNode[];
-};
-
-export const createMockNodeOutput = (node: TCanvasNode): unknown => {
-	const def = getNodeDefinition(node.data.defKey, node.data.definition);
-	if (!def) return null;
-	if (def.category === 'output') return node.data.values.name ?? 'result';
-	if (def.category === 'logic') return { branch: 'true' };
-	if (def.category === 'integration') return { sent: true };
-	if (def.category === 'extract') return { title: 'Example', confidence: 0.92 };
-	if (def.category === 'ai') return 'Generated AI response preview.';
-	if (def.category === 'scrape') return 'Fetched markdown content preview.';
-	return node.data.values;
 };

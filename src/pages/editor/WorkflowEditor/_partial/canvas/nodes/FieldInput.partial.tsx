@@ -2,6 +2,7 @@ import { ChevronDown } from 'lucide-react';
 import { useCredentials } from '@/api/modules/credentials';
 import { useWorkspaceContext } from '@/context/workspaceContext';
 import type { TNodeField } from '../../../_types/node.type';
+import ExpressionInput from './ExpressionInput.partial';
 
 export const inputClass =
 	'w-full rounded-lg border bg-white px-3 py-2 text-sm text-zinc-900 outline-none transition border-zinc-300 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100 focus:border-emerald-400 focus:ring-2 focus:ring-emerald-400/20';
@@ -14,6 +15,7 @@ type FieldInputProps = {
 	value: unknown;
 	onChange: (value: unknown) => void;
 	compact?: boolean;
+	nodeId?: string;
 };
 
 const CredentialFieldInput = ({ field, value, onChange, compact }: FieldInputProps) => {
@@ -57,8 +59,26 @@ const CredentialFieldInput = ({ field, value, onChange, compact }: FieldInputPro
 	);
 };
 
-const FieldInput = ({ field, value, onChange, compact }: FieldInputProps) => {
+const FieldInput = ({ field, value, onChange, compact, nodeId }: FieldInputProps) => {
 	const cls = compact ? compactInputClass : inputClass;
+
+	// Fields that opt into {{variables}} get the expression editor with autocomplete.
+	if (
+		field.supportsVariables &&
+		nodeId &&
+		(field.kind === 'text' || field.kind === 'longtext')
+	) {
+		return (
+			<ExpressionInput
+				field={field}
+				value={value}
+				onChange={onChange}
+				compact={compact}
+				nodeId={nodeId}
+				className={cls}
+			/>
+		);
+	}
 
 	if (field.kind === 'toggle') {
 		const active = Boolean(value);

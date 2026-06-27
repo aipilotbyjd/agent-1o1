@@ -14,3 +14,22 @@ export type TRunState = {
 	currentNodeId: string | null;
 	logs: TRunLog[];
 };
+
+export type TNodeRunRecord = {
+	nodeId: string;
+	label: string;
+	status: 'success' | 'error' | 'skipped';
+	durationMs?: number;
+	output?: unknown;
+	error?: string;
+};
+
+export type TRunRecord = {
+	id: string;
+	startedAt: number;
+	finishedAt: number;
+	status: 'success' | 'error' | 'stopped';
+	trigger: 'manual' | 'replay';
+	nodeRuns: TNodeRunRecord[];
+	logs: TRunLog[];
+};
