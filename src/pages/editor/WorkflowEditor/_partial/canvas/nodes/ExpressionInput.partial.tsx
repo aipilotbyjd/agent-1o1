@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Braces, CornerDownLeft } from 'lucide-react';
 import { useWorkflowEditor } from '../../../_context/WorkflowEditorProvider.context';
 import { collectUpstreamVariables } from '../../../_helper/variables.helper';
@@ -23,8 +23,14 @@ type Props = {
 const ExpressionInput = ({ field, value, onChange, compact, nodeId, className }: Props) => {
 	const { state } = useWorkflowEditor();
 	const ref = useRef<HTMLTextAreaElement | HTMLInputElement | null>(null);
+	const blurTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 	const [query, setQuery] = useState<string | null>(null);
 	const [activeIndex, setActiveIndex] = useState(0);
+
+	// Clear any pending blur timer on unmount so we never setState after teardown.
+	useEffect(() => () => {
+		if (blurTimer.current) clearTimeout(blurTimer.current);
+	}, []);
 
 	const text = String(value ?? '');
 
@@ -115,7 +121,11 @@ const ExpressionInput = ({ field, value, onChange, compact, nodeId, className }:
 			syncQuery(event.currentTarget),
 		onClick: (event: React.MouseEvent<HTMLTextAreaElement | HTMLInputElement>) =>
 			syncQuery(event.currentTarget),
-		onBlur: () => setTimeout(() => setQuery(null), 120),
+		onBlur: () => {
+			if (blurTimer.current) clearTimeout(blurTimer.current);
+			// Delay so a mousedown on a suggestion can register before the list closes.
+			blurTimer.current = setTimeout(() => setQuery(null), 120);
+		},
 	};
 
 	return (

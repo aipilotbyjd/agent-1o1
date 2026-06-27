@@ -29,7 +29,7 @@ export type TRunRecord = {
 	startedAt: number;
 	finishedAt: number;
 	status: 'success' | 'error' | 'stopped';
-	trigger: 'manual' | 'replay';
+	trigger: 'manual';
 	nodeRuns: TNodeRunRecord[];
 	logs: TRunLog[];
 };

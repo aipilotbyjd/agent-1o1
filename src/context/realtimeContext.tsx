@@ -2,7 +2,7 @@ import { createContext, useContext, useEffect, useState } from 'react';
 import Echo from 'laravel-echo';
 import Pusher from 'pusher-js';
 import { useWorkspaceContext } from '@/context/workspaceContext';
-import { getAccessToken } from '@/api/core/token-manager';
+import { getAccessToken, TOKEN_CHANGE_EVENT } from '@/api/core/token-manager';
 import { useQueryClient } from '@tanstack/react-query';
 import { notificationKeys } from '@/api/modules/notifications/notifications.keys';
 import { notify } from '@/api/core';
@@ -23,7 +23,19 @@ export const RealtimeProvider = ({ children }: { children: React.ReactNode }) =>
 	const [echo, setEcho] = useState<Echo<any> | null>(null);
 	const qc = useQueryClient();
 
-	const token = getAccessToken();
+	// Track the token in state so we re-subscribe on login/logout/refresh instead
+	// of reading localStorage on every render.
+	const [token, setToken] = useState<string | null>(() => getAccessToken());
+
+	useEffect(() => {
+		const syncToken = () => setToken(getAccessToken());
+		window.addEventListener(TOKEN_CHANGE_EVENT, syncToken);
+		window.addEventListener('storage', syncToken);
+		return () => {
+			window.removeEventListener(TOKEN_CHANGE_EVENT, syncToken);
+			window.removeEventListener('storage', syncToken);
+		};
+	}, []);
 
 	useEffect(() => {
 		if (!token || !activeWorkspaceId) {
@@ -83,7 +95,7 @@ export const RealtimeProvider = ({ children }: { children: React.ReactNode }) =>
 
 		const channel = newEcho.private(`workspace.${activeWorkspaceId}`);
 
-		channel.listen('.notification.created', (notification: any) => {
+		channel.listen('.notification.created', (notification: { title?: string }) => {
 			// Display a toast/notification
 			notify.success(notification.title || 'New notification received');
 			// Invalidate every notification query (lists across filters + unread count)
