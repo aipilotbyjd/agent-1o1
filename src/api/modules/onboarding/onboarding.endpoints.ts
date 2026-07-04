@@ -6,5 +6,5 @@ export const OnboardingEndpoints = {
 	discovery: '/onboarding/discovery',
 	complete: '/onboarding/complete',
 	dismiss: '/user/dismiss-onboarding',
-	stripeCheckout: (workspaceId: string) => `/workspaces/${workspaceId}/subscriptions/checkout`,
+	stripeCheckout: (workspaceId: string) => `/workspaces/${workspaceId}/subscription/checkout`,
 } as const;

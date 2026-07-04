@@ -34,6 +34,6 @@ export const WorkspaceService = {
 	leave: (id: string) => axiosClient.post(E.leave(id)).then(() => undefined),
 	switch: (workspaceId: string) =>
 		axiosClient
-			.put<TApiResponse<TUser>>(E.switch, { workspace_id: workspaceId })
+			.post<TApiResponse<TUser>>(E.switch, { workspace_id: workspaceId })
 			.then(unwrap<TUser>),
 };
