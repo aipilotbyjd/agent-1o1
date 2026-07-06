@@ -65,11 +65,11 @@ export const UserService = {
 		axiosClient.get<TApiResponse<TUser>>(UserEndpoints.me, { signal }).then(unwrap<TUser>),
 
 	updateProfile: (payload: TUpdateProfileDto) =>
-		axiosClient.put<TApiResponse<TUser>>(UserEndpoints.update, payload).then(unwrap<TUser>),
+		axiosClient.patch<TApiResponse<TUser>>(UserEndpoints.update, payload).then(unwrap<TUser>),
 
 	changePassword: (payload: TChangePasswordDto) =>
 		axiosClient
-			.put<TMessageResponse>(UserEndpoints.changePassword, payload)
+			.post<TMessageResponse>(UserEndpoints.changePassword, payload)
 			.then((r) => r.data),
 
 	dismissOnboarding: () =>

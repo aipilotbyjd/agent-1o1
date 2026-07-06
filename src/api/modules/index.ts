@@ -42,4 +42,8 @@ export * from './git-sync';
 export * from './environments';
 export * from './node-sandbox';
 export * from './onboarding';
+export * from './admin-settings';
+export * from './trigger-catalog';
+export * from './connector-metrics';
+export * from './vector-store';
 

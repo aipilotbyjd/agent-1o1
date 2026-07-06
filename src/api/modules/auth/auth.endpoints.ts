@@ -13,8 +13,8 @@ export const UserEndpoints = {
 	me: '/user',
 	update: '/user',
 	destroy: '/user',
-	changePassword: '/user/password',
-	dismissOnboarding: '/user/onboarding/dismiss',
+	changePassword: '/user/change-password',
+	dismissOnboarding: '/user/dismiss-onboarding',
 	uploadAvatar: '/user/avatar',
 	deleteAvatar: '/user/avatar',
 } as const;

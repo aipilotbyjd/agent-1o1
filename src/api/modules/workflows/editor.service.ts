@@ -15,7 +15,7 @@ import type {
 	ISetPinnedDataDto,
 	TStoreWorkflowVersionDto,
 } from '@/types/workflow.type';
-import { WorkflowEditorEndpoints as E } from './workflows.endpoints';
+import { WorkflowEditorEndpoints as E, WorkflowEndpoints } from './workflows.endpoints';
 
 /**
  * Workflow editor-specific operations:
@@ -46,8 +46,22 @@ export const WorkflowEditorService = {
 
 	createVersion: (ws: string, workflowId: string, body: TStoreWorkflowVersionDto) =>
 		axiosClient
-			.post<TApiResponse<IWorkflowVersion>>(E.versions(ws, workflowId), body)
-			.then(unwrap<IWorkflowVersion>),
+			.put<TApiResponse<IWorkflow>>(WorkflowEndpoints.update(ws, workflowId), body)
+			.then(unwrap<IWorkflow>)
+			.then<IWorkflowVersion>((wf) => ({
+				id: wf.current_version_id ?? '',
+				workflow_id: wf.id,
+				version_number: wf.version ?? 0,
+				name: body.name ?? null,
+				description: body.description ?? null,
+				nodes: body.nodes,
+				edges: body.edges,
+				viewport: body.viewport ?? null,
+				settings: body.settings ?? wf.settings ?? {},
+				change_summary: body.change_summary ?? null,
+				is_published: false,
+				created_at: wf.updated_at,
+			})),
 
 	publishVersion: (ws: string, id: string, version: string) =>
 		axiosClient
