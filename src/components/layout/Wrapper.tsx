@@ -31,9 +31,15 @@ const Wrapper: FC<IWrapperProps> = (props) => {
 				},
 			)}
 			{...rest}>
-			<div className='sticky top-0 z-99 h-full max-h-4 min-h-4 bg-zinc-100 before:absolute before:start-0 before:top-[calc(1rem+1px)] before:h-4 before:w-4 before:rotate-180 before:content-[url("/src/assets/required/corner.svg")] after:absolute after:end-px after:top-4 after:h-4 after:w-4 after:-rotate-90 after:content-[url("/src/assets/required/corner.svg")] rtl:before:top-4 rtl:before:-rotate-90 rtl:after:-left-px rtl:after:rotate-180 dark:bg-zinc-900 dark:before:content-[url("/src/assets/required/dark:corner.svg")] dark:after:content-[url("/src/assets/required/dark:corner.svg")]'></div>
+			<div className='sticky top-0 z-99 h-full max-h-4 min-h-4 bg-zinc-100 dark:bg-zinc-900'>
+				<div className='absolute start-0 top-[calc(1rem+1px)] h-4 w-4 corner-top-left rtl:top-4 rtl:corner-top-right' />
+				<div className='absolute end-px top-4 h-4 w-4 corner-top-right rtl:-left-px rtl:corner-top-left' />
+			</div>
 			{children}
-			<div className='sticky bottom-0 z-99 h-full max-h-4 min-h-4 bg-zinc-100 before:absolute before:start-px before:-top-4 before:h-4 before:w-4 before:rotate-90 before:content-[url("/src/assets/required/corner.svg")] after:absolute after:end-0 after:-top-[calc(1rem+1px)] after:h-4 after:w-4 after:content-[url("/src/assets/required/corner.svg")] rtl:before:start-0 rtl:before:rotate-0 rtl:after:-top-4 rtl:after:rotate-90 dark:bg-zinc-900 dark:before:content-[url("/src/assets/required/dark:corner.svg")] dark:after:content-[url("/src/assets/required/dark:corner.svg")]'></div>
+			<div className='sticky bottom-0 z-99 h-full max-h-4 min-h-4 bg-zinc-100 dark:bg-zinc-900'>
+				<div className='absolute start-px -top-4 h-4 w-4 corner-bottom-left rtl:start-0 rtl:corner-bottom-right' />
+				<div className='absolute end-0 -top-[calc(1rem+1px)] h-4 w-4 corner-bottom-right rtl:-top-4 rtl:corner-bottom-left' />
+			</div>
 		</section>
 	);
 };

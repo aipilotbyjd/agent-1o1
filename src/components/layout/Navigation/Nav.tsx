@@ -192,7 +192,7 @@ export const NavItem: FC<INavItemProps> = (props) => {
 
 	const { t } = useTranslation('menu');
 
-	const { asideStatus, setAsideStatus } = useAsideStatus();
+	const { asideStatus, closeAside } = useAsideStatus();
 
 	// @ts-ignore
 	const isChildrenNavButton = navItemChildCheck(children);
@@ -248,7 +248,7 @@ export const NavItem: FC<INavItemProps> = (props) => {
 						<NavLink
 							end
 							to={to}
-							onClick={() => setAsideStatus(false)}
+							onClick={closeAside}
 							className={({ isActive }) =>
 								isActive || isActiveOverwrite
 									? classNames(
@@ -440,7 +440,7 @@ export const NavUser: FC<INavUserProps> = (props) => {
 
 	const { t } = useTranslation('menu');
 
-	const { asideStatus, setAsideStatus } = useAsideStatus();
+	const { asideStatus, closeAside } = useAsideStatus();
 	// @ts-ignore
 	const isChildrenNavButton = navItemChildCheck(children);
 
@@ -496,7 +496,7 @@ export const NavUser: FC<INavUserProps> = (props) => {
 						<NavLink
 							end
 							to={to}
-							onClick={() => setAsideStatus(false)}
+							onClick={closeAside}
 							className={({ isActive }) =>
 								isActive
 									? classNames(

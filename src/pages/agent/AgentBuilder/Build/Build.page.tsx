@@ -428,6 +428,7 @@ const BuildPage = () => {
 						primaryActionColor='purple'
 						showWorkspaceActions={false}
 						showThemeToggle={false}
+						toggleClassName='md:hidden'
 						onPrimaryAction={handleSendMessage}>
 						{/* Share button */}
 						<MainAppBarPillButton onClick={() => {

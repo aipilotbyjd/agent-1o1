@@ -5,6 +5,7 @@ import type { ReactNode } from 'react';
 import DARK_MODE from '@/constants/darkMode.constant';
 import useDarkMode from '@/hooks/useDarkMode';
 import { useWorkflowShellStore } from '@/store/workflowShell.store';
+import useAsideStatus from '@/hooks/useAsideStatus';
 
 export const MainAppBarIconButton = ({
 	title,
@@ -73,6 +74,7 @@ const MainAppBar = ({
 	showWorkspaceActions = true,
 	primaryActionColor = 'emerald',
 	showThemeToggle = true,
+	toggleClassName = 'lg:hidden',
 }: {
 	title: string;
 	status?: string;
@@ -84,13 +86,14 @@ const MainAppBar = ({
 	showWorkspaceActions?: boolean;
 	primaryActionColor?: 'emerald' | 'purple';
 	showThemeToggle?: boolean;
+	toggleClassName?: string;
 }) => {
-	const toggleMobileSidebar = useWorkflowShellStore((store) => store.toggleMobileSidebar);
+	const { toggleAside } = useAsideStatus();
 	const { isDarkTheme, setDarkModeStatus } = useDarkMode();
 
 	return (
 		<header className='flex h-16 shrink-0 items-center gap-3 border-b border-zinc-200 bg-white/95 px-4 backdrop-blur-xl dark:border-white/10 dark:bg-zinc-950/92'>
-			<MainAppBarIconButton title='Open workspace sidebar' onClick={toggleMobileSidebar}>
+			<MainAppBarIconButton title='Open workspace sidebar' onClick={toggleAside} className={toggleClassName}>
 				<Menu size={16} />
 			</MainAppBarIconButton>
 

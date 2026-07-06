@@ -503,6 +503,7 @@ const AppsListPage = () => {
 				const fields = getCredentialFields(credentialType);
 				await createCredentialMutation.mutateAsync({
 					name: credentialName.trim(),
+					type: credentialType.type,
 					credential_type_id: credentialType.id,
 					data: buildCreateCredentialData(fields, credentialFormValues),
 					expires_at: null,

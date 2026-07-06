@@ -2,8 +2,10 @@ import { useEffect, useState } from 'react';
 import { ArrowLeft, Search, Sparkles, X } from 'lucide-react';
 import { useWorkflowEditor } from '../../_context/WorkflowEditorProvider.context';
 import { useWorkflowRouteParams } from '../../_hooks/useWorkflowRouteParams.hook';
+import { mapApiCategoriesToGroups } from '../../_helper/apiNodeCatalog.helper';
 import type { TNodeCategoryGroup } from '../../_helper/apiNodeCatalog.helper';
 import type { TNodeDefinition } from '../../_types/node.type';
+import { useNodeCategories } from '@/api/modules/node-types';
 import NodeLibrarySearch from './NodeLibrarySearch.partial';
 import { PanelLoader } from './LibraryItems.partial';
 import { tintStyle } from './library.util';
@@ -21,6 +23,20 @@ const NodeLibrary = () => {
 	const [query, setQuery] = useState('');
 	const [debouncedQuery, setDebouncedQuery] = useState('');
 	const [selected, setSelected] = useState<TNodeCategoryGroup | null>(null);
+	const [hasSetDefault, setHasSetDefault] = useState(false);
+
+	const { data: categories } = useNodeCategories();
+
+	useEffect(() => {
+		if (categories && !hasSetDefault) {
+			const groups = mapApiCategoriesToGroups(categories);
+			const triggersGroup = groups.find((g) => g.slug === 'triggers-events');
+			if (triggersGroup) {
+				setSelected(triggersGroup);
+				setHasSetDefault(true);
+			}
+		}
+	}, [categories, hasSetDefault]);
 
 	useEffect(() => {
 		const id = setTimeout(() => setDebouncedQuery(query.trim()), SEARCH_DEBOUNCE_MS);

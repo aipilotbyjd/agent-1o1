@@ -706,7 +706,7 @@ export const NODE_CATALOG: TNodeDefinition[] = [
 		outputs: [{ id: 'sent', name: 'sent', type: 'boolean' }],
 		fields: [
 			{
-				key: 'credential',
+				key: 'credential_id',
 				label: 'Credential',
 				kind: 'credential',
 				credentialType: 'slack',
@@ -790,4 +790,50 @@ export const NODE_CATALOG_MAP = Object.fromEntries(
 export const getNodeDefinition = (
 	defKey: string,
 	runtimeDefinition?: TNodeDefinition,
-): TNodeDefinition | undefined => runtimeDefinition ?? NODE_CATALOG_MAP[defKey];
+): TNodeDefinition | undefined => {
+	const rawDef = runtimeDefinition ?? NODE_CATALOG_MAP[defKey];
+	if (!rawDef) return undefined;
+
+	if (rawDef.requiresCredential) {
+		const hasCredentialField = rawDef.fields.some(
+			(f) => f.kind === 'credential' || f.key === 'credential_id',
+		);
+		if (!hasCredentialField) {
+			let credentialType = 'google';
+			const key = defKey.toLowerCase();
+			if (key.includes('slack')) credentialType = 'slack';
+			else if (key.includes('google_drive') || key.includes('google-drive'))
+				credentialType = 'google_drive';
+			else if (key.includes('google_sheets') || key.includes('google-sheets'))
+				credentialType = 'google_sheets';
+			else if (key.includes('google_calendar') || key.includes('google-calendar'))
+				credentialType = 'google_calendar';
+			else if (key.includes('gmail')) credentialType = 'gmail';
+			else if (key.includes('hubspot')) credentialType = 'hubspot';
+			else if (key.includes('zendesk')) credentialType = 'zendesk';
+			else if (key.includes('linear')) credentialType = 'linear';
+			else if (key.includes('jira')) credentialType = 'jira';
+			else if (key.includes('typeform')) credentialType = 'typeform';
+			else if (key.includes('incident_io') || key.includes('incidentio'))
+				credentialType = 'incident_io';
+			else if (key.includes('teams')) credentialType = 'microsoft_teams';
+
+			return {
+				...rawDef,
+				fields: [
+					{
+						key: 'credential_id',
+						label: 'Credential',
+						kind: 'credential' as const,
+						credentialType,
+						required: true,
+						help: `Select a connected ${credentialType} credential.`,
+					},
+					...rawDef.fields,
+				],
+			};
+		}
+	}
+
+	return rawDef;
+};

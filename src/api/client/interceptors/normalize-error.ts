@@ -34,7 +34,7 @@ export const normalizeError = (client: AxiosInstance) => {
 					if (status && status >= 500) {
 						notify.error('Server error. Please try again later.');
 					} else if (!status) {
-						notify.error('Network error. Check your connection.');
+						console.warn('Network error. Check your connection.');
 					} else if (status !== 401) {
 						notify.error(message);
 					}

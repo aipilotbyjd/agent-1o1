@@ -22,7 +22,7 @@ import classNames from 'classnames';
 const AppAsideTemplate = () => {
 	const navigate = useNavigate();
 	const location = useLocation();
-	const { asideStatus, setAsideStatus } = useAsideStatus();
+	const { asideStatus, closeAside } = useAsideStatus();
 	const { userData } = useAuth();
 	const [recentSearch, setRecentSearch] = useState('');
 
@@ -47,7 +47,7 @@ const AppAsideTemplate = () => {
 							<Search size={15} />
 						</button>
 						<button
-							onClick={() => setAsideStatus(false)}
+							onClick={closeAside}
 							title='Collapse sidebar'
 							className='text-zinc-400 hover:text-zinc-950 dark:hover:text-white'>
 							<svg

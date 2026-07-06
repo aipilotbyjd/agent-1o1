@@ -48,6 +48,7 @@ import {
 } from 'lucide-react';
 import { ComponentType } from 'react';
 import { useWorkflowShellStore } from '@/store/workflowShell.store';
+import useAsideStatus from '@/hooks/useAsideStatus';
 
 interface ILaunchTrigger {
 	label: string;
@@ -373,7 +374,7 @@ const mockIntegrations = [
 ];
 
 const WorkflowLaunchSurface = () => {
-	const toggleMobileSidebar = useWorkflowShellStore((store) => store.toggleMobileSidebar);
+	const { toggleAside } = useAsideStatus();
 	const fileInputRef = useRef<HTMLInputElement>(null);
 	const [mode, setMode] = useState<'build' | 'ask'>('ask');
 	const [exampleIndex, setExampleIndex] = useState(0);
@@ -470,7 +471,7 @@ const WorkflowLaunchSurface = () => {
 						className='flex h-13 max-w-[760px] min-w-0 items-center gap-2 rounded-2xl border border-zinc-200/80 bg-white/95 px-3 shadow-sm shadow-zinc-200/70 backdrop-blur-xl sm:h-14 sm:gap-3 sm:px-4'>
 						<button
 							type='button'
-							onClick={toggleMobileSidebar}
+							onClick={toggleAside}
 							aria-label='Open sidebar'
 							className='flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-zinc-700 transition hover:bg-zinc-100 hover:text-zinc-950 lg:hidden'>
 							<Menu size={18} />

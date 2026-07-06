@@ -131,33 +131,43 @@ interface IAsideProps extends HTMLAttributes<HTMLElement> {
 const Aside: FC<IAsideProps> = (props) => {
 	const { children, className, ...rest } = props;
 
-	const { asideStatus } = useAsideStatus();
+	const { asideStatus, closeAside } = useAsideStatus();
 	return (
-		<aside
-			data-component-name='Aside'
-			className={classNames(
-				'peer',
-				'fixed top-0 bottom-0 z-40 md:z-20',
-				'flex flex-col',
-				'bg-white',
-				'py-2',
-				'z-[100]',
-				'border-e border-zinc-500/10 dark:border-zinc-800/50',
-				'dark:bg-zinc-900 dark:text-white',
-				'transition-all duration-300 ease-in-out',
-				className,
-				// Mobile Design
-				'max-md:w-[20rem] max-md:shadow-2xl max-md:ltr:-left-[20rem] max-md:rtl:-right-[20rem]',
-				{
-					'md:w-[20rem]': asideStatus,
-					'md:w-[5.25em]': !asideStatus,
-					'max-md:ltr:-left-[20rem] max-md:rtl:-right-[20rem]': !asideStatus,
-					'max-md:ltr:left-0 max-md:rtl:right-0': asideStatus,
-				},
+		<>
+			{asideStatus && (
+				<button
+					type='button'
+					aria-label='Close sidebar'
+					onClick={closeAside}
+					className='fixed inset-0 z-[80] bg-zinc-950/35 backdrop-blur-xs md:hidden'
+				/>
 			)}
-			{...rest}>
-			{children}
-		</aside>
+			<aside
+				data-component-name='Aside'
+				className={classNames(
+					'peer',
+					'fixed top-0 bottom-0 z-40 md:z-20',
+					'flex flex-col',
+					'bg-white',
+					'py-2',
+					'z-[100]',
+					'border-e border-zinc-500/10 dark:border-zinc-800/50',
+					'dark:bg-zinc-900 dark:text-white',
+					'transition-all duration-300 ease-in-out',
+					className,
+					// Mobile Design
+					'max-md:w-[20rem] max-md:shadow-2xl max-md:ltr:-left-[20rem] max-md:rtl:-right-[20rem]',
+					{
+						'md:w-[20rem]': asideStatus,
+						'md:w-[5.25em]': !asideStatus,
+						'max-md:ltr:-left-[20rem] max-md:rtl:-right-[20rem]': !asideStatus,
+						'max-md:ltr:left-0 max-md:rtl:right-0': asideStatus,
+					},
+				)}
+				{...rest}>
+				{children}
+			</aside>
+		</>
 	);
 };
 

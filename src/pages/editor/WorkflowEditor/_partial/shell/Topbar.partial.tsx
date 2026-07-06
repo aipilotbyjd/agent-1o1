@@ -9,17 +9,18 @@ import {
 	Sun,
 	LayoutGrid,
 	Zap,
-	GitBranch,
 	Share,
 	ChevronDown,
 	Save,
 	Keyboard,
 	GitCompare,
 	Library,
+	MoreVertical,
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useState } from 'react';
 import type { ReactNode } from 'react';
+import { Link } from 'react-router';
 import DARK_MODE from '@/constants/darkMode.constant';
 import useDarkMode from '@/hooks/useDarkMode';
 import { useCreateWorkflowVersion } from '@/api/modules/workflows';
@@ -85,6 +86,7 @@ const Topbar = () => {
 	const setGovModalOpen = useWorkflowShellStore((store) => store.setGovModalOpen);
 	const setGovModalTab = useWorkflowShellStore((store) => store.setGovModalTab);
 	const [isSaveDropdownOpen, setIsSaveDropdownOpen] = useState(false);
+	const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 	const isRunning = state.run.status === 'running';
 
 	const handleSave = () => {
@@ -126,8 +128,8 @@ const Topbar = () => {
 						<svg className='h-4 w-4 stroke-current mr-1 text-zinc-500' viewBox='0 0 24 24' fill='none' strokeWidth='2' strokeLinecap='round' strokeLinejoin='round'>
 							<path d='M22 12h-4l-3 9L9 3l-3 9H2' />
 						</svg>
-						<span>Pipeline</span>
-						<span className='mx-1 text-zinc-300 dark:text-zinc-700'>/</span>
+						<span className='hidden sm:inline'>Pipeline</span>
+						<span className='hidden sm:inline mx-1 text-zinc-300 dark:text-zinc-700'>/</span>
 						<span className='font-bold text-zinc-800 dark:text-zinc-100'>Untitled Workflow</span>
 					</span>
 					<button
@@ -165,25 +167,25 @@ const Topbar = () => {
 			{/* Left Section: Branding & Navigation */}
 			<div className='flex items-center gap-4'>
 				<div className='flex items-center gap-2'>
-					<span className='flex items-center gap-1.5 text-violet-600 dark:text-violet-400'>
+					<Link to='/dashboard' className='flex items-center gap-1.5 text-violet-600 dark:text-violet-400 hover:opacity-80 transition-opacity'>
 						<Bot size={24} strokeWidth={2.5} />
-						<span className='text-base font-extrabold tracking-tight'>agent101</span>
-					</span>
+						<span className='text-base font-extrabold tracking-tight hidden sm:inline'>agent101</span>
+					</Link>
 					<button
 						type='button'
 						title='Workspace Settings'
-						className='flex h-7 w-7 items-center justify-center rounded-lg text-zinc-400 transition hover:bg-zinc-100 hover:text-zinc-700 dark:hover:bg-white/[0.05] dark:hover:text-white'>
+						className='flex h-7 w-7 items-center justify-center rounded-lg text-zinc-400 transition hover:bg-zinc-100 hover:text-zinc-700 dark:hover:bg-white/[0.05] dark:hover:text-white hidden sm:flex'>
 						<Settings2 size={15} />
 					</button>
 				</div>
 
-				<div className='h-6 w-px bg-zinc-200 dark:bg-zinc-800' />
+				<div className='h-6 w-px bg-zinc-200 dark:bg-zinc-800 hidden sm:block' />
 
 				{/* Add buttons */}
 				<div className='flex items-center gap-2'>
 					<PurpleOutlineButton>
 						<LayoutGrid size={14} className='text-violet-600 dark:text-violet-400' />
-						<span>Add Interface</span>
+						<span className='hidden sm:inline'>Add Interface</span>
 					</PurpleOutlineButton>
 					{state.ui.leftPanelOpen ? (
 						<button
@@ -191,7 +193,7 @@ const Topbar = () => {
 							onClick={() => dispatch({ type: 'TOGGLE_LEFT_PANEL' })}
 							className='dark:bg-violet-750 dark:hover:bg-violet-650 flex h-9 cursor-pointer items-center gap-2 rounded-lg bg-violet-600 px-3 text-xs font-semibold text-white shadow-xs transition hover:bg-violet-700'>
 							<Zap size={14} className='fill-white text-white' />
-							<span>Add Trigger</span>
+							<span className='hidden sm:inline'>Add Trigger</span>
 						</button>
 					) : (
 						<PurpleOutlineButton
@@ -200,135 +202,265 @@ const Topbar = () => {
 								size={14}
 								className='fill-violet-600 text-violet-600 dark:fill-violet-400 dark:text-violet-400'
 							/>
-							<span>Add Trigger</span>
+							<span className='hidden sm:inline'>Add Trigger</span>
 						</PurpleOutlineButton>
 					)}
-					<button
-						type='button'
-						className='flex h-9 w-9 items-center justify-center rounded-lg border border-zinc-200 bg-white text-violet-600 shadow-xs transition hover:bg-zinc-50 dark:border-zinc-800/40 dark:bg-zinc-900 dark:text-violet-400 dark:hover:bg-white/[0.04]'>
-						<GitBranch size={15} />
-					</button>
 				</div>
 			</div>
 
 			{/* Right Section: Action Controls */}
 			<div className='flex items-center gap-3.5'>
-				{/* Undo/Redo & Darkmode */}
-				<div className='flex items-center gap-1.5'>
-					<IconButton
-						title='Undo (⌘Z)'
-						onClick={() => dispatch({ type: 'UNDO' })}
-						disabled={!state.history.past.length}>
-						<RotateCcw size={14} />
-					</IconButton>
-					<IconButton
-						title='Redo (⌘⇧Z)'
-						onClick={() => dispatch({ type: 'REDO' })}
-						disabled={!state.history.future.length}>
-						<RotateCw size={14} />
-					</IconButton>
-					<IconButton
-						title='Version diff (⌘⇧V)'
-						onClick={() => dispatch({ type: 'SET_DIFF_VIEWER', open: true })}
-						disabled={!state.history.past.length}>
-						<GitCompare size={14} />
-					</IconButton>
-					<IconButton
-						title={isDarkTheme ? 'Switch to light mode' : 'Switch to dark mode'}
-						onClick={() =>
-							setDarkModeStatus(isDarkTheme ? DARK_MODE.LIGHT : DARK_MODE.DARK)
-						}>
-						{isDarkTheme ? <Sun size={14} /> : <Moon size={14} />}
-					</IconButton>
-					<IconButton
-						title='Keyboard shortcuts (?)'
-						onClick={() => dispatch({ type: 'SET_SHORTCUTS_OPEN', open: true })}>
-						<Keyboard size={14} />
-					</IconButton>
+				{/* Desktop-only action groups */}
+				<div className='hidden md:flex items-center gap-3.5'>
+					{/* Undo/Redo & Darkmode & Keyboard */}
+					<div className='flex items-center gap-1.5'>
+						<IconButton
+							title='Undo (⌘Z)'
+							onClick={() => dispatch({ type: 'UNDO' })}
+							disabled={!state.history.past.length}>
+							<RotateCcw size={14} />
+						</IconButton>
+						<IconButton
+							title='Redo (⌘⇧Z)'
+							onClick={() => dispatch({ type: 'REDO' })}
+							disabled={!state.history.future.length}>
+							<RotateCw size={14} />
+						</IconButton>
+						<IconButton
+							title='Version diff (⌘⇧V)'
+							onClick={() => dispatch({ type: 'SET_DIFF_VIEWER', open: true })}
+							disabled={!state.history.past.length}>
+							<GitCompare size={14} />
+						</IconButton>
+						<IconButton
+							title={isDarkTheme ? 'Switch to light mode' : 'Switch to dark mode'}
+							onClick={() =>
+								setDarkModeStatus(isDarkTheme ? DARK_MODE.LIGHT : DARK_MODE.DARK)
+							}>
+							{isDarkTheme ? <Sun size={14} /> : <Moon size={14} />}
+						</IconButton>
+						<IconButton
+							title='Keyboard shortcuts (?)'
+							onClick={() => dispatch({ type: 'SET_SHORTCUTS_OPEN', open: true })}>
+							<Keyboard size={14} />
+						</IconButton>
+					</div>
+
+					<div className='h-6 w-px bg-zinc-200 dark:bg-zinc-800' />
+
+					<PurpleOutlineButton
+						onClick={() => dispatch({ type: 'SET_TEMPLATE_LIBRARY', open: true })}>
+						<Library size={14} className='text-violet-600 dark:text-violet-400' />
+						<span>Templates</span>
+					</PurpleOutlineButton>
+					<PurpleOutlineButton
+						onClick={() => {
+							setGovModalTab('sharing');
+							setGovModalOpen(true);
+						}}>
+						<Share size={14} className='text-violet-600 dark:text-violet-400' />
+						<span>Share</span>
+					</PurpleOutlineButton>
+
+					<div className='relative flex items-center shadow-xs'>
+						<button
+							type='button'
+							onClick={handleSave}
+							disabled={saveVersion.isPending}
+							className='flex h-9 items-center gap-1.5 rounded-l-lg border border-r-0 border-zinc-200 bg-white px-3 text-xs font-semibold text-violet-600 shadow-xs transition hover:bg-zinc-50 disabled:cursor-not-allowed disabled:opacity-40 dark:border-zinc-800/40 dark:bg-zinc-900 dark:text-violet-400'>
+							<Save size={14} className='text-violet-600 dark:text-violet-400' />
+							<span>{saveVersion.isPending ? 'Saving' : 'Save'}</span>
+						</button>
+						<button
+							type='button'
+							onClick={() => setIsSaveDropdownOpen(!isSaveDropdownOpen)}
+							className='flex h-9 items-center justify-center rounded-r-lg border border-zinc-200 bg-white px-2 text-violet-600 shadow-xs transition hover:bg-zinc-50 dark:border-zinc-800/40 dark:bg-zinc-900 dark:text-violet-400'>
+							<ChevronDown size={14} />
+						</button>
+
+						{isSaveDropdownOpen && (
+							<>
+								<div
+									className="fixed inset-0 z-10"
+									onClick={() => setIsSaveDropdownOpen(false)}
+								/>
+								<div className="absolute right-0 top-11 z-20 w-52 rounded-xl border border-zinc-200 bg-white p-1 text-zinc-900 shadow-xl dark:border-white/10 dark:bg-zinc-950">
+									<button
+										type="button"
+										onClick={() => {
+											setIsSaveDropdownOpen(false);
+											setGovModalTab('versions');
+											setGovModalOpen(true);
+										}}
+										className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-xs font-semibold hover:bg-zinc-50 hover:text-violet-600 dark:text-zinc-300 dark:hover:bg-white/[0.04] dark:hover:text-violet-400"
+									>
+										<span>Version History</span>
+									</button>
+									<button
+										type="button"
+										onClick={() => {
+											setIsSaveDropdownOpen(false);
+											setGovModalTab('approvals');
+											setGovModalOpen(true);
+										}}
+										className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-xs font-semibold hover:bg-zinc-50 hover:text-violet-600 dark:text-zinc-300 dark:hover:bg-white/[0.04] dark:hover:text-violet-400"
+									>
+										<span>Request Approval</span>
+									</button>
+									<button
+										type="button"
+										onClick={() => {
+											setIsSaveDropdownOpen(false);
+											setGovModalTab('releases');
+											setGovModalOpen(true);
+										}}
+										className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-xs font-semibold hover:bg-zinc-50 hover:text-violet-600 dark:text-zinc-300 dark:hover:bg-white/[0.04] dark:hover:text-violet-400"
+									>
+										<span>Deploy Release</span>
+									</button>
+									<button
+										type="button"
+										onClick={() => {
+											setIsSaveDropdownOpen(false);
+											setGovModalTab('contracts');
+											setGovModalOpen(true);
+										}}
+										className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-xs font-semibold hover:bg-zinc-50 hover:text-violet-600 dark:text-zinc-300 dark:hover:bg-white/[0.04] dark:hover:text-violet-400"
+									>
+										<span>Contracts Verification</span>
+									</button>
+								</div>
+							</>
+						)}
+					</div>
 				</div>
 
-				<div className='h-6 w-px bg-zinc-200 dark:bg-zinc-800' />
-
-				<PurpleOutlineButton
-					onClick={() => dispatch({ type: 'SET_TEMPLATE_LIBRARY', open: true })}>
-					<Library size={14} className='text-violet-600 dark:text-violet-400' />
-					<span>Templates</span>
-				</PurpleOutlineButton>
-				<PurpleOutlineButton
-					onClick={() => {
-						setGovModalTab('sharing');
-						setGovModalOpen(true);
-					}}>
-					<Share size={14} className='text-violet-600 dark:text-violet-400' />
-					<span>Share</span>
-				</PurpleOutlineButton>
-
-				<div className='relative flex items-center shadow-xs'>
-					<button
-						type='button'
-						onClick={handleSave}
-						disabled={saveVersion.isPending}
-						className='flex h-9 items-center gap-1.5 rounded-l-lg border border-r-0 border-zinc-200 bg-white px-3 text-xs font-semibold text-violet-600 shadow-xs transition hover:bg-zinc-50 disabled:cursor-not-allowed disabled:opacity-40 dark:border-zinc-800/40 dark:bg-zinc-900 dark:text-violet-400'>
-						<Save size={14} className='text-violet-600 dark:text-violet-400' />
-						<span>{saveVersion.isPending ? 'Saving' : 'Save'}</span>
-					</button>
-					<button
-						type='button'
-						onClick={() => setIsSaveDropdownOpen(!isSaveDropdownOpen)}
-						className='flex h-9 items-center justify-center rounded-r-lg border border-zinc-200 bg-white px-2 text-violet-600 shadow-xs transition hover:bg-zinc-50 dark:border-zinc-800/40 dark:bg-zinc-900 dark:text-violet-400'>
-						<ChevronDown size={14} />
-					</button>
-
-					{isSaveDropdownOpen && (
+				{/* Mobile-only menu button and dropdown */}
+				<div className='relative md:hidden flex items-center gap-1.5'>
+					<IconButton
+						title='More Actions'
+						active={isMobileMenuOpen}
+						onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
+						<MoreVertical size={16} />
+					</IconButton>
+					{isMobileMenuOpen && (
 						<>
 							<div
 								className="fixed inset-0 z-10"
-								onClick={() => setIsSaveDropdownOpen(false)}
+								onClick={() => setIsMobileMenuOpen(false)}
 							/>
-							<div className="absolute right-0 top-11 z-20 w-52 rounded-xl border border-zinc-200 bg-white p-1 text-zinc-900 shadow-xl dark:border-white/10 dark:bg-zinc-950">
+							<div className="absolute right-0 top-11 z-50 w-56 rounded-xl border border-zinc-200 bg-white p-1 text-zinc-900 shadow-xl dark:border-white/10 dark:bg-zinc-950">
 								<button
 									type="button"
 									onClick={() => {
-										setIsSaveDropdownOpen(false);
+										setIsMobileMenuOpen(false);
+										handleSave();
+									}}
+									disabled={saveVersion.isPending}
+									className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-left text-xs font-semibold text-zinc-700 hover:bg-zinc-50 hover:text-violet-600 disabled:opacity-40 dark:text-zinc-300 dark:hover:bg-white/[0.04] dark:hover:text-violet-400"
+								>
+									<Save size={14} className="text-zinc-450 dark:text-zinc-500" />
+									<span>{saveVersion.isPending ? 'Saving...' : 'Save Workflow'}</span>
+								</button>
+								<button
+									type="button"
+									onClick={() => {
+										setIsMobileMenuOpen(false);
+										setGovModalTab('sharing');
+										setGovModalOpen(true);
+									}}
+									className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-left text-xs font-semibold text-zinc-700 hover:bg-zinc-50 hover:text-violet-600 dark:text-zinc-300 dark:hover:bg-white/[0.04] dark:hover:text-violet-400"
+								>
+									<Share size={14} className="text-zinc-450 dark:text-zinc-500" />
+									<span>Share Workflow</span>
+								</button>
+								<button
+									type="button"
+									onClick={() => {
+										setIsMobileMenuOpen(false);
+										dispatch({ type: 'SET_TEMPLATE_LIBRARY', open: true });
+									}}
+									className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-left text-xs font-semibold text-zinc-700 hover:bg-zinc-50 hover:text-violet-600 dark:text-zinc-300 dark:hover:bg-white/[0.04] dark:hover:text-violet-400"
+								>
+									<Library size={14} className="text-zinc-450 dark:text-zinc-500" />
+									<span>Templates</span>
+								</button>
+
+								<div className="my-1 h-px bg-zinc-150 dark:bg-zinc-800" />
+
+								<button
+									type="button"
+									onClick={() => {
+										setIsMobileMenuOpen(false);
 										setGovModalTab('versions');
 										setGovModalOpen(true);
 									}}
-									className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-xs font-semibold hover:bg-zinc-50 hover:text-violet-600 dark:text-zinc-300 dark:hover:bg-white/[0.04] dark:hover:text-violet-400"
+									className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-left text-xs font-semibold text-zinc-700 hover:bg-zinc-50 hover:text-violet-600 dark:text-zinc-300 dark:hover:bg-white/[0.04] dark:hover:text-violet-400"
 								>
+									<GitCompare size={14} className="text-zinc-450 dark:text-zinc-500" />
 									<span>Version History</span>
 								</button>
 								<button
 									type="button"
 									onClick={() => {
-										setIsSaveDropdownOpen(false);
+										setIsMobileMenuOpen(false);
 										setGovModalTab('approvals');
 										setGovModalOpen(true);
 									}}
-									className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-xs font-semibold hover:bg-zinc-50 hover:text-violet-600 dark:text-zinc-300 dark:hover:bg-white/[0.04] dark:hover:text-violet-400"
+									className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-left text-xs font-semibold text-zinc-700 hover:bg-zinc-50 hover:text-violet-600 dark:text-zinc-300 dark:hover:bg-white/[0.04] dark:hover:text-violet-400"
 								>
+									<Settings2 size={14} className="text-zinc-450 dark:text-zinc-500" />
 									<span>Request Approval</span>
 								</button>
 								<button
 									type="button"
 									onClick={() => {
-										setIsSaveDropdownOpen(false);
+										setIsMobileMenuOpen(false);
 										setGovModalTab('releases');
 										setGovModalOpen(true);
 									}}
-									className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-xs font-semibold hover:bg-zinc-50 hover:text-violet-600 dark:text-zinc-300 dark:hover:bg-white/[0.04] dark:hover:text-violet-400"
+									className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-left text-xs font-semibold text-zinc-700 hover:bg-zinc-50 hover:text-violet-600 dark:text-zinc-300 dark:hover:bg-white/[0.04] dark:hover:text-violet-400"
 								>
+									<Play size={14} className="text-zinc-450 dark:text-zinc-500" />
 									<span>Deploy Release</span>
+								</button>
+
+								<div className="my-1 h-px bg-zinc-150 dark:bg-zinc-800" />
+
+								<button
+									type="button"
+									disabled={!state.history.past.length}
+									onClick={() => {
+										dispatch({ type: 'UNDO' });
+									}}
+									className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-left text-xs font-semibold text-zinc-700 hover:bg-zinc-50 hover:text-violet-600 disabled:opacity-30 dark:text-zinc-300 dark:hover:bg-white/[0.04] dark:hover:text-violet-400"
+								>
+									<RotateCcw size={14} className="text-zinc-450 dark:text-zinc-500" />
+									<span>Undo</span>
 								</button>
 								<button
 									type="button"
+									disabled={!state.history.future.length}
 									onClick={() => {
-										setIsSaveDropdownOpen(false);
-										setGovModalTab('contracts');
-										setGovModalOpen(true);
+										dispatch({ type: 'REDO' });
 									}}
-									className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-xs font-semibold hover:bg-zinc-50 hover:text-violet-600 dark:text-zinc-300 dark:hover:bg-white/[0.04] dark:hover:text-violet-400"
+									className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-left text-xs font-semibold text-zinc-700 hover:bg-zinc-50 hover:text-violet-600 disabled:opacity-30 dark:text-zinc-300 dark:hover:bg-white/[0.04] dark:hover:text-violet-400"
 								>
-									<span>Contracts Verification</span>
+									<RotateCw size={14} className="text-zinc-450 dark:text-zinc-500" />
+									<span>Redo</span>
+								</button>
+
+								<div className="my-1 h-px bg-zinc-150 dark:bg-zinc-800" />
+
+								<button
+									type="button"
+									onClick={() => {
+										setDarkModeStatus(isDarkTheme ? DARK_MODE.LIGHT : DARK_MODE.DARK);
+									}}
+									className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-left text-xs font-semibold text-zinc-700 hover:bg-zinc-50 hover:text-violet-600 dark:text-zinc-300 dark:hover:bg-white/[0.04] dark:hover:text-violet-400"
+								>
+									{isDarkTheme ? <Sun size={14} className="text-zinc-450 dark:text-zinc-500" /> : <Moon size={14} className="text-zinc-450 dark:text-zinc-500" />}
+									<span>{isDarkTheme ? 'Light Mode' : 'Dark Mode'}</span>
 								</button>
 							</div>
 						</>
@@ -341,7 +473,7 @@ const Topbar = () => {
 					onClick={isRunning ? stopRun : runWorkflow}
 					disabled={state.nodes.length === 0 && state.ui.emptyCanvasView !== 'chat-started'}
 					className={[
-						'flex h-9 items-center gap-2 rounded-lg px-5 text-xs font-bold text-white shadow-md transition duration-200',
+						'flex h-9 items-center gap-2 rounded-lg px-4 sm:px-5 text-xs font-bold text-white shadow-md transition duration-200 shrink-0',
 						state.nodes.length === 0 && state.ui.emptyCanvasView !== 'chat-started'
 							? 'opacity-40 cursor-not-allowed'
 							: 'cursor-pointer',
@@ -354,7 +486,7 @@ const Topbar = () => {
 					) : (
 						<Play size={12} fill='currentColor' />
 					)}
-					<span>Run</span>
+					<span className='hidden sm:inline'>Run</span>
 				</motion.button>
 			</div>
 		</header>

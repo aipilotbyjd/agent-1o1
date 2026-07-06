@@ -53,12 +53,11 @@ export interface ICredentialDetail extends ICredential {
 
 export type ICreateCredentialDto = {
 	name: string;
+	type: string;
 	data: TCredentialData;
 	expires_at?: string | null;
-} & (
-	| { credential_type_id: string; type?: never }
-	| { type: TCredentialType; credential_type_id?: never }
-);
+	credential_type_id?: string;
+};
 
 export interface IUpdateCredentialDto {
 	name?: string;
