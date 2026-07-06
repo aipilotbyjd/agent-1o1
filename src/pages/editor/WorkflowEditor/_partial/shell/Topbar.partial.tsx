@@ -7,8 +7,8 @@ import {
 	Moon,
 	Square,
 	Sun,
-	LayoutGrid,
-	Zap,
+	Boxes,
+	Rocket,
 	Share,
 	ChevronDown,
 	Save,
@@ -34,16 +34,23 @@ const PurpleOutlineButton = ({
 	children,
 	onClick,
 	disabled,
+	active,
 }: {
 	children: ReactNode;
 	onClick?: () => void;
 	disabled?: boolean;
+	active?: boolean;
 }) => (
 	<button
 		type='button'
 		onClick={onClick}
 		disabled={disabled}
-		className='flex h-9 items-center gap-2 rounded-lg border border-zinc-200 bg-white px-3 text-xs font-semibold text-violet-600 shadow-xs transition hover:bg-zinc-50 disabled:cursor-not-allowed disabled:opacity-40 dark:border-zinc-800/40 dark:bg-zinc-900 dark:text-violet-400 dark:hover:bg-white/[0.04]'>
+		className={[
+			'flex h-9 items-center gap-2 rounded-lg border px-3 text-xs font-semibold shadow-xs transition disabled:cursor-not-allowed disabled:opacity-40',
+			active
+				? 'border-violet-300 bg-violet-50 text-violet-700 dark:border-violet-700/60 dark:bg-violet-950/40 dark:text-violet-300'
+				: 'border-zinc-200 bg-white text-violet-600 hover:bg-zinc-50 dark:border-zinc-800/40 dark:bg-zinc-900 dark:text-violet-400 dark:hover:bg-white/[0.04]',
+		].join(' ')}>
 		{children}
 	</button>
 );
@@ -183,26 +190,37 @@ const Topbar = () => {
 
 				{/* Add buttons */}
 				<div className='flex items-center gap-2'>
-					<PurpleOutlineButton>
-						<LayoutGrid size={14} className='text-violet-600 dark:text-violet-400' />
-						<span className='hidden sm:inline'>Add Interface</span>
-					</PurpleOutlineButton>
-					{state.ui.leftPanelOpen ? (
+					{state.ui.leftPanelOpen && state.ui.leftPanelIntent === 'home' ? (
 						<button
 							type='button'
-							onClick={() => dispatch({ type: 'TOGGLE_LEFT_PANEL' })}
+							onClick={() => dispatch({ type: 'TOGGLE_LEFT_PANEL', intent: 'home' })}
 							className='dark:bg-violet-750 dark:hover:bg-violet-650 flex h-9 cursor-pointer items-center gap-2 rounded-lg bg-violet-600 px-3 text-xs font-semibold text-white shadow-xs transition hover:bg-violet-700'>
-							<Zap size={14} className='fill-white text-white' />
-							<span className='hidden sm:inline'>Add Trigger</span>
+							<Boxes size={14} className='text-white' />
+							<span className='hidden sm:inline'>Apps</span>
 						</button>
 					) : (
 						<PurpleOutlineButton
-							onClick={() => dispatch({ type: 'TOGGLE_LEFT_PANEL' })}>
-							<Zap
+							onClick={() => dispatch({ type: 'TOGGLE_LEFT_PANEL', intent: 'home' })}>
+							<Boxes size={14} className='text-violet-600 dark:text-violet-400' />
+							<span className='hidden sm:inline'>Apps</span>
+						</PurpleOutlineButton>
+					)}
+					{state.ui.leftPanelOpen && state.ui.leftPanelIntent === 'trigger' ? (
+						<button
+							type='button'
+							onClick={() => dispatch({ type: 'TOGGLE_LEFT_PANEL', intent: 'trigger' })}
+							className='dark:bg-violet-750 dark:hover:bg-violet-650 flex h-9 cursor-pointer items-center gap-2 rounded-lg bg-violet-600 px-3 text-xs font-semibold text-white shadow-xs transition hover:bg-violet-700'>
+							<Rocket size={14} className='fill-white text-white' />
+							<span className='hidden sm:inline'>Triggers</span>
+						</button>
+					) : (
+						<PurpleOutlineButton
+							onClick={() => dispatch({ type: 'TOGGLE_LEFT_PANEL', intent: 'trigger' })}>
+							<Rocket
 								size={14}
 								className='fill-violet-600 text-violet-600 dark:fill-violet-400 dark:text-violet-400'
 							/>
-							<span className='hidden sm:inline'>Add Trigger</span>
+							<span className='hidden sm:inline'>Triggers</span>
 						</PurpleOutlineButton>
 					)}
 				</div>

@@ -17,6 +17,7 @@ export type TWorkflowMeta = {
 
 export type TEditorUiState = {
 	leftPanelOpen: boolean;
+	leftPanelIntent: 'home' | 'trigger';
 	runPanelOpen: boolean;
 	aiPanelOpen: boolean;
 	miniMapOpen: boolean;

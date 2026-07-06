@@ -68,11 +68,16 @@ interface IFolder {
 
 const ROOT_FOLDER_ID = '__root__';
 const FOLDER_COLOR_OPTIONS = [
-	{ label: 'Indigo', value: 'bg-indigo-600' },
-	{ label: 'Rose', value: 'bg-rose-500' },
-	{ label: 'Violet', value: 'bg-violet-600' },
-	{ label: 'Emerald', value: 'bg-emerald-600' },
-	{ label: 'Amber', value: 'bg-amber-500' },
+	{ label: 'Indigo', value: '#4f46e5' },
+	{ label: 'Rose', value: '#f43f5e' },
+	{ label: 'Violet', value: '#7c3aed' },
+	{ label: 'Emerald', value: '#059669' },
+	{ label: 'Amber', value: '#f59e0b' },
+	{ label: 'Blue', value: '#3b82f6' },
+	{ label: 'Teal', value: '#14b8a6' },
+	{ label: 'Fuchsia', value: '#d946ef' },
+	{ label: 'Lime', value: '#84cc16' },
+	{ label: 'Slate', value: '#64748b' },
 ] as const;
 
 const getInitials = (name: string) =>
@@ -150,7 +155,7 @@ const WorkflowsListPage = () => {
 		return apiFolders.map((f) => ({
 			id: f.id,
 			name: f.name,
-			color: f.color || 'bg-indigo-600',
+			color: f.color || '#4f46e5',
 		}));
 	}, [apiFolders]);
 
@@ -214,10 +219,10 @@ const WorkflowsListPage = () => {
 	}, [searchParams, setSearchParams]);
 
 	const [newFolderName, setNewFolderName] = useState('');
-	const [newFolderColor, setNewFolderColor] = useState('bg-indigo-600');
+	const [newFolderColor, setNewFolderColor] = useState('#4f46e5');
 	const [editingFolder, setEditingFolder] = useState<IFolder | null>(null);
 	const [editFolderName, setEditFolderName] = useState('');
-	const [editFolderColor, setEditFolderColor] = useState('bg-indigo-600');
+	const [editFolderColor, setEditFolderColor] = useState('#4f46e5');
 
 	const [renamingId, setRenamingId] = useState<string | null>(null);
 	const [renameValue, setRenameValue] = useState('');
@@ -284,7 +289,7 @@ const WorkflowsListPage = () => {
 
 	const workflowGroups = useMemo<IFolder[]>(() => {
 		if (folderGrouped[ROOT_FOLDER_ID].length === 0) return folders;
-		return [{ id: ROOT_FOLDER_ID, name: 'Root workflows', color: 'bg-slate-600' }, ...folders];
+		return [{ id: ROOT_FOLDER_ID, name: 'Root workflows', color: '#475569' }, ...folders];
 	}, [folderGrouped, folders]);
 
 	const handleCreateWorkflow = async (e: React.FormEvent) => {
@@ -854,7 +859,8 @@ const WorkflowsListPage = () => {
 								) : (
 									<div className='group/folder relative flex items-center overflow-hidden rounded-2xl border border-slate-200/80 bg-white/70 shadow-2xs backdrop-blur-md transition-all duration-300 hover:border-violet-500/25 hover:bg-white dark:border-zinc-800/80 dark:bg-zinc-900/60 dark:hover:border-violet-500/20 dark:hover:bg-zinc-900/80'>
 										<div
-											className={`absolute top-0 bottom-0 left-0 w-1.5 ${folder.color} opacity-85`}
+											style={{ backgroundColor: folder.color }}
+											className='absolute top-0 bottom-0 left-0 w-1.5 opacity-85'
 										/>
 
 										<button
@@ -881,7 +887,8 @@ const WorkflowsListPage = () => {
 													)}
 												</span>
 												<div
-													className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl ${folder.color} text-white shadow-sm shadow-black/10`}>
+													style={{ backgroundColor: folder.color }}
+													className='flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-white shadow-sm shadow-black/10'>
 													<Folder size={16} className='fill-white/10' />
 												</div>
 												<span className='truncate text-xs font-bold tracking-wide text-slate-800 dark:text-zinc-200'>
@@ -1552,7 +1559,8 @@ const WorkflowsListPage = () => {
 												type='button'
 												title={color.label}
 												onClick={() => setNewFolderColor(color.value)}
-												className={`h-7.5 w-7.5 rounded-full ${color.value} cursor-pointer border bg-gradient-to-br transition ${newFolderColor === color.value ? 'scale-110 border-slate-800 ring-2 ring-violet-500 dark:border-white' : 'border-slate-200/50 hover:scale-105'}`}
+												style={{ backgroundColor: color.value }}
+												className={`h-7.5 w-7.5 rounded-full cursor-pointer border transition ${newFolderColor === color.value ? 'scale-110 border-slate-800 ring-2 ring-violet-500 dark:border-white' : 'border-slate-200/50 hover:scale-105'}`}
 											/>
 										))}
 									</div>
@@ -1627,7 +1635,8 @@ const WorkflowsListPage = () => {
 												type='button'
 												title={color.label}
 												onClick={() => setEditFolderColor(color.value)}
-												className={`h-7.5 w-7.5 rounded-full ${color.value} cursor-pointer border bg-gradient-to-br transition ${editFolderColor === color.value ? 'scale-110 border-slate-800 ring-2 ring-violet-500 dark:border-white' : 'border-slate-200/50 hover:scale-105'}`}
+												style={{ backgroundColor: color.value }}
+												className={`h-7.5 w-7.5 rounded-full cursor-pointer border transition ${editFolderColor === color.value ? 'scale-110 border-slate-800 ring-2 ring-violet-500 dark:border-white' : 'border-slate-200/50 hover:scale-105'}`}
 											/>
 										))}
 									</div>

@@ -49,7 +49,7 @@ export type TWorkflowEditorAction =
 	| { type: 'REDO' }
 	| { type: 'SET_WORKFLOW_META'; patch: Partial<TWorkflowMeta> }
 	| { type: 'SET_SAVE_STATE'; savingState: TWorkflowMeta['savingState'] }
-	| { type: 'TOGGLE_LEFT_PANEL' }
+	| { type: 'TOGGLE_LEFT_PANEL'; intent?: 'home' | 'trigger' }
 	| { type: 'TOGGLE_RUN_PANEL' }
 	| { type: 'TOGGLE_AI_PANEL' }
 	| { type: 'TOGGLE_MINIMAP' }
@@ -131,6 +131,7 @@ export const initialWorkflowEditorState: TWorkflowEditorState = {
 	},
 	ui: {
 		leftPanelOpen: false,
+		leftPanelIntent: 'home',
 		runPanelOpen: false,
 		aiPanelOpen: false,
 		miniMapOpen: false,
@@ -395,12 +396,16 @@ export const workflowEditorReducer = (
 		case 'SET_SAVE_STATE':
 			return { ...state, workflow: { ...state.workflow, savingState: action.savingState } };
 		case 'TOGGLE_LEFT_PANEL': {
-			const willBeOpen = !state.ui.leftPanelOpen;
+			const requestedIntent = action.intent ?? 'home';
+			const isSwitchingIntent =
+				state.ui.leftPanelOpen && state.ui.leftPanelIntent !== requestedIntent;
+			const willBeOpen = isSwitchingIntent ? true : !state.ui.leftPanelOpen;
 			return {
 				...state,
 				ui: {
 					...state.ui,
 					leftPanelOpen: willBeOpen,
+					leftPanelIntent: willBeOpen ? requestedIntent : state.ui.leftPanelIntent,
 					aiPanelOpen: willBeOpen ? false : state.ui.aiPanelOpen,
 				},
 			};

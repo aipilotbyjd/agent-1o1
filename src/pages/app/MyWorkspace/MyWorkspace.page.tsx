@@ -63,11 +63,16 @@ type TWorkflowView = {
 const ROOT_FOLDER_ID = '__root__';
 
 const FOLDER_COLOR_OPTIONS = [
-	{ label: 'Indigo', value: 'bg-indigo-600' },
-	{ label: 'Rose', value: 'bg-rose-500' },
-	{ label: 'Violet', value: 'bg-violet-600' },
-	{ label: 'Emerald', value: 'bg-emerald-600' },
-	{ label: 'Amber', value: 'bg-amber-500' },
+	{ label: 'Indigo', value: '#4f46e5' },
+	{ label: 'Rose', value: '#f43f5e' },
+	{ label: 'Violet', value: '#7c3aed' },
+	{ label: 'Emerald', value: '#059669' },
+	{ label: 'Amber', value: '#f59e0b' },
+	{ label: 'Blue', value: '#3b82f6' },
+	{ label: 'Teal', value: '#14b8a6' },
+	{ label: 'Fuchsia', value: '#d946ef' },
+	{ label: 'Lime', value: '#84cc16' },
+	{ label: 'Slate', value: '#64748b' },
 ] as const;
 
 const getInitials = (name: string) =>
@@ -144,7 +149,7 @@ const MyWorkspacePage = () => {
 			apiFolders.map((folder) => ({
 				id: folder.id,
 				name: folder.name,
-				color: folder.color || 'bg-indigo-600',
+				color: folder.color || '#4f46e5',
 			})),
 		[apiFolders],
 	);
@@ -173,7 +178,7 @@ const MyWorkspacePage = () => {
 	const [isFolderModalOpen, setIsFolderModalOpen] = useState(false);
 	const [editingFolder, setEditingFolder] = useState<TFolderView | null>(null);
 	const [folderName, setFolderName] = useState('');
-	const [folderColor, setFolderColor] = useState('bg-indigo-600');
+	const [folderColor, setFolderColor] = useState('#4f46e5');
 	const [workflowName, setWorkflowName] = useState('');
 	const [workflowDescription, setWorkflowDescription] = useState('');
 	const [workflowFolderId, setWorkflowFolderId] = useState('');
@@ -231,7 +236,7 @@ const MyWorkspacePage = () => {
 	const workflowGroups = useMemo(() => {
 		const rootGroup =
 			groupedWorkflows[ROOT_FOLDER_ID].length > 0
-				? [{ id: ROOT_FOLDER_ID, name: 'Workflows without folders', color: 'bg-slate-600' }]
+				? [{ id: ROOT_FOLDER_ID, name: 'Workflows without folders', color: '#475569' }]
 				: [];
 		return [...rootGroup, ...folders];
 	}, [folders, groupedWorkflows]);
@@ -248,7 +253,7 @@ const MyWorkspacePage = () => {
 	const resetFolderForm = () => {
 		setEditingFolder(null);
 		setFolderName('');
-		setFolderColor('bg-indigo-600');
+		setFolderColor('#4f46e5');
 	};
 
 	const openCreateFolder = () => {
@@ -879,7 +884,8 @@ const MyWorkspacePage = () => {
 									) : (
 										<div className='group/folder relative flex items-center overflow-hidden rounded-2xl border border-slate-200/80 bg-white/70 shadow-2xs backdrop-blur-md transition-all duration-300 hover:border-violet-500/25 hover:bg-white dark:border-zinc-800/80 dark:bg-zinc-900/60 dark:hover:border-violet-500/20 dark:hover:bg-zinc-900/80'>
 											<div
-												className={`absolute top-0 bottom-0 left-0 w-1.5 ${folder.color} opacity-85`}
+												style={{ backgroundColor: folder.color }}
+												className='absolute top-0 bottom-0 left-0 w-1.5 opacity-85'
 											/>
 
 											<button
@@ -902,7 +908,8 @@ const MyWorkspacePage = () => {
 														)}
 													</span>
 													<div
-														className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl ${folder.color} text-white shadow-sm shadow-black/10`}>
+														style={{ backgroundColor: folder.color }}
+														className='flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-white shadow-sm shadow-black/10'>
 														<Folder
 															size={16}
 															className='fill-white/10'
@@ -1124,7 +1131,8 @@ const MyWorkspacePage = () => {
 												aria-label={`Use ${color.label} folder color`}
 												title={color.label}
 												onClick={() => setFolderColor(color.value)}
-												className={`h-8 w-8 rounded-full ${color.value} border-2 transition ${
+												style={{ backgroundColor: color.value }}
+												className={`h-8 w-8 rounded-full border-2 transition ${
 													folderColor === color.value
 														? 'scale-110 border-slate-900 shadow-md dark:border-white'
 														: 'border-transparent hover:scale-105'
