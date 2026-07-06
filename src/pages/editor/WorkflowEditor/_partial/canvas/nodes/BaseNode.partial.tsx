@@ -13,6 +13,7 @@ import {
 	Loader2,
 	MessageSquare,
 	OctagonX,
+	Pin,
 	TriangleAlert,
 	Webhook,
 	Zap,
@@ -216,6 +217,14 @@ const BaseNode = ({ id, data, selected }: NodeProps<TCanvasNode>) => {
 								{status === 'success' && <CheckCircle2 size={9} />}
 								{status}
 							</span>
+							{data.pinned && (
+								<span
+									title='Output pinned — reused on re-run'
+									className='inline-flex shrink-0 items-center gap-1 rounded-full bg-amber-100 px-2 py-0.5 text-[9px] font-bold tracking-wide text-amber-600 uppercase dark:bg-amber-950/40 dark:text-amber-400'>
+									<Pin size={9} />
+									Pinned
+								</span>
+							)}
 						</div>
 						<div className='text-[15px] font-bold tracking-tight text-zinc-900 dark:text-zinc-100'>
 							{data.label || def?.label || 'Node'}

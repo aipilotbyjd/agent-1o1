@@ -837,6 +837,7 @@ const HistoryListPage = () => {
 										setRowsPerPage(Number(e.target.value));
 										setCurrentPage(1);
 									}}
+									style={{ WebkitAppearance: 'none', MozAppearance: 'none' }}
 									className='h-9 cursor-pointer appearance-none rounded-xl border border-slate-200 bg-white bg-[url("/src/assets/required/chevron-down.svg")] bg-[length:12px] bg-[right_12px_center] bg-no-repeat pr-8 pl-3.5 text-xs font-bold shadow-xs transition-colors outline-none focus:border-violet-500 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-300'>
 									{[10, 20, 50].map((val) => (
 										<option key={val} value={val}>

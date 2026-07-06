@@ -276,3 +276,26 @@ layer(base);
 .rdrDateInput.rdrDateDisplayItem.rdrDateDisplayItemActive {
 	@apply bg-transparent dark:bg-transparent;
 }
+
+@layer base {
+	:root {
+		--corner-bg: var(--color-zinc-100);
+	}
+	.dark {
+		--corner-bg: var(--color-zinc-900);
+	}
+}
+
+@utility corner-top-left {
+	background: radial-gradient(circle at 100% 100%, transparent 16px, var(--corner-bg) 16.5px);
+}
+@utility corner-top-right {
+	background: radial-gradient(circle at 0% 100%, transparent 16px, var(--corner-bg) 16.5px);
+}
+@utility corner-bottom-left {
+	background: radial-gradient(circle at 100% 0%, transparent 16px, var(--corner-bg) 16.5px);
+}
+@utility corner-bottom-right {
+	background: radial-gradient(circle at 0% 0%, transparent 16px, var(--corner-bg) 16.5px);
+}
+

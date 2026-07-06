@@ -1,5 +1,5 @@
 import type { TCanvasEdge, TCanvasNode, TCanvasSnapshot } from './canvas.type';
-import type { TRunState } from './run.type';
+import type { TRunRecord, TRunState } from './run.type';
 
 export type TWorkflowMeta = {
 	id: string;
@@ -36,6 +36,7 @@ export type TEditorUiState = {
 	stepMode: boolean;
 	waitingForStep: boolean;
 	linkCredentialsOpen: boolean;
+	runPanelTab: 'console' | 'history';
 };
 
 export type THistoryState = {
@@ -50,6 +51,7 @@ export type TWorkflowEditorState = {
 	run: TRunState;
 	ui: TEditorUiState;
 	history: THistoryState;
+	runHistory: TRunRecord[];
 };
 
 export type TExportedWorkflow = {

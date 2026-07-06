@@ -3,6 +3,7 @@ import { useWorkflowEditor } from '../../_context/WorkflowEditorProvider.context
 import { Bug, ChevronRight, X } from 'lucide-react';
 import NodeRunOutput from './NodeRunOutput.partial';
 import RunConsole from './RunConsole.partial';
+import RunHistory from './RunHistory.partial';
 import RunTimeline from './RunTimeline.partial';
 
 const ProfilerSummary = ({ nodes }: { nodes: { label: string; durationMs?: number }[] }) => {
@@ -66,6 +67,7 @@ const RunPanel = () => {
 	if (!state.ui.runPanelOpen) return null;
 
 	const run = state.run;
+	const tab = state.ui.runPanelTab;
 	const hasOutput = state.nodes.some((node) => node.data.outputPreview !== undefined);
 	const timedNodes = state.nodes
 		.filter((n) => n.data.durationMs !== undefined)
@@ -93,6 +95,26 @@ const RunPanel = () => {
 							)}
 						</div>
 						<RunTimeline run={run} />
+						<div className='mt-1 flex items-center gap-1'>
+							{(['console', 'history'] as const).map((value) => (
+								<button
+									key={value}
+									type='button'
+									onClick={() => dispatch({ type: 'SET_RUN_PANEL_TAB', tab: value })}
+									className={`rounded-md px-2.5 py-1 text-[11px] font-bold capitalize transition ${
+										tab === value
+											? 'bg-white/10 text-white'
+											: 'text-zinc-500 hover:text-zinc-300'
+									}`}>
+									{value}
+									{value === 'history' && state.runHistory.length > 0 && (
+										<span className='ml-1 text-zinc-500'>
+											({state.runHistory.length})
+										</span>
+									)}
+								</button>
+							))}
+						</div>
 					</div>
 					<div className='flex items-center gap-2'>
 						{run.status === 'running' && run.currentNodeId && (
@@ -123,6 +145,11 @@ const RunPanel = () => {
 				</div>
 			</div>
 
+			{tab === 'history' ? (
+				<div className='flex-1 p-4'>
+					<RunHistory />
+				</div>
+			) : (
 			<div className='flex-1 space-y-6 p-4'>
 				{hasOutput && (
 					<div>
@@ -142,6 +169,7 @@ const RunPanel = () => {
 					<RunConsole logs={run.logs} />
 				</div>
 			</div>
+			)}
 		</section>
 	);
 };

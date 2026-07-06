@@ -22,6 +22,8 @@ import HistoryPage from '@/pages/app/History/HistoryList.page';
 import Topbar from '../_partial/shell/Topbar.partial';
 import WorkflowsPage from '@/pages/app/Workflows/WorkflowsList.page';
 import WorkspaceSidebar from '@/templates/asides/AgentAside.template';
+import useAsideStatus from '@/hooks/useAsideStatus';
+import useDeviceScreen from '@/hooks/useDeviceScreen';
 import { useAutosave } from '../_hooks/useAutosave.hook';
 import { useEditorHotkeys } from '../_hooks/useEditorHotkeys.hook';
 import { useWorkflowApiLoader } from '../_hooks/useWorkflowApiLoader.hook';
@@ -34,13 +36,15 @@ import { CanvasTopbar } from '../_partial/shell/CanvasTopbar.partial';
 const BuildPage = () => {
 	const isChatActive = useAiChatStore((store) => store.isChatActive);
 	const { state, dispatch } = useWorkflowEditor();
+	const { width } = useDeviceScreen();
+	const isMobile = width !== undefined && width < 768;
 	const activeWorkspaceView = useWorkflowShellStore((store) => store.activeWorkspaceView);
 	const resolvedView = window.location.pathname.startsWith('/editor')
 		? 'editor'
 		: activeWorkspaceView;
 	const setActiveWorkspaceView = useWorkflowShellStore((store) => store.setActiveWorkspaceView);
 	const mobileSidebarOpen = useWorkflowShellStore((store) => store.mobileSidebarOpen);
-	const closeMobileSidebar = useWorkflowShellStore((store) => store.closeMobileSidebar);
+	const { closeAside } = useAsideStatus();
 	const { workspaceId, workflowId } = useWorkflowRouteParams();
 	const apiState = useWorkflowApiLoader(workspaceId, workflowId);
 	const [leftPanelWidth, setLeftPanelWidth] = useState(320);
@@ -86,7 +90,7 @@ const BuildPage = () => {
 						<button
 							type='button'
 							aria-label='Close sidebar'
-							onClick={closeMobileSidebar}
+							onClick={closeAside}
 							className='absolute inset-0 bg-zinc-950/35 backdrop-blur-sm'
 						/>
 						<motion.div
@@ -115,48 +119,60 @@ const BuildPage = () => {
 			) : (
 				<>
 					<Topbar />
-					<div className='flex flex-1 min-h-0'>
+					<div className='relative flex flex-1 min-h-0'>
 						<AnimatePresence initial={false}>
 							{state.ui.aiPanelOpen && (
 								<motion.div
 									initial={{ width: 0, opacity: 0 }}
-									animate={{ width: aiPanelWidth, opacity: 1 }}
+									animate={{ width: isMobile ? (width || '100%') : aiPanelWidth, opacity: 1 }}
 									exit={{ width: 0, opacity: 0 }}
 									transition={{ duration: 0.2 }}
-									className='min-h-0 shrink-0 overflow-hidden'>
-									<Resizable
-										size={{ width: aiPanelWidth, height: '100%' }}
-										minWidth={360}
-										maxWidth='45vw'
-										enable={{ right: true }}
-										onResizeStop={(_, __, ref) => setAiPanelWidth(ref.offsetWidth)}
-										className='min-h-0 shrink-0'>
-										<AiBuilderPanel />
-									</Resizable>
+									className={isMobile ? 'absolute inset-y-0 left-0 z-50 bg-zinc-50 dark:bg-zinc-950 shadow-2xl min-h-0 w-full' : 'min-h-0 shrink-0 overflow-hidden'}>
+									{isMobile ? (
+										<div className="w-full h-full overflow-y-auto">
+											<AiBuilderPanel />
+										</div>
+									) : (
+										<Resizable
+											size={{ width: aiPanelWidth, height: '100%' }}
+											minWidth={360}
+											maxWidth='45vw'
+											enable={{ right: true }}
+											onResizeStop={(_, __, ref) => setAiPanelWidth(ref.offsetWidth)}
+											className='min-h-0 shrink-0'>
+											<AiBuilderPanel />
+										</Resizable>
+									)}
 								</motion.div>
 							)}
 						</AnimatePresence>
 						<div className='flex min-w-0 flex-1 flex-col overflow-hidden rounded-l-2xl border-l border-zinc-200 bg-white dark:border-white/10 dark:bg-zinc-950'>
-							<div className='flex min-h-0 flex-1'>
+							<div className='relative flex min-h-0 flex-1'>
 							<AnimatePresence initial={false}>
 								{state.ui.leftPanelOpen && (
 									<motion.div
 										initial={{ width: 0, opacity: 0 }}
-										animate={{ width: leftPanelWidth, opacity: 1 }}
+										animate={{ width: isMobile ? 320 : leftPanelWidth, opacity: 1 }}
 										exit={{ width: 0, opacity: 0 }}
 										transition={{ duration: 0.2 }}
-										className='min-h-0 shrink-0 overflow-hidden'>
-										<Resizable
-											size={{ width: leftPanelWidth, height: '100%' }}
-											minWidth={260}
-											maxWidth={460}
-											enable={{ right: true }}
-											onResizeStop={(_, __, ref) =>
-												setLeftPanelWidth(ref.offsetWidth)
-											}
-											className='min-h-0 shrink-0'>
-											<NodeLibrary />
-										</Resizable>
+										className={isMobile ? 'absolute inset-y-0 left-0 z-40 bg-white dark:bg-zinc-950 border-r border-zinc-200 dark:border-white/10 shadow-2xl min-h-0' : 'min-h-0 shrink-0 overflow-hidden'}>
+										{isMobile ? (
+											<div className="w-[320px] max-w-[100vw] h-full overflow-y-auto">
+												<NodeLibrary />
+											</div>
+										) : (
+											<Resizable
+												size={{ width: leftPanelWidth, height: '100%' }}
+												minWidth={260}
+												maxWidth={460}
+												enable={{ right: true }}
+												onResizeStop={(_, __, ref) =>
+													setLeftPanelWidth(ref.offsetWidth)
+												}
+												className='min-h-0 shrink-0'>
+												<NodeLibrary />
+											</Resizable>
+										)}
 									</motion.div>
 								)}
 							</AnimatePresence>

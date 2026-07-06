@@ -13,7 +13,7 @@ interface IHeaderLeftProps extends HTMLAttributes<HTMLDivElement> {
 export const HeaderLeft: FC<IHeaderLeftProps> = (props) => {
 	const { children, className, ...rest } = props;
 
-	const { asideStatus, setAsideStatus } = useAsideStatus();
+	const { asideStatus, toggleAside } = useAsideStatus();
 
 	return (
 		<div
@@ -27,7 +27,7 @@ export const HeaderLeft: FC<IHeaderLeftProps> = (props) => {
 			<button
 				type='button'
 				aria-label='Toggle Aside Menu'
-				onClick={() => setAsideStatus(!asideStatus)}
+				onClick={toggleAside}
 				className='flex h-12 w-10 shrink-0 items-center justify-center sm:w-12 md:hidden'>
 				<Icon icon={asideStatus ? 'SidebarLeft01' : 'SidebarLeft'} className='text-2xl' />
 			</button>

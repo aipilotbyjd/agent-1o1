@@ -15,7 +15,7 @@ import type {
 	TNodeDefinition,
 	TNodeRunStatus,
 } from '../_types/node.type';
-import type { TRunLog } from '../_types/run.type';
+import type { TRunLog, TRunRecord } from '../_types/run.type';
 import type {
 	TExportedWorkflow,
 	TWorkflowEditorState,
@@ -90,7 +90,13 @@ export type TWorkflowEditorAction =
 	| { type: 'SET_DIFF_VIEWER'; open: boolean }
 	| { type: 'SET_STEP_MODE'; enabled: boolean }
 	| { type: 'STEP_NEXT' }
-	| { type: 'SET_LINK_CREDENTIALS_OPEN'; open: boolean };
+	| { type: 'SET_LINK_CREDENTIALS_OPEN'; open: boolean }
+	// Pinned data + run history
+	| { type: 'PIN_NODE_OUTPUT'; id: string; output?: unknown }
+	| { type: 'UNPIN_NODE'; id: string }
+	| { type: 'PUSH_RUN_HISTORY'; record: TRunRecord }
+	| { type: 'CLEAR_RUN_HISTORY' }
+	| { type: 'SET_RUN_PANEL_TAB'; tab: 'console' | 'history' };
 
 export type TWorkflowEditorContextValue = {
 	state: TWorkflowEditorState;
@@ -143,12 +149,16 @@ export const initialWorkflowEditorState: TWorkflowEditorState = {
 		stepMode: false,
 		waitingForStep: false,
 		linkCredentialsOpen: false,
+		runPanelTab: 'console',
 	},
 	history: {
 		past: [],
 		future: [],
 	},
+	runHistory: [],
 };
+
+const RUN_HISTORY_LIMIT = 25;
 
 const snapshot = (state: TWorkflowEditorState): TCanvasSnapshot => ({
 	nodes: structuredClone(state.nodes),
@@ -596,6 +606,43 @@ export const workflowEditorReducer = (
 			return { ...state, ui: { ...state.ui, waitingForStep: false } };
 		case 'SET_LINK_CREDENTIALS_OPEN':
 			return { ...state, ui: { ...state.ui, linkCredentialsOpen: action.open } };
+		case 'PIN_NODE_OUTPUT':
+			return {
+				...state,
+				nodes: state.nodes.map((node) =>
+					node.id === action.id
+						? {
+								...node,
+								data: {
+									...node.data,
+									pinned: true,
+									pinnedOutput:
+										action.output !== undefined
+											? action.output
+											: node.data.outputPreview,
+								},
+							}
+						: node,
+				),
+			};
+		case 'UNPIN_NODE':
+			return {
+				...state,
+				nodes: state.nodes.map((node) =>
+					node.id === action.id
+						? { ...node, data: { ...node.data, pinned: false, pinnedOutput: undefined } }
+						: node,
+				),
+			};
+		case 'PUSH_RUN_HISTORY':
+			return {
+				...state,
+				runHistory: [action.record, ...state.runHistory].slice(0, RUN_HISTORY_LIMIT),
+			};
+		case 'CLEAR_RUN_HISTORY':
+			return { ...state, runHistory: [] };
+		case 'SET_RUN_PANEL_TAB':
+			return { ...state, ui: { ...state.ui, runPanelTab: action.tab } };
 		default:
 			return state;
 	}

@@ -93,4 +93,7 @@ export type TCanvasNodeData = {
 	comments?: TNodeComment[];
 	testOutput?: unknown;
 	testStatus?: 'idle' | 'running' | 'success' | 'error';
+	// Pinned data: when pinned, the engine reuses this output instead of executing
+	pinned?: boolean;
+	pinnedOutput?: unknown;
 } & Record<string, unknown>;

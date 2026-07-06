@@ -209,7 +209,6 @@ const ProfilePage = () => {
 
 	return (
 		<div className='mx-auto w-full max-w-[1180px] px-6 py-8 sm:px-10 lg:px-14'>
-			{/* Top Header Row */}
 			<div className='mb-6 flex items-start justify-between'>
 				<div>
 					<h1 className='text-3xl font-black tracking-tight text-zinc-950 dark:text-zinc-50'>
@@ -218,44 +217,6 @@ const ProfilePage = () => {
 					<p className='mt-1 text-sm font-medium text-zinc-500 dark:text-zinc-400'>
 						Manage your account settings and preferences
 					</p>
-				</div>
-
-				{/* Top Right Controls */}
-				<div className='flex items-center gap-3'>
-					{/* Help Button */}
-					<button
-						type='button'
-						aria-label='Help'
-						className='flex h-9.5 w-9.5 items-center justify-center rounded-xl border border-zinc-200 bg-white text-zinc-500 transition hover:text-zinc-800 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200'>
-						<HelpCircle size={18} />
-					</button>
-
-					{/* Notifications Bell */}
-					<button
-						type='button'
-						aria-label='Notifications'
-						className='relative flex h-9.5 w-9.5 items-center justify-center rounded-xl border border-zinc-200 bg-white text-zinc-500 transition hover:text-zinc-800 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200'>
-						<Bell size={18} />
-						<span className='absolute top-1.5 right-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[9px] font-bold text-white shadow-sm'>
-							3
-						</span>
-					</button>
-
-					{/* User Profile dropdown */}
-					<div className='dark:hover:bg-zinc-800 flex cursor-pointer items-center gap-2.5 rounded-full border border-zinc-200 bg-white p-1 pr-3 transition hover:bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900'>
-						<div className='flex h-7.5 w-7.5 items-center justify-center rounded-full bg-pink-100 text-xs font-black text-pink-600 dark:bg-pink-950 dark:text-pink-400'>
-							{getInitials(displayName)}
-						</div>
-						<div className='flex flex-col text-left leading-none'>
-							<span className='text-xs font-black text-zinc-900 dark:text-zinc-100'>
-								{displayName}
-							</span>
-							<span className='mt-0.5 text-[9px] font-semibold text-zinc-400'>
-								{workspaceRole}
-							</span>
-						</div>
-						<ChevronDown size={12} className='text-zinc-400' />
-					</div>
 				</div>
 			</div>
 

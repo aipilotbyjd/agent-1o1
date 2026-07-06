@@ -6,6 +6,7 @@ import { useEffect } from 'react';
 import MainAppBar from '@/pages/app/_partial/MainAppBar.partial';
 import WorkspaceSidebar from '@/templates/asides/AgentAside.template';
 import { useWorkflowShellStore } from '@/store/workflowShell.store';
+import useAsideStatus from '@/hooks/useAsideStatus';
 
 type TWorkspaceView =
 	| 'dashboard'
@@ -45,7 +46,7 @@ const WorkspacePageFrame = ({
 }) => {
 	const setActiveWorkspaceView = useWorkflowShellStore((store) => store.setActiveWorkspaceView);
 	const mobileSidebarOpen = useWorkflowShellStore((store) => store.mobileSidebarOpen);
-	const closeMobileSidebar = useWorkflowShellStore((store) => store.closeMobileSidebar);
+	const { closeAside } = useAsideStatus();
 
 	useEffect(() => {
 		setActiveWorkspaceView(activeView);
@@ -63,7 +64,7 @@ const WorkspacePageFrame = ({
 						<button
 							type='button'
 							aria-label='Close sidebar'
-							onClick={closeMobileSidebar}
+							onClick={closeAside}
 							className='absolute inset-0 bg-zinc-950/35 backdrop-blur-sm'
 						/>
 						<motion.div
