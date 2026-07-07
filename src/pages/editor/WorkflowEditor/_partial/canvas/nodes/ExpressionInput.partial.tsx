@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { Braces, CornerDownLeft } from 'lucide-react';
 import { useWorkflowEditor } from '../../../_context/WorkflowEditorProvider.context';
 import { collectUpstreamVariables } from '../../../_helper/variables.helper';
-import { buildTokenMap, resolveExpressions } from '../../../_helper/runtime.helper';
+import { buildRuntimeContext, resolveExpressions } from '../../../_helper/runtime.helper';
 import type { TNodeField } from '../../../_types/node.type';
 import type { TNodeOutputs } from '../../../_helper/runtime.helper';
 
@@ -39,26 +39,29 @@ const ExpressionInput = ({ field, value, onChange, compact, nodeId, className }:
 		[nodeId, state.nodes, state.edges],
 	);
 
-	// Build a token map from the latest outputs / pinned data for live preview.
-	const tokenMap = useMemo(() => {
+	// Build an id-keyed runtime context from the latest outputs / pinned data for
+	// live preview, matching the backend resolver's scope.
+	const runtimeCtx = useMemo(() => {
 		const outputs: TNodeOutputs = {};
 		state.nodes.forEach((node) => {
 			const out = node.data.pinned ? node.data.pinnedOutput : node.data.outputPreview;
 			if (out !== undefined) outputs[node.id] = out;
 		});
-		return buildTokenMap(state.nodes, outputs);
+		return buildRuntimeContext(state.nodes, outputs);
 	}, [state.nodes]);
 
 	const matches = useMemo(() => {
 		if (query === null) return [];
 		const q = query.toLowerCase();
+		// Tokens are now id-based (opaque), so match against the friendly label
+		// and field name too — that's what the user actually types.
 		return variables
-			.filter((v) => v.token.toLowerCase().includes(q))
+			.filter((v) => `${v.nodeLabel} ${v.outputId} ${v.token}`.toLowerCase().includes(q))
 			.slice(0, 6);
 	}, [query, variables]);
 
 	const hasTokens = text.includes('{{');
-	const preview = hasTokens ? String(resolveExpressions(text, tokenMap) ?? '') : '';
+	const preview = hasTokens ? String(resolveExpressions(text, runtimeCtx) ?? '') : '';
 	const previewChanged = preview !== text;
 
 	const syncQuery = (el: HTMLTextAreaElement | HTMLInputElement) => {
