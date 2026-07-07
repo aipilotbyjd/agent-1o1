@@ -35,6 +35,13 @@ export type TExecution = {
 	credits_consumed?: number;
 };
 
+// Response of POST /workspaces/{id}/workflows/{id}/execute — the engine returns
+// the queued execution plus the private channel to subscribe to for live updates.
+export type TExecuteWorkflowResponse = {
+	execution: TExecution;
+	channel: string;
+};
+
 // Execution detail — as returned by GET /workspaces/{id}/executions/{id}
 export type TExecutionDetail = {
 	id: string;
