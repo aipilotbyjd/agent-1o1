@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import { Check, Crown, Infinity, X, Zap } from 'lucide-react';
+import { Check, X, Zap } from 'lucide-react';
 import { useWorkspaceContext } from '@/context/workspaceContext';
 import { usePlans, useSubscription } from '@/api/modules/plans';
-import { useBillingSwitch, useLifetimePlans } from '@/api/modules/billing';
+import { useBillingCheckout } from '@/api/modules/billing';
 import type { TBillingInterval, TPlanFeatures } from '@/types/billing.type';
 
 const FEATURE_LABELS: Record<keyof TPlanFeatures, string> = {
@@ -34,14 +34,12 @@ const PlanUpgradePage = () => {
 	const { activeWorkspaceId } = useWorkspaceContext();
 	const { data: plans, isLoading } = usePlans();
 	const { data: subscription } = useSubscription(activeWorkspaceId);
-	const { data: lifetimePlans } = useLifetimePlans(activeWorkspaceId);
-	const switchPlan = useBillingSwitch(activeWorkspaceId);
+	const switchPlan = useBillingCheckout(activeWorkspaceId);
 	const [interval, setInterval] = useState<TBillingInterval>('monthly');
 
 	const currentSlug = subscription?.plan?.slug;
 	const currentInterval = subscription?.billing_interval;
 	const isCurrentLifetime = subscription?.is_lifetime ?? false;
-	const hasLifetimePlans = (lifetimePlans?.length ?? 0) > 0;
 
 	if (isLoading) {
 		return (
@@ -221,107 +219,6 @@ const PlanUpgradePage = () => {
 					);
 				})}
 			</div>
-
-			{/* Lifetime plans section */}
-			{hasLifetimePlans && (
-				<section>
-					<div className='mb-4 flex items-center gap-3'>
-						<Crown size={18} className='text-amber-500' />
-						<h3 className='text-lg font-black'>Lifetime Plans</h3>
-						<span className='rounded-full bg-amber-100 px-2.5 py-0.5 text-xs font-black text-amber-700 dark:bg-amber-950 dark:text-amber-300'>
-							One-time payment
-						</span>
-					</div>
-					<p className='mb-5 text-sm text-zinc-500 dark:text-zinc-400'>
-						Pay once, own it forever. No recurring charges, no credit card on file.
-					</p>
-					<div className='grid gap-4 sm:grid-cols-2 lg:grid-cols-3'>
-						{lifetimePlans?.map((lp) => {
-							const isCurrentLifetimePlan =
-								isCurrentLifetime && currentSlug === lp.plan_slug;
-							return (
-								<div
-									key={lp.plan_slug}
-									className={[
-										'relative flex flex-col rounded-2xl border p-6 shadow-sm transition',
-										isCurrentLifetimePlan
-											? 'border-amber-400 bg-amber-950 text-white dark:border-amber-400'
-											: 'border-zinc-200 bg-white dark:border-zinc-700 dark:bg-zinc-900',
-									].join(' ')}>
-									{isCurrentLifetimePlan && (
-										<span className='absolute top-4 right-4 rounded-full bg-amber-500/20 px-2.5 py-1 text-[10px] font-black text-amber-300'>
-											Your plan
-										</span>
-									)}
-									<div className='flex items-center gap-2'>
-										<Crown size={15} className='text-amber-500' />
-										<p className='text-xs font-bold tracking-widest text-amber-600 uppercase dark:text-amber-400'>
-											Lifetime
-										</p>
-									</div>
-									<h3 className='mt-1 text-xl font-black'>{lp.label}</h3>
-									<div className='mt-3 flex items-baseline gap-1.5'>
-										<span className='text-3xl font-black'>
-											${(lp.price_cents / 100).toFixed(0)}
-										</span>
-										<span className='text-sm text-zinc-400'>one-time</span>
-									</div>
-
-									{/* Key limits */}
-									<ul className='mt-4 space-y-1.5 border-t border-zinc-100 pt-4 text-sm dark:border-zinc-800'>
-										<li className='flex items-center gap-2'>
-											<Infinity size={14} className='text-amber-500' />
-											{fmtLimit(lp.limits.credits_monthly)} credits/mo
-										</li>
-										<li className='flex items-center gap-2'>
-											<Infinity size={14} className='text-amber-500' />
-											Never expires
-										</li>
-										{lp.features.annual_rollover && (
-											<li className='flex items-center gap-2'>
-												<Check size={14} className='text-emerald-500' />
-												Annual rollover included
-											</li>
-										)}
-									</ul>
-
-									{/* CTA */}
-									<div className='mt-6'>
-										{isCurrentLifetimePlan ? (
-											<div className='flex w-full items-center justify-center rounded-xl border border-amber-500/30 py-2.5 text-sm font-bold text-amber-400'>
-												Your current plan
-											</div>
-										) : !lp.available ? (
-											<div className='flex w-full items-center justify-center rounded-xl border border-zinc-200 py-2.5 text-sm font-medium text-zinc-400 dark:border-zinc-700'>
-												Not available
-											</div>
-										) : (
-											<button
-												type='button'
-												onClick={() =>
-													switchPlan.mutate({
-														plan_id:
-															plans?.find(
-																(p) => p.slug === lp.plan_slug,
-															)?.id ?? lp.plan_slug,
-														interval: 'lifetime',
-													})
-												}
-												disabled={switchPlan.isPending}
-												className='flex w-full items-center justify-center gap-2 rounded-xl bg-amber-500 py-2.5 text-sm font-black text-white transition hover:bg-amber-600 disabled:opacity-60'>
-												<Crown size={14} />
-												{switchPlan.isPending
-													? 'Processing…'
-													: 'Get lifetime access'}
-											</button>
-										)}
-									</div>
-								</div>
-							);
-						})}
-					</div>
-				</section>
-			)}
 
 			{/* Full feature comparison table */}
 			{plans && plans.length > 0 && (

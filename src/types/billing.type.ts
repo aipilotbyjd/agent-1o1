@@ -3,32 +3,25 @@ export type TBillingCheckoutDto = {
 	interval: TBillingInterval;
 };
 
-export type TBillingSwitchDto = {
-	plan_id: string;
-	interval: TBillingInterval | 'lifetime';
-};
-
 export type TBillingSwitchUrlResponse = {
 	url: string;
 	trial_days?: number;
 };
 
 export type TBuyCreditsDto = {
-	price_id: string;
+	pack_key: string;
 };
 
 export type TBillingUrlResponse = {
 	url: string;
 };
 
-export type TLifetimePlan = {
-	plan_slug: string;
-	plan_name: string;
+export type TCreditPackCatalogItem = {
+	key: string;
 	label: string;
+	credits: number;
 	price_cents: number;
 	available: boolean;
-	limits: TPlanLimits;
-	features: TPlanFeatures;
 };
 
 export type TSubscriptionStatus = 'active' | 'trialing' | 'past_due' | 'canceled' | 'expired';

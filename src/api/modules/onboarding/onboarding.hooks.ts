@@ -53,11 +53,11 @@ export const useOnboardingSelectPlan = () => {
 
 export const useOnboardingStripeCheckout = (workspaceId: string) => {
 	return useMutation({
-		mutationFn: (payload: { plan_slug: string }) =>
+		mutationFn: (payload: { plan_id: string; interval: 'monthly' | 'yearly' }) =>
 			OnboardingService.stripeCheckout(workspaceId, payload),
 		onSuccess: (data) => {
-			if (data.checkout_url) {
-				window.location.href = data.checkout_url;
+			if (data.url) {
+				window.location.href = data.url;
 			}
 		},
 		onError: (error) => {

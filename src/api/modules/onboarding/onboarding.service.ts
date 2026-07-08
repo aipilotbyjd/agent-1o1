@@ -80,10 +80,10 @@ export const OnboardingService = {
 			.post<TApiResponse<IOnboardingStateResponse>>(E.plan, payload)
 			.then(unwrap<IOnboardingStateResponse>),
 
-	stripeCheckout: (workspaceId: string, payload: { plan_slug: string }) =>
+	stripeCheckout: (workspaceId: string, payload: { plan_id: string; interval: 'monthly' | 'yearly' }) =>
 		axiosClient
-			.post<TApiResponse<{ checkout_url: string }>>(E.stripeCheckout(workspaceId), payload)
-			.then(unwrap<{ checkout_url: string }>),
+			.post<TApiResponse<{ url: string }>>(E.stripeCheckout(workspaceId), payload)
+			.then(unwrap<{ url: string }>),
 
 	submitDiscovery: (payload: { discovery_source: string }) =>
 		axiosClient

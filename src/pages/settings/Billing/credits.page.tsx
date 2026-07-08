@@ -1,16 +1,9 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { AlertTriangle, CreditCard, Package, Sparkles } from 'lucide-react';
 import { useWorkspaceContext } from '@/context/workspaceContext';
 import { useCreditBalance, useCreditPacks } from '@/api/modules/credits';
-import { useBuyCredits } from '@/api/modules/billing';
+import { useBuyCredits, usePackCatalog } from '@/api/modules/billing';
 import type { TCreditPack } from '@/types/credit.type';
-
-const CREDIT_PACKS = [
-	{ credits: 1_000, bonus: 0, price: 5_00, priceId: 'price_1k', label: '1,000 credits' },
-	{ credits: 5_000, bonus: 250, price: 20_00, priceId: 'price_5k', label: '5,000 credits' },
-	{ credits: 20_000, bonus: 2_000, price: 70_00, priceId: 'price_20k', label: '20,000 credits' },
-	{ credits: 50_000, bonus: 7_500, price: 150_00, priceId: 'price_50k', label: '50,000 credits' },
-];
 
 const formatPrice = (cents: number) =>
 	new Intl.NumberFormat('en-US', {
@@ -49,11 +42,19 @@ const packStatusBadge: Record<TCreditPack['status'], { bg: string; text: string;
 	};
 
 const CreditsPage = () => {
-	const [selected, setSelected] = useState(CREDIT_PACKS[1].priceId);
 	const { activeWorkspaceId } = useWorkspaceContext();
 	const { data: balance, isLoading: balanceLoading } = useCreditBalance(activeWorkspaceId);
 	const { data: activePacks, isLoading: packsLoading } = useCreditPacks(activeWorkspaceId);
+	const { data: catalog, isLoading: catalogLoading } = usePackCatalog(activeWorkspaceId);
 	const buyCredits = useBuyCredits(activeWorkspaceId);
+
+	const [selected, setSelected] = useState<string | null>(null);
+
+	useEffect(() => {
+		if (!selected && catalog && catalog.length > 0) {
+			setSelected(catalog[Math.min(1, catalog.length - 1)].key);
+		}
+	}, [catalog, selected]);
 
 	const credits = balance?.credits;
 	const remaining = credits?.remaining ?? 0;
@@ -68,8 +69,8 @@ const CreditsPage = () => {
 	const barColor =
 		usedPct >= 80 ? 'bg-red-500' : usedPct >= 60 ? 'bg-yellow-500' : 'bg-emerald-500';
 
-	const selectedPack = CREDIT_PACKS.find((p) => p.priceId === selected)!;
-	const totalCredits = selectedPack.credits + selectedPack.bonus;
+	const packs = catalog ?? [];
+	const selectedPack = packs.find((p) => p.key === selected);
 
 	return (
 		<div className='text-zinc-950 dark:text-zinc-50'>
@@ -86,85 +87,90 @@ const CreditsPage = () => {
 					<h2 className='text-sm font-black tracking-widest text-zinc-400 uppercase dark:text-zinc-500'>
 						Select a pack
 					</h2>
-					<div className='mt-3 grid gap-3 sm:grid-cols-2'>
-						{CREDIT_PACKS.map((pack) => (
-							<button
-								key={pack.priceId}
-								type='button'
-								onClick={() => setSelected(pack.priceId)}
-								className={[
-									'relative rounded-2xl border p-5 text-left transition',
-									selected === pack.priceId
-										? 'border-zinc-950 bg-zinc-950 text-zinc-50 dark:border-zinc-50 dark:bg-zinc-50 dark:text-zinc-950'
-										: 'border-zinc-200 bg-white hover:border-zinc-300 dark:border-zinc-700 dark:bg-zinc-900 dark:hover:border-zinc-600',
-								].join(' ')}>
-								<div className='flex items-start justify-between'>
-									<div>
-										<p className='text-xl font-black'>
-											{pack.credits.toLocaleString()}
+					{catalogLoading ? (
+						<div className='mt-3 grid gap-3 sm:grid-cols-2'>
+							{[1, 2, 3, 4].map((i) => (
+								<div
+									key={i}
+									className='h-24 animate-pulse rounded-2xl bg-zinc-100 dark:bg-zinc-800'
+								/>
+							))}
+						</div>
+					) : (
+						<div className='mt-3 grid gap-3 sm:grid-cols-2'>
+							{packs.map((pack) => (
+								<button
+									key={pack.key}
+									type='button'
+									disabled={!pack.available}
+									onClick={() => setSelected(pack.key)}
+									className={[
+										'relative rounded-2xl border p-5 text-left transition disabled:cursor-not-allowed disabled:opacity-50',
+										selected === pack.key
+											? 'border-zinc-950 bg-zinc-950 text-zinc-50 dark:border-zinc-50 dark:bg-zinc-50 dark:text-zinc-950'
+											: 'border-zinc-200 bg-white hover:border-zinc-300 dark:border-zinc-700 dark:bg-zinc-900 dark:hover:border-zinc-600',
+									].join(' ')}>
+									<div className='flex items-start justify-between'>
+										<div>
+											<p className='text-xl font-black'>
+												{pack.credits.toLocaleString()}
+											</p>
+											<p
+												className={`text-xs font-semibold ${selected === pack.key ? 'text-zinc-300 dark:text-zinc-700' : 'text-zinc-400 dark:text-zinc-500'}`}>
+												credits
+											</p>
+										</div>
+										<p className='text-2xl font-black'>
+											{formatPrice(pack.price_cents)}
 										</p>
-										<p
-											className={`text-xs font-semibold ${selected === pack.priceId ? 'text-zinc-300 dark:text-zinc-700' : 'text-zinc-400 dark:text-zinc-500'}`}>
-											credits
-										</p>
 									</div>
-									<p className='text-2xl font-black'>{formatPrice(pack.price)}</p>
-								</div>
-								{pack.bonus > 0 && (
-									<div className='mt-3 flex items-center gap-1.5'>
-										<Sparkles size={12} className='text-emerald-500' />
-										<span
-											className={`text-xs font-bold ${selected === pack.priceId ? 'text-emerald-400 dark:text-emerald-600' : 'text-emerald-600 dark:text-emerald-400'}`}>
-											+{pack.bonus.toLocaleString()} bonus credits
-										</span>
-									</div>
-								)}
-								{selected === pack.priceId && (
-									<div className='mt-3 text-xs font-semibold text-zinc-300 dark:text-zinc-700'>
-										Total: {(pack.credits + pack.bonus).toLocaleString()}{' '}
-										credits
-									</div>
-								)}
-							</button>
-						))}
-					</div>
+									{!pack.available && (
+										<div className='mt-3 flex items-center gap-1.5'>
+											<Sparkles size={12} className='text-zinc-400' />
+											<span className='text-xs font-bold text-zinc-400'>
+												Not available on your plan
+											</span>
+										</div>
+									)}
+								</button>
+							))}
+						</div>
+					)}
 
 					{/* Checkout summary */}
+					{selectedPack && (
 					<div className='mt-4 rounded-2xl border border-zinc-200 bg-white p-5 shadow-sm dark:border-zinc-700 dark:bg-zinc-900'>
 						<div className='flex items-center justify-between'>
 							<div>
 								<p className='text-sm font-black'>Order summary</p>
 								<p className='mt-1 text-sm text-zinc-500 dark:text-zinc-400'>
-									{selectedPack.credits.toLocaleString()} credits
-									{selectedPack.bonus > 0 &&
-										` + ${selectedPack.bonus.toLocaleString()} bonus`}
-									{' = '}
 									<span className='font-bold text-zinc-800 dark:text-zinc-200'>
-										{totalCredits.toLocaleString()} total
+										{selectedPack.credits.toLocaleString()} credits
 									</span>
 								</p>
 							</div>
 							<div className='text-right'>
 								<p className='text-2xl font-black'>
-									{formatPrice(selectedPack.price)}
+									{formatPrice(selectedPack.price_cents)}
 								</p>
 								<p className='text-xs text-zinc-400 dark:text-zinc-500'>one-time</p>
 							</div>
 						</div>
 						<button
 							type='button'
-							disabled={buyCredits.isPending}
-							onClick={() => buyCredits.mutate({ price_id: selected })}
+							disabled={buyCredits.isPending || !selectedPack.available}
+							onClick={() => buyCredits.mutate({ pack_key: selectedPack.key })}
 							className='mt-4 flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-zinc-950 text-sm font-black text-white shadow-sm transition hover:bg-zinc-800 disabled:opacity-60 dark:bg-zinc-50 dark:text-zinc-950 dark:hover:bg-zinc-200'>
 							<CreditCard size={16} />
 							{buyCredits.isPending
 								? 'Redirecting to checkout…'
-								: `Buy ${totalCredits.toLocaleString()} credits`}
+								: `Buy ${selectedPack.credits.toLocaleString()} credits`}
 						</button>
 						<p className='mt-2 text-center text-xs text-zinc-400 dark:text-zinc-500'>
 							Secure payment via Stripe. Credits activate instantly after payment.
 						</p>
 					</div>
+					)}
 				</div>
 
 				{/* Sidebar */}

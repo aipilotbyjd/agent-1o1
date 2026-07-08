@@ -3,11 +3,10 @@ import { unwrap } from '@/api/core';
 import type { TApiResponse } from '@/api/core';
 import type {
 	TBillingCheckoutDto,
-	TBillingSwitchDto,
 	TBillingSwitchUrlResponse,
 	TBuyCreditsDto,
 	TBillingUrlResponse,
-	TLifetimePlan,
+	TCreditPackCatalogItem,
 	TSubscription,
 } from '@/types/billing.type';
 import { BillingEndpoints as E } from './billing.endpoints';
@@ -15,18 +14,13 @@ import { BillingEndpoints as E } from './billing.endpoints';
 export const BillingService = {
 	checkout: (ws: string, body: TBillingCheckoutDto) =>
 		axiosClient
-			.post<TApiResponse<TBillingSwitchUrlResponse>>(E.checkout(ws), body)
-			.then(unwrap<TBillingSwitchUrlResponse>),
-
-	switch: (ws: string, body: TBillingSwitchDto) =>
-		axiosClient
-			.post<TApiResponse<TBillingSwitchUrlResponse | TSubscription>>(E.switch(ws), body)
+			.post<TApiResponse<TBillingSwitchUrlResponse | TSubscription>>(E.checkout(ws), body)
 			.then(unwrap<TBillingSwitchUrlResponse | TSubscription>),
 
-	lifetimePlans: (ws: string, signal?: AbortSignal) =>
+	packCatalog: (ws: string, signal?: AbortSignal) =>
 		axiosClient
-			.get<TApiResponse<TLifetimePlan[]>>(E.lifetimePlans(ws), { signal })
-			.then(unwrap<TLifetimePlan[]>),
+			.get<TApiResponse<TCreditPackCatalogItem[]>>(E.packCatalog(ws), { signal })
+			.then(unwrap<TCreditPackCatalogItem[]>),
 
 	buyCredits: (ws: string, body: TBuyCreditsDto) =>
 		axiosClient
