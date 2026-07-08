@@ -1,4 +1,4 @@
-import { BaseEdge, EdgeLabelRenderer, getBezierPath, type EdgeProps } from '@xyflow/react';
+import { BaseEdge, EdgeLabelRenderer, getSmoothStepPath, type EdgeProps } from '@xyflow/react';
 import { useWorkflowEditor } from '../../_context/WorkflowEditorProvider.context';
 import type { TCanvasEdge } from '../../_types/canvas.type';
 
@@ -10,27 +10,61 @@ const ClickEdge = ({
 	targetY,
 	sourcePosition,
 	targetPosition,
-	markerEnd,
 	style,
 	selected,
 	data,
 }: EdgeProps<TCanvasEdge>) => {
 	const { dispatch } = useWorkflowEditor();
-	const [edgePath, labelX, labelY] = getBezierPath({
+	const [edgePath, labelX, labelY] = getSmoothStepPath({
 		sourceX,
 		sourceY,
 		sourcePosition,
 		targetX,
 		targetY,
 		targetPosition,
+		borderRadius: 16,
 	});
+
+	const stroke = (style?.stroke as string) ?? 'rgb(139 92 246)';
+	const arrowId = `edge-arrow-${id}`;
 
 	return (
 		<>
-			<BaseEdge path={edgePath} markerEnd={markerEnd} style={style} interactionWidth={20} />
+			<defs>
+				<marker
+					id={arrowId}
+					viewBox='0 0 10 10'
+					refX='8'
+					refY='5'
+					markerWidth='6'
+					markerHeight='6'
+					orient='auto-start-reverse'>
+					<path d='M 0 0 L 10 5 L 0 10 z' fill={stroke} />
+				</marker>
+			</defs>
+			{/* Solid colored base line */}
+			<BaseEdge
+				path={edgePath}
+				markerEnd={`url(#${arrowId})`}
+				style={{ ...style, stroke, strokeWidth: 3 }}
+				interactionWidth={20}
+			/>
+			{/* Animated flowing dash on top of the line */}
+			<path
+				d={edgePath}
+				fill='none'
+				stroke='rgba(255,255,255,0.85)'
+				strokeWidth={2}
+				strokeLinecap='round'
+				strokeDasharray='6 18'
+				className='workflow-edge-flow pointer-events-none'
+			/>
 			<EdgeLabelRenderer>
 				<div
-					className='nodrag nopan absolute flex -translate-x-1/2 -translate-y-1/2 items-center gap-1'
+					className={[
+						'nodrag nopan absolute flex -translate-x-1/2 -translate-y-1/2 items-center gap-1 transition-opacity duration-150',
+						selected ? 'opacity-100' : 'opacity-0 hover:opacity-100',
+					].join(' ')}
 					style={{
 						transform: `translate(${labelX}px, ${labelY}px)`,
 						pointerEvents: 'all',

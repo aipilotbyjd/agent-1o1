@@ -486,47 +486,61 @@ const TriggerNode = ({ data, selected }: NodeProps<TCanvasNode>) => {
 				</div>
 			</div>
 
-			{/* Number Badge at Bottom */}
-			<div className='border-violet-205 dark:border-violet-850 absolute -bottom-3 left-1/2 flex h-6 w-6 -translate-x-1/2 items-center justify-center rounded-full border-2 bg-white text-[10px] font-bold text-violet-600 shadow-xs dark:bg-zinc-900 dark:text-violet-400'>
-				1
-			</div>
-
 			{/* Input Handle */}
-			{def?.inputs && def.inputs.length > 0 && (
+			{def && (
 				<Handle
-					id={def.inputs[0].id}
+					id={def.inputs && def.inputs.length > 0 ? def.inputs[0].id : 'in'}
 					type='target'
-					position={Position.Left}
+					position={Position.Top}
 					style={{
-						top: '50%',
-						backgroundColor: '#8b5cf6',
-						borderColor: 'rgba(139, 92, 246, 0.3)',
+						left: 'calc(50% - 12px)',
+						top: -12,
+						backgroundColor: 'white',
+						borderColor: '#8b5cf6',
 						borderWidth: 2,
-						height: 12,
-						width: 12,
-						left: -6,
+						height: 24,
+						width: 24,
+						display: 'flex',
+						alignItems: 'center',
+						justifyContent: 'center',
+						fontSize: 10,
+						fontWeight: 'bold',
+						color: '#8b5cf6',
+						zIndex: 10,
 					}}
-					className='transition-transform duration-150 hover:scale-125'
-				/>
+					className='transition-transform duration-150 hover:scale-110 shadow-sm rounded-full cursor-crosshair dark:bg-zinc-900 dark:border-zinc-800'
+				>
+					<span className='pointer-events-none'>1</span>
+				</Handle>
 			)}
 
 			{/* Output Handle */}
-			{def?.outputs[0] && (
+			{def && (
 				<Handle
-					id={def.outputs[0].id}
+					id={def.outputs && def.outputs.length > 0 ? def.outputs[0].id : 'out'}
 					type='source'
-					position={Position.Right}
+					position={Position.Bottom}
 					style={{
-						top: '50%',
-						backgroundColor: '#8b5cf6',
-						borderColor: 'rgba(139, 92, 246, 0.3)',
+						left: 'calc(50% - 12px)',
+						bottom: -12,
+						top: 'auto',
+						backgroundColor: 'white',
+						borderColor: '#8b5cf6',
 						borderWidth: 2,
-						height: 12,
-						width: 12,
-						right: -6,
+						height: 24,
+						width: 24,
+						display: 'flex',
+						alignItems: 'center',
+						justifyContent: 'center',
+						fontSize: 10,
+						fontWeight: 'bold',
+						color: '#8b5cf6',
+						zIndex: 10,
 					}}
-					className='transition-transform duration-150 hover:scale-125'
-				/>
+					className='transition-transform duration-150 hover:scale-110 shadow-sm rounded-full cursor-crosshair dark:bg-zinc-900 dark:border-zinc-800'
+				>
+					<span className='pointer-events-none'>1</span>
+				</Handle>
 			)}
 
 			{selected && (

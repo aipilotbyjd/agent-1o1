@@ -67,39 +67,55 @@ const profilerColor = (ms?: number): string => {
 const PortHandles = ({
 	ports,
 	type,
-	position,
+	color,
 }: {
 	ports: TNodePort[];
 	type: 'source' | 'target';
-	position: Position;
-}) => (
-	<>
-		{ports.map((port, index) => (
-			<Handle
-				key={port.id}
-				id={port.id}
-				type={type}
-				position={position}
-				title={`${port.name}: ${port.type}`}
-				style={{
-					top: getPortTop(index, ports.length),
-					backgroundColor: PORT_TYPE_COLOR[port.type],
-					borderColor: 'rgb(39 39 42)',
-					height: 10,
-					width: 10,
-				}}
-				className='transition-transform duration-150 group-hover:scale-125'
-			/>
-		))}
-	</>
-);
+	color?: string;
+}) => {
+	const position = type === 'source' ? Position.Bottom : Position.Top;
+	const getPortLeft = (index: number, total: number) => `${((index + 1) * 100) / (total + 1)}%`;
+	return (
+		<>
+			{ports.map((port, index) => (
+				<Handle
+					key={port.id}
+					id={port.id}
+					type={type}
+					position={position}
+					title={`${port.name}: ${port.type}`}
+					style={{
+						left: `calc(${getPortLeft(index, ports.length)} - 12px)`,
+						bottom: type === 'source' ? -12 : undefined,
+						top: type === 'target' ? -12 : undefined,
+						width: 24,
+						height: 24,
+						backgroundColor: 'white',
+						borderWidth: 2,
+						borderColor: color ?? '#d4d4d8',
+						color: color ?? '#71717a',
+						display: 'flex',
+						alignItems: 'center',
+						justifyContent: 'center',
+						fontSize: 10,
+						fontWeight: 'bold',
+						zIndex: 10,
+					}}
+					className='transition-transform duration-150 hover:scale-110 shadow-sm rounded-full cursor-crosshair dark:bg-zinc-900 dark:text-zinc-300 dark:border-zinc-700'
+				>
+					<span className='pointer-events-none'>{(index + 1).toString()}</span>
+				</Handle>
+			))}
+		</>
+	);
+};
 
 const BaseNode = ({ id, data, selected }: NodeProps<TCanvasNode>) => {
 	const { dispatch } = useWorkflowEditor();
 	const def = getNodeDefinition(data.defKey, data.definition);
 	const status = data.status ?? 'idle';
-	const inputs = def?.inputs ?? [];
-	const outputs = def?.outputs ?? [];
+	const inputs = def?.inputs && def.inputs.length > 0 ? def.inputs : [{ id: 'in', name: 'input', type: 'any' as const }];
+	const outputs = def?.outputs && def.outputs.length > 0 ? def.outputs : [{ id: 'out', name: 'output', type: 'any' as const }];
 	const validationIssues = (data.validationIssues ?? []) as TValidationIssue[];
 	const hasError =
 		status === 'error' || validationIssues.some((issue) => issue.severity === 'error');
@@ -136,7 +152,7 @@ const BaseNode = ({ id, data, selected }: NodeProps<TCanvasNode>) => {
 					? { borderColor: data.color, boxShadow: `0 0 0 4px ${data.color}18` }
 					: undefined
 			}>
-			<PortHandles ports={inputs} type='target' position={Position.Left} />
+			<PortHandles ports={inputs} type='target' color={effectiveColorHex} />
 
 			{/* Breakpoint indicator */}
 			{data.breakpoint && (
@@ -287,16 +303,12 @@ const BaseNode = ({ id, data, selected }: NodeProps<TCanvasNode>) => {
 				{selected && <NodeInlineTest nodeId={id} defKey={data.defKey} def={def ?? null} />}
 			</div>
 
-			<div
-				className='absolute -bottom-3 left-1/2 flex h-6 w-6 -translate-x-1/2 items-center justify-center rounded-full border-2 bg-white text-[10px] font-bold shadow-xs dark:bg-zinc-900'
-				style={{ borderColor: effectiveColorHex ?? '#d4d4d8', color: effectiveColorHex }}>
-				{(data.stepNumber as number) ?? 1}
-			</div>
+
 
 			{isActiveRunNode && (
 				<div className='absolute inset-0 -z-10 rounded-xl bg-emerald-400/15 blur-xl' />
 			)}
-			<PortHandles ports={outputs} type='source' position={Position.Right} />
+			<PortHandles ports={outputs} type='source' color={effectiveColorHex} />
 
 			{selected && (
 				<div className='absolute -top-11 left-1/2 -translate-x-1/2 flex items-center gap-1 bg-white border border-zinc-200 rounded-lg px-2.5 py-1.5 shadow-md z-50 text-[10px] font-bold text-zinc-600 select-none pointer-events-auto dark:bg-zinc-900 dark:border-zinc-800 dark:text-zinc-300 whitespace-nowrap shadow-zinc-200/50 dark:shadow-none'>

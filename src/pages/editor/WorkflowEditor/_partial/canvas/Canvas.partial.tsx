@@ -10,6 +10,7 @@ import {
 	type IsValidConnection,
 	type NodeChange,
 	type NodeTypes,
+	type OnConnectEnd,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import { useCallback, useMemo, useRef, useState } from 'react';
@@ -204,7 +205,7 @@ const Canvas = () => {
 							: isActive
 								? 'rgb(16 185 129)'
 								: 'rgb(139 92 246)',
-						strokeWidth: isActive ? 3 : 2,
+						strokeWidth: 3,
 					},
 				};
 			}),
@@ -220,17 +221,9 @@ const Canvas = () => {
 			) {
 				return false;
 			}
-			const sourceType = getPortType(
-				state.nodes.find((node) => node.id === connection.source),
-				connection.sourceHandle,
-			);
-			const targetType = getPortType(
-				state.nodes.find((node) => node.id === connection.target),
-				connection.targetHandle,
-			);
-			return sourceType === 'any' || targetType === 'any' || sourceType === targetType;
+			return true;
 		},
-		[state.nodes],
+		[],
 	);
 
 	const onConnect = useCallback(
@@ -242,6 +235,37 @@ const Canvas = () => {
 				target: connection.target,
 				sourceHandle: connection.sourceHandle ?? undefined,
 				targetHandle: connection.targetHandle ?? undefined,
+			});
+		},
+		[dispatch],
+	);
+
+	// Gumloop-style: if the connection is released over a node's body (not exactly
+	// on a handle), connect to that node instead of dropping the connection.
+	const onConnectEnd: OnConnectEnd = useCallback(
+		(event, connectionState) => {
+			if (connectionState.toHandle) return; // already handled by onConnect
+			const fromHandle = connectionState.fromHandle;
+			const fromNodeId = connectionState.fromNode?.id;
+			if (!fromHandle || !fromNodeId) return;
+
+			const point =
+				'changedTouches' in event ? event.changedTouches[0] : (event as MouseEvent);
+			const targetEl = document
+				.elementFromPoint(point.clientX, point.clientY)
+				?.closest('.react-flow__node');
+			const droppedNodeId = targetEl?.getAttribute('data-id');
+			if (!droppedNodeId || droppedNodeId === fromNodeId) return;
+
+			// Respect drag direction: a drag started from a target handle means the
+			// dropped node is the source.
+			const fromIsSource = fromHandle.type === 'source';
+			dispatch({
+				type: 'ADD_EDGE',
+				source: fromIsSource ? fromNodeId : droppedNodeId,
+				target: fromIsSource ? droppedNodeId : fromNodeId,
+				sourceHandle: fromIsSource ? fromHandle.id ?? undefined : undefined,
+				targetHandle: fromIsSource ? undefined : fromHandle.id ?? undefined,
 			});
 		},
 		[dispatch],
@@ -282,12 +306,14 @@ const Canvas = () => {
 				selectionOnDrag
 				multiSelectionKeyCode={['Meta', 'Shift']}
 				reconnectRadius={18}
+				connectionRadius={45}
 				nodes={nodes}
 				edges={edges}
 				nodeTypes={nodeTypes}
 				edgeTypes={edgeTypes}
 				onNodesChange={onNodesChange}
 				onConnect={onConnect}
+				onConnectEnd={onConnectEnd}
 				isValidConnection={isValidConnection}
 				onNodeDragStart={(_, node) => {
 					didDragNodeRef.current = true;
