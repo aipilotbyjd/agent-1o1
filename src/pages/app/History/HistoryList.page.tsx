@@ -409,17 +409,23 @@ const HistoryListPage = () => {
 				pagesList.push(i);
 			}
 		} else {
-			// Show 1, 2, 3, ..., totalPages
-			pagesList.push(1, 2, 3, '...', totalPages);
+			// Show first 3 pages, ellipsis, last page
+			pagesList.push(1, 2, 3);
+			if (currentPage > 4 && currentPage < totalPages - 1) {
+				pagesList.push('...');
+				pagesList.push(currentPage);
+			}
+			pagesList.push('...');
+			pagesList.push(totalPages);
 		}
 		return pagesList.map((page, index) => {
 			if (page === '...') {
 				return (
-					<span
-						key={`ellipse-${index}`}
-						className='dark:text-zinc-550 px-2.5 py-1.5 text-xs font-bold text-slate-400 select-none'>
-						...
-					</span>
+					<div key={`ellipse-${index}`} className='flex items-center px-1'>
+						<span className='dark:text-zinc-550 text-xs font-bold text-slate-400 select-none'>
+							•••
+						</span>
+					</div>
 				);
 			}
 			const isPageActive = currentPage === page;
@@ -430,7 +436,7 @@ const HistoryListPage = () => {
 					className={`flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg text-xs font-extrabold transition-all duration-200 ${
 						isPageActive
 							? 'bg-violet-600 text-white shadow-sm dark:bg-violet-500'
-							: 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-zinc-400 dark:hover:bg-zinc-800'
+							: 'border border-slate-200 text-slate-600 hover:bg-slate-50 hover:text-slate-900 dark:border-zinc-800/50 dark:text-zinc-400 dark:hover:bg-zinc-800/50'
 					}`}>
 					{page}
 				</button>
@@ -658,7 +664,7 @@ const HistoryListPage = () => {
 							<div className='min-w-[768px]'>
 								{/* Table Header */}
 								<div className='grid grid-cols-12 gap-4 border-b border-slate-100 bg-[#fafbfe]/70 px-6 py-4.5 text-left text-[11px] font-black tracking-wider text-slate-400 uppercase dark:border-zinc-800/80 dark:bg-zinc-950/20'>
-									<div className='col-span-5 sm:col-span-6'>Activity</div>
+									<div className='col-span-5'>Activity</div>
 									<div className='col-span-2'>Type</div>
 									<div className='col-span-2'>Connections</div>
 									<div className='col-span-2'>Date & Time</div>
@@ -728,7 +734,7 @@ const HistoryListPage = () => {
 														: ''
 												}`}>
 												{/* Activity col */}
-												<div className='col-span-5 flex min-w-0 items-center gap-4 sm:col-span-6'>
+												<div className='col-span-5 flex min-w-0 items-center gap-4'>
 													<div
 														className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl ${
 															displayItem.type === 'Chat'
@@ -803,7 +809,8 @@ const HistoryListPage = () => {
 						</div>
 					)}
 
-					{/* Pagination Controls footer */}
+					{/* Pagination Controls footer - only show if more than one page or more items than can fit on one page */}
+					{totalPages > 1 && (
 					<div className='flex flex-col items-center justify-between gap-4 border-t border-slate-100 bg-[#fafbfe]/70 px-6 py-4 sm:flex-row dark:border-zinc-800/80 dark:bg-zinc-950/20'>
 						<div className='dark:text-zinc-450 flex items-center gap-2 text-xs font-bold text-slate-500'>
 							<span>
@@ -848,6 +855,7 @@ const HistoryListPage = () => {
 							</div>
 						</div>
 					</div>
+					)}
 				</div>
 			</div>
 

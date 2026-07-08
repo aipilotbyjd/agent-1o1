@@ -1,8 +1,6 @@
 import { Outlet } from 'react-router';
 import Header, { HeaderLeft, HeaderRight } from '@/components/layout/Header';
 import { Dispatch, ReactNode, SetStateAction, useState } from 'react';
-import ChangeDarkModeTemplate from '@/templates/header/ChangeDarkMode.template';
-import ChangeLanguageTemplate from '@/templates/header/ChangeLanguage.template';
 import EXAMPLE from '@/examples/_index';
 import NotificationsDropdown from '@/components/notifications/NotificationsDropdown';
 
@@ -19,8 +17,6 @@ const HistoryLayout = () => {
 			<Header>
 				<HeaderLeft>{headerLeft}</HeaderLeft>
 				<HeaderRight>
-					<ChangeDarkModeTemplate />
-					<ChangeLanguageTemplate />
 					<NotificationsDropdown />
 					<EXAMPLE.Ui.Dropdown.WorkspaceSwitcher />
 				</HeaderRight>

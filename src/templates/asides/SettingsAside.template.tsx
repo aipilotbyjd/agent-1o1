@@ -98,9 +98,6 @@ const SettingsAsideTemplate = () => {
 								<SettingsNavItem {...pages.onboarding.subPages.workspaceList} />
 							)}
 							<SettingsNavItem {...pages.settings.subPages.members} />
-							<LockedNavItem label='Teams' />
-							<LockedNavItem label='Custom Roles' />
-							<LockedNavItem label='SAML & SCIM' />
 						</div>
 					</section>
 
@@ -112,13 +109,6 @@ const SettingsAsideTemplate = () => {
 						</div>
 					</section>
 
-					<section>
-						<SectionTitle>AI Providers</SectionTitle>
-						<div className='space-y-1'>
-							<LockedNavItem label='Model Restrictions' />
-							<LockedNavItem label='API Keys & Proxies' />
-						</div>
-					</section>
 				</div>
 			</AsideBody>
 		</Aside>

@@ -6,8 +6,6 @@ import Container from '@/components/layout/Container';
 import Skeleton from '@/components/ui/Skeleton';
 import Subheader, { SubheaderLeft, SubheaderRight } from '@/components/layout/Subheader';
 import Header, { HeaderLeft, HeaderRight } from '@/components/layout/Header';
-import ChangeDarkModeTemplate from '@/templates/header/ChangeDarkMode.template';
-import ChangeLanguageTemplate from '@/templates/header/ChangeLanguage.template';
 import EXAMPLE from '@/examples/_index';
 import NotificationsDropdown from '@/components/notifications/NotificationsDropdown';
 
@@ -19,8 +17,6 @@ const SettingsLayout = () => {
 				<Header>
 					<HeaderLeft>Settings</HeaderLeft>
 					<HeaderRight>
-						<ChangeDarkModeTemplate />
-						<ChangeLanguageTemplate />
 						<NotificationsDropdown />
 						<EXAMPLE.Ui.Dropdown.WorkspaceSwitcher />
 					</HeaderRight>
