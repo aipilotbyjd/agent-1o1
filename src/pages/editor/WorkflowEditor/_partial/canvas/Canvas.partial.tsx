@@ -28,6 +28,7 @@ import CanvasStats from './CanvasStats.partial';
 import CanvasSearch from './CanvasSearch.partial';
 import ClickEdge from './ClickEdge.partial';
 import NodeDocumentationPanel from '../dialogs/NodeDocumentationPanel.partial';
+import NodeExpandedView from '../dialogs/NodeExpandedView.partial';
 import useDarkMode from '@/hooks/useDarkMode';
 import { useAiChatStore } from '@/store/aiChat.store';
 import { useAuth } from '@/context/authContext';
@@ -430,6 +431,7 @@ const Canvas = () => {
 			)}
 			<CanvasSearch />
 			<NodeDocumentationPanel />
+			<NodeExpandedView />
 
 			{isChatActive && (
 				<div className='pointer-events-auto absolute right-0 bottom-0 left-0 flex h-14 items-center justify-between border-t border-zinc-200 bg-white/95 px-5 select-none dark:border-white/10 dark:bg-[#07080b]/95 z-10'>

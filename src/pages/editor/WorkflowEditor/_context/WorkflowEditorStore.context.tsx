@@ -87,6 +87,7 @@ export type TWorkflowEditorAction =
 	| { type: 'SET_CANVAS_SEARCH'; open?: boolean; query?: string }
 	| { type: 'SET_TEMPLATE_LIBRARY'; open: boolean }
 	| { type: 'SET_NODE_DOC'; open: boolean; nodeId?: string | null }
+	| { type: 'SET_NODE_EXPANDED'; open: boolean; nodeId?: string | null }
 	| { type: 'SET_DIFF_VIEWER'; open: boolean }
 	| { type: 'SET_STEP_MODE'; enabled: boolean }
 	| { type: 'STEP_NEXT' }
@@ -147,6 +148,8 @@ export const initialWorkflowEditorState: TWorkflowEditorState = {
 		diffViewerOpen: false,
 		nodeDocOpen: false,
 		nodeDocNodeId: null,
+		nodeExpandedOpen: false,
+		nodeExpandedId: null,
 		stepMode: false,
 		waitingForStep: false,
 		linkCredentialsOpen: false,
@@ -617,6 +620,15 @@ export const workflowEditorReducer = (
 					...state.ui,
 					nodeDocOpen: action.open,
 					nodeDocNodeId: action.nodeId ?? state.ui.nodeDocNodeId,
+				},
+			};
+		case 'SET_NODE_EXPANDED':
+			return {
+				...state,
+				ui: {
+					...state.ui,
+					nodeExpandedOpen: action.open,
+					nodeExpandedId: action.nodeId ?? state.ui.nodeExpandedId,
 				},
 			};
 		case 'SET_DIFF_VIEWER':

@@ -233,6 +233,8 @@ const WorkflowsListPage = () => {
 	const [searchQuery, setSearchQuery] = useState('');
 	const [isGridView, setIsGridView] = useState(true);
 	const [toast, setToast] = useState<{ message: string; type: 'success' | 'info' } | null>(null);
+	const [draggedWorkflowId, setDraggedWorkflowId] = useState<string | null>(null);
+	const [dragOverFolderId, setDragOverFolderId] = useState<string | null>(null);
 
 	useEffect(() => {
 		setHeaderLeft(<Breadcrumb list={[{ ...pages.app.subPages.workflows }]} />);
@@ -433,6 +435,48 @@ const WorkflowsListPage = () => {
 		} catch {
 			// Error is surfaced by the mutation hook
 		}
+	};
+
+	// Drag and drop handlers
+	const handleDragStart = (e: React.DragEvent, workflowId: string) => {
+		setDraggedWorkflowId(workflowId);
+		e.dataTransfer.effectAllowed = 'move';
+		e.dataTransfer.setData('text/plain', workflowId);
+	};
+
+	const handleDragEnd = () => {
+		setDraggedWorkflowId(null);
+		setDragOverFolderId(null);
+	};
+
+	const handleDragOver = (e: React.DragEvent) => {
+		e.preventDefault();
+		e.dataTransfer.dropEffect = 'move';
+	};
+
+	const handleDragEnter = (folderId: string) => {
+		setDragOverFolderId(folderId);
+	};
+
+	const handleDragLeave = (e: React.DragEvent, folderId: string) => {
+		// Only clear if we're leaving the folder entirely, not entering a child element
+		if (e.currentTarget === e.target) {
+			setDragOverFolderId(null);
+		}
+	};
+
+	const handleDropOnFolder = async (e: React.DragEvent, folderId: string) => {
+		e.preventDefault();
+		e.stopPropagation();
+
+		const workflowId = e.dataTransfer.getData('text/plain');
+		if (!workflowId || workflowId === '') return;
+
+		const workflow = workflows.find((w) => w.id === workflowId);
+		if (!workflow || workflow.folderId === folderId) return;
+
+		setDragOverFolderId(null);
+		await handleMoveWorkflow(workflow, folderId === ROOT_FOLDER_ID ? null : folderId);
 	};
 
 	const renderMoveWorkflowMenu = (workflow: IWorkflow) => {
@@ -857,7 +901,16 @@ const WorkflowsListPage = () => {
 										</span>
 									</div>
 								) : (
-									<div className='group/folder relative flex items-center overflow-hidden rounded-2xl border border-slate-200/80 bg-white/70 shadow-2xs backdrop-blur-md transition-all duration-300 hover:border-violet-500/25 hover:bg-white dark:border-zinc-800/80 dark:bg-zinc-900/60 dark:hover:border-violet-500/20 dark:hover:bg-zinc-900/80'>
+									<div
+										onDragOver={handleDragOver}
+										onDragEnter={() => handleDragEnter(folder.id)}
+										onDragLeave={(e) => handleDragLeave(e, folder.id)}
+										onDrop={(e) => handleDropOnFolder(e, folder.id)}
+										className={`group/folder relative flex items-center overflow-hidden rounded-2xl border shadow-2xs backdrop-blur-md transition-all duration-300 dark:border-zinc-800/80 dark:bg-zinc-900/60 dark:hover:border-violet-500/20 dark:hover:bg-zinc-900/80 ${
+											dragOverFolderId === folder.id
+												? 'border-violet-400/60 bg-violet-50/40 dark:bg-violet-950/20 dark:border-violet-500/40'
+												: 'border-slate-200/80 bg-white/70 hover:border-violet-500/25 hover:bg-white'
+										}`}>
 										<div
 											style={{ backgroundColor: folder.color }}
 											className='absolute top-0 bottom-0 left-0 w-1.5 opacity-85'
@@ -928,6 +981,9 @@ const WorkflowsListPage = () => {
 															key={wf.id}
 															role='link'
 															tabIndex={0}
+															draggable
+															onDragStart={(e) => handleDragStart(e, wf.id)}
+															onDragEnd={handleDragEnd}
 															onClick={() =>
 																navigate(
 																	`${pages.editor.subPages.editWorkflow.to}/${currentWorkspaceId}/${wf.id}`,

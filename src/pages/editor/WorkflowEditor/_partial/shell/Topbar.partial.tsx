@@ -47,8 +47,8 @@ const EditableWorkflowName = ({
 	const inputRef = useRef<HTMLInputElement>(null);
 
 	useEffect(() => {
-		if (!isEditing) setDraft(name);
-	}, [name, isEditing]);
+		setDraft(name);
+	}, [name]);
 
 	useEffect(() => {
 		if (isEditing) {
@@ -59,9 +59,13 @@ const EditableWorkflowName = ({
 
 	const commit = () => {
 		const trimmed = draft.trim();
+		if (!trimmed || trimmed === name) {
+			setDraft(name);
+			setIsEditing(false);
+			return;
+		}
 		setIsEditing(false);
-		if (trimmed && trimmed !== name) onSave(trimmed);
-		else setDraft(name);
+		onSave(trimmed);
 	};
 
 	if (isEditing) {

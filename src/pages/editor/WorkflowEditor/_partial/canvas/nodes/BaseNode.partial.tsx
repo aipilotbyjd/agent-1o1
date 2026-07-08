@@ -11,6 +11,7 @@ import {
 	Globe2,
 	Info,
 	Loader2,
+	Maximize2,
 	MessageSquare,
 	OctagonX,
 	Pin,
@@ -249,6 +250,16 @@ const BaseNode = ({ id, data, selected }: NodeProps<TCanvasNode>) => {
 
 					{/* Node action buttons — visible on hover */}
 					<div className='flex shrink-0 items-center gap-0.5 opacity-0 transition-opacity duration-150 group-hover:opacity-100'>
+						<button
+							type='button'
+							title='Expand node configuration'
+							onClick={(e) => {
+								e.stopPropagation();
+								dispatch({ type: 'SET_NODE_EXPANDED', open: true, nodeId: id });
+							}}
+							className='flex h-7 w-7 items-center justify-center rounded text-zinc-400 transition hover:bg-violet-100 hover:text-violet-600 dark:hover:bg-violet-900/40 dark:hover:text-violet-400'>
+							<Maximize2 size={14} />
+						</button>
 						<NodeColorPicker
 							nodeId={id}
 							currentColor={data.color as string | undefined}
