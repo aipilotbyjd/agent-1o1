@@ -16,6 +16,7 @@ import {
 	GitCompare,
 	Library,
 	MoreVertical,
+	Sparkles,
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useState } from 'react';
@@ -190,6 +191,14 @@ const Topbar = () => {
 
 				{/* Add buttons */}
 				<div className='flex items-center gap-2'>
+					<PurpleOutlineButton>
+						<LayoutGrid size={14} className='text-violet-600 dark:text-violet-400' />
+						<span className='hidden sm:inline'>Add Interface</span>
+					</PurpleOutlineButton>
+					<PurpleOutlineButton onClick={() => dispatch({ type: 'TOGGLE_AI_PANEL' })}>
+						<Sparkles size={14} className='text-violet-600 dark:text-violet-400' />
+						<span className='hidden sm:inline'>{state.ui.aiPanelOpen ? 'Hide Chat' : 'AI Chat'}</span>
+					</PurpleOutlineButton>
 					{state.ui.leftPanelOpen && state.ui.leftPanelIntent === 'home' ? (
 						<button
 							type='button'

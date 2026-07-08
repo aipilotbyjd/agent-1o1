@@ -6,6 +6,7 @@ import {
 	Save,
 	LayoutGrid,
 	GitBranch,
+	Sparkles,
 } from 'lucide-react';
 import { useState } from 'react';
 import { motion } from 'framer-motion';
@@ -69,6 +70,19 @@ export const CanvasTopbar = () => {
 				>
 					<span className="text-sm font-extrabold">+</span>
 					<span>Apps</span>
+				</button>
+				<button
+					type="button"
+					title="Toggle AI Chat Panel"
+					onClick={() => dispatch({ type: 'TOGGLE_AI_PANEL' })}
+					className={`flex h-9 items-center gap-1.5 rounded-xl border px-3.5 text-xs font-bold shadow-xs transition ${
+						state.ui.aiPanelOpen
+							? 'border-violet-200 bg-violet-600 text-white hover:bg-violet-700 dark:border-violet-850 dark:bg-violet-750 dark:hover:bg-violet-650'
+							: 'border-zinc-200 bg-white text-zinc-650 hover:bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-350 dark:hover:bg-zinc-800'
+					}`}
+				>
+					<Sparkles size={13} className={state.ui.aiPanelOpen ? 'fill-white text-white' : 'text-violet-500 fill-violet-500/10'} />
+					<span>{state.ui.aiPanelOpen ? 'Hide Chat' : 'Reopen Chat'}</span>
 				</button>
 				<button
 					type="button"

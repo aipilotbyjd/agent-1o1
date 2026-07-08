@@ -36,7 +36,7 @@ const PricingPage = () => {
 				</div>
 
 				<div className='mx-auto max-w-4xl text-center'>
-					<h1 className='text-slate-955 text-6xl leading-[0.95] font-semibold tracking-normal md:text-7xl xl:text-8xl'>
+					<h1 className='text-slate-950 text-6xl leading-[0.95] font-semibold tracking-normal md:text-7xl xl:text-8xl'>
 						Pricing built around momentum.
 					</h1>
 					<p className='mx-auto mt-7 max-w-2xl text-xl leading-8 font-medium text-slate-600'>
@@ -52,8 +52,8 @@ const PricingPage = () => {
 							onClick={() => setBillingCycle('monthly')}
 							className={`rounded-xl px-5 py-3 text-sm font-black transition ${
 								billingCycle === 'monthly'
-									? 'text-slate-955 bg-white shadow-sm'
-									: 'hover:text-slate-955 text-slate-500'
+									? 'text-slate-950 bg-white shadow-sm'
+									: 'hover:text-slate-950 text-slate-500'
 							}`}>
 							Monthly
 						</button>
@@ -62,8 +62,8 @@ const PricingPage = () => {
 							onClick={() => setBillingCycle('annual')}
 							className={`rounded-xl px-5 py-3 text-sm font-black transition ${
 								billingCycle === 'annual'
-									? 'text-slate-955 bg-white shadow-sm'
-									: 'hover:text-slate-955 text-slate-500'
+									? 'text-slate-950 bg-white shadow-sm'
+									: 'hover:text-slate-950 text-slate-500'
 							}`}>
 							Annually{' '}
 							<span className='ml-2 rounded-lg bg-[#e85d9e] px-2 py-1 text-white'>
@@ -79,12 +79,12 @@ const PricingPage = () => {
 							<p className='text-sm font-black tracking-[0.18em] text-slate-400 uppercase'>
 								Monthly usage
 							</p>
-							<h2 className='text-slate-955 mt-3 text-4xl font-semibold tracking-normal'>
+							<h2 className='text-slate-950 mt-3 text-4xl font-semibold tracking-normal'>
 								How many credits do you need?
 							</h2>
 						</div>
 						<div className='rounded-3xl border border-slate-200 bg-white px-6 py-4 text-right shadow-lg shadow-slate-200/70'>
-							<p className='text-slate-955 text-3xl font-black'>{credits.label}</p>
+							<p className='text-slate-950 text-3xl font-black'>{credits.label}</p>
 							<p className='text-xs font-bold text-slate-500'>credits / month</p>
 						</div>
 					</div>
@@ -161,7 +161,7 @@ const PricingPage = () => {
 							<div className='mb-4 flex h-11 w-11 items-center justify-center rounded-2xl bg-slate-950 text-white'>
 								<Icon icon={item.icon} className='h-5 w-5' />
 							</div>
-							<p className='text-slate-955 text-base font-black'>{item.title}</p>
+							<p className='text-slate-950 text-base font-black'>{item.title}</p>
 							<p className='mt-2 text-sm leading-6 font-medium text-slate-500'>
 								{item.description}
 							</p>
@@ -177,26 +177,26 @@ const PricingNav = () => (
 	<header className='relative z-20 px-5 pt-6'>
 		<nav className='mx-auto flex max-w-[1220px] items-center justify-between rounded-[28px] border border-white bg-white/85 px-4 py-3 shadow-xl shadow-slate-200/70 backdrop-blur'>
 			<Link to='/' className='flex items-center gap-3'>
-				<span className='bg-slate-955 flex h-10 w-10 items-center justify-center rounded-2xl text-sm font-black text-white'>
+				<span className='bg-slate-950 flex h-10 w-10 items-center justify-center rounded-2xl text-sm font-black text-white'>
 					A1
 				</span>
-				<span className='text-slate-955 text-xl font-black'>Agent1o1</span>
+				<span className='text-slate-950 text-xl font-black'>Agent1o1</span>
 			</Link>
 			<div className='hidden items-center gap-7 text-sm font-bold text-slate-500 md:flex'>
 				<span>Solutions</span>
 				<span>Agents</span>
 				<span>Teams</span>
-				<span className='text-slate-955'>Pricing</span>
+				<span className='text-slate-950'>Pricing</span>
 			</div>
 			<div className='flex items-center gap-3'>
 				<Link
 					to={pages.onboarding.subPages.inviteTeam.to}
-					className='hover:text-slate-955 hidden text-sm font-bold text-slate-500 transition sm:block'>
+					className='hover:text-slate-950 hidden text-sm font-bold text-slate-500 transition sm:block'>
 					Talk to sales
 				</Link>
 				<Link
 					to={pages.editor.subPages.addWorkflow.to}
-					className='bg-slate-955 rounded-2xl px-5 py-3 text-sm font-black text-white transition hover:bg-slate-800'>
+					className='bg-slate-950 rounded-2xl px-5 py-3 text-sm font-black text-white transition hover:bg-slate-800'>
 					Go to app
 				</Link>
 			</div>
@@ -230,22 +230,22 @@ const PricingCard = ({
 			highlight ? 'border-[#e85d9e]' : 'border-slate-200'
 		}`}>
 		{highlight && (
-			<div className='bg-slate-955 absolute -top-4 right-7 rounded-full px-4 py-2 text-xs font-black text-white'>
+			<div className='bg-slate-950 absolute -top-4 right-7 rounded-full px-4 py-2 text-xs font-black text-white'>
 				Most popular
 			</div>
 		)}
 		<div className='mb-6 h-10 w-10 rounded-2xl' style={{ backgroundColor: color }} />
-		<h3 className='text-slate-955 text-3xl font-black'>{name}</h3>
+		<h3 className='text-slate-950 text-3xl font-black'>{name}</h3>
 		<p className='mt-3 min-h-12 text-base leading-7 font-medium text-slate-500'>
 			{description}
 		</p>
 
 		<div className='mt-8 flex items-end gap-2'>
 			{price === null ? (
-				<p className='text-slate-955 text-4xl font-black'>Custom</p>
+				<p className='text-slate-950 text-4xl font-black'>Custom</p>
 			) : (
 				<>
-					<p className='text-slate-955 text-5xl font-black'>${price}</p>
+					<p className='text-slate-950 text-5xl font-black'>${price}</p>
 					<p className='pb-2 text-sm font-bold text-slate-500'>
 						/user/{billingCycle === 'annual' ? 'mo, billed yearly' : 'mo'}
 					</p>
@@ -257,8 +257,8 @@ const PricingCard = ({
 			to={to}
 			className={`mt-8 flex min-h-13 items-center justify-center rounded-2xl px-5 text-sm font-black transition ${
 				highlight
-					? 'bg-slate-955 text-white hover:bg-slate-800'
-					: 'text-slate-955 hover:bg-slate-55 border border-slate-200'
+					? 'bg-slate-950 text-white hover:bg-slate-800'
+					: 'text-slate-950 hover:bg-slate-50 border border-slate-200'
 			}`}>
 			{cta}
 		</Link>

@@ -11,7 +11,7 @@ const AgentLayout = () => {
 	return (
 		<>
 			<AgentAsideTemplate />
-			<Wrapper>
+			<Wrapper borderDisabled={true}>
 				<Suspense
 					fallback={
 						<>

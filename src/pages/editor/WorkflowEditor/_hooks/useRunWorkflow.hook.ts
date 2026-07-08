@@ -1,5 +1,5 @@
 import { useRef } from 'react';
-import { WorkflowService } from '@/api/modules/workflows';
+import { WorkflowService, useWorkflow } from '@/api/modules/workflows';
 import {
 	ExecutionService,
 	subscribeToExecution,
@@ -20,6 +20,7 @@ import {
 import { getNodeDefinition } from '../_helper/nodeCatalog.constants';
 import type { TNodeRunRecord, TRunLog, TRunRecord } from '../_types/run.type';
 import type { TNodeRunStatus } from '../_types/node.type';
+import { notify } from '@/api/core/notify';
 
 const wait = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
 
@@ -68,6 +69,11 @@ export const useRunWorkflow = () => {
 	const { echo } = useRealtime();
 	const stopped = useRef(false);
 	const stepResolveRef = useRef<(() => void) | null>(null);
+
+	const ws = state.workflow.workspaceId;
+	const wfId = state.workflow.apiId;
+	const workflowQuery = useWorkflow(ws || '', wfId || '');
+	const isApiError = workflowQuery.isError;
 
 	/** Finalise a local run: flip status and push the record into history. */
 	const finishLocalRun = (
@@ -258,7 +264,7 @@ export const useRunWorkflow = () => {
 				type: 'APPEND_LOG',
 				log: {
 					level: 'info',
-					message: `Execution ${execution.id} started with status ${execution.status}`,
+					message: `Execution ${execution.id} started with status ${execution.status || 'running'}`,
 				},
 			});
 
@@ -269,13 +275,8 @@ export const useRunWorkflow = () => {
 
 			await finishRemoteRun(ws, execution.id, status);
 		} catch (error) {
-			dispatch({
-				type: 'APPEND_LOG',
-				log: {
-					level: 'error',
-					message: error instanceof Error ? error.message : 'Failed to execute workflow',
-				},
-			});
+			const msg = error instanceof Error ? error.message : 'Failed to execute workflow';
+			notify.error(msg);
 			dispatch({ type: 'RUN_FINISH', status: 'error' });
 		}
 	};
@@ -449,15 +450,13 @@ export const useRunWorkflow = () => {
 		stopped.current = false;
 		const runId = createId('run');
 		const runStartedAt = Date.now();
-		dispatch({ type: 'RUN_START', id: runId });
 
-		const ws = state.workflow.workspaceId;
-		const wfId = state.workflow.apiId;
-		if (ws && wfId) {
+		if (ws && wfId && !isApiError) {
 			await runRemoteWorkflow(ws, wfId);
 			return;
 		}
 
+		dispatch({ type: 'RUN_START', id: runId });
 		await runLocalWorkflow(runId, runStartedAt);
 	};
 

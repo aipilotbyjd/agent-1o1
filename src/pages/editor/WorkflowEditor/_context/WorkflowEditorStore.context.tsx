@@ -502,7 +502,26 @@ export const workflowEditorReducer = (
 				nodes: action.workflow.nodes,
 				edges: action.workflow.edges,
 				history: { past: [], future: [] },
-				ui: { ...state.ui, selectedNodeId: null, importExportOpen: false },
+				ui: {
+					...state.ui,
+					selectedNodeId: null,
+					importExportOpen: false,
+					emptyCanvasView: 'ai',
+					leftPanelOpen: false,
+					aiPanelOpen: false,
+					runPanelOpen: false,
+					commandPaletteOpen: false,
+					quickAddOpen: false,
+					shortcutsOpen: false,
+					canvasSearchOpen: false,
+					canvasSearchQuery: '',
+					templateLibraryOpen: false,
+					diffViewerOpen: false,
+					nodeDocOpen: false,
+					nodeDocNodeId: null,
+					waitingForStep: false,
+					linkCredentialsOpen: false,
+				},
 			};
 		case 'SET_NODE_COLOR': {
 			const next = withHistory(state);

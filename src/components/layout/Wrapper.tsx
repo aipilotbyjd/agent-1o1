@@ -7,10 +7,11 @@ interface IWrapperProps {
 	children: ReactNode;
 	className?: string;
 	hasAside?: boolean;
+	borderDisabled?: boolean;
 }
 // @end-snippet:: interface
 const Wrapper: FC<IWrapperProps> = (props) => {
-	const { children, className, hasAside = true, ...rest } = props;
+	const { children, className, hasAside = true, borderDisabled = false, ...rest } = props;
 
 	const { asideStatus } = useAsideStatus();
 
@@ -20,7 +21,7 @@ const Wrapper: FC<IWrapperProps> = (props) => {
 			className={classNames(
 				'flex flex-auto flex-col',
 				'bg-white dark:bg-zinc-950',
-				'border-s-[1rem] border-e-[1rem] border-zinc-100 md:border-s-0 dark:border-zinc-900',
+				!borderDisabled && 'border-s-[1rem] border-e-[1rem] border-zinc-100 md:border-s-0 dark:border-zinc-900',
 				'transition-all duration-300 ease-in-out',
 				className,
 				{
@@ -31,15 +32,19 @@ const Wrapper: FC<IWrapperProps> = (props) => {
 				},
 			)}
 			{...rest}>
-			<div className='sticky top-0 z-99 h-full max-h-4 min-h-4 bg-zinc-100 dark:bg-zinc-900'>
-				<div className='absolute start-0 top-[calc(1rem+1px)] h-4 w-4 corner-top-left rtl:top-4 rtl:corner-top-right' />
-				<div className='absolute end-px top-4 h-4 w-4 corner-top-right rtl:-left-px rtl:corner-top-left' />
-			</div>
+			{!borderDisabled && (
+				<div className='sticky top-0 z-99 h-full max-h-4 min-h-4 bg-zinc-100 dark:bg-zinc-900'>
+					<div className='absolute start-0 top-[calc(1rem+1px)] h-4 w-4 corner-top-left rtl:top-4 rtl:corner-top-right' />
+					<div className='absolute end-px top-4 h-4 w-4 corner-top-right rtl:-left-px rtl:corner-top-left' />
+				</div>
+			)}
 			{children}
-			<div className='sticky bottom-0 z-99 h-full max-h-4 min-h-4 bg-zinc-100 dark:bg-zinc-900'>
-				<div className='absolute start-px -top-4 h-4 w-4 corner-bottom-left rtl:start-0 rtl:corner-bottom-right' />
-				<div className='absolute end-0 -top-[calc(1rem+1px)] h-4 w-4 corner-bottom-right rtl:-top-4 rtl:corner-bottom-left' />
-			</div>
+			{!borderDisabled && (
+				<div className='sticky bottom-0 z-99 h-full max-h-4 min-h-4 bg-zinc-100 dark:bg-zinc-900'>
+					<div className='absolute start-px -top-4 h-4 w-4 corner-bottom-left rtl:start-0 rtl:corner-bottom-right' />
+					<div className='absolute end-0 -top-[calc(1rem+1px)] h-4 w-4 corner-bottom-right rtl:-top-4 rtl:corner-bottom-left' />
+				</div>
+			)}
 		</section>
 	);
 };

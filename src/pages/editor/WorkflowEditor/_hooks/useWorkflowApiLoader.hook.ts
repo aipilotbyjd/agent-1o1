@@ -2,12 +2,34 @@ import { useEffect, useMemo, useRef } from 'react';
 import { useWorkflow, useWorkflowVersions } from '@/api/modules/workflows';
 import { versionToExportedWorkflow } from '../_helper/workflowApiTransform.helper';
 import { useWorkflowEditor } from '../_context/WorkflowEditorProvider.context';
+import { useAiChatStore } from '@/store/aiChat.store';
+import { useNodeCategories } from '@/api/modules/node-types';
+import { mapApiCategoriesToGroups } from '../_helper/apiNodeCatalog.helper';
+import { NODE_CATALOG_MAP } from '../_helper/nodeCatalog.constants';
 
 export const useWorkflowApiLoader = (workspaceId: string, workflowId: string) => {
 	const { dispatch } = useWorkflowEditor();
 	const loadedKey = useRef<string | null>(null);
 	const workflowQuery = useWorkflow(workspaceId, workflowId);
 	const versionsQuery = useWorkflowVersions(workspaceId, workflowId);
+
+	// Load dynamic node categories/definitions from the API
+	const { data: apiCategories } = useNodeCategories({ include_nodes: true });
+
+	// Register dynamic definitions so they are globally resolvable in the editor
+	useEffect(() => {
+		if (!apiCategories) return;
+		try {
+			const groups = mapApiCategoriesToGroups(apiCategories);
+			groups.forEach((group) => {
+				group.nodes.forEach((node) => {
+					NODE_CATALOG_MAP[node.key] = node;
+				});
+			});
+		} catch (err) {
+			console.error('Failed to register dynamic node definitions:', err);
+		}
+	}, [apiCategories]);
 
 	const selectedVersion = useMemo(() => {
 		const versions = versionsQuery.data ?? [];
@@ -27,6 +49,9 @@ export const useWorkflowApiLoader = (workspaceId: string, workflowId: string) =>
 		const loadKey = `${workspaceId}:${workflowId}:${versionKey}`;
 		if (loadedKey.current === loadKey) return;
 		loadedKey.current = loadKey;
+
+		// Exit and clear any active AI chats from other workflows
+		useAiChatStore.getState().exitChat();
 
 		dispatch({
 			type: 'LOAD_WORKFLOW',

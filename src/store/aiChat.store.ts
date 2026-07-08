@@ -13,6 +13,7 @@ type TAiChatState = {
 	isChatActive: boolean;
 	isThinking: boolean;
 	messages: TAiChatMessage[];
+	workflowBuildStep: number; // 0 = none, 1 = first card, 2 = second card, 3 = third card
 	startChat: (initialPrompt: string) => void;
 	sendMessage: (prompt: string) => void;
 	setThinking: (thinking: boolean) => void;
@@ -50,6 +51,7 @@ export const useAiChatStore = create<TAiChatState>((set, get) => ({
 	isChatActive: false,
 	isThinking: false,
 	messages: [WELCOME_MESSAGE],
+	workflowBuildStep: 0,
 
 	startChat: (initialPrompt) => {
 		const timeStr = getCurrentTimeStr();
@@ -64,14 +66,16 @@ export const useAiChatStore = create<TAiChatState>((set, get) => ({
 			isChatActive: true,
 			isThinking: true,
 			messages: [WELCOME_MESSAGE, userMsg],
+			workflowBuildStep: 0,
 		});
 
 		// Trigger mock assistant response after a short thinking delay
 		setTimeout(() => {
+			const replyId = makeId();
 			const replyMsg: TAiChatMessage = {
-				id: makeId(),
+				id: replyId,
 				role: 'assistant',
-				text: GUMMIE_RESPONSE,
+				text: '',
 				timestamp: getCurrentTimeStr(),
 				isThought: true, // will display the "Thought for a couple of seconds"
 			};
@@ -79,6 +83,36 @@ export const useAiChatStore = create<TAiChatState>((set, get) => ({
 				isThinking: false,
 				messages: [...get().messages, replyMsg],
 			});
+
+			// Stream GUMMIE_RESPONSE
+			let currentLen = 0;
+			const fullText = GUMMIE_RESPONSE;
+			const interval = setInterval(() => {
+				currentLen += Math.min(3 + Math.floor(Math.random() * 3), fullText.length - currentLen);
+				const streamedText = fullText.slice(0, currentLen);
+
+				// Determine build step based on progress
+				const progress = currentLen / fullText.length;
+				let buildStep = 0;
+				if (progress >= 0.85) {
+					buildStep = 3;
+				} else if (progress >= 0.5) {
+					buildStep = 2;
+				} else if (progress >= 0.15) {
+					buildStep = 1;
+				}
+
+				set((state) => ({
+					messages: state.messages.map((m) =>
+						m.id === replyId ? { ...m, text: streamedText } : m
+					),
+					workflowBuildStep: buildStep,
+				}));
+
+				if (currentLen >= fullText.length) {
+					clearInterval(interval);
+				}
+			}, 30);
 		}, 1800);
 	},
 
@@ -105,10 +139,11 @@ export const useAiChatStore = create<TAiChatState>((set, get) => ({
 				responseText = `I've analyzed your request: "${prompt}". I recommend adding an action step to connect your services. Would you like me to build it on the canvas?`;
 			}
 
+			const replyId = makeId();
 			const replyMsg: TAiChatMessage = {
-				id: makeId(),
+				id: replyId,
 				role: 'assistant',
-				text: responseText,
+				text: '',
 				timestamp: getCurrentTimeStr(),
 			};
 
@@ -116,6 +151,23 @@ export const useAiChatStore = create<TAiChatState>((set, get) => ({
 				isThinking: false,
 				messages: [...get().messages, replyMsg],
 			});
+
+			// Stream responseText
+			let currentLen = 0;
+			const interval = setInterval(() => {
+				currentLen += Math.min(3 + Math.floor(Math.random() * 3), responseText.length - currentLen);
+				const streamedText = responseText.slice(0, currentLen);
+
+				set((state) => ({
+					messages: state.messages.map((m) =>
+						m.id === replyId ? { ...m, text: streamedText } : m
+					),
+				}));
+
+				if (currentLen >= responseText.length) {
+					clearInterval(interval);
+				}
+			}, 30);
 		}, 1500);
 	},
 
@@ -124,6 +176,7 @@ export const useAiChatStore = create<TAiChatState>((set, get) => ({
 	resetChat: () => {
 		set({
 			isThinking: false,
+			workflowBuildStep: 0,
 			messages: [
 				{
 					...WELCOME_MESSAGE,
@@ -137,6 +190,7 @@ export const useAiChatStore = create<TAiChatState>((set, get) => ({
 		set({
 			isChatActive: false,
 			isThinking: false,
+			workflowBuildStep: 0,
 			messages: [WELCOME_MESSAGE],
 		});
 	},

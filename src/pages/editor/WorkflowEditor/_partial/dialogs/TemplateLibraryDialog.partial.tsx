@@ -145,14 +145,14 @@ const TemplateLibraryDialog = () => {
 				</div>
 
 				{/* Category chips */}
-				<div className='flex flex-wrap gap-2'>
+				<div className='flex items-center gap-2 overflow-x-auto pb-1 -mx-5 px-5 scrollbar-none [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden'>
 					{CATEGORIES.map((cat) => (
 						<button
 							key={cat}
 							type='button'
 							onClick={() => setActiveCategory(cat)}
 							className={[
-								'rounded-full px-3 py-1 text-xs font-semibold transition',
+								'rounded-full px-3 py-1 text-xs font-semibold transition shrink-0',
 								activeCategory === cat
 									? 'bg-violet-600 text-white'
 									: 'bg-zinc-100 text-zinc-600 hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700',
@@ -167,10 +167,11 @@ const TemplateLibraryDialog = () => {
 					{filtered.map((template) => (
 						<div
 							key={template.id}
-							className='group flex flex-col justify-between rounded-xl border border-zinc-200 bg-white p-4 transition hover:border-violet-300 hover:shadow-md hover:shadow-violet-50 dark:border-zinc-800 dark:bg-zinc-900 dark:hover:border-violet-800/50'>
+							onClick={() => applyTemplate(template)}
+							className='group flex cursor-pointer flex-col justify-between rounded-xl border border-zinc-200 bg-white p-4 transition-all hover:border-violet-300 hover:shadow-md hover:shadow-violet-50 active:scale-[0.98] dark:border-zinc-800 dark:bg-zinc-900 dark:hover:border-violet-800/50'>
 							<div>
 								<div className='mb-1 flex items-start justify-between gap-2'>
-									<div className='text-sm font-bold text-zinc-800 dark:text-zinc-100'>
+									<div className='text-sm font-bold text-zinc-800 transition-colors group-hover:text-violet-600 dark:text-zinc-100 dark:group-hover:text-violet-400'>
 										{template.name}
 									</div>
 									{template.badge && (
@@ -183,7 +184,7 @@ const TemplateLibraryDialog = () => {
 								<p className='text-xs leading-relaxed text-zinc-500 dark:text-zinc-400'>
 									{template.description}
 								</p>
-								<div className='mt-2 flex flex-wrap gap-1'>
+								<div className='mt-2.5 flex flex-wrap gap-1'>
 									{template.defKeys.slice(0, 4).map((key, i) => (
 										<span
 											key={i}
@@ -198,13 +199,10 @@ const TemplateLibraryDialog = () => {
 									)}
 								</div>
 							</div>
-							<button
-								type='button'
-								onClick={() => applyTemplate(template)}
-								className='mt-3 flex w-full items-center justify-center gap-1.5 rounded-lg bg-violet-600 py-2 text-xs font-bold text-white opacity-0 transition group-hover:opacity-100 hover:bg-violet-700'>
+							<div className='mt-4 flex items-center gap-1.5 text-xs font-bold text-violet-600 opacity-100 transition-all sm:opacity-0 sm:group-hover:opacity-100 dark:text-violet-400'>
 								<Zap size={12} fill='currentColor' />
-								Use Template
-							</button>
+								<span>Use Template</span>
+							</div>
 						</div>
 					))}
 				</div>

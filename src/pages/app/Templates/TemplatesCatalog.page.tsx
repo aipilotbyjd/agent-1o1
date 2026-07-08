@@ -625,7 +625,7 @@ const TemplatesCatalogPage = () => {
 								value={searchQuery}
 								onChange={(e) => setSearchQuery(e.target.value)}
 								placeholder={`Search ${activeTab === 'workflows' ? 'workflows' : activeTab === 'agents' ? 'agents' : 'collections'}...`}
-								className='dark:focus:ring-violet-650 shadow-3xs w-full rounded-xl border border-zinc-200/80 bg-white py-2 pr-4 pl-9 text-xs text-zinc-700 focus:ring-1 focus:ring-violet-500 focus:outline-none dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-300'
+								className='dark:focus:ring-violet-600 shadow-3xs w-full rounded-xl border border-zinc-200/80 bg-white py-2 pr-4 pl-9 text-xs text-zinc-700 focus:ring-1 focus:ring-violet-500 focus:outline-none dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-300'
 							/>
 						</div>
 
@@ -758,7 +758,7 @@ const TemplatesCatalogPage = () => {
 																);
 															} catch (err) {}
 														}}
-														className='dark:border-violet-650 cursor-pointer rounded-xl border border-[#6E3FF3] px-3.5 py-1.5 text-[10px] font-bold text-[#6E3FF3] transition-all duration-200 hover:bg-[#6E3FF3] hover:text-white dark:text-violet-400 dark:hover:bg-violet-600 dark:hover:text-white'>
+														className='dark:border-violet-600 cursor-pointer rounded-xl border border-[#6E3FF3] px-3.5 py-1.5 text-[10px] font-bold text-[#6E3FF3] transition-all duration-200 hover:bg-[#6E3FF3] hover:text-white dark:text-violet-400 dark:hover:bg-violet-600 dark:hover:text-white'>
 														Use Template
 													</button>
 												</div>
@@ -838,7 +838,7 @@ const TemplatesCatalogPage = () => {
 																);
 															} catch (err) {}
 														}}
-														className='dark:hover:bg-blue-550 cursor-pointer rounded-xl border border-blue-600 px-3.5 py-1.5 text-[10px] font-bold text-blue-600 transition-all duration-200 hover:bg-blue-600 hover:text-white dark:border-blue-500 dark:text-blue-400 dark:hover:text-white'>
+														className='dark:hover:bg-blue-500 cursor-pointer rounded-xl border border-blue-600 px-3.5 py-1.5 text-[10px] font-bold text-blue-600 transition-all duration-200 hover:bg-blue-600 hover:text-white dark:border-blue-500 dark:text-blue-400 dark:hover:text-white'>
 														Deploy Agent
 													</button>
 												</div>
@@ -891,7 +891,7 @@ const TemplatesCatalogPage = () => {
 															</span>
 														</div>
 													</div>
-													<button className='hover:text-zinc-650 rounded p-1 text-zinc-400 dark:hover:text-zinc-300'>
+													<button className='hover:text-zinc-600 rounded p-1 text-zinc-400 dark:hover:text-zinc-300'>
 														<span className='text-sm leading-none font-bold'>
 															...
 														</span>
@@ -957,7 +957,7 @@ const TemplatesCatalogPage = () => {
 
 							{/* Layout Switcher */}
 							<div className='flex items-center rounded-lg border border-zinc-200/20 bg-zinc-200/55 p-0.5 dark:bg-zinc-900'>
-								<button className='text-violet-650 shadow-3xs cursor-pointer rounded-md bg-white p-1.5 dark:bg-zinc-800 dark:text-violet-400'>
+								<button className='text-violet-600 shadow-3xs cursor-pointer rounded-md bg-white p-1.5 dark:bg-zinc-800 dark:text-violet-400'>
 									<Grid className='h-3.5 w-3.5' />
 								</button>
 								<button className='cursor-pointer rounded-md p-1.5 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300'>
@@ -973,7 +973,7 @@ const TemplatesCatalogPage = () => {
 					(activeTab === 'collections' && isCollsLoading) ? (
 						<div className='flex flex-col items-center justify-center gap-2 py-24'>
 							<Loader2 className='h-8 w-8 animate-spin text-violet-500' />
-							<span className='dark:text-zinc-455 text-xs text-zinc-500'>
+							<span className='dark:text-zinc-400 text-xs text-zinc-500'>
 								Loading catalog...
 							</span>
 						</div>
@@ -982,7 +982,7 @@ const TemplatesCatalogPage = () => {
 					{/* Empty lists */}
 					{activeTab === 'workflows' && workflows?.length === 0 && (
 						<div className='rounded-2xl border border-dashed border-zinc-200 bg-white/50 py-16 text-center dark:border-zinc-800 dark:bg-zinc-950/50'>
-							<Workflow className='text-zinc-350 dark:text-zinc-650 mx-auto mb-2 h-10 w-10' />
+							<Workflow className='text-zinc-300 dark:text-zinc-600 mx-auto mb-2 h-10 w-10' />
 							<h3 className='mb-1 text-sm font-bold text-zinc-700 dark:text-zinc-300'>
 								No workflow templates found
 							</h3>
@@ -993,7 +993,7 @@ const TemplatesCatalogPage = () => {
 					)}
 					{activeTab === 'agents' && agents?.length === 0 && (
 						<div className='rounded-2xl border border-dashed border-zinc-200 bg-white/50 py-16 text-center dark:border-zinc-800 dark:bg-zinc-950/50'>
-							<Cpu className='text-zinc-350 dark:text-zinc-650 mx-auto mb-2 h-10 w-10' />
+							<Cpu className='text-zinc-300 dark:text-zinc-600 mx-auto mb-2 h-10 w-10' />
 							<h3 className='mb-1 text-sm font-bold text-zinc-700 dark:text-zinc-300'>
 								No AI agent templates found
 							</h3>
@@ -1004,7 +1004,7 @@ const TemplatesCatalogPage = () => {
 					)}
 					{activeTab === 'collections' && collections?.length === 0 && (
 						<div className='rounded-2xl border border-dashed border-zinc-200 bg-white/50 py-16 text-center dark:border-zinc-800 dark:bg-zinc-950/50'>
-							<Layers className='text-zinc-350 dark:text-zinc-650 mx-auto mb-2 h-10 w-10' />
+							<Layers className='text-zinc-300 dark:text-zinc-600 mx-auto mb-2 h-10 w-10' />
 							<h3 className='mb-1 text-sm font-bold text-zinc-700 dark:text-zinc-300'>
 								No collections found
 							</h3>
@@ -1022,7 +1022,7 @@ const TemplatesCatalogPage = () => {
 								return (
 									<div
 										key={wf.id}
-										className='group dark:bg-zinc-955 dark:border-zinc-800 flex cursor-pointer flex-col rounded-2xl border border-zinc-200/50 bg-white p-4.5 transition-all duration-200 hover:border-violet-300 hover:shadow-md dark:hover:border-violet-800'
+										className='group dark:bg-zinc-950 dark:border-zinc-800 flex cursor-pointer flex-col rounded-2xl border border-zinc-200/50 bg-white p-4.5 transition-all duration-200 hover:border-violet-300 hover:shadow-md dark:hover:border-violet-800'
 										onClick={() => setPreviewId(wf.id)}>
 										<div className='mb-3.5 flex items-start justify-between'>
 											<div className='flex items-center gap-3 truncate'>
@@ -1094,7 +1094,7 @@ const TemplatesCatalogPage = () => {
 								return (
 									<div
 										key={agent.id}
-										className='group dark:bg-zinc-955 dark:border-zinc-800 flex cursor-pointer flex-col rounded-2xl border border-zinc-200/50 bg-white p-4.5 transition-all duration-200 hover:border-blue-300 hover:shadow-md dark:hover:border-blue-800'
+										className='group dark:bg-zinc-950 dark:border-zinc-800 flex cursor-pointer flex-col rounded-2xl border border-zinc-200/50 bg-white p-4.5 transition-all duration-200 hover:border-blue-300 hover:shadow-md dark:hover:border-blue-800'
 										onClick={() => setPreviewId(agent.id)}>
 										<div className='mb-3.5 flex items-start justify-between'>
 											<div className='flex items-center gap-3 truncate'>
@@ -1115,7 +1115,7 @@ const TemplatesCatalogPage = () => {
 													</span>
 												</div>
 											</div>
-											<button className='hover:text-zinc-650 rounded p-1 text-zinc-400 dark:hover:text-zinc-300'>
+											<button className='hover:text-zinc-600 rounded p-1 text-zinc-400 dark:hover:text-zinc-300'>
 												<span className='text-sm leading-none font-bold'>
 													...
 												</span>
@@ -1143,7 +1143,7 @@ const TemplatesCatalogPage = () => {
 								return (
 									<div
 										key={coll.id}
-										className='group dark:bg-zinc-955 dark:border-zinc-800 flex cursor-pointer flex-col rounded-2xl border border-zinc-200/50 bg-white p-4.5 transition-all duration-200 hover:border-amber-300 hover:shadow-md dark:hover:border-amber-800'
+										className='group dark:bg-zinc-950 dark:border-zinc-800 flex cursor-pointer flex-col rounded-2xl border border-zinc-200/50 bg-white p-4.5 transition-all duration-200 hover:border-amber-300 hover:shadow-md dark:hover:border-amber-800'
 										onClick={() => setPreviewId(coll.id)}>
 										<div className='mb-3.5 flex items-start justify-between'>
 											<div className='flex items-center gap-3 truncate'>
@@ -1164,7 +1164,7 @@ const TemplatesCatalogPage = () => {
 													</span>
 												</div>
 											</div>
-											<button className='hover:text-zinc-650 rounded p-1 text-zinc-400 dark:hover:text-zinc-300'>
+											<button className='hover:text-zinc-600 rounded p-1 text-zinc-400 dark:hover:text-zinc-300'>
 												<span className='text-sm leading-none font-bold'>
 													...
 												</span>

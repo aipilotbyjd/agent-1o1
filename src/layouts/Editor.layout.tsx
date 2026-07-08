@@ -9,7 +9,7 @@ import Header, { HeaderLeft, HeaderRight } from '@/components/layout/Header';
 const EditorLayout = () => {
 	return (
 		<>
-			<Wrapper hasAside={false}>
+			<Wrapper hasAside={false} borderDisabled={true}>
 				<Suspense
 					fallback={
 						<>
