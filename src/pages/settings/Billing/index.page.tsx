@@ -14,50 +14,19 @@ import {
 } from 'lucide-react';
 import { useWorkspaceContext } from '@/context/workspaceContext';
 import { useCreditBalance, useCreditPacks, useCreditTransactions } from '@/api/modules/credits';
-import { useBillingPortal, useBuyCredits } from '@/api/modules/billing';
+import { useBillingPortal, useBuyCredits, usePackCatalog } from '@/api/modules/billing';
 import { useSubscription } from '@/api/modules/plans';
 import pages from '@/Routes/pages';
 import type { TCreditPack } from '@/types/credit.type';
 
 // ── helpers ──────────────────────────────────────────────────────────────────
 
-const PACK_OPTIONS = [
-	{
-		credits: 1_000,
-		label: '1k',
-		bonus: '',
-		price: 5_00,
-		priceId: 'price_1k',
-		icon: Sparkles,
-		iconBg: 'bg-purple-100 text-purple-600 dark:bg-purple-950/40 dark:text-purple-400',
-	},
-	{
-		credits: 5_000,
-		label: '5k',
-		bonus: '0.3k',
-		price: 20_00,
-		priceId: 'price_5k',
-		icon: Star,
-		iconBg: 'bg-amber-100 text-amber-600 dark:bg-amber-950/40 dark:text-amber-400',
-	},
-	{
-		credits: 20_000,
-		label: '20k',
-		bonus: '2k',
-		price: 70_00,
-		priceId: 'price_20k',
-		icon: Star,
-		iconBg: 'bg-sky-100 text-sky-600 dark:bg-sky-950/40 dark:text-sky-450',
-	},
-	{
-		credits: 50_000,
-		label: '50k',
-		bonus: '8k',
-		price: 150_00,
-		priceId: 'price_50k',
-		icon: Star,
-		iconBg: 'bg-rose-100 text-rose-600 dark:bg-rose-950/40 dark:text-rose-400',
-	},
+const PACK_ICONS = [Sparkles, Star, Star, Star];
+const PACK_ICON_BG = [
+	'bg-purple-100 text-purple-600 dark:bg-purple-950/40 dark:text-purple-400',
+	'bg-amber-100 text-amber-600 dark:bg-amber-950/40 dark:text-amber-400',
+	'bg-sky-100 text-sky-600 dark:bg-sky-950/40 dark:text-sky-450',
+	'bg-rose-100 text-rose-600 dark:bg-rose-950/40 dark:text-rose-400',
 ];
 
 const packStatusCfg: Record<TCreditPack['status'], { label: string; color: string }> = {
@@ -97,6 +66,7 @@ const BillingOverviewPage = () => {
 	const { data: balance, refetch: refetchBalance } = useCreditBalance(activeWorkspaceId);
 	const { refetch: refetchSubscription } = useSubscription(activeWorkspaceId);
 	const { data: packs, isLoading: packsLoading } = useCreditPacks(activeWorkspaceId);
+	const { data: catalog, isLoading: catalogLoading } = usePackCatalog(activeWorkspaceId);
 	const { data: txData } = useCreditTransactions(activeWorkspaceId, { per_page: 5 });
 	const portal = useBillingPortal(activeWorkspaceId);
 	const buyCredits = useBuyCredits(activeWorkspaceId);
@@ -318,20 +288,31 @@ const BillingOverviewPage = () => {
 					</h3>
 				</div>
 				<div className='grid gap-4 sm:grid-cols-2 lg:grid-cols-4'>
-					{PACK_OPTIONS.map((pack) => (
+					{catalogLoading ? (
+						[1, 2, 3, 4].map((i) => (
+							<div
+								key={i}
+								className='h-40 animate-pulse rounded-2xl bg-zinc-100 dark:bg-zinc-800'
+							/>
+						))
+					) : (
+					(catalog ?? []).map((pack, i) => {
+						const Icon = PACK_ICONS[i % PACK_ICONS.length];
+						const iconBg = PACK_ICON_BG[i % PACK_ICON_BG.length];
+						return (
 						<div
-							key={pack.priceId}
+							key={pack.key}
 							className='dark:border-zinc-800 flex flex-col justify-between rounded-2xl border border-zinc-100 bg-white p-5 shadow-sm dark:bg-zinc-950'>
 							<div>
 								<div className='flex items-center justify-between'>
 									<div className='flex items-center gap-2.5'>
 										<div
-											className={`flex h-8 w-8 items-center justify-center rounded-xl ${pack.iconBg}`}>
-											<pack.icon size={16} />
+											className={`flex h-8 w-8 items-center justify-center rounded-xl ${iconBg}`}>
+											<Icon size={16} />
 										</div>
 										<div>
 											<span className='dark:text-zinc-150 text-sm font-black text-zinc-900'>
-												{pack.label}
+												{pack.credits.toLocaleString()}
 											</span>
 											<p className='mt-0.5 text-[10px] leading-none font-semibold text-zinc-400'>
 												credits
@@ -339,26 +320,28 @@ const BillingOverviewPage = () => {
 										</div>
 									</div>
 
-									{pack.bonus && (
-										<span className='rounded-md bg-emerald-100 px-1.5 py-0.5 text-[9px] font-bold text-emerald-700 dark:bg-emerald-950 dark:text-emerald-400'>
-											+{pack.bonus} free
+									{!pack.available && (
+										<span className='rounded-md bg-zinc-100 px-1.5 py-0.5 text-[9px] font-bold text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400'>
+											Unavailable
 										</span>
 									)}
 								</div>
 								<p className='mt-5 text-xl font-black text-zinc-950 dark:text-zinc-100'>
-									{fmt(pack.price)}
+									{fmt(pack.price_cents)}
 								</p>
 							</div>
 
 							<button
 								type='button'
-								onClick={() => buyCredits.mutate({ price_id: pack.priceId })}
-								disabled={buyCredits.isPending}
+								onClick={() => buyCredits.mutate({ pack_key: pack.key })}
+								disabled={buyCredits.isPending || !pack.available}
 								className='mt-4 w-full rounded-xl bg-indigo-600 py-2.5 text-center text-xs font-bold text-white shadow-md shadow-indigo-600/10 transition hover:bg-indigo-700 active:scale-95 disabled:opacity-60'>
 								Buy now
 							</button>
 						</div>
-					))}
+						);
+					})
+					)}
 				</div>
 			</section>
 
