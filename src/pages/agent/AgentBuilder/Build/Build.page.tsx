@@ -108,7 +108,7 @@ const BuildPage = () => {
 	const [connectedApps, setConnectedApps] = useState([
 		{ id: 'firecrawl', name: 'Firecrawl', desc: 'Scrape and extract data from websites.', icon: Flame, iconBg: 'bg-orange-500', isConnected: true },
 		{ id: 'google-docs', name: 'Google Docs', desc: 'Create, read and update documents.', icon: FileText, iconBg: 'bg-blue-500', isConnected: false },
-		{ id: 'parallel', name: 'Parallel', desc: 'Run AI tasks in parallel for faster results.', icon: Globe, iconBg: 'bg-zinc-800 dark:bg-zinc-700 border dark:border-zinc-650', isConnected: true }
+		{ id: 'parallel', name: 'Parallel', desc: 'Run AI tasks in parallel for faster results.', icon: Globe, iconBg: 'bg-zinc-800 dark:bg-zinc-700 border dark:border-zinc-600', isConnected: true }
 	]);
 
 	// Add an App drawer states
@@ -411,7 +411,7 @@ const BuildPage = () => {
 	const AgentIconComponent = agentIcon;
 
 	return (
-		<div className='dark:text-zinc-550 relative flex min-w-0 flex-1 flex-col overflow-hidden bg-zinc-50/50 text-zinc-950 transition-colors duration-300 dark:bg-zinc-950'>
+		<div className='dark:text-zinc-500 relative flex min-w-0 flex-1 flex-col overflow-hidden bg-zinc-50/50 text-zinc-950 transition-colors duration-300 dark:bg-zinc-950'>
 			{/* Ambient Lighting Gradients */}
 			<div className='pointer-events-none absolute top-[-100px] left-1/4 -z-10 h-[380px] w-[380px] rounded-full bg-violet-500/8 blur-[120px] dark:bg-violet-600/12' />
 			<div className='pointer-events-none absolute right-1/4 bottom-1/4 -z-10 h-[450px] w-[450px] rounded-full bg-emerald-500/8 blur-[140px] dark:bg-emerald-600/12' />
@@ -532,7 +532,7 @@ const BuildPage = () => {
 										<h2 className='text-lg font-black tracking-tight sm:text-xl dark:text-zinc-50'>
 											Templates
 										</h2>
-										<span className='text-zinc-650 inline-flex items-center rounded-md bg-zinc-100 px-2 py-0.5 text-[11px] font-black dark:bg-zinc-900 dark:text-zinc-400'>
+										<span className='text-zinc-600 inline-flex items-center rounded-md bg-zinc-100 px-2 py-0.5 text-[11px] font-black dark:bg-zinc-900 dark:text-zinc-400'>
 											{filteredTemplates.length} Available
 										</span>
 									</div>
@@ -544,7 +544,7 @@ const BuildPage = () => {
 								</div>
 
 								{/* Categories Tab Bar */}
-								<div className='text-zinc-450 flex gap-5 overflow-x-auto border-b border-zinc-200/80 text-[13px] font-black whitespace-nowrap sm:gap-6 sm:text-sm dark:border-zinc-800/80 dark:text-zinc-500'>
+								<div className='text-zinc-400 flex gap-5 overflow-x-auto border-b border-zinc-200/80 text-[13px] font-black whitespace-nowrap sm:gap-6 sm:text-sm dark:border-zinc-800/80 dark:text-zinc-500'>
 									{agentTemplateTabs.map((tab) => {
 										const isActive = tab === activeTab;
 										return (
@@ -607,7 +607,7 @@ const BuildPage = () => {
 												key={chip.label}
 												type='button'
 												onClick={() => handleChipClick(chip.text)}
-												className='text-zinc-650 hover:text-zinc-950 inline-flex items-center gap-1.5 rounded-full border border-zinc-200/80 bg-white/70 px-4 py-1.5 text-[11px] font-black shadow-2xs backdrop-blur-xs transition-all hover:bg-zinc-50/50 dark:border-zinc-800 dark:bg-zinc-900/60 dark:text-zinc-400 dark:hover:border-zinc-700 dark:hover:bg-zinc-900'>
+												className='text-zinc-600 hover:text-zinc-950 inline-flex items-center gap-1.5 rounded-full border border-zinc-200/80 bg-white/70 px-4 py-1.5 text-[11px] font-black shadow-2xs backdrop-blur-xs transition-all hover:bg-zinc-50/50 dark:border-zinc-800 dark:bg-zinc-900/60 dark:text-zinc-400 dark:hover:border-zinc-700 dark:hover:bg-zinc-900'>
 												<ChipIcon size={12} className='text-violet-500' />
 												{chip.label}
 											</button>
@@ -661,7 +661,7 @@ const BuildPage = () => {
 							{/* Back button */}
 							<button
 								onClick={() => setIsPreviewMode(false)}
-								className='flex h-9 w-9 items-center justify-center rounded-lg border border-zinc-200 bg-white text-zinc-500 hover:bg-zinc-100 hover:text-zinc-950 dark:border-white/10 dark:bg-white/[0.03] dark:text-zinc-450 dark:hover:bg-white/[0.07] dark:hover:text-white'>
+								className='flex h-9 w-9 items-center justify-center rounded-lg border border-zinc-200 bg-white text-zinc-500 hover:bg-zinc-100 hover:text-zinc-950 dark:border-white/10 dark:bg-white/[0.03] dark:text-zinc-400 dark:hover:bg-white/[0.07] dark:hover:text-white'>
 								<X size={16} />
 							</button>
 
@@ -774,7 +774,7 @@ const BuildPage = () => {
 														setAgentIconColor('purple');
 														toast.error('Agent draft reset/deleted.');
 													}}
-													className='flex w-full items-center gap-2 rounded-lg px-2.5 py-2 text-left text-xs font-semibold text-rose-600 hover:bg-rose-50 dark:text-rose-450 dark:hover:bg-rose-950/20 transition-colors'>
+													className='flex w-full items-center gap-2 rounded-lg px-2.5 py-2 text-left text-xs font-semibold text-rose-600 hover:bg-rose-50 dark:text-rose-400 dark:hover:bg-rose-950/20 transition-colors'>
 													<Trash2 size={13} />
 													Delete Agent Draft
 												</button>
@@ -820,7 +820,7 @@ const BuildPage = () => {
 												{message.type === 'table' && message.headers && message.data && (
 													<div className='mt-4 overflow-hidden rounded-xl border border-zinc-200/80 bg-white dark:border-zinc-800 dark:bg-zinc-950'>
 														<div className='overflow-x-auto'>
-															<table className='w-full text-left text-xs font-semibold text-zinc-650 dark:text-zinc-400'>
+															<table className='w-full text-left text-xs font-semibold text-zinc-600 dark:text-zinc-400'>
 																<thead className='bg-zinc-50/50 text-[11px] font-black uppercase tracking-wider text-zinc-600 border-b border-zinc-200 dark:bg-zinc-900/40 dark:text-zinc-400 dark:border-zinc-800'>
 																	<tr>
 																		{message.headers.map((h) => (
@@ -918,7 +918,7 @@ const BuildPage = () => {
 									<button
 										onClick={() => setSkillEnabled(!skillEnabled)}
 										title='Toggle Skills'
-										className='flex h-9 items-center gap-1.5 rounded-lg border border-zinc-150 bg-zinc-50/50 px-2.5 text-xs font-bold text-zinc-500 hover:bg-zinc-100 dark:border-zinc-800 dark:bg-zinc-950/50 dark:text-zinc-400 dark:hover:bg-zinc-800'>
+										className='flex h-9 items-center gap-1.5 rounded-lg border border-zinc-100 bg-zinc-50/50 px-2.5 text-xs font-bold text-zinc-500 hover:bg-zinc-100 dark:border-zinc-800 dark:bg-zinc-950/50 dark:text-zinc-400 dark:hover:bg-zinc-800'>
 										{skillEnabled ? (
 											<CheckSquare size={14} className='text-violet-600 dark:text-violet-400' />
 										) : (
@@ -970,7 +970,7 @@ const BuildPage = () => {
 									{/* Mic icon */}
 									<button
 										title='Voice input'
-										className='flex h-9 w-9 items-center justify-center rounded-lg text-zinc-400 hover:bg-zinc-50 hover:text-zinc-700 dark:text-zinc-550 dark:hover:bg-zinc-800 dark:hover:text-zinc-300'>
+										className='flex h-9 w-9 items-center justify-center rounded-lg text-zinc-400 hover:bg-zinc-50 hover:text-zinc-700 dark:text-zinc-500 dark:hover:bg-zinc-800 dark:hover:text-zinc-300'>
 										<Mic size={18} />
 									</button>
 
@@ -1024,10 +1024,10 @@ const BuildPage = () => {
 									{/* Tab: Agent */}
 									<button 
 										onClick={() => setActiveSidebarTab('agent')}
-										className={`flex items-center gap-1.5 px-3 pb-4 text-xs font-bold transition-all border-b-2 ${
+										className={`flex items-center gap-1.5 px-3 pb-4 text-xs font-bold transition-all border-b-50 ${
 											activeSidebarTab === 'agent'
 												? 'text-violet-600 border-violet-600 dark:text-violet-400 dark:border-violet-400'
-												: 'text-zinc-400 border-transparent hover:text-zinc-655 dark:text-zinc-500 dark:hover:text-zinc-305'
+												: 'text-zinc-400 border-transparent hover:text-zinc-600 dark:text-zinc-500 dark:hover:text-zinc-300'
 										}`}
 									>
 										<Bot size={14} />
@@ -1036,10 +1036,10 @@ const BuildPage = () => {
 									{/* Tab: Settings */}
 									<button 
 										onClick={() => setActiveSidebarTab('settings')}
-										className={`flex items-center gap-1.5 px-3 pb-4 text-xs font-bold transition-all border-b-2 ${
+										className={`flex items-center gap-1.5 px-3 pb-4 text-xs font-bold transition-all border-b-50 ${
 											activeSidebarTab === 'settings'
 												? 'text-violet-600 border-violet-600 dark:text-violet-400 dark:border-violet-400'
-												: 'text-zinc-400 border-transparent hover:text-zinc-655 dark:text-zinc-500 dark:hover:text-zinc-305'
+												: 'text-zinc-400 border-transparent hover:text-zinc-600 dark:text-zinc-500 dark:hover:text-zinc-300'
 										}`}
 									>
 										<SlidersHorizontal size={14} />
@@ -1048,10 +1048,10 @@ const BuildPage = () => {
 									{/* Tab: Chat Details */}
 									<button 
 										onClick={() => setActiveSidebarTab('chatDetails')}
-										className={`flex items-center gap-1.5 px-3 pb-4 text-xs font-bold transition-all border-b-2 ${
+										className={`flex items-center gap-1.5 px-3 pb-4 text-xs font-bold transition-all border-b-50 ${
 											activeSidebarTab === 'chatDetails'
 												? 'text-violet-600 border-violet-600 dark:text-violet-400 dark:border-violet-400'
-												: 'text-zinc-400 border-transparent hover:text-zinc-655 dark:text-zinc-500 dark:hover:text-zinc-305'
+												: 'text-zinc-400 border-transparent hover:text-zinc-600 dark:text-zinc-500 dark:hover:text-zinc-300'
 										}`}
 									>
 										<MessageSquare size={14} />
@@ -1064,7 +1064,7 @@ const BuildPage = () => {
 									<button 
 										onClick={() => setIsSettingsOpen(false)}
 										title="Go back"
-										className='flex h-8 w-8 items-center justify-center rounded-lg border border-zinc-200 bg-white text-zinc-500 hover:bg-zinc-100 hover:text-zinc-955 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800'>
+										className='flex h-8 w-8 items-center justify-center rounded-lg border border-zinc-200 bg-white text-zinc-500 hover:bg-zinc-100 hover:text-zinc-950 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800'>
 										<Undo2 size={14} />
 									</button>
 									<button 
@@ -1091,20 +1091,20 @@ const BuildPage = () => {
 												<ChevronDown size={16} className='text-zinc-500' />
 												<h3 className='text-sm font-black text-zinc-900 dark:text-white'>Agent Preferences</h3>
 											</div>
-											<button className='inline-flex items-center gap-1 rounded-lg border border-zinc-200 bg-white px-2.5 py-1 text-[10px] font-bold text-zinc-655 hover:bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800'>
+											<button className='inline-flex items-center gap-1 rounded-lg border border-zinc-200 bg-white px-2.5 py-1 text-[10px] font-bold text-zinc-600 hover:bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800'>
 												<span>Advanced</span>
 												<SlidersHorizontal size={10} />
 											</button>
 										</div>
 
 										{/* Model Selector Card */}
-										<div className='flex items-center justify-between rounded-xl border border-zinc-150 p-3 bg-zinc-50/20 dark:border-zinc-800 dark:bg-zinc-950/20 cursor-pointer hover:border-zinc-300 dark:hover:border-zinc-700 transition'>
+										<div className='flex items-center justify-between rounded-xl border border-zinc-100 p-3 bg-zinc-50/20 dark:border-zinc-800 dark:bg-zinc-950/20 cursor-pointer hover:border-zinc-300 dark:hover:border-zinc-700 transition'>
 											<div className='flex items-center gap-3'>
 												<div className='flex h-9 w-9 items-center justify-center rounded-xl bg-blue-500/10 text-blue-600 dark:bg-blue-500/5 dark:text-blue-400'>
 													<Sparkles size={16} fill="currentColor" />
 												</div>
 												<div className='flex flex-col'>
-													<span className='text-[10px] font-black tracking-wide text-zinc-450 uppercase'>Recommended Model</span>
+													<span className='text-[10px] font-black tracking-wide text-zinc-400 uppercase'>Recommended Model</span>
 													<span className='text-xs font-black text-zinc-800 dark:text-zinc-200'>Gemini 3.5 Flash</span>
 												</div>
 											</div>
@@ -1118,22 +1118,22 @@ const BuildPage = () => {
 												value={agentInstructions}
 												onChange={(e) => setAgentInstructions(e.target.value.substring(0, 4000))}
 												placeholder='Add instructions for the agent...'
-												className='w-full rounded-xl border border-zinc-200 bg-white p-3 text-xs font-semibold text-zinc-800 placeholder:text-zinc-400 outline-none focus:border-violet-500/50 focus:ring-4 focus:ring-violet-500/5 dark:border-zinc-800 dark:bg-zinc-950/25 dark:text-zinc-200 dark:placeholder:text-zinc-550 focus:outline-none focus:ring-0 focus:ring-offset-0'
+												className='w-full rounded-xl border border-zinc-200 bg-white p-3 text-xs font-semibold text-zinc-800 placeholder:text-zinc-400 outline-none focus:border-violet-500/50 focus:ring-4 focus:ring-violet-500/5 dark:border-zinc-800 dark:bg-zinc-950/25 dark:text-zinc-200 dark:placeholder:text-zinc-500 focus:outline-none focus:ring-0 focus:ring-offset-50'
 											/>
-											<span className='text-[10px] font-bold text-zinc-455 dark:text-zinc-500 text-right mt-1.5'>
+											<span className='text-[10px] font-bold text-zinc-400 dark:text-zinc-500 text-right mt-1.5'>
 												{agentInstructions.length} / 4000
 											</span>
 										</div>
 
 										{/* Allow Self-Updates Row */}
-										<div className='flex items-center justify-between rounded-xl border border-zinc-150 p-3 bg-zinc-50/20 dark:border-zinc-800 dark:bg-zinc-950/20'>
+										<div className='flex items-center justify-between rounded-xl border border-zinc-100 p-3 bg-zinc-50/20 dark:border-zinc-800 dark:bg-zinc-950/20'>
 											<div className='flex items-center gap-3'>
 												<div className='flex h-9 w-9 items-center justify-center rounded-xl bg-purple-500/10 text-purple-600 dark:bg-purple-500/5 dark:text-purple-400'>
 													<SquarePen size={16} />
 												</div>
 												<div className='flex flex-col pr-4'>
 													<span className='text-xs font-black text-zinc-800 dark:text-zinc-200'>Allow Self-Updates</span>
-													<span className='text-[10px] font-semibold text-zinc-455 dark:text-zinc-400 mt-0.5 leading-normal'>Let the agent improve its knowledge and instructions automatically.</span>
+													<span className='text-[10px] font-semibold text-zinc-400 dark:text-zinc-400 mt-0.5 leading-normal'>Let the agent improve its knowledge and instructions automatically.</span>
 												</div>
 											</div>
 											<button
@@ -1170,7 +1170,7 @@ const BuildPage = () => {
 												<span>Trigger</span>
 											</button>
 										</div>
-										<p className='text-[10px] font-semibold text-zinc-455 dark:text-zinc-500 pl-9'>
+										<p className='text-[10px] font-semibold text-zinc-400 dark:text-zinc-500 pl-9'>
 											Define events or conditions that activate this agent.
 										</p>
 									</div>
@@ -1214,7 +1214,7 @@ const BuildPage = () => {
 															</div>
 															<div className='flex flex-col'>
 																<span className='text-xs font-black text-zinc-800 dark:text-zinc-200'>{app.name}</span>
-																<span className='text-[10px] font-semibold text-zinc-455 dark:text-zinc-500 leading-tight mt-0.5'>{app.desc}</span>
+																<span className='text-[10px] font-semibold text-zinc-400 dark:text-zinc-500 leading-tight mt-0.5'>{app.desc}</span>
 															</div>
 														</div>
 														<div className='flex items-center gap-2'>
@@ -1230,7 +1230,7 @@ const BuildPage = () => {
 															) : (
 																<ChevronRight size={14} className='text-zinc-400' />
 															)}
-															<button className='text-zinc-400 hover:text-zinc-700 p-1 dark:hover:text-zinc-250'><MoreHorizontal size={14}/></button>
+															<button className='text-zinc-400 hover:text-zinc-700 p-1 dark:hover:text-zinc-200'><MoreHorizontal size={14}/></button>
 														</div>
 													</div>
 												);
@@ -1258,7 +1258,7 @@ const BuildPage = () => {
 												<span>Skill</span>
 											</button>
 										</div>
-										<p className='text-[10px] font-semibold text-zinc-455 dark:text-zinc-550 pl-9'>
+										<p className='text-[10px] font-semibold text-zinc-400 dark:text-zinc-500 pl-9'>
 											Add custom skills to extend your agent's abilities.
 										</p>
 									</div>
@@ -1277,22 +1277,22 @@ const BuildPage = () => {
 												<span>Subagent</span>
 											</button>
 										</div>
-										<p className='text-[10px] font-semibold text-zinc-455 dark:text-zinc-550 pl-9'>
+										<p className='text-[10px] font-semibold text-zinc-400 dark:text-zinc-500 pl-9'>
 											Delegate tasks to specialized subagents.
 										</p>
 
 										{/* Subagent Item */}
-										<div className='flex items-center justify-between py-2 border border-zinc-150 rounded-xl p-3 bg-zinc-50/20 dark:border-zinc-800 dark:bg-zinc-950/20 pl-9'>
+										<div className='flex items-center justify-between py-2 border border-zinc-100 rounded-xl p-3 bg-zinc-50/20 dark:border-zinc-800 dark:bg-zinc-950/20 pl-9'>
 											<div className='flex items-center gap-3'>
 												<div className='flex h-8 w-8 items-center justify-center rounded-lg bg-zinc-950 text-white dark:bg-zinc-800 dark:border dark:border-zinc-700'>
 													<Bot size={15} />
 												</div>
 												<div className='flex flex-col'>
 													<span className='text-xs font-black text-zinc-800 dark:text-zinc-200'>Competitor Research Agent (Me)</span>
-													<span className='text-[10px] font-semibold text-zinc-455 dark:text-zinc-550 leading-tight mt-0.5'>Enables me to clone myself as a subagent to research competitors.</span>
+													<span className='text-[10px] font-semibold text-zinc-400 dark:text-zinc-500 leading-tight mt-0.5'>Enables me to clone myself as a subagent to research competitors.</span>
 												</div>
 											</div>
-											<button className='text-zinc-400 hover:text-zinc-700 p-1 dark:hover:text-zinc-250'><MoreHorizontal size={14}/></button>
+											<button className='text-zinc-400 hover:text-zinc-700 p-1 dark:hover:text-zinc-200'><MoreHorizontal size={14}/></button>
 										</div>
 									</div>
 
@@ -1315,9 +1315,9 @@ const BuildPage = () => {
 									{/* Personalization Section */}
 									<div className='rounded-2xl border border-zinc-200 bg-white p-5 dark:border-zinc-800 dark:bg-zinc-900/40 space-y-4 shadow-2xs'>
 										{/* Section Header */}
-										<div className='flex items-center gap-2.5 pb-2 border-b border-zinc-150 dark:border-zinc-800/80'>
+										<div className='flex items-center gap-2.5 pb-2 border-b border-zinc-100 dark:border-zinc-800/80'>
 											<ChevronDown size={18} className='text-zinc-500 cursor-pointer' />
-											<div className='flex h-8 w-8 items-center justify-center rounded-xl bg-violet-100 text-violet-650 dark:bg-violet-500/10 dark:text-violet-400'>
+											<div className='flex h-8 w-8 items-center justify-center rounded-xl bg-violet-100 text-violet-600 dark:bg-violet-500/10 dark:text-violet-400'>
 												<Users size={16} />
 											</div>
 											<h3 className='text-sm font-black text-zinc-950 dark:text-white'>Personalization</h3>
@@ -1331,7 +1331,7 @@ const BuildPage = () => {
 												{/* Subheader Title */}
 												<div className='space-y-0.5'>
 													<h4 className='text-xs font-black text-zinc-950 dark:text-white'>Icon & Name</h4>
-													<p className='text-[10px] font-semibold text-zinc-450 dark:text-zinc-500'>Choose an icon and give your agent a name.</p>
+													<p className='text-[10px] font-semibold text-zinc-400 dark:text-zinc-500'>Choose an icon and give your agent a name.</p>
 												</div>
 
 												{/* Large Chosen Icon Avatar Box */}
@@ -1392,7 +1392,7 @@ const BuildPage = () => {
 																				type='button'
 																				onClick={() => setAgentIconColor(col.value)}
 																				className={`h-5 w-5 rounded-full border transition flex items-center justify-center ${col.bgClass} ${
-																					isSelected ? 'ring-2 ring-violet-500 ring-offset-2 dark:ring-offset-zinc-900 bg-clip-content p-[1px]' : 'border-zinc-200 dark:border-zinc-700'
+																					isSelected ? 'ring-2 ring-violet-500 ring-offset-50 dark:ring-offset-zinc-900 bg-clip-content p-[1px]' : 'border-zinc-200 dark:border-zinc-700'
 																				}`}
 																				title={col.value}>
 																				{col.value === 'rainbow' && (
@@ -1428,7 +1428,7 @@ const BuildPage = () => {
 												{/* Description textarea box */}
 												<div className='space-y-1.5 w-full'>
 													<div className='flex flex-col'>
-														<label className='text-[11px] font-black text-zinc-650 dark:text-zinc-300'>Description</label>
+														<label className='text-[11px] font-black text-zinc-600 dark:text-zinc-300'>Description</label>
 														<span className='text-[10px] font-semibold text-zinc-400 dark:text-zinc-500 mt-0.5'>Describe what your agent does and how it helps you.</span>
 													</div>
 													{/* Border wrapping both textarea and character count at bottom right */}
@@ -1458,8 +1458,8 @@ const BuildPage = () => {
 													<Zap size={16} />
 												</div>
 												<div className='flex flex-col min-w-0'>
-													<span className='text-xs font-black text-zinc-855 dark:text-zinc-200'>Agent Details</span>
-													<span className='truncate text-[10px] font-semibold text-zinc-455 dark:text-zinc-500 leading-tight mt-0.5'>Configure core information and capabilities of your agent.</span>
+													<span className='text-xs font-black text-zinc-900 dark:text-zinc-200'>Agent Details</span>
+													<span className='truncate text-[10px] font-semibold text-zinc-400 dark:text-zinc-500 leading-tight mt-0.5'>Configure core information and capabilities of your agent.</span>
 												</div>
 											</div>
 											<div className='flex items-center gap-2.5 shrink-0'>
@@ -1469,7 +1469,7 @@ const BuildPage = () => {
 														e.stopPropagation();
 														toast.success('Agent copy created successfully!');
 													}}
-													className='flex items-center gap-1.5 px-3 py-1 border border-zinc-250 text-zinc-700 bg-white hover:bg-zinc-50 text-[10px] font-black rounded-lg dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-400 dark:hover:bg-zinc-900'>
+													className='flex items-center gap-1.5 px-3 py-1 border border-zinc-200 text-zinc-700 bg-white hover:bg-zinc-50 text-[10px] font-black rounded-lg dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-400 dark:hover:bg-zinc-900'>
 													<Copy size={11} />
 													<span>Make a Copy</span>
 												</button>
@@ -1484,8 +1484,8 @@ const BuildPage = () => {
 													<MessageSquare size={16} />
 												</div>
 												<div className='flex flex-col min-w-0'>
-													<span className='text-xs font-black text-zinc-855 dark:text-zinc-200'>Chat Preferences</span>
-													<span className='truncate text-[10px] font-semibold text-zinc-455 dark:text-zinc-500 leading-tight mt-0.5'>Customize how your agent communicates and responds.</span>
+													<span className='text-xs font-black text-zinc-900 dark:text-zinc-200'>Chat Preferences</span>
+													<span className='truncate text-[10px] font-semibold text-zinc-400 dark:text-zinc-500 leading-tight mt-0.5'>Customize how your agent communicates and responds.</span>
 												</div>
 											</div>
 											<ChevronRight size={14} className='text-zinc-400' />
@@ -1498,8 +1498,8 @@ const BuildPage = () => {
 													<Layers size={16} />
 												</div>
 												<div className='flex flex-col min-w-0'>
-													<span className='text-xs font-black text-zinc-855 dark:text-zinc-200'>Slack Preferences</span>
-													<span className='truncate text-[10px] font-semibold text-zinc-455 dark:text-zinc-500 leading-tight mt-0.5'>Configure how your agent interacts in Slack.</span>
+													<span className='text-xs font-black text-zinc-900 dark:text-zinc-200'>Slack Preferences</span>
+													<span className='truncate text-[10px] font-semibold text-zinc-400 dark:text-zinc-500 leading-tight mt-0.5'>Configure how your agent interacts in Slack.</span>
 												</div>
 											</div>
 											<ChevronRight size={14} className='text-zinc-400' />
@@ -1512,22 +1512,22 @@ const BuildPage = () => {
 													<Lock size={16} />
 												</div>
 												<div className='flex flex-col min-w-0'>
-													<span className='text-xs font-black text-zinc-855 dark:text-zinc-200'>Secrets</span>
-													<span className='truncate text-[10px] font-semibold text-zinc-455 dark:text-zinc-500 leading-tight mt-0.5'>Manage API keys, tokens, and other sensitive information.</span>
+													<span className='text-xs font-black text-zinc-900 dark:text-zinc-200'>Secrets</span>
+													<span className='truncate text-[10px] font-semibold text-zinc-400 dark:text-zinc-500 leading-tight mt-0.5'>Manage API keys, tokens, and other sensitive information.</span>
 												</div>
 											</div>
 											<ChevronRight size={14} className='text-zinc-400' />
 										</div>
 
 										{/* Danger Zone */}
-										<div className='flex items-center justify-between rounded-xl border border-rose-200 bg-white p-3.5 shadow-2xs hover:bg-rose-50/20 dark:border-rose-955/40 dark:bg-zinc-900/40 transition cursor-pointer'>
+										<div className='flex items-center justify-between rounded-xl border border-rose-200 bg-white p-3.5 shadow-2xs hover:bg-rose-50/20 dark:border-rose-950/40 dark:bg-zinc-900/40 transition cursor-pointer'>
 											<div className='flex items-center gap-3 min-w-0'>
-												<div className='flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-rose-500/10 text-rose-600 dark:bg-rose-500/5 dark:text-rose-455'>
+												<div className='flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-rose-500/10 text-rose-600 dark:bg-rose-500/5 dark:text-rose-400'>
 													<AlertTriangle size={16} />
 												</div>
 												<div className='flex flex-col min-w-0'>
 													<span className='text-xs font-black text-rose-600 dark:text-rose-400'>Danger Zone</span>
-													<span className='truncate text-[10px] font-semibold text-zinc-455 dark:text-rose-955/40 leading-tight mt-0.5'>Irreversible actions that can affect your agent.</span>
+													<span className='truncate text-[10px] font-semibold text-zinc-400 dark:text-rose-950/40 leading-tight mt-0.5'>Irreversible actions that can affect your agent.</span>
 												</div>
 											</div>
 											<ChevronRight size={14} className='text-rose-400' />
@@ -1565,7 +1565,7 @@ const BuildPage = () => {
 										<MessageSquare size={22} />
 									</div>
 									<h4 className='text-sm font-black text-zinc-800 dark:text-zinc-100'>No Active Chat History Details</h4>
-									<p className='text-xs font-semibold text-zinc-455 dark:text-zinc-500 max-w-[280px] leading-relaxed'>
+									<p className='text-xs font-semibold text-zinc-400 dark:text-zinc-500 max-w-[280px] leading-relaxed'>
 										Once this agent runs inside a production environment, conversation logs, token usage, and execution stats will be displayed here.
 									</p>
 								</div>
@@ -1618,7 +1618,7 @@ const BuildPage = () => {
 											value={appSearchQuery}
 											onChange={(e) => setAppSearchQuery(e.target.value)}
 											placeholder='Search 98 apps'
-											className='flex-1 bg-transparent px-2.5 text-xs font-semibold text-zinc-900 placeholder:text-zinc-400 outline-none border-none focus:ring-0 dark:text-zinc-100 dark:placeholder:text-zinc-550'
+											className='flex-1 bg-transparent px-2.5 text-xs font-semibold text-zinc-900 placeholder:text-zinc-400 outline-none border-none focus:ring-0 dark:text-zinc-100 dark:placeholder:text-zinc-500'
 										/>
 									</div>
 
@@ -1629,7 +1629,7 @@ const BuildPage = () => {
 											className={`px-3 py-1.5 text-[10px] font-black rounded-md transition ${
 												appCategory === 'all'
 													? 'bg-white text-zinc-900 shadow-2xs dark:bg-zinc-800 dark:text-white'
-													: 'text-zinc-450 hover:text-zinc-800 dark:text-zinc-500 dark:hover:text-zinc-350'
+													: 'text-zinc-400 hover:text-zinc-800 dark:text-zinc-500 dark:hover:text-zinc-300'
 											}`}>
 											All
 										</button>
@@ -1638,7 +1638,7 @@ const BuildPage = () => {
 											className={`px-3 py-1.5 text-[10px] font-black rounded-md transition ${
 												appCategory === 'custom'
 													? 'bg-white text-zinc-900 shadow-2xs dark:bg-zinc-800 dark:text-white'
-													: 'text-zinc-450 hover:text-zinc-800 dark:text-zinc-500 dark:hover:text-zinc-350'
+													: 'text-zinc-400 hover:text-zinc-800 dark:text-zinc-500 dark:hover:text-zinc-300'
 											}`}>
 											Custom
 										</button>
@@ -1648,7 +1648,7 @@ const BuildPage = () => {
 
 							{/* Apps List Scrollable */}
 							<div className='flex-1 overflow-y-auto p-4 space-y-3 dark:bg-zinc-950/10'>
-								<h4 className='text-[10px] font-black text-zinc-450 uppercase tracking-widest pl-1'>All apps</h4>
+								<h4 className='text-[10px] font-black text-zinc-400 uppercase tracking-widest pl-1'>All apps</h4>
 								
 								<div className='space-y-1.5'>
 									{filteredAvailableApps.map((app) => {
@@ -1664,7 +1664,7 @@ const BuildPage = () => {
 													<div className='flex flex-col'>
 														<span className='text-xs font-black text-zinc-900 dark:text-zinc-100'>{app.name}</span>
 														{/* Add description in mock detail */}
-														<span className='text-[9px] font-semibold text-zinc-450 dark:text-zinc-500 mt-0.5 leading-tight'>{app.desc}</span>
+														<span className='text-[9px] font-semibold text-zinc-400 dark:text-zinc-500 mt-0.5 leading-tight'>{app.desc}</span>
 													</div>
 												</div>
 												<button
@@ -1690,7 +1690,7 @@ const BuildPage = () => {
 										toast.success('App selections saved!');
 										setIsAddAppOpen(false);
 									}}
-									className='w-full max-w-[380px] flex h-10 items-center justify-center gap-2 rounded-xl bg-zinc-500 text-white font-bold text-xs shadow-md shadow-zinc-500/20 hover:bg-zinc-650 transition active:scale-95 dark:bg-zinc-700 dark:hover:bg-zinc-600 dark:shadow-none'>
+									className='w-full max-w-[380px] flex h-10 items-center justify-center gap-2 rounded-xl bg-zinc-500 text-white font-bold text-xs shadow-md shadow-zinc-500/20 hover:bg-zinc-600 transition active:scale-95 dark:bg-zinc-700 dark:hover:bg-zinc-600 dark:shadow-none'>
 									<span>Save ⌘ S</span>
 								</button>
 							</div>

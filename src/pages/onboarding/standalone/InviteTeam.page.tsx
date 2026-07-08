@@ -94,7 +94,7 @@ const InviteTeamPage = () => {
 						<span className='h-2 w-2 rounded-full bg-[#e85d9e]' />
 						Collaboration setup
 					</div>
-					<h1 className='text-slate-955 text-5xl leading-[0.98] font-semibold tracking-normal md:text-7xl'>
+					<h1 className='text-slate-950 text-5xl leading-[0.98] font-semibold tracking-normal md:text-7xl'>
 						Bring the right people into the loop.
 					</h1>
 					<p className='mt-7 max-w-xl text-lg leading-8 font-medium text-slate-600'>
@@ -117,7 +117,7 @@ const InviteTeamPage = () => {
 										{member.initials}
 									</div>
 									<div className='min-w-0 flex-1'>
-										<p className='text-slate-955 text-sm font-black'>
+										<p className='text-slate-950 text-sm font-black'>
 											{member.name}
 										</p>
 										<p className='text-xs font-bold text-slate-500'>
@@ -141,7 +141,7 @@ const InviteTeamPage = () => {
 								<p className='text-xs font-black tracking-[0.18em] text-slate-400 uppercase'>
 									Step 2 of 2
 								</p>
-								<h2 className='text-slate-955 mt-2 text-3xl font-black'>
+								<h2 className='text-slate-950 mt-2 text-3xl font-black'>
 									Invite team members
 								</h2>
 							</div>
@@ -153,7 +153,7 @@ const InviteTeamPage = () => {
 						<form className='space-y-6' onSubmit={formik.handleSubmit}>
 							<div>
 								<label
-									className='text-slate-955 mb-2 block text-sm font-black'
+									className='text-slate-950 mb-2 block text-sm font-black'
 									htmlFor='emails'>
 									Work emails
 								</label>
@@ -166,14 +166,14 @@ const InviteTeamPage = () => {
 									value={formik.values.emails}
 									onChange={formik.handleChange}
 									onBlur={formik.handleBlur}
-									className='text-slate-955 block w-full resize-none rounded-2xl border border-slate-200 bg-white px-5 py-4 text-base font-medium shadow-sm outline-none placeholder:text-slate-400 focus:border-slate-300 focus:shadow-lg focus:shadow-slate-200'
+									className='text-slate-950 block w-full resize-none rounded-2xl border border-slate-200 bg-white px-5 py-4 text-base font-medium shadow-sm outline-none placeholder:text-slate-400 focus:border-slate-300 focus:shadow-lg focus:shadow-slate-200'
 								/>
 							</div>
 
 							<div className='grid gap-4 sm:grid-cols-[0.75fr_1fr]'>
 								<div>
 									<label
-										className='text-slate-955 mb-2 block text-sm font-black'
+										className='text-slate-950 mb-2 block text-sm font-black'
 										htmlFor='role'>
 										Role
 									</label>
@@ -185,7 +185,7 @@ const InviteTeamPage = () => {
 											value={formik.values.role}
 											onChange={formik.handleChange}
 											onBlur={formik.handleBlur}
-											className='text-slate-750 block min-h-14 w-full appearance-none rounded-2xl border border-slate-200 bg-white px-5 text-base font-bold shadow-sm outline-none focus:border-slate-300'>
+											className='text-slate-700 block min-h-14 w-full appearance-none rounded-2xl border border-slate-200 bg-white px-5 text-base font-bold shadow-sm outline-none focus:border-slate-300'>
 											<option value='admin'>Admin</option>
 											<option value='editor'>Editor</option>
 											<option value='member'>Member</option>
@@ -202,7 +202,7 @@ const InviteTeamPage = () => {
 									<p className='text-xs font-black tracking-[0.16em] text-slate-400 uppercase'>
 										Access
 									</p>
-									<p className='text-slate-955 mt-2 text-sm font-black'>
+									<p className='text-slate-950 mt-2 text-sm font-black'>
 										{roleDescriptions[formik.values.role]}
 									</p>
 								</div>
@@ -210,7 +210,7 @@ const InviteTeamPage = () => {
 
 							<div>
 								<label
-									className='text-slate-955 mb-2 block text-sm font-black'
+									className='text-slate-950 mb-2 block text-sm font-black'
 									htmlFor='message'>
 									Invite note
 								</label>
@@ -222,7 +222,7 @@ const InviteTeamPage = () => {
 									value={formik.values.message}
 									onChange={formik.handleChange}
 									onBlur={formik.handleBlur}
-									className='text-slate-955 block w-full resize-none rounded-2xl border border-slate-200 bg-white px-5 py-4 text-base font-medium shadow-sm outline-none placeholder:text-slate-400 focus:border-slate-300 focus:shadow-lg focus:shadow-slate-200'
+									className='text-slate-950 block w-full resize-none rounded-2xl border border-slate-200 bg-white px-5 py-4 text-base font-medium shadow-sm outline-none placeholder:text-slate-400 focus:border-slate-300 focus:shadow-lg focus:shadow-slate-200'
 								/>
 							</div>
 
@@ -256,10 +256,10 @@ const InviteNav = () => (
 	<header className='relative z-20 px-5 pt-6'>
 		<nav className='mx-auto flex max-w-[1220px] items-center justify-between rounded-[28px] border border-white bg-white/85 px-4 py-3 shadow-xl shadow-slate-200/70 backdrop-blur'>
 			<Link to='/' className='flex items-center gap-3'>
-				<span className='bg-slate-955 flex h-10 w-10 items-center justify-center rounded-2xl text-sm font-black text-white'>
+				<span className='bg-slate-950 flex h-10 w-10 items-center justify-center rounded-2xl text-sm font-black text-white'>
 					A1
 				</span>
-				<span className='text-slate-955 text-xl font-black'>Agent1o1</span>
+				<span className='text-slate-950 text-xl font-black'>Agent1o1</span>
 			</Link>
 			<div className='hidden items-center gap-7 text-sm font-bold text-slate-500 md:flex'>
 				<span>Agents</span>
@@ -268,7 +268,7 @@ const InviteNav = () => (
 			</div>
 			<Link
 				to={pages.editor.subPages.addWorkflow.to}
-				className='bg-slate-955 rounded-2xl px-5 py-3 text-sm font-black text-white transition hover:bg-slate-800'>
+				className='bg-slate-950 rounded-2xl px-5 py-3 text-sm font-black text-white transition hover:bg-slate-800'>
 				Go to app
 			</Link>
 		</nav>

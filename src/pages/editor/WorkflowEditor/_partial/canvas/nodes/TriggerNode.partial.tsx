@@ -30,6 +30,7 @@ import {
 import { useWorkflowRouteParams } from '../../../_hooks/useWorkflowRouteParams.hook';
 import { useWorkflowEditor } from '../../../_context/WorkflowEditorProvider.context';
 import { useMemo } from 'react';
+import NodeFields from './NodeFields.partial';
 
 const iconMap: Record<
 	string,
@@ -151,9 +152,9 @@ const brandNameMap: Record<string, string> = {
 	'trigger.airtable_reader': 'Airtable',
 };
 
-const TriggerNode = ({ data, selected }: NodeProps<TCanvasNode>) => {
+const TriggerNode = ({ id, data, selected }: NodeProps<TCanvasNode>) => {
 	const def = getNodeDefinition(data.defKey, data.definition);
-	const hasError = def?.requiresCredential ?? false;
+	const hasError = Boolean(def?.requiresCredential) && !data.values.credential_id;
 	const brand = brandNameMap[data.defKey] || 'Trigger';
 	const colorInfo = colorMap[data.defKey] || {
 		bg: 'bg-violet-50/30',
@@ -279,6 +280,7 @@ const TriggerNode = ({ data, selected }: NodeProps<TCanvasNode>) => {
 						</div>
 						<button
 							type='button'
+							onClick={() => dispatch({ type: 'SET_LINK_CREDENTIALS_OPEN', open: true })}
 							className='border-zinc-250 mt-1 flex cursor-pointer items-center gap-1.5 self-start rounded-md border bg-white px-2.5 py-1 text-[11px] font-semibold text-violet-600 shadow-xs hover:bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900 dark:text-violet-400'>
 							Authenticate credentials
 						</button>
@@ -324,127 +326,11 @@ const TriggerNode = ({ data, selected }: NodeProps<TCanvasNode>) => {
 					{def?.description}
 				</div>
 
-				{/* Inputs Section */}
-				<div className='mt-4 flex flex-col gap-3'>
-					{def?.fields.map((field) => {
-						if (field.kind === 'toggle') {
-							return (
-								<div key={field.key} className='flex items-center justify-between'>
-									<div className='flex items-center gap-1'>
-										<span className='text-[11px] font-bold text-zinc-800 dark:text-zinc-200'>
-											{field.label}
-										</span>
-										<Info size={11} className='text-zinc-400' />
-									</div>
-									<div className='flex items-center gap-2'>
-										<span className='text-[11px] font-semibold text-zinc-400'>
-											No
-										</span>
-										<div className='flex h-4 w-7 cursor-pointer items-center rounded-full bg-zinc-200 p-0.5'>
-											<div className='h-3 w-3 rounded-full bg-white shadow-xs' />
-										</div>
-									</div>
-								</div>
-							);
-						}
-
-						if (field.key === 'folder' || field.key === 'form') {
-							const isFolder = field.key === 'folder';
-							return (
-								<div key={field.key}>
-									<div className='mb-1.5 flex items-center gap-1'>
-										<span className='text-[11px] font-bold text-zinc-800 dark:text-zinc-200'>
-											{field.label}
-										</span>
-										<Info size={11} className='text-zinc-400' />
-									</div>
-									<button
-										type='button'
-										className='flex w-full cursor-pointer items-center justify-center gap-1.5 rounded-md border border-zinc-200 bg-white py-1.5 text-[11px] font-bold text-zinc-700 shadow-xs hover:bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-300'>
-										<span className='mr-0.5 font-extrabold text-blue-500'>
-											G
-										</span>{' '}
-										{isFolder ? 'Pick Folder' : 'Pick File'}
-									</button>
-								</div>
-							);
-						}
-
-						if (field.kind === 'select') {
-							return (
-								<div key={field.key}>
-									<div className='mb-1.5 flex items-center gap-1'>
-										<span className='text-[11px] font-bold text-zinc-800 dark:text-zinc-200'>
-											{field.label}
-										</span>
-										<Info size={11} className='text-zinc-400' />
-									</div>
-									<div className='relative'>
-										<select
-											className='text-zinc-750 w-full cursor-pointer appearance-none rounded-lg border border-zinc-200 bg-white px-3 py-1.5 text-[11px] font-medium shadow-xs outline-none dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-300'
-											defaultValue=''>
-											<option value='' disabled>
-												{field.placeholder ?? 'Select an option'}
-											</option>
-											{field.options?.map((opt) => (
-												<option key={opt.value} value={opt.value}>
-													{opt.label}
-												</option>
-											))}
-										</select>
-										<div className='pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-zinc-500'>
-											<ChevronDown size={12} />
-										</div>
-									</div>
-								</div>
-							);
-						}
-
-						const val =
-							data.values?.[field.key] !== undefined
-								? String(data.values[field.key])
-								: field.default !== undefined
-									? String(field.default)
-									: '';
-
-						return (
-							<div key={field.key}>
-								<div className='mb-1.5 flex items-center gap-1'>
-									<span className='text-[11px] font-bold text-zinc-800 dark:text-zinc-200'>
-										{field.label}
-									</span>
-									<Info size={11} className='text-zinc-400' />
-								</div>
-								<input
-									type='text'
-									readOnly
-									value={val}
-									className='text-zinc-750 w-full rounded-lg border border-zinc-200 bg-white px-3 py-1.5 text-[11px] font-medium shadow-xs outline-none dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-300'
-									placeholder={field.placeholder ?? `Enter ${field.label}...`}
-								/>
-							</div>
-						);
-					})}
-
-					<button
-						type='button'
-						className='mt-1 flex cursor-pointer items-center gap-1.5 self-start rounded-md border border-zinc-200 bg-white px-2 py-1 text-[10px] font-semibold text-zinc-500 hover:bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-400'>
-						<svg
-							width='10'
-							height='10'
-							viewBox='0 0 24 24'
-							fill='none'
-							stroke='currentColor'
-							strokeWidth='2'
-							strokeLinecap='round'
-							strokeLinejoin='round'>
-							<rect x='3' y='3' width='18' height='18' rx='2' ry='2'></rect>
-							<line x1='9' y1='9' x2='15' y2='15'></line>
-							<line x1='15' y1='9' x2='9' y2='15'></line>
-						</svg>
-						Show More Options
-					</button>
-
+				{def && def.fields.length > 0 && (
+					<div className='mt-4'>
+						<NodeFields nodeId={id} fields={def.fields} values={data.values} />
+					</div>
+				)}
 					{!!triggerDetail && (
 						<div className='mt-3.5 flex flex-col gap-2 border-t border-violet-100 pt-3 dark:border-violet-900/30'>
 							{(triggerDetail as any).webhook_url && (
@@ -484,7 +370,6 @@ const TriggerNode = ({ data, selected }: NodeProps<TCanvasNode>) => {
 						</div>
 					)}
 				</div>
-			</div>
 
 			{/* Input Handle */}
 			{def && (

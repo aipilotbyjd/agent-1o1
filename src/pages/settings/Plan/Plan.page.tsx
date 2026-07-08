@@ -57,8 +57,8 @@ const statusConfig: Record<TSubscriptionStatus, { label: string; bg: string; tex
 	},
 	expired: {
 		label: 'Expired',
-		bg: 'bg-zinc-100 dark:bg-zinc-800/20 text-zinc-650 dark:text-zinc-400 border-zinc-200/50 dark:border-zinc-800/30',
-		text: 'text-zinc-650 dark:text-zinc-450',
+		bg: 'bg-zinc-100 dark:bg-zinc-800/20 text-zinc-600 dark:text-zinc-400 border-zinc-200/50 dark:border-zinc-800/30',
+		text: 'text-zinc-600 dark:text-zinc-400',
 	},
 };
 
@@ -124,8 +124,8 @@ const PlanPage = () => {
 	if (!canManage) {
 		return (
 			<div className='flex min-h-[50vh] flex-col items-center justify-center gap-4 text-center'>
-				<ShieldCheck size={40} className='text-zinc-300 dark:text-zinc-650' />
-				<h2 className='text-xl font-black text-zinc-955 dark:text-zinc-50'>
+				<ShieldCheck size={40} className='text-zinc-300 dark:text-zinc-600' />
+				<h2 className='text-xl font-black text-zinc-950 dark:text-zinc-50'>
 					Access Restricted
 				</h2>
 				<p className='max-w-sm text-sm text-zinc-500 dark:text-zinc-400'>
@@ -178,7 +178,7 @@ const PlanPage = () => {
 			title: 'Monthly Credits',
 			value: fmt(limits?.credits_monthly),
 			icon: Coins,
-			iconBg: 'bg-amber-50/70 text-amber-600 dark:bg-amber-955/30 dark:text-amber-400',
+			iconBg: 'bg-amber-50/70 text-amber-600 dark:bg-amber-950/30 dark:text-amber-400',
 			link: pages.settings.subPages.usage.to,
 			linkLabel: 'View usage',
 			isCredits: true,
@@ -187,7 +187,7 @@ const PlanPage = () => {
 			title: 'Active Workflows',
 			value: fmt(limits?.active_workflows),
 			icon: GitBranch,
-			iconBg: 'bg-purple-50/70 text-purple-600 dark:bg-purple-955/30 dark:text-purple-400',
+			iconBg: 'bg-purple-50/70 text-purple-600 dark:bg-purple-950/30 dark:text-purple-400',
 			link: pages.app.subPages.workflows.to,
 			linkLabel: 'View workflows',
 		},
@@ -195,7 +195,7 @@ const PlanPage = () => {
 			title: 'Team Members',
 			value: fmt(limits?.members),
 			icon: Users,
-			iconBg: 'bg-emerald-50/70 text-emerald-600 dark:bg-emerald-955/30 dark:text-emerald-400',
+			iconBg: 'bg-emerald-50/70 text-emerald-600 dark:bg-emerald-950/30 dark:text-emerald-400',
 			link: pages.settings.subPages.members.to,
 			linkLabel: 'Manage members',
 		},
@@ -205,19 +205,19 @@ const PlanPage = () => {
 				? 'Unlimited'
 				: `${limits.min_schedule_interval_minutes} min`,
 			icon: Clock,
-			iconBg: 'bg-blue-50/70 text-blue-600 dark:bg-blue-955/30 dark:text-blue-400',
+			iconBg: 'bg-blue-50/70 text-blue-600 dark:bg-blue-950/30 dark:text-blue-400',
 		},
 		{
 			title: 'Max Execution Time',
 			value: fmt(limits?.max_execution_time_seconds, 'sec'),
 			icon: Timer,
-			iconBg: 'bg-pink-50/70 text-pink-600 dark:bg-pink-955/30 dark:text-pink-400',
+			iconBg: 'bg-pink-50/70 text-pink-600 dark:bg-pink-950/30 dark:text-pink-400',
 		},
 		{
 			title: 'Log Retention',
 			value: fmt(limits?.execution_log_retention_days, 'days'),
 			icon: Database,
-			iconBg: 'bg-violet-50/70 text-violet-600 dark:bg-violet-955/30 dark:text-violet-400',
+			iconBg: 'bg-violet-50/70 text-violet-600 dark:bg-violet-950/30 dark:text-violet-400',
 		},
 	];
 
@@ -226,13 +226,13 @@ const PlanPage = () => {
 			variants={containerVariants}
 			initial="hidden"
 			animate="show"
-			className='space-y-8 text-zinc-955 dark:text-zinc-50'
+			className='space-y-8 text-zinc-950 dark:text-zinc-50'
 		>
 			{/* Status banners */}
 			{status === 'past_due' && (
 				<motion.div
 					variants={itemVariants}
-					className='flex items-center gap-3 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 dark:border-amber-800/40 dark:bg-amber-955/20 backdrop-blur-md'
+					className='flex items-center gap-3 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 dark:border-amber-800/40 dark:bg-amber-950/20 backdrop-blur-md'
 				>
 					<AlertTriangle size={18} className='shrink-0 text-amber-600 dark:text-amber-400' />
 					<p className='text-sm font-semibold text-amber-700 dark:text-amber-300'>
@@ -252,7 +252,7 @@ const PlanPage = () => {
 			{(status === 'expired' || (status === 'canceled' && !periodEndInFuture)) && (
 				<motion.div
 					variants={itemVariants}
-					className='flex items-center gap-3 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 dark:border-red-800/40 dark:bg-red-955/20 backdrop-blur-md'
+					className='flex items-center gap-3 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 dark:border-red-800/40 dark:bg-red-950/20 backdrop-blur-md'
 				>
 					<AlertTriangle size={18} className='shrink-0 text-red-600 dark:text-red-400' />
 					<p className='text-sm font-semibold text-red-700 dark:text-red-300'>
@@ -271,7 +271,7 @@ const PlanPage = () => {
 			{canResume && (
 				<motion.div
 					variants={itemVariants}
-					className='flex flex-wrap items-center gap-3 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 dark:border-amber-800/40 dark:bg-amber-955/20 backdrop-blur-md'
+					className='flex flex-wrap items-center gap-3 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 dark:border-amber-800/40 dark:bg-amber-950/20 backdrop-blur-md'
 				>
 					<AlertTriangle size={18} className='shrink-0 text-amber-600 dark:text-amber-400' />
 					<p className='text-sm font-semibold text-amber-700 dark:text-amber-300'>
@@ -303,12 +303,12 @@ const PlanPage = () => {
 			<motion.div variants={itemVariants} className='flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between'>
 				<div>
 					<div className="flex items-center gap-2.5">
-						<h1 className='text-3xl font-black tracking-tight sm:text-4xl text-zinc-955 dark:text-zinc-50'>Plan</h1>
-						<span className="rounded-full bg-indigo-50 px-2.5 py-0.5 text-xs font-bold text-indigo-600 dark:bg-indigo-955/40 dark:text-indigo-400 border border-indigo-100/50 dark:border-indigo-900/30">
+						<h1 className='text-3xl font-black tracking-tight sm:text-4xl text-zinc-950 dark:text-zinc-50'>Plan</h1>
+						<span className="rounded-full bg-indigo-50 px-2.5 py-0.5 text-xs font-bold text-indigo-600 dark:bg-indigo-950/40 dark:text-indigo-400 border border-indigo-100/50 dark:border-indigo-900/30">
 							Settings
 						</span>
 					</div>
-					<p className='mt-1 text-sm font-medium text-zinc-400 dark:text-zinc-550'>
+					<p className='mt-1 text-sm font-medium text-zinc-400 dark:text-zinc-500'>
 						Your current plan, limits, and included features.
 					</p>
 				</div>
@@ -319,7 +319,7 @@ const PlanPage = () => {
 						type='button'
 						onClick={() => portal.mutate()}
 						disabled={portal.isPending}
-						className='flex h-10 items-center gap-2 rounded-xl border border-zinc-200 bg-white px-4 text-sm font-bold text-zinc-750 shadow-sm transition hover:bg-zinc-50 disabled:opacity-60 dark:border-zinc-800 dark:bg-zinc-955 dark:text-zinc-300 dark:hover:bg-zinc-900'
+						className='flex h-10 items-center gap-2 rounded-xl border border-zinc-200 bg-white px-4 text-sm font-bold text-zinc-700 shadow-sm transition hover:bg-zinc-50 disabled:opacity-60 dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-300 dark:hover:bg-zinc-900'
 					>
 						<ExternalLink size={14} />
 						{portal.isPending ? 'Opening…' : 'Manage billing'}
@@ -343,7 +343,7 @@ const PlanPage = () => {
 							type='button'
 							onClick={handleCancel}
 							disabled={cancelSubscription.isPending}
-							className='flex h-10 items-center gap-2 rounded-xl border border-red-200 bg-white px-4 text-sm font-bold text-red-600 shadow-sm transition hover:bg-red-50 disabled:opacity-60 dark:border-red-900/40 dark:bg-zinc-955 dark:text-red-400 dark:hover:bg-red-950/20'
+							className='flex h-10 items-center gap-2 rounded-xl border border-red-200 bg-white px-4 text-sm font-bold text-red-600 shadow-sm transition hover:bg-red-50 disabled:opacity-60 dark:border-red-900/40 dark:bg-zinc-950 dark:text-red-400 dark:hover:bg-red-950/20'
 						>
 							<XCircle size={14} />
 							{cancelSubscription.isPending ? 'Canceling…' : 'Cancel plan'}
@@ -358,7 +358,7 @@ const PlanPage = () => {
 			) : (
 				<motion.div
 					variants={itemVariants}
-					className='relative overflow-hidden rounded-2xl border border-zinc-150 bg-white p-6 shadow-xs dark:border-zinc-800 dark:bg-zinc-955/60 backdrop-blur-md'
+					className='relative overflow-hidden rounded-2xl border border-zinc-100 bg-white p-6 shadow-xs dark:border-zinc-800 dark:bg-zinc-950/60 backdrop-blur-md'
 				>
 					{/* Decorative glows */}
 					<div className="absolute -right-10 -top-10 -z-10 h-36 w-36 rounded-full bg-indigo-500/10 blur-3xl dark:bg-indigo-500/5" />
@@ -366,24 +366,24 @@ const PlanPage = () => {
 
 					<div className='flex flex-wrap items-start justify-between gap-4'>
 						<div className="flex items-start gap-4">
-							<div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-50 to-purple-50 text-indigo-600 shadow-xs dark:from-indigo-955/30 dark:to-purple-955/30 dark:text-indigo-400 border border-indigo-100/30 dark:border-indigo-900/30">
+							<div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-50 to-purple-50 text-indigo-600 shadow-xs dark:from-indigo-950/30 dark:to-purple-950/30 dark:text-indigo-400 border border-indigo-100/30 dark:border-indigo-900/30">
 								<Crown size={26} className="text-indigo-600 dark:text-indigo-400 fill-indigo-600/5" />
 							</div>
 							<div>
-								<p className='text-[10px] font-black tracking-wider text-zinc-400 uppercase dark:text-zinc-550'>
+								<p className='text-[10px] font-black tracking-wider text-zinc-400 uppercase dark:text-zinc-500'>
 									Current plan
 								</p>
 								<div className='mt-1 flex items-center gap-2'>
-									<h2 className='text-3xl font-black text-zinc-955 dark:text-zinc-50 tracking-tight'>{plan?.name ?? 'Free'}</h2>
+									<h2 className='text-3xl font-black text-zinc-950 dark:text-zinc-50 tracking-tight'>{plan?.name ?? 'Free'}</h2>
 									{isLifetime && (
-										<span className='inline-flex items-center gap-1 rounded-full bg-amber-100 px-2.5 py-0.5 text-[10px] font-black text-amber-700 dark:bg-amber-955 dark:text-amber-300 border border-amber-250/20'>
+										<span className='inline-flex items-center gap-1 rounded-full bg-amber-100 px-2.5 py-0.5 text-[10px] font-black text-amber-700 dark:bg-amber-950 dark:text-amber-300 border border-amber-200/20'>
 											<Crown size={11} className="fill-amber-700/10" />
 											Lifetime
 										</span>
 									)}
 								</div>
 								{billingInterval && !isLifetime && (
-									<p className='mt-1 text-xs font-semibold text-zinc-550 capitalize dark:text-zinc-400'>
+									<p className='mt-1 text-xs font-semibold text-zinc-500 capitalize dark:text-zinc-400'>
 										Billed {billingInterval === 'yearly' ? 'yearly' : 'monthly'} ·{' '}
 										{fmtPrice(
 											billingInterval === 'yearly'
@@ -400,7 +400,7 @@ const PlanPage = () => {
 							</div>
 						</div>
 						<span
-							className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-bold border border-zinc-150/30 dark:border-zinc-800/30 ${statusCfg.bg} ${statusCfg.text}`}
+							className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-bold border border-zinc-100/30 dark:border-zinc-800/30 ${statusCfg.bg} ${statusCfg.text}`}
 						>
 							<CheckCircle2 size={12} />
 							{statusCfg.label}
@@ -408,14 +408,14 @@ const PlanPage = () => {
 					</div>
 					<div className='mt-5 flex flex-wrap gap-4 border-t border-zinc-100 pt-4 text-xs text-zinc-400 dark:border-zinc-800 dark:text-zinc-500 font-semibold'>
 						{isLifetime ? (
-							<span className='text-amber-605 dark:text-amber-450'>
+							<span className='text-amber-600 dark:text-amber-400'>
 								Lifetime access — no renewal required
 							</span>
 						) : (
 							<div className="flex items-center gap-4">
 								{periodEnd && (
 									<span className="flex items-center gap-1">
-										<Calendar size={12} className="text-zinc-400 dark:text-zinc-550" />
+										<Calendar size={12} className="text-zinc-400 dark:text-zinc-500" />
 										Renews{' '}
 										{new Date(periodEnd).toLocaleDateString(undefined, {
 											month: 'short',
@@ -425,7 +425,7 @@ const PlanPage = () => {
 									</span>
 								)}
 								{trialEnd && (
-									<span className='font-bold text-sky-655 dark:text-sky-400'>
+									<span className='font-bold text-sky-600 dark:text-sky-400'>
 										Trial ends{' '}
 										{new Date(trialEnd).toLocaleDateString(undefined, {
 											month: 'short',
@@ -460,19 +460,19 @@ const PlanPage = () => {
 							whileHover={{ y: -2, scale: 1.01 }}
 							whileTap={{ scale: 0.99 }}
 							transition={{ duration: 0.25, ease: 'easeOut' }}
-							className='relative overflow-hidden rounded-2xl border border-zinc-100 bg-white p-5 shadow-xs dark:border-zinc-800 dark:bg-zinc-955/40 backdrop-blur-xs flex flex-col justify-between min-h-[140px] hover:border-zinc-350 dark:hover:border-zinc-700/80 transition-all duration-200'
+							className='relative overflow-hidden rounded-2xl border border-zinc-100 bg-white p-5 shadow-xs dark:border-zinc-800 dark:bg-zinc-950/40 backdrop-blur-xs flex flex-col justify-between min-h-[140px] hover:border-zinc-300 dark:hover:border-zinc-700/80 transition-all duration-200'
 						>
 							<div className="w-full">
 								<div className="flex items-center gap-3">
-									<div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl ${card.iconBg} border border-zinc-150/15`}>
+									<div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl ${card.iconBg} border border-zinc-100/15`}>
 										<card.icon size={16} />
 									</div>
-									<p className='text-[10px] font-black tracking-wider text-zinc-455 dark:text-zinc-550 uppercase'>
+									<p className='text-[10px] font-black tracking-wider text-zinc-400 dark:text-zinc-500 uppercase'>
 										{card.title}
 									</p>
 								</div>
 
-								<p className='mt-3.5 text-2xl font-black text-zinc-955 dark:text-zinc-50 tracking-tight'>
+								<p className='mt-3.5 text-2xl font-black text-zinc-950 dark:text-zinc-50 tracking-tight'>
 									{card.value}
 								</p>
 
@@ -497,7 +497,7 @@ const PlanPage = () => {
 								<div className="mt-4 pt-3 border-t border-zinc-50 dark:border-zinc-800/50">
 									<Link
 										to={card.link}
-										className='inline-flex items-center gap-1 text-xs font-bold text-indigo-600 dark:text-indigo-400 hover:text-indigo-750 dark:hover:text-indigo-300 transition-colors'
+										className='inline-flex items-center gap-1 text-xs font-bold text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 transition-colors'
 									>
 										<span>{card.linkLabel}</span>
 										<ArrowRight size={11} className="transition-transform group-hover:translate-x-0.5" />
@@ -511,8 +511,8 @@ const PlanPage = () => {
 
 			{/* Features */}
 			<motion.section variants={itemVariants}>
-				<h3 className='mb-4 text-xs font-black tracking-wider text-zinc-400 dark:text-zinc-505 uppercase'>Included Features</h3>
-				<div className='rounded-2xl border border-zinc-150 bg-white/50 dark:border-zinc-800 dark:bg-zinc-955/20 backdrop-blur-xs p-5'>
+				<h3 className='mb-4 text-xs font-black tracking-wider text-zinc-400 dark:text-zinc-500 uppercase'>Included Features</h3>
+				<div className='rounded-2xl border border-zinc-100 bg-white/50 dark:border-zinc-800 dark:bg-zinc-950/20 backdrop-blur-xs p-5'>
 					<div className='grid gap-4 sm:grid-cols-2 lg:grid-cols-3'>
 						{features &&
 							(Object.keys(FEATURE_LABELS) as (keyof TPlanFeatures)[]).map(
@@ -523,14 +523,14 @@ const PlanPage = () => {
 											key={key}
 											className={`flex items-center gap-3 rounded-xl border p-3 transition-all ${
 												enabled
-													? 'border-emerald-100/50 bg-emerald-50/10 dark:border-emerald-955/25 dark:bg-emerald-955/5'
+													? 'border-emerald-100/50 bg-emerald-50/10 dark:border-emerald-950/25 dark:bg-emerald-950/5'
 													: 'border-zinc-100/40 bg-zinc-50/10 dark:border-zinc-800/20 opacity-50'
 											}`}
 										>
 											<div
 												className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full border ${
 													enabled
-														? 'border-emerald-250 bg-emerald-50 text-emerald-600 dark:border-emerald-800/40 dark:bg-emerald-955/40 dark:text-emerald-400'
+														? 'border-emerald-200 bg-emerald-50 text-emerald-600 dark:border-emerald-800/40 dark:bg-emerald-950/40 dark:text-emerald-400'
 														: 'border-zinc-200 bg-zinc-100 text-zinc-400 dark:border-zinc-800 dark:bg-zinc-900'
 												}`}
 											>
@@ -560,10 +560,10 @@ const PlanPage = () => {
 			{/* Compare plans */}
 			<motion.section variants={itemVariants}>
 				<div className='mb-4 flex items-center justify-between'>
-					<h3 className='text-xs font-black tracking-wider text-zinc-400 dark:text-zinc-550 uppercase'>Other Plans</h3>
+					<h3 className='text-xs font-black tracking-wider text-zinc-400 dark:text-zinc-500 uppercase'>Other Plans</h3>
 					<Link
 						to={pages.settings.subPages.plan.subPages.upgrade.to}
-						className='flex items-center gap-1 text-xs font-bold text-indigo-600 dark:text-indigo-400 hover:text-indigo-750 dark:hover:text-indigo-300 transition-colors'
+						className='flex items-center gap-1 text-xs font-bold text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 transition-colors'
 					>
 						<span>See full comparison</span>
 						<ArrowRight size={12} />
@@ -597,19 +597,19 @@ const ComparePlanCards = ({ currentSlug }: { currentSlug?: string }) => (
 					transition={{ duration: 0.2 }}
 					className={`flex min-w-[200px] flex-1 flex-col justify-between rounded-2xl border p-5 shadow-xs transition-all relative ${
 						isCurrent
-							? 'border-indigo-600 bg-zinc-950 text-white dark:border-indigo-400 dark:bg-white dark:text-zinc-950 ring-2 ring-indigo-500/25'
-							: 'border-zinc-150 bg-white dark:border-zinc-800 dark:bg-zinc-955/40 hover:border-zinc-350 dark:hover:border-zinc-700'
+							? 'border-indigo-600 bg-zinc-950 text-white dark:border-indigo-400 dark:bg-zinc-900 ring-2 ring-indigo-500/25'
+							: 'border-zinc-100 bg-white dark:border-zinc-800 dark:bg-zinc-950/40 hover:border-zinc-300 dark:hover:border-zinc-700'
 					}`}
 				>
 					{isCurrent && (
-						<div className="absolute -top-2.5 left-1/2 -translate-x-1/2 rounded-full bg-gradient-to-r from-indigo-500 to-purple-500 px-3 py-0.5 text-[9px] font-black text-white shadow-md shadow-indigo-550/15 uppercase tracking-wider border border-indigo-400/20">
+						<div className="absolute -top-2.5 left-1/2 -translate-x-1/2 rounded-full bg-gradient-to-r from-indigo-500 to-purple-500 px-3 py-0.5 text-[9px] font-black text-white shadow-md shadow-indigo-500/15 uppercase tracking-wider border border-indigo-400/20">
 							Active
 						</div>
 					)}
 
 					<div>
 						<div className='flex items-center justify-between'>
-							<span className={`text-xs font-black tracking-wide uppercase ${isCurrent ? 'text-white' : 'text-zinc-400 dark:text-zinc-550'}`}>
+							<span className={`text-xs font-black tracking-wide uppercase ${isCurrent ? 'text-white' : 'text-zinc-400 dark:text-zinc-500'}`}>
 								{p.name}
 							</span>
 							{isCurrent && (
@@ -617,24 +617,24 @@ const ComparePlanCards = ({ currentSlug }: { currentSlug?: string }) => (
 							)}
 						</div>
 
-						<p className={`mt-3.5 text-2xl font-black tracking-tight ${isCurrent ? 'text-white' : 'text-zinc-955 dark:text-zinc-50'}`}>
+						<p className={`mt-3.5 text-2xl font-black tracking-tight ${isCurrent ? 'text-white' : 'text-zinc-950 dark:text-zinc-50'}`}>
 							{p.price_monthly === 0
 								? p.slug === 'enterprise'
 									? 'Custom'
 									: 'Free'
 								: `$${p.price_monthly / 100}`}
 							{p.price_monthly > 0 && (
-								<span className={`text-xs font-bold ml-1 ${isCurrent ? 'text-white/60 dark:text-zinc-400' : 'text-zinc-455'}`}>
+								<span className={`text-xs font-bold ml-1 ${isCurrent ? 'text-white/60' : 'text-zinc-400'}`}>
 									/mo
 								</span>
 							)}
 						</p>
 
-						<div className={`mt-4 space-y-1.5 border-t pt-4 text-xs font-semibold ${isCurrent ? 'border-white/10 dark:border-zinc-100' : 'border-zinc-100 dark:border-zinc-800'}`}>
-							<p className={isCurrent ? 'text-white/80 dark:text-zinc-700' : 'text-zinc-500 dark:text-zinc-400'}>
+						<div className={`mt-4 space-y-1.5 border-t pt-4 text-xs font-semibold ${isCurrent ? 'border-white/10' : 'border-zinc-100 dark:border-zinc-800'}`}>
+							<p className={isCurrent ? 'text-white/80' : 'text-zinc-500 dark:text-zinc-400'}>
 								{p.credits === -1 ? 'Unlimited' : `${(p.credits / 1000).toFixed(0)}k`} credits
 							</p>
-							<p className={isCurrent ? 'text-white/80 dark:text-zinc-700' : 'text-zinc-550 dark:text-zinc-400'}>
+							<p className={isCurrent ? 'text-white/80' : 'text-zinc-500 dark:text-zinc-400'}>
 								{p.workflows === -1 ? 'Unlimited' : p.workflows} workflows
 							</p>
 						</div>
@@ -644,7 +644,7 @@ const ComparePlanCards = ({ currentSlug }: { currentSlug?: string }) => (
 						{!isCurrent && p.slug !== 'enterprise' && (
 							<Link
 								to={pages.settings.subPages.plan.subPages.upgrade.to}
-								className='flex items-center justify-center gap-1 rounded-xl border border-zinc-200/80 bg-white py-2 text-xs font-bold text-zinc-750 shadow-xs transition hover:bg-zinc-55 dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-300 dark:hover:bg-zinc-900 w-full'
+								className='flex items-center justify-center gap-1 rounded-xl border border-zinc-200/80 bg-white py-2 text-xs font-bold text-zinc-700 shadow-xs transition hover:bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-300 dark:hover:bg-zinc-900 w-full'
 							>
 								<Zap size={11} className="text-zinc-400" />
 								Switch
@@ -653,13 +653,13 @@ const ComparePlanCards = ({ currentSlug }: { currentSlug?: string }) => (
 						{p.slug === 'enterprise' && !isCurrent && (
 							<a
 								href='mailto:sales@agent1o1.com'
-								className='flex items-center justify-center gap-1 rounded-xl border border-zinc-200/80 bg-white py-2 text-xs font-bold text-zinc-755 shadow-xs transition hover:bg-zinc-55 dark:border-zinc-800 dark:bg-zinc-955 dark:text-zinc-300 dark:hover:bg-zinc-900 w-full'
+								className='flex items-center justify-center gap-1 rounded-xl border border-zinc-200/80 bg-white py-2 text-xs font-bold text-zinc-700 shadow-xs transition hover:bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-300 dark:hover:bg-zinc-900 w-full'
 							>
 								Contact us
 							</a>
 						)}
 						{isCurrent && (
-							<div className="flex items-center justify-center py-2 text-xs font-bold text-indigo-400 dark:text-indigo-650 w-full">
+							<div className="flex items-center justify-center py-2 text-xs font-bold text-indigo-400 dark:text-indigo-600 w-full">
 								Current Plan
 							</div>
 						)}

@@ -138,6 +138,9 @@ const BuildPage = () => {
 											minWidth={360}
 											maxWidth='45vw'
 											enable={{ right: true }}
+											onResize={(e, direction, ref) => {
+												setAiPanelWidth(ref.offsetWidth);
+											}}
 											onResizeStop={(_, __, ref) => setAiPanelWidth(ref.offsetWidth)}
 											className='min-h-0 shrink-0'>
 											<AiBuilderPanel />
@@ -166,6 +169,9 @@ const BuildPage = () => {
 												minWidth={260}
 												maxWidth={460}
 												enable={{ right: true }}
+												onResize={(e, direction, ref) => {
+													setLeftPanelWidth(ref.offsetWidth);
+												}}
 												onResizeStop={(_, __, ref) =>
 													setLeftPanelWidth(ref.offsetWidth)
 												}
@@ -197,6 +203,9 @@ const BuildPage = () => {
 								minHeight={180}
 								maxHeight='58vh'
 								enable={{ top: true }}
+								onResize={(e, direction, ref) => {
+									setRunPanelHeight(ref.offsetHeight);
+								}}
 								onResizeStop={(_, __, ref) => setRunPanelHeight(ref.offsetHeight)}
 								className='shrink-0'>
 								<RunPanel />

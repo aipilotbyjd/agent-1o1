@@ -15,7 +15,7 @@ const SettingsLayout = () => {
 	return (
 		<>
 			<SettingsAsideTemplate />
-			<Wrapper className='[&>div:first-child]:hidden [&>div:last-child]:hidden'>
+			<Wrapper borderDisabled={true}>
 				<Header>
 					<HeaderLeft>Settings</HeaderLeft>
 					<HeaderRight>

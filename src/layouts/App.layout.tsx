@@ -11,7 +11,7 @@ const AppLayout = () => {
 	return (
 		<>
 			<AppAsideTemplate />
-			<Wrapper>
+			<Wrapper borderDisabled={true}>
 				<Suspense
 					fallback={
 						<>

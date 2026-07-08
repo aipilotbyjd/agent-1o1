@@ -268,7 +268,7 @@ const WorkspaceAsideTemplate = () => {
 						type='button'
 						onClick={toggleSidebar}
 						aria-label={sidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
-						className='text-zinc-550 hover:border-zinc-350 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-zinc-200 bg-white transition hover:bg-zinc-50 hover:text-zinc-950 dark:border-white/10 dark:bg-white/[0.035] dark:text-zinc-400 dark:hover:border-white/15 dark:hover:bg-white/[0.07] dark:hover:text-white'>
+						className='text-zinc-500 hover:border-zinc-300 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-zinc-200 bg-white transition hover:bg-zinc-50 hover:text-zinc-950 dark:border-white/10 dark:bg-white/[0.035] dark:text-zinc-400 dark:hover:border-white/15 dark:hover:bg-white/[0.07] dark:hover:text-white'>
 						{sidebarCollapsed ? <ChevronRight size={17} /> : <ChevronLeft size={17} />}
 					</button>
 				</div>
@@ -313,7 +313,7 @@ const WorkspaceAsideTemplate = () => {
 									animate={{ opacity: 1, y: 0, scale: 1 }}
 									exit={{ opacity: 0, y: 5, scale: 0.95 }}
 									className='absolute right-0 left-0 z-[60] mt-2 flex flex-col gap-1 rounded-2xl border border-zinc-200 bg-white/95 p-1.5 shadow-2xl backdrop-blur-md dark:border-white/10 dark:bg-[#0f111a]/95'>
-									<div className='dark:text-zinc-550 px-2.5 py-1.5 text-[10px] font-bold tracking-wider text-zinc-400 uppercase'>
+									<div className='dark:text-zinc-500 px-2.5 py-1.5 text-[10px] font-bold tracking-wider text-zinc-400 uppercase'>
 										Switch Workspace
 									</div>
 									{workspaces.map((ws) => (
@@ -339,7 +339,7 @@ const WorkspaceAsideTemplate = () => {
 														/>
 													)}
 												</div>
-												<div className='text-zinc-550 truncate text-[10px] font-semibold'>
+												<div className='text-zinc-500 truncate text-[10px] font-semibold'>
 													{ws.description}
 												</div>
 											</div>
@@ -352,8 +352,8 @@ const WorkspaceAsideTemplate = () => {
 											setTopDropdownOpen(false);
 											setIsCreateWorkspaceOpen(true);
 										}}
-										className='text-zinc-650 flex w-full items-center gap-2.5 rounded-xl p-2 text-left text-xs font-bold hover:bg-zinc-50 dark:text-zinc-300 dark:hover:bg-white/[0.05]'>
-										<Plus size={14} className='text-zinc-550' />
+										className='text-zinc-600 flex w-full items-center gap-2.5 rounded-xl p-2 text-left text-xs font-bold hover:bg-zinc-50 dark:text-zinc-300 dark:hover:bg-white/[0.05]'>
+										<Plus size={14} className='text-zinc-500' />
 										Create new workspace
 									</button>
 								</motion.div>
@@ -367,7 +367,7 @@ const WorkspaceAsideTemplate = () => {
 						type='button'
 						title='Search workspace'
 						className={[
-							'group hover:border-emerald-250 relative flex h-12 w-full items-center gap-3 rounded-2xl border border-zinc-200 bg-zinc-50 text-sm font-semibold text-zinc-600 shadow-sm transition hover:bg-white hover:text-zinc-950 dark:border-white/10 dark:bg-white/[0.045] dark:text-zinc-300 dark:shadow-xl dark:shadow-black/10 dark:hover:border-emerald-300/25 dark:hover:bg-white/[0.07] dark:hover:text-white',
+							'group hover:border-emerald-200 relative flex h-12 w-full items-center gap-3 rounded-2xl border border-zinc-200 bg-zinc-50 text-sm font-semibold text-zinc-600 shadow-sm transition hover:bg-white hover:text-zinc-950 dark:border-white/10 dark:bg-white/[0.045] dark:text-zinc-300 dark:shadow-xl dark:shadow-black/10 dark:hover:border-emerald-300/25 dark:hover:bg-white/[0.07] dark:hover:text-white',
 							sidebarCollapsed ? 'justify-center px-0' : 'px-4',
 						].join(' ')}>
 						<Search size={18} />
@@ -388,7 +388,7 @@ const WorkspaceAsideTemplate = () => {
 						{navigationGroups.map((group) => (
 							<div key={group.label}>
 								{!sidebarCollapsed && (
-									<div className='dark:text-zinc-650 mb-2 px-3 text-[11px] font-bold tracking-[0.18em] text-zinc-400 uppercase'>
+									<div className='dark:text-zinc-600 mb-2 px-3 text-[11px] font-bold tracking-[0.18em] text-zinc-400 uppercase'>
 										{group.label}
 									</div>
 								)}
@@ -407,7 +407,7 @@ const WorkspaceAsideTemplate = () => {
 													'group relative flex h-11 w-full items-center gap-3 rounded-2xl px-3 text-sm font-bold transition',
 													isActive
 														? 'border border-emerald-200 bg-emerald-50 text-emerald-800 shadow-sm dark:border-white/10 dark:bg-white/[0.08] dark:text-white dark:shadow-lg dark:shadow-black/20'
-														: 'hover:text-zinc-955 text-zinc-500 hover:bg-zinc-100 dark:text-zinc-400 dark:hover:bg-white/[0.055] dark:hover:text-zinc-100',
+														: 'hover:text-zinc-950 text-zinc-500 hover:bg-zinc-100 dark:text-zinc-400 dark:hover:bg-white/[0.055] dark:hover:text-zinc-100',
 													sidebarCollapsed ? 'justify-center px-0' : '',
 												].join(' ')}>
 												{isActive && (
@@ -424,7 +424,7 @@ const WorkspaceAsideTemplate = () => {
 													className={[
 														'flex h-8 w-8 items-center justify-center rounded-xl transition',
 														isActive
-															? 'text-emerald-750 bg-emerald-100 dark:bg-emerald-300/10 dark:text-emerald-200'
+															? 'text-emerald-700 bg-emerald-100 dark:bg-emerald-300/10 dark:text-emerald-200'
 															: '',
 													].join(' ')}>
 													<Icon size={18} />
@@ -519,7 +519,7 @@ const WorkspaceAsideTemplate = () => {
 														/>
 													)}
 												</div>
-												<div className='text-zinc-550 truncate text-[10px] font-semibold'>
+												<div className='text-zinc-500 truncate text-[10px] font-semibold'>
 													{ws.description}
 												</div>
 											</div>
@@ -532,8 +532,8 @@ const WorkspaceAsideTemplate = () => {
 											setBottomDropdownOpen(false);
 											setIsCreateWorkspaceOpen(true);
 										}}
-										className='text-zinc-650 flex w-full items-center gap-2.5 rounded-xl p-2 text-left text-xs font-bold hover:bg-zinc-50 dark:text-zinc-300 dark:hover:bg-white/[0.05]'>
-										<Plus size={14} className='text-zinc-550' />
+										className='text-zinc-600 flex w-full items-center gap-2.5 rounded-xl p-2 text-left text-xs font-bold hover:bg-zinc-50 dark:text-zinc-300 dark:hover:bg-white/[0.05]'>
+										<Plus size={14} className='text-zinc-500' />
 										Create new workspace
 									</button>
 								</motion.div>
@@ -554,8 +554,8 @@ const WorkspaceAsideTemplate = () => {
 								<div className='truncate text-sm font-bold text-zinc-950 dark:text-white'>
 									Amaan
 								</div>
-								<div className='text-zinc-550 flex items-center gap-1.5 text-xs font-semibold'>
-									<Activity size={12} className='text-emerald-350' />
+								<div className='text-zinc-500 flex items-center gap-1.5 text-xs font-semibold'>
+									<Activity size={12} className='text-emerald-300' />
 									Online
 								</div>
 							</div>
@@ -582,7 +582,7 @@ const WorkspaceAsideTemplate = () => {
 							onClick={(e) => e.stopPropagation()}>
 							<button
 								onClick={() => setIsCreateWorkspaceOpen(false)}
-								className='hover:text-slate-650 dark:hover:text-zinc-350 absolute top-4 right-4 text-slate-400 transition dark:text-zinc-500'>
+								className='hover:text-slate-600 dark:hover:text-zinc-300 absolute top-4 right-4 text-slate-400 transition dark:text-zinc-500'>
 								<X size={18} />
 							</button>
 
@@ -599,7 +599,7 @@ const WorkspaceAsideTemplate = () => {
 										Workspace Name
 									</label>
 									<div className='group relative flex items-center'>
-										<Building2 className='text-slate-450 group-focus-within:text-violet-650 absolute left-3.5 h-4.5 w-4.5 transition-colors duration-200 dark:group-focus-within:text-violet-400' />
+										<Building2 className='text-slate-400 group-focus-within:text-violet-600 absolute left-3.5 h-4.5 w-4.5 transition-colors duration-200 dark:group-focus-within:text-violet-400' />
 										<input
 											type='text'
 											id='modal-ws-name'
@@ -654,7 +654,7 @@ const WorkspaceAsideTemplate = () => {
 									<button
 										type='submit'
 										disabled={!formik.isValid || createWorkspace.isPending}
-										className='bg-violet-650 flex h-10 items-center justify-center gap-2 rounded-xl px-4 text-xs font-black text-white transition hover:bg-violet-600 disabled:pointer-events-none disabled:opacity-50'>
+										className='bg-violet-600 flex h-10 items-center justify-center gap-2 rounded-xl px-4 text-xs font-black text-white transition hover:bg-violet-600 disabled:pointer-events-none disabled:opacity-50'>
 										{createWorkspace.isPending
 											? 'Creating...'
 											: 'Create Workspace'}

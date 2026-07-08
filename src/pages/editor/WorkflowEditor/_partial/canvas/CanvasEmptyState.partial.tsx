@@ -195,6 +195,7 @@ const CanvasEmptyState = () => {
 	}, [isGenerating, prompt, dispatch, steps.length]);
 
 	const startChat = useAiChatStore((store) => store.startChat);
+	const workflowBuildStep = useAiChatStore((store) => store.workflowBuildStep);
 	const { userData } = useAuth();
 
 	const handleGenerate = () => {
@@ -718,7 +719,8 @@ const CanvasEmptyState = () => {
 										<div className='flex justify-center pt-2'>
 											<button
 												type='button'
-												className='flex items-center gap-1.5 text-xs font-bold text-violet-600 transition hover:text-violet-700 dark:text-violet-400'>
+												onClick={() => dispatch({ type: 'SET_TEMPLATE_LIBRARY', open: true })}
+												className='flex items-center gap-1.5 text-xs font-bold text-violet-600 transition hover:text-violet-700 dark:text-violet-400 pointer-events-auto'>
 												<LayoutGrid size={14} />
 												<span>View more templates</span>
 											</button>
@@ -844,267 +846,294 @@ const CanvasEmptyState = () => {
 							{/* Connection curves background */}
 							<svg className='absolute inset-0 w-full h-full pointer-events-none' style={{ zIndex: 0 }}>
 								{/* Trigger to Action curve */}
-								<path
+								<motion.path
 									d='M 220 160 C 240 160, 240 175, 250 175 C 260 175, 260 160, 280 160'
 									stroke='rgba(161, 161, 170, 0.4)'
 									strokeWidth='1.5'
 									strokeDasharray='4 4'
 									fill='none'
+									initial={{ pathLength: 0 }}
+									animate={{ pathLength: workflowBuildStep >= 2 ? 1 : 0 }}
+									transition={{ duration: 0.5, ease: 'easeInOut' }}
 								/>
 								{/* Action to Output curve */}
-								<path
+								<motion.path
 									d='M 500 160 C 520 160, 520 175, 530 175 C 540 175, 540 160, 560 160'
 									stroke='rgba(161, 161, 170, 0.4)'
 									strokeWidth='1.5'
 									strokeDasharray='4 4'
 									fill='none'
+									initial={{ pathLength: 0 }}
+									animate={{ pathLength: workflowBuildStep >= 3 ? 1 : 0 }}
+									transition={{ duration: 0.5, ease: 'easeInOut' }}
 								/>
 							</svg>
 
 							{/* Node 1: Webhook Trigger Card */}
-							<motion.div
-								whileHover={{ y: -4, scale: 1.02 }}
-								transition={{ duration: 0.16 }}
-								className='absolute left-0 top-[45px] z-10 w-[220px] rounded-xl border-2 p-1 text-left shadow-lg bg-white dark:bg-zinc-950 border-emerald-500 dark:border-emerald-500'>
-								<div className='rounded-lg p-2.5 bg-emerald-500/5 dark:bg-emerald-500/5'>
-									{/* Header */}
-									<div className='flex items-start gap-2'>
-										<div className='flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-emerald-100 text-emerald-600 dark:bg-emerald-950 dark:text-emerald-400'>
-											<Webhook size={18} strokeWidth={2.5} />
-										</div>
-										<div className='min-w-0 flex-1'>
-											<div className='mb-0.5 flex items-center justify-between gap-1'>
-												<span className='flex min-w-0 items-center gap-0.5'>
-													<span className='shrink-0 text-emerald-600 dark:text-emerald-400'>
-														<Webhook size={10} />
-													</span>
-													<span className='truncate text-[9px] font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-wide'>
-														TRIGGER
-													</span>
-												</span>
-												<span className='inline-flex shrink-0 items-center gap-0.5 rounded-full bg-zinc-100 text-zinc-500 px-1.5 py-0.5 text-[8px] font-bold tracking-wide uppercase dark:bg-zinc-800 dark:text-zinc-400'>
-													IDLE
-												</span>
+							<AnimatePresence>
+								{workflowBuildStep >= 1 && (
+									<motion.div
+										initial={{ opacity: 0, scale: 0.9, y: 15 }}
+										animate={{ opacity: 1, scale: 1, y: 0 }}
+										exit={{ opacity: 0, scale: 0.9, y: 15 }}
+										whileHover={{ y: -4, scale: 1.02 }}
+										transition={{ duration: 0.3 }}
+										className='absolute left-0 top-[45px] z-10 w-[220px] rounded-xl border-2 p-1 text-left shadow-lg bg-white dark:bg-zinc-950 border-emerald-500 dark:border-emerald-500'>
+										<div className='rounded-lg p-2.5 bg-emerald-500/5 dark:bg-emerald-500/5'>
+											{/* Header */}
+											<div className='flex items-start gap-2'>
+												<div className='flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-emerald-100 text-emerald-600 dark:bg-emerald-950 dark:text-emerald-400'>
+													<Webhook size={18} strokeWidth={2.5} />
+												</div>
+												<div className='min-w-0 flex-1'>
+													<div className='mb-0.5 flex items-center justify-between gap-1'>
+														<span className='flex min-w-0 items-center gap-0.5'>
+															<span className='shrink-0 text-emerald-600 dark:text-emerald-400'>
+																<Webhook size={10} />
+															</span>
+															<span className='truncate text-[9px] font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-wide'>
+																TRIGGER
+															</span>
+														</span>
+														<span className='inline-flex shrink-0 items-center gap-0.5 rounded-full bg-zinc-100 text-zinc-500 px-1.5 py-0.5 text-[8px] font-bold tracking-wide uppercase dark:bg-zinc-800 dark:text-zinc-400'>
+															IDLE
+														</span>
+													</div>
+													<div className='text-xs font-bold tracking-tight text-zinc-900 dark:text-zinc-100 truncate'>
+														Webhook Trigger
+													</div>
+												</div>
 											</div>
-											<div className='text-xs font-bold tracking-tight text-zinc-900 dark:text-zinc-100 truncate'>
-												Webhook Trigger
+
+											{/* Description */}
+											<div className='mt-1 text-[9px] leading-tight text-zinc-500 dark:text-zinc-400 line-clamp-1'>
+												Starts the flow on HTTP POST request.
+											</div>
+
+											{/* Mock Fields */}
+											<div className='mt-2.5 space-y-2'>
+												<div>
+													<label className='text-[8px] font-bold text-zinc-400 dark:text-zinc-500 uppercase tracking-wider block mb-1'>Webhook URL</label>
+													<div className='w-full rounded-lg border border-zinc-200 bg-white dark:bg-zinc-900 dark:border-zinc-800 px-2.5 py-1.5 text-[10px] font-semibold text-zinc-700 dark:text-zinc-300 flex items-center justify-between shadow-xs select-none'>
+														<span className='truncate text-zinc-500 dark:text-zinc-400'>https://api.agent101.co/v1/web...</span>
+													</div>
+												</div>
+												<div>
+													<label className='text-[8px] font-bold text-zinc-400 dark:text-zinc-500 uppercase tracking-wider block mb-1'>Method</label>
+													<div className='w-full rounded-lg border border-zinc-200 bg-white dark:bg-zinc-900 dark:border-zinc-800 px-2.5 py-1.5 text-[10px] font-semibold text-zinc-700 dark:text-zinc-300 flex items-center justify-between shadow-xs select-none'>
+														<span>POST</span>
+														<ChevronDown size={12} className='text-zinc-400 shrink-0' />
+													</div>
+												</div>
+											</div>
+
+											{/* Inline Action Button */}
+											<div className='mt-3'>
+												<button
+													type='button'
+													className='flex w-full items-center justify-center gap-1 rounded-lg border border-zinc-200 dark:border-zinc-800 py-1 text-[10px] font-bold text-zinc-500 hover:text-emerald-600 dark:hover:text-emerald-455 hover:border-emerald-300 dark:hover:border-emerald-900 transition bg-white dark:bg-zinc-900'>
+													<Beaker size={11} />
+													<span>Test Trigger</span>
+												</button>
 											</div>
 										</div>
-									</div>
 
-									{/* Description */}
-									<div className='mt-1 text-[9px] leading-tight text-zinc-500 dark:text-zinc-400 line-clamp-1'>
-										Starts the flow on HTTP POST request.
-									</div>
-
-									{/* Mock Fields */}
-									<div className='mt-2.5 space-y-2'>
-										<div>
-											<label className='text-[8px] font-bold text-zinc-400 dark:text-zinc-500 uppercase tracking-wider block mb-1'>Webhook URL</label>
-											<div className='w-full rounded-lg border border-zinc-200 bg-white dark:bg-zinc-900 dark:border-zinc-800 px-2.5 py-1.5 text-[10px] font-semibold text-zinc-700 dark:text-zinc-300 flex items-center justify-between shadow-xs select-none'>
-												<span className='truncate text-zinc-500 dark:text-zinc-400'>https://api.agent101.co/v1/web...</span>
-											</div>
+										{/* Step Number Circle */}
+										<div className='absolute -bottom-2.5 left-1/2 flex h-5 w-5 -translate-x-1/2 items-center justify-center rounded-full border-2 bg-white text-[9px] font-bold shadow-xs border-emerald-500 text-emerald-600 dark:bg-zinc-900 dark:text-emerald-450'>
+											1
 										</div>
-										<div>
-											<label className='text-[8px] font-bold text-zinc-400 dark:text-zinc-500 uppercase tracking-wider block mb-1'>Method</label>
-											<div className='w-full rounded-lg border border-zinc-200 bg-white dark:bg-zinc-900 dark:border-zinc-800 px-2.5 py-1.5 text-[10px] font-semibold text-zinc-700 dark:text-zinc-300 flex items-center justify-between shadow-xs select-none'>
-												<span>POST</span>
-												<ChevronDown size={12} className='text-zinc-400 shrink-0' />
-											</div>
-										</div>
-									</div>
 
-									{/* Inline Action Button */}
-									<div className='mt-3'>
-										<button
-											type='button'
-											className='flex w-full items-center justify-center gap-1 rounded-lg border border-zinc-200 dark:border-zinc-800 py-1 text-[10px] font-bold text-zinc-500 hover:text-emerald-600 dark:hover:text-emerald-455 hover:border-emerald-300 dark:hover:border-emerald-900 transition bg-white dark:bg-zinc-900'>
-											<Beaker size={11} />
-											<span>Test Trigger</span>
-										</button>
-									</div>
-								</div>
-
-								{/* Step Number Circle */}
-								<div className='absolute -bottom-2.5 left-1/2 flex h-5 w-5 -translate-x-1/2 items-center justify-center rounded-full border-2 bg-white text-[9px] font-bold shadow-xs border-emerald-500 text-emerald-600 dark:bg-zinc-900 dark:text-emerald-450'>
-									1
-								</div>
-
-								{/* Handle right port */}
-								<button className='absolute -right-2 top-1/2 -translate-y-1/2 flex h-4 w-4 items-center justify-center rounded-full bg-white border border-emerald-400 text-[10px] text-emerald-500 hover:text-emerald-700 hover:bg-emerald-50 dark:bg-zinc-900 dark:border-emerald-800 shadow-xs z-20 font-bold'>+</button>
-							</motion.div>
+										{/* Handle right port */}
+										<button className='absolute -right-2 top-1/2 -translate-y-1/2 flex h-4 w-4 items-center justify-center rounded-full bg-white border border-emerald-400 text-[10px] text-emerald-500 hover:text-emerald-700 hover:bg-emerald-50 dark:bg-zinc-900 dark:border-emerald-800 shadow-xs z-20 font-bold'>+</button>
+									</motion.div>
+								)}
+							</AnimatePresence>
 
 							{/* Node 2: Image Generation Card (AI/Action) */}
-							<motion.div
-								whileHover={{ y: -4, scale: 1.02 }}
-								transition={{ duration: 0.16 }}
-								className='absolute left-[280px] top-[45px] z-10 w-[220px] rounded-xl border-2 p-1 text-left shadow-lg bg-white dark:bg-zinc-950 border-violet-500 dark:border-violet-500 ring-4 shadow-violet-100/50 ring-violet-500/10 dark:shadow-none'>
-								
-								{/* Floating Toolbar like Mockup 1 */}
-								<div className='absolute -top-[44px] left-1/2 -translate-x-1/2 flex items-center gap-1 bg-white border border-zinc-200 rounded-lg px-2 py-1 shadow-md z-20 text-[9px] font-bold text-zinc-650 dark:bg-zinc-900 dark:border-zinc-800 dark:text-zinc-350 whitespace-nowrap shadow-zinc-250/50'>
-									<span className='flex items-center gap-1 px-1.5 py-0.5 hover:bg-zinc-50 dark:hover:bg-zinc-800 rounded cursor-pointer'>
-										<svg className="h-3 w-3 text-zinc-505" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5"><path strokeLinecap="round" strokeLinejoin="round" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2" /></svg>
-										<span>Duplicate</span>
-									</span>
-									<span className='flex items-center gap-1 px-1.5 py-0.5 hover:bg-zinc-50 dark:hover:bg-zinc-800 rounded cursor-pointer'>
-										<svg className="h-3 w-3 text-zinc-505" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5"><path strokeLinecap="round" strokeLinejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
-										<span>Rename</span>
-									</span>
-									<span className='flex items-center gap-1 px-1.5 py-0.5 hover:bg-zinc-50 dark:hover:bg-zinc-800 rounded cursor-pointer'>
-										<svg className="h-3 w-3 text-zinc-505" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5"><path strokeLinecap="round" strokeLinejoin="round" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" /></svg>
-										<span>Inputs</span>
-									</span>
-									<span className='flex items-center gap-1 px-1.5 py-0.5 hover:bg-zinc-50 dark:hover:bg-zinc-800 rounded cursor-pointer'>
-										<svg className="h-3 w-3 text-zinc-505" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5"><path strokeLinecap="round" strokeLinejoin="round" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" /><path strokeLinecap="round" strokeLinejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-										<span>Test</span>
-									</span>
-									<span className='flex items-center gap-1 px-1.5 py-0.5 hover:bg-rose-50 dark:hover:bg-rose-950/30 rounded cursor-pointer text-rose-500 hover:text-rose-700'>
-										<svg className="h-3 w-3 text-rose-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5"><path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
-										<span>Delete</span>
-									</span>
-								</div>
-
-								<div className='rounded-lg p-2.5 bg-violet-500/5 dark:bg-violet-500/5'>
-									{/* Header */}
-									<div className='flex items-start gap-2'>
-										<div className='flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-violet-100 text-violet-600 dark:bg-violet-950 dark:text-violet-400'>
-											<ImageIcon size={18} strokeWidth={2.5} />
+							<AnimatePresence>
+								{workflowBuildStep >= 2 && (
+									<motion.div
+										initial={{ opacity: 0, scale: 0.9, y: 15 }}
+										animate={{ opacity: 1, scale: 1, y: 0 }}
+										exit={{ opacity: 0, scale: 0.9, y: 15 }}
+										whileHover={{ y: -4, scale: 1.02 }}
+										transition={{ duration: 0.3 }}
+										className='absolute left-[280px] top-[45px] z-10 w-[220px] rounded-xl border-2 p-1 text-left shadow-lg bg-white dark:bg-zinc-950 border-violet-500 dark:border-violet-500 ring-4 shadow-violet-100/50 ring-violet-500/10 dark:shadow-none'>
+										
+										{/* Floating Toolbar like Mockup 1 */}
+										<div className='absolute -top-[44px] left-1/2 -translate-x-1/2 flex items-center gap-1 bg-white border border-zinc-200 rounded-lg px-2 py-1 shadow-md z-20 text-[9px] font-bold text-zinc-650 dark:bg-zinc-900 dark:border-zinc-800 dark:text-zinc-350 whitespace-nowrap shadow-zinc-250/50'>
+											<span className='flex items-center gap-1 px-1.5 py-0.5 hover:bg-zinc-50 dark:hover:bg-zinc-800 rounded cursor-pointer'>
+												<svg className="h-3 w-3 text-zinc-505" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5"><path strokeLinecap="round" strokeLinejoin="round" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2" /></svg>
+												<span>Duplicate</span>
+											</span>
+											<span className='flex items-center gap-1 px-1.5 py-0.5 hover:bg-zinc-50 dark:hover:bg-zinc-800 rounded cursor-pointer'>
+												<svg className="h-3 w-3 text-zinc-505" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5"><path strokeLinecap="round" strokeLinejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
+												<span>Rename</span>
+											</span>
+											<span className='flex items-center gap-1 px-1.5 py-0.5 hover:bg-zinc-50 dark:hover:bg-zinc-800 rounded cursor-pointer'>
+												<svg className="h-3 w-3 text-zinc-505" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5"><path strokeLinecap="round" strokeLinejoin="round" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" /></svg>
+												<span>Inputs</span>
+											</span>
+											<span className='flex items-center gap-1 px-1.5 py-0.5 hover:bg-zinc-50 dark:hover:bg-zinc-800 rounded cursor-pointer'>
+												<svg className="h-3 w-3 text-zinc-505" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5"><path strokeLinecap="round" strokeLinejoin="round" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" /><path strokeLinecap="round" strokeLinejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+												<span>Test</span>
+											</span>
+											<span className='flex items-center gap-1 px-1.5 py-0.5 hover:bg-rose-50 dark:hover:bg-rose-950/30 rounded cursor-pointer text-rose-500 hover:text-rose-700'>
+												<svg className="h-3 w-3 text-rose-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5"><path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+												<span>Delete</span>
+											</span>
 										</div>
-										<div className='min-w-0 flex-1'>
-											<div className='mb-0.5 flex items-center justify-between gap-1'>
-												<span className='flex min-w-0 items-center gap-0.5'>
-													<span className='shrink-0 text-violet-600 dark:text-violet-400'>
-														<Bot size={10} />
-													</span>
-													<span className='truncate text-[9px] font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-wide'>
-														AI
-													</span>
-												</span>
-												<span className='inline-flex shrink-0 items-center gap-0.5 rounded-full bg-zinc-100 text-zinc-500 px-1.5 py-0.5 text-[8px] font-bold tracking-wide uppercase dark:bg-zinc-800 dark:text-zinc-400'>
-													IDLE
-												</span>
+
+										<div className='rounded-lg p-2.5 bg-violet-500/5 dark:bg-violet-500/5'>
+											{/* Header */}
+											<div className='flex items-start gap-2'>
+												<div className='flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-violet-100 text-violet-600 dark:bg-violet-950 dark:text-violet-400'>
+													<ImageIcon size={18} strokeWidth={2.5} />
+												</div>
+												<div className='min-w-0 flex-1'>
+													<div className='mb-0.5 flex items-center justify-between gap-1'>
+														<span className='flex min-w-0 items-center gap-0.5'>
+															<span className='shrink-0 text-violet-600 dark:text-violet-400'>
+																<Bot size={10} />
+															</span>
+															<span className='truncate text-[9px] font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-wide'>
+																AI
+															</span>
+														</span>
+														<span className='inline-flex shrink-0 items-center gap-0.5 rounded-full bg-zinc-100 text-zinc-500 px-1.5 py-0.5 text-[8px] font-bold tracking-wide uppercase dark:bg-zinc-800 dark:text-zinc-400'>
+															IDLE
+														</span>
+													</div>
+													<div className='text-xs font-bold tracking-tight text-zinc-900 dark:text-zinc-100 truncate'>
+														Image Generation
+													</div>
+												</div>
 											</div>
-											<div className='text-xs font-bold tracking-tight text-zinc-900 dark:text-zinc-100 truncate'>
-												Image Generation
+
+											{/* Description */}
+											<div className='mt-1 text-[9px] leading-tight text-zinc-500 dark:text-zinc-400 line-clamp-1'>
+												Generate images from text prompts using AI.
+											</div>
+
+											{/* Mock Fields */}
+											<div className='mt-2.5 space-y-2'>
+												<div>
+													<label className='text-[8px] font-bold text-zinc-400 dark:text-zinc-500 uppercase tracking-wider block mb-1'>Provider</label>
+													<div className='w-full rounded-lg border border-zinc-200 bg-white dark:bg-zinc-900 dark:border-zinc-800 px-2.5 py-1.5 text-[10px] font-semibold text-zinc-700 dark:text-zinc-300 flex items-center justify-between shadow-xs select-none'>
+														<span>Gemini</span>
+														<ChevronDown size={12} className='text-zinc-400 shrink-0' />
+													</div>
+												</div>
+												<div>
+													<label className='text-[8px] font-bold text-zinc-400 dark:text-zinc-500 uppercase tracking-wider block mb-1'>Model</label>
+													<div className='w-full rounded-lg border border-zinc-200 bg-white dark:bg-zinc-900 dark:border-zinc-800 px-2.5 py-1.5 text-[10px] font-semibold text-zinc-700 dark:text-zinc-300 flex items-center justify-between shadow-xs select-none h-[29px]'>
+														<span className='text-zinc-400 dark:text-zinc-550'>Select a model...</span>
+													</div>
+												</div>
+											</div>
+
+											{/* Inline Action Button */}
+											<div className='mt-3'>
+												<button
+													type='button'
+													className='flex w-full items-center justify-center gap-1 rounded-lg border border-zinc-200 dark:border-zinc-800 py-1 text-[10px] font-bold text-zinc-500 hover:text-violet-600 dark:hover:text-violet-450 hover:border-violet-300 dark:hover:border-violet-900 transition bg-white dark:bg-zinc-900 shadow-2xs'>
+													<Beaker size={11} />
+													<span>Test Node</span>
+												</button>
 											</div>
 										</div>
-									</div>
 
-									{/* Description */}
-									<div className='mt-1 text-[9px] leading-tight text-zinc-500 dark:text-zinc-400 line-clamp-1'>
-										Generate images from text prompts using AI.
-									</div>
-
-									{/* Mock Fields */}
-									<div className='mt-2.5 space-y-2'>
-										<div>
-											<label className='text-[8px] font-bold text-zinc-400 dark:text-zinc-500 uppercase tracking-wider block mb-1'>Provider</label>
-											<div className='w-full rounded-lg border border-zinc-200 bg-white dark:bg-zinc-900 dark:border-zinc-800 px-2.5 py-1.5 text-[10px] font-semibold text-zinc-700 dark:text-zinc-300 flex items-center justify-between shadow-xs select-none'>
-												<span>Gemini</span>
-												<ChevronDown size={12} className='text-zinc-400 shrink-0' />
-											</div>
+										{/* Step Number Circle */}
+										<div className='absolute -bottom-2.5 left-1/2 flex h-5 w-5 -translate-x-1/2 items-center justify-center rounded-full border-2 bg-white text-[9px] font-bold shadow-xs border-violet-500 text-violet-600 dark:bg-zinc-900 dark:text-violet-450'>
+											2
 										</div>
-										<div>
-											<label className='text-[8px] font-bold text-zinc-400 dark:text-zinc-500 uppercase tracking-wider block mb-1'>Model</label>
-											<div className='w-full rounded-lg border border-zinc-200 bg-white dark:bg-zinc-900 dark:border-zinc-800 px-2.5 py-1.5 text-[10px] font-semibold text-zinc-700 dark:text-zinc-300 flex items-center justify-between shadow-xs select-none h-[29px]'>
-												<span className='text-zinc-400 dark:text-zinc-550'>Select a model...</span>
-											</div>
-										</div>
-									</div>
 
-									{/* Inline Action Button */}
-									<div className='mt-3'>
-										<button
-											type='button'
-											className='flex w-full items-center justify-center gap-1 rounded-lg border border-zinc-200 dark:border-zinc-800 py-1 text-[10px] font-bold text-zinc-500 hover:text-violet-600 dark:hover:text-violet-450 hover:border-violet-300 dark:hover:border-violet-900 transition bg-white dark:bg-zinc-900 shadow-2xs'>
-											<Beaker size={11} />
-											<span>Test Node</span>
-										</button>
-									</div>
-								</div>
-
-								{/* Step Number Circle */}
-								<div className='absolute -bottom-2.5 left-1/2 flex h-5 w-5 -translate-x-1/2 items-center justify-center rounded-full border-2 bg-white text-[9px] font-bold shadow-xs border-violet-500 text-violet-600 dark:bg-zinc-900 dark:text-violet-450'>
-									2
-								</div>
-
-								{/* Handle left & right ports */}
-								<button className='absolute -left-2 top-1/2 -translate-y-1/2 flex h-4 w-4 items-center justify-center rounded-full bg-white border border-violet-400 text-[10px] text-violet-505 hover:text-violet-700 hover:bg-violet-50 dark:bg-zinc-900 dark:border-violet-800 shadow-xs z-20 font-bold'>+</button>
-								<button className='absolute -right-2 top-1/2 -translate-y-1/2 flex h-4 w-4 items-center justify-center rounded-full bg-white border border-violet-400 text-[10px] text-violet-505 hover:text-violet-700 hover:bg-violet-50 dark:bg-zinc-900 dark:border-violet-800 shadow-xs z-20 font-bold'>+</button>
-							</motion.div>
+										{/* Handle left & right ports */}
+										<button className='absolute -left-2 top-1/2 -translate-y-1/2 flex h-4 w-4 items-center justify-center rounded-full bg-white border border-violet-400 text-[10px] text-violet-505 hover:text-violet-700 hover:bg-violet-50 dark:bg-zinc-900 dark:border-violet-800 shadow-xs z-20 font-bold'>+</button>
+										<button className='absolute -right-2 top-1/2 -translate-y-1/2 flex h-4 w-4 items-center justify-center rounded-full bg-white border border-violet-400 text-[10px] text-violet-505 hover:text-violet-700 hover:bg-violet-50 dark:bg-zinc-900 dark:border-violet-800 shadow-xs z-20 font-bold'>+</button>
+									</motion.div>
+								)}
+							</AnimatePresence>
 
 							{/* Node 3: Slack Output Card (Output) */}
-							<motion.div
-								whileHover={{ y: -4, scale: 1.02 }}
-								transition={{ duration: 0.16 }}
-								className='absolute left-[560px] top-[45px] z-10 w-[220px] rounded-xl border-2 p-1 text-left shadow-lg bg-white dark:bg-zinc-950 border-blue-500 dark:border-blue-500'>
-								<div className='rounded-lg p-2.5 bg-blue-500/5 dark:bg-blue-500/5'>
-									{/* Header */}
-									<div className='flex items-start gap-2'>
-										<div className='flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-blue-100 text-blue-600 dark:bg-blue-950 dark:text-blue-400'>
-											<Zap size={18} strokeWidth={2.5} />
-										</div>
-										<div className='min-w-0 flex-1'>
-											<div className='mb-0.5 flex items-center justify-between gap-1'>
-												<span className='flex min-w-0 items-center gap-0.5'>
-													<span className='shrink-0 text-blue-600 dark:text-blue-400'>
-														<Zap size={10} />
-													</span>
-													<span className='truncate text-[9px] font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-wide'>
-														OUTPUT
-													</span>
-												</span>
-												<span className='inline-flex shrink-0 items-center gap-0.5 rounded-full bg-zinc-100 text-zinc-500 px-1.5 py-0.5 text-[8px] font-bold tracking-wide uppercase dark:bg-zinc-800 dark:text-zinc-400'>
-													IDLE
-												</span>
+							<AnimatePresence>
+								{workflowBuildStep >= 3 && (
+									<motion.div
+										initial={{ opacity: 0, scale: 0.9, y: 15 }}
+										animate={{ opacity: 1, scale: 1, y: 0 }}
+										exit={{ opacity: 0, scale: 0.9, y: 15 }}
+										whileHover={{ y: -4, scale: 1.02 }}
+										transition={{ duration: 0.3 }}
+										className='absolute left-[560px] top-[45px] z-10 w-[220px] rounded-xl border-2 p-1 text-left shadow-lg bg-white dark:bg-zinc-950 border-blue-500 dark:border-blue-500'>
+										<div className='rounded-lg p-2.5 bg-blue-500/5 dark:bg-blue-500/5'>
+											{/* Header */}
+											<div className='flex items-start gap-2'>
+												<div className='flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-blue-100 text-blue-600 dark:bg-blue-950 dark:text-blue-400'>
+													<Zap size={18} strokeWidth={2.5} />
+												</div>
+												<div className='min-w-0 flex-1'>
+													<div className='mb-0.5 flex items-center justify-between gap-1'>
+														<span className='flex min-w-0 items-center gap-0.5'>
+															<span className='shrink-0 text-blue-600 dark:text-blue-400'>
+																<Zap size={10} />
+															</span>
+															<span className='truncate text-[9px] font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-wide'>
+																OUTPUT
+															</span>
+														</span>
+														<span className='inline-flex shrink-0 items-center gap-0.5 rounded-full bg-zinc-100 text-zinc-500 px-1.5 py-0.5 text-[8px] font-bold tracking-wide uppercase dark:bg-zinc-800 dark:text-zinc-400'>
+															IDLE
+														</span>
+													</div>
+													<div className='text-xs font-bold tracking-tight text-zinc-900 dark:text-zinc-100 truncate'>
+														Slack Output
+													</div>
+												</div>
 											</div>
-											<div className='text-xs font-bold tracking-tight text-zinc-900 dark:text-zinc-100 truncate'>
-												Slack Output
+
+											{/* Description */}
+											<div className='mt-1 text-[9px] leading-tight text-zinc-500 dark:text-zinc-400 line-clamp-1'>
+												Post message to a Slack channel.
+											</div>
+
+											{/* Mock Fields */}
+											<div className='mt-2.5 space-y-2'>
+												<div>
+													<label className='text-[8px] font-bold text-zinc-400 dark:text-zinc-500 uppercase tracking-wider block mb-1'>Channel</label>
+													<div className='w-full rounded-lg border border-zinc-200 bg-white dark:bg-zinc-900 dark:border-zinc-800 px-2.5 py-1.5 text-[10px] font-semibold text-zinc-700 dark:text-zinc-300 flex items-center justify-between shadow-xs select-none'>
+														<span>#general</span>
+														<ChevronDown size={12} className='text-zinc-400 shrink-0' />
+													</div>
+												</div>
+												<div>
+													<label className='text-[8px] font-bold text-zinc-400 dark:text-zinc-500 uppercase tracking-wider block mb-1'>Message</label>
+													<div className='w-full rounded-lg border border-zinc-200 bg-white dark:bg-zinc-900 dark:border-zinc-800 px-2.5 py-1 text-[9px] font-semibold text-zinc-700 dark:text-zinc-300 flex items-center justify-between shadow-xs select-none min-h-[29px] leading-snug'>
+														<span className='truncate'>Workflow completed!</span>
+													</div>
+												</div>
+											</div>
+
+											{/* Inline Action Button */}
+											<div className='mt-3'>
+												<button
+													type='button'
+													className='flex w-full items-center justify-center gap-1 rounded-lg border border-zinc-200 dark:border-zinc-800 py-1 text-[10px] font-bold text-zinc-500 hover:text-blue-600 dark:hover:text-blue-455 hover:border-blue-300 dark:hover:border-blue-900 transition bg-white dark:bg-zinc-900'>
+													<Beaker size={11} />
+													<span>Test Node</span>
+												</button>
 											</div>
 										</div>
-									</div>
 
-									{/* Description */}
-									<div className='mt-1 text-[9px] leading-tight text-zinc-500 dark:text-zinc-400 line-clamp-1'>
-										Post message to a Slack channel.
-									</div>
-
-									{/* Mock Fields */}
-									<div className='mt-2.5 space-y-2'>
-										<div>
-											<label className='text-[8px] font-bold text-zinc-400 dark:text-zinc-500 uppercase tracking-wider block mb-1'>Channel</label>
-											<div className='w-full rounded-lg border border-zinc-200 bg-white dark:bg-zinc-900 dark:border-zinc-800 px-2.5 py-1.5 text-[10px] font-semibold text-zinc-700 dark:text-zinc-300 flex items-center justify-between shadow-xs select-none'>
-												<span>#general</span>
-												<ChevronDown size={12} className='text-zinc-400 shrink-0' />
-											</div>
+										{/* Step Number Circle */}
+										<div className='absolute -bottom-2.5 left-1/2 flex h-5 w-5 -translate-x-1/2 items-center justify-center rounded-full border-2 bg-white text-[9px] font-bold shadow-xs border-blue-500 text-blue-600 dark:bg-zinc-900 dark:text-blue-450'>
+											3
 										</div>
-										<div>
-											<label className='text-[8px] font-bold text-zinc-400 dark:text-zinc-500 uppercase tracking-wider block mb-1'>Message</label>
-											<div className='w-full rounded-lg border border-zinc-200 bg-white dark:bg-zinc-900 dark:border-zinc-800 px-2.5 py-1 text-[9px] font-semibold text-zinc-700 dark:text-zinc-300 flex items-center justify-between shadow-xs select-none min-h-[29px] leading-snug'>
-												<span className='truncate'>Workflow completed!</span>
-											</div>
-										</div>
-									</div>
 
-									{/* Inline Action Button */}
-									<div className='mt-3'>
-										<button
-											type='button'
-											className='flex w-full items-center justify-center gap-1 rounded-lg border border-zinc-200 dark:border-zinc-800 py-1 text-[10px] font-bold text-zinc-500 hover:text-blue-600 dark:hover:text-blue-455 hover:border-blue-300 dark:hover:border-blue-900 transition bg-white dark:bg-zinc-900'>
-											<Beaker size={11} />
-											<span>Test Node</span>
-										</button>
-									</div>
-								</div>
-
-								{/* Step Number Circle */}
-								<div className='absolute -bottom-2.5 left-1/2 flex h-5 w-5 -translate-x-1/2 items-center justify-center rounded-full border-2 bg-white text-[9px] font-bold shadow-xs border-blue-500 text-blue-600 dark:bg-zinc-900 dark:text-blue-450'>
-									3
-								</div>
-
-								{/* Handle left port */}
-								<button className='absolute -left-2 top-1/2 -translate-y-1/2 flex h-4 w-4 items-center justify-center rounded-full bg-white border border-blue-400 text-[10px] text-blue-500 hover:text-blue-700 hover:bg-blue-50 dark:bg-zinc-900 dark:border-blue-800 shadow-xs z-20 font-bold'>+</button>
-							</motion.div>
+										{/* Handle left port */}
+										<button className='absolute -left-2 top-1/2 -translate-y-1/2 flex h-4 w-4 items-center justify-center rounded-full bg-white border border-blue-400 text-[10px] text-blue-500 hover:text-blue-700 hover:bg-blue-50 dark:bg-zinc-900 dark:border-blue-800 shadow-xs z-20 font-bold'>+</button>
+									</motion.div>
+								)}
+							</AnimatePresence>
 						</div>
 
 						{/* Titles */}
