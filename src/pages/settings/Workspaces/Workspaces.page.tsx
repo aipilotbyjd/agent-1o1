@@ -19,7 +19,6 @@ import {
 	X,
 	Layers,
 	Cpu,
-	Bell,
 } from 'lucide-react';
 import useDarkMode from '@/hooks/useDarkMode';
 import DARK_MODE from '@/constants/darkMode.constant';
@@ -171,9 +170,9 @@ const mapApiWorkspaceToCard = (w: TWorkspace, currentUserId?: string): IWorkspac
 		name: w.name,
 		tier,
 		role,
-		activeFlowsCount: (w as any).workflows_count ?? 0,
-		totalNodes: (w as any).nodes_count ?? 0,
-		activeAgentsCount: (w as any).agents_count ?? 0,
+		activeFlowsCount: w.workflows_count ?? 0,
+		totalNodes: 0,
+		activeAgentsCount: w.agents_count ?? 0,
 		members,
 		gradientFrom: g.from,
 		gradientTo: g.to,
@@ -522,16 +521,6 @@ const WorkspacesPage = () => {
 								)}
 							</button>
 
-							<button
-								className='flex h-10 w-10 cursor-pointer items-center justify-center rounded-xl transition-all'
-								style={{
-									border: `1px solid ${lineSoft}`,
-									background: `linear-gradient(180deg, ${surface2}, ${surface})`,
-									color: faintColor,
-								}}>
-								<Bell size={17} />
-							</button>
-
 							<div
 								className='flex cursor-pointer items-center gap-2.5 rounded-[14px] px-3 py-1.5 transition-all'
 								style={{ border: `1px solid ${lineSoft}`, background: surface2 }}>
@@ -581,7 +570,7 @@ const WorkspacesPage = () => {
 								fontFamily: 'Space Grotesk, sans-serif',
 								fontSize: 'clamp(40px, 5.6vw, 62px)',
 								fontWeight: 700,
-								background: isDarkTheme
+								backgroundImage: isDarkTheme
 									? 'linear-gradient(180deg, #ffffff 0%, #a78bfa 100%)'
 									: 'linear-gradient(180deg, #1a1825 30%, #7c5cff 100%)',
 								WebkitBackgroundClip: 'text',

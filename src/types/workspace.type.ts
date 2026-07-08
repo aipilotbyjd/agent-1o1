@@ -19,6 +19,9 @@ export type TWorkspace = {
 		email: string;
 		avatar: string | null;
 	};
+	member_count?: number;
+	workflows_count?: number;
+	agents_count?: number;
 	created_at: string;
 };
 

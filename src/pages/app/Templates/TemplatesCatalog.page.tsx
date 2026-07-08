@@ -27,7 +27,6 @@ import pages from '@/Routes/pages';
 import { useWorkspaceContext } from '@/context/workspaceContext';
 import {
 	useTemplates,
-	useTemplateCategories,
 	useTemplate,
 	useUseTemplate,
 	useAgentTemplates,
@@ -361,9 +360,6 @@ const TemplatesCatalogPage = () => {
 		return () => setHeaderLeft('');
 	}, [setHeaderLeft]);
 
-	// Fetch dynamic filters and categories
-	const { data: wfCategories } = useTemplateCategories();
-
 	// React-Query filter args
 	const filters = useMemo(() => {
 		const f: any = {};
@@ -376,6 +372,18 @@ const TemplatesCatalogPage = () => {
 	const { data: workflows, isLoading: isWfsLoading } = useTemplates(
 		activeTab === 'workflows' ? filters : undefined,
 	);
+	// Unfiltered fetch to derive the category dropdown options/counts (no dedicated categories endpoint)
+	const { data: allWorkflowTemplates } = useTemplates(
+		activeTab === 'workflows' ? { per_page: 100 } : undefined,
+	);
+	const wfCategories = useMemo(() => {
+		if (!allWorkflowTemplates) return [];
+		const counts = new Map<string, number>();
+		for (const t of allWorkflowTemplates) {
+			counts.set(t.category, (counts.get(t.category) || 0) + 1);
+		}
+		return Array.from(counts, ([category, count]) => ({ category, count }));
+	}, [allWorkflowTemplates]);
 	const { data: agents, isLoading: isAgentsLoading } = useAgentTemplates(
 		activeTab === 'agents' ? filters : undefined,
 	);
