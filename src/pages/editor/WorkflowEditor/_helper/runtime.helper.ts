@@ -22,29 +22,32 @@ const asScopeObject = (value: unknown): Record<string, unknown> => {
 };
 
 /**
- * Build a map of `{{Node Label.port}}` → resolved value from the outputs produced
- * so far. Mirrors the token format emitted by collectUpstreamVariables.
+ * A resolution scope keyed by node id, mirroring the backend engine's context:
+ * `{ node_2: { output: … }, nodes: { node_2: { output: … } } }`. Tokens resolve
+ * against this by dotted path, so `{{ node_2.output.city }}` and the namespaced
+ * `{{ nodes.node_2.output.city }}` both work.
  */
-export const buildTokenMap = (
+export type TRuntimeContext = Record<string, unknown>;
+
+/**
+ * Build an id-keyed runtime context from the outputs produced so far. This is the
+ * client-side mirror of the backend resolver's scope — references are by stable
+ * node **id**, never by label (labels break on rename/duplicate).
+ */
+export const buildRuntimeContext = (
 	nodes: TCanvasNode[],
 	outputs: TNodeOutputs,
-): Map<string, unknown> => {
-	const tokens = new Map<string, unknown>();
+): TRuntimeContext => {
+	const ctx: Record<string, unknown> = {};
+	const nodesScope: Record<string, unknown> = {};
 	nodes.forEach((node) => {
 		if (!(node.id in outputs)) return;
-		const def = getNodeDefinition(node.data.defKey, node.data.definition);
-		const output = outputs[node.id];
-		(def?.outputs ?? []).forEach((port) => {
-			const scoped =
-				output && typeof output === 'object' && port.name in (output as object)
-					? (output as Record<string, unknown>)[port.name]
-					: output;
-			tokens.set(`{{${node.data.label}.${port.name}}}`, scoped);
-		});
-		// Also expose the whole output under the bare label for convenience.
-		tokens.set(`{{${node.data.label}}}`, output);
+		const scope = { output: outputs[node.id] };
+		ctx[node.id] = scope;
+		nodesScope[node.id] = scope;
 	});
-	return tokens;
+	ctx.nodes = nodesScope;
+	return ctx;
 };
 
 const stringifyToken = (value: unknown): string => {
@@ -53,28 +56,81 @@ const stringifyToken = (value: unknown): string => {
 	return String(value);
 };
 
-/** Replace every `{{...}}` token in a string with its resolved value. */
-export const resolveExpressions = (input: unknown, tokens: Map<string, unknown>): unknown => {
+/** Walk a dotted/indexed path (`node_2.output.data.0.id`) into the context. */
+const getPath = (ctx: TRuntimeContext, path: string): unknown => {
+	const parts = path
+		.split('.')
+		.map((p) => p.trim())
+		.filter(Boolean);
+	let cur: unknown = ctx;
+	for (const part of parts) {
+		if (cur === null || cur === undefined) return undefined;
+		if (Array.isArray(cur)) {
+			if (!/^\d+$/.test(part)) return undefined;
+			cur = cur[Number(part)];
+		} else if (typeof cur === 'object') {
+			cur = (cur as Record<string, unknown>)[part];
+		} else {
+			return undefined;
+		}
+	}
+	return cur;
+};
+
+/** Small set of single-argument transforms for preview parity with the backend. */
+const TOKEN_FUNCTIONS: Record<string, (value: unknown) => unknown> = {
+	uppercase: (v) => stringifyToken(v).toUpperCase(),
+	lowercase: (v) => stringifyToken(v).toLowerCase(),
+	trim: (v) => stringifyToken(v).trim(),
+	length: (v) => (Array.isArray(v) || typeof v === 'string' ? v.length : stringifyToken(v).length),
+	json: (v) => JSON.stringify(v),
+};
+
+/**
+ * Resolve a single token body (the text between `{{ }}`) to its value. Supports
+ * dotted/indexed paths and one level of `fn(path)` transform. Returns `undefined`
+ * when it can't be resolved so callers can decide how to render the miss.
+ */
+const resolveToken = (body: string, ctx: TRuntimeContext): unknown => {
+	const expr = body.trim();
+	const fn = expr.match(/^([a-zA-Z_]\w*)\((.*)\)$/);
+	if (fn && TOKEN_FUNCTIONS[fn[1]]) {
+		const arg = resolveToken(fn[2], ctx);
+		return TOKEN_FUNCTIONS[fn[1]](arg);
+	}
+	return getPath(ctx, expr);
+};
+
+/**
+ * Replace every `{{ … }}` token in a string with its resolved value. If the whole
+ * string is a single token the raw typed value is returned (preserving arrays/
+ * objects/numbers); mixed strings interpolate. Unresolved tokens are left as-is
+ * so an in-progress expression still shows in the preview.
+ */
+export const resolveExpressions = (input: unknown, ctx: TRuntimeContext): unknown => {
 	if (typeof input !== 'string') return input;
 	if (!input.includes('{{')) return input;
 
-	// If the whole string is a single token, return the raw value (keeps types).
-	const single = input.match(/^\s*(\{\{[^}]+\}\})\s*$/);
-	if (single && tokens.has(single[1])) return tokens.get(single[1]);
+	const single = input.match(/^\s*\{\{([^}]+)\}\}\s*$/);
+	if (single) {
+		const value = resolveToken(single[1], ctx);
+		if (value !== undefined) return value;
+	}
 
-	return input.replace(/\{\{[^}]+\}\}/g, (match) =>
-		tokens.has(match) ? stringifyToken(tokens.get(match)) : match,
-	);
+	return input.replace(/\{\{([^}]+)\}\}/g, (match, body: string) => {
+		const value = resolveToken(body, ctx);
+		return value === undefined ? match : stringifyToken(value);
+	});
 };
 
-/** Resolve every field value's expressions against the current token map. */
+/** Resolve every field value's expressions against the current context. */
 export const resolveNodeValues = (
 	values: Record<string, unknown>,
-	tokens: Map<string, unknown>,
+	ctx: TRuntimeContext,
 ): Record<string, unknown> => {
 	const resolved: Record<string, unknown> = {};
 	Object.entries(values).forEach(([key, value]) => {
-		resolved[key] = resolveExpressions(value, tokens);
+		resolved[key] = resolveExpressions(value, ctx);
 	});
 	return resolved;
 };

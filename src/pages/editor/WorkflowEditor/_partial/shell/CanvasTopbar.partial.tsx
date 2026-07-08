@@ -60,11 +60,16 @@ export const CanvasTopbar = () => {
 			<div className="flex items-center gap-2">
 				<button
 					type="button"
-					onClick={() => dispatch({ type: 'TOGGLE_LEFT_PANEL' })}
-					className="flex h-9 items-center gap-2 rounded-xl border border-violet-200 bg-violet-50/50 px-3.5 text-xs font-bold text-violet-600 shadow-xs transition hover:bg-violet-100/70 dark:border-violet-850 dark:bg-violet-950/20 dark:text-violet-400"
+					onClick={() => dispatch({ type: 'TOGGLE_LEFT_PANEL', intent: 'home' })}
+					className={[
+						"flex h-9 items-center gap-2 rounded-xl border px-3.5 text-xs font-bold shadow-xs transition",
+						state.ui.leftPanelOpen && state.ui.leftPanelIntent === 'home'
+							? "border-violet-400 bg-violet-100 text-violet-700 dark:border-violet-600 dark:bg-violet-950/50 dark:text-violet-300"
+							: "border-violet-200 bg-violet-50/50 text-violet-600 hover:bg-violet-100/70 dark:border-violet-850 dark:bg-violet-950/20 dark:text-violet-400"
+					].join(' ')}
 				>
 					<span className="text-sm font-extrabold">+</span>
-					<span>Add Interface</span>
+					<span>Apps</span>
 				</button>
 				<button
 					type="button"

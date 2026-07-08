@@ -11,7 +11,7 @@ import type {
 	IWorkflowImport,
 	IDuplicateWorkflowDto,
 } from '@/types/workflow.type';
-import type { TExecution } from '@/types/execution.type';
+import type { TExecution, TExecuteWorkflowResponse } from '@/types/execution.type';
 import { WorkflowEndpoints as E } from './workflows.endpoints';
 
 export const WorkflowService = {
@@ -35,8 +35,8 @@ export const WorkflowService = {
 
 	execute: (ws: string, id: string, body?: IExecuteWorkflowDto) =>
 		axiosClient
-			.post<TApiResponse<TExecution>>(E.execute(ws, id), body)
-			.then(unwrap<TExecution>),
+			.post<TApiResponse<TExecuteWorkflowResponse>>(E.execute(ws, id), body)
+			.then(unwrap<TExecuteWorkflowResponse>),
 
 	activate: (ws: string, id: string) =>
 		axiosClient.post<TApiResponse<IWorkflow>>(E.activate(ws, id)).then(unwrap<IWorkflow>),
