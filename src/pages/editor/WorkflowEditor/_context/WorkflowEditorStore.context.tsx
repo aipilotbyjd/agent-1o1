@@ -13,6 +13,7 @@ import type {
 	TCanvasNodeData,
 	TNodeComment,
 	TNodeDefinition,
+	TNodeField,
 	TNodeRunStatus,
 } from '../_types/node.type';
 import type { TRunLog, TRunRecord } from '../_types/run.type';
@@ -34,6 +35,7 @@ export type TWorkflowEditorAction =
 	| { type: 'SELECT_NODE'; id: string | null }
 	| { type: 'UPDATE_NODE_VALUE'; id: string; fieldKey: string; value: unknown }
 	| { type: 'RENAME_NODE'; id: string; label: string }
+	| { type: 'CONFIGURE_NODE_FIELDS'; id: string; fields: TNodeField[] }
 	| { type: 'DELETE_SELECTED' }
 	| { type: 'DUPLICATE_SELECTED' }
 	| {
@@ -625,6 +627,31 @@ export const workflowEditorReducer = (
 			return { ...state, ui: { ...state.ui, waitingForStep: false } };
 		case 'SET_LINK_CREDENTIALS_OPEN':
 			return { ...state, ui: { ...state.ui, linkCredentialsOpen: action.open } };
+		case 'CONFIGURE_NODE_FIELDS': {
+			const next = withHistory(state);
+			return {
+				...next,
+				nodes: next.nodes.map((node) =>
+					node.id === action.id
+						? {
+								...node,
+								data: {
+									...node.data,
+									definition: {
+										...(node.data.definition ?? getNodeDefinition(node.data.defKey)!),
+										fields: action.fields,
+										outputs: action.fields.map((f) => ({
+											id: f.key,
+											name: f.label,
+											type: f.kind === 'toggle' ? 'boolean' : f.kind === 'number' ? 'number' : 'string',
+										})),
+									},
+								},
+							}
+						: node,
+				),
+			};
+		}
 		case 'PIN_NODE_OUTPUT':
 			return {
 				...state,
