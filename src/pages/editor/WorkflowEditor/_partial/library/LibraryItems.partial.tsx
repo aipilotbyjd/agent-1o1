@@ -1,8 +1,9 @@
 import type { ReactNode } from 'react';
-import { ChevronRight } from 'lucide-react';
+import { ChevronRight, Plus } from 'lucide-react';
 import type { TNodeCategoryGroup } from '../../_helper/apiNodeCatalog.helper';
 import type { TNodeDefinition } from '../../_types/node.type';
 import NodeIcon from './NodeIcon.partial';
+import CategoryIcon from './CategoryIcon.partial';
 import { tintStyle } from './library.util';
 
 const startNodeDrag = (event: React.DragEvent, node: TNodeDefinition) => {
@@ -21,19 +22,22 @@ export const NodeRow = ({ node, onAdd }: TNodeProps) => (
 		title={node.description}
 		onDragStart={(event) => startNodeDrag(event, node)}
 		onClick={() => onAdd(node)}
-		className='group flex w-full cursor-grab items-center gap-3.5 rounded-xl border border-transparent p-2.5 text-left transition hover:bg-zinc-50 dark:hover:bg-white/[0.04]'>
+		className='group flex w-full cursor-grab items-center gap-3.5 rounded-xl border border-transparent p-2.5 text-left transition hover:border-primary-200/70 hover:bg-primary-50/60 hover:shadow-[0_1px_2px_rgba(147,51,234,0.06)] dark:hover:border-primary-500/25 dark:hover:bg-primary-500/[0.07]'>
 		<span
 			className='flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-base transition group-hover:scale-105'
 			style={tintStyle(node.colorHex)}>
 			<NodeIcon icon={node.icon} size={16} />
 		</span>
 		<span className='min-w-0 flex-1'>
-			<span className='block truncate text-xs font-bold text-zinc-900 transition group-hover:text-zinc-950 dark:text-zinc-100 dark:group-hover:text-white'>
+			<span className='block truncate text-xs font-bold text-zinc-900 transition group-hover:text-primary-700 dark:text-zinc-100 dark:group-hover:text-primary-300'>
 				{node.label}
 			</span>
 			<span className='mt-0.5 line-clamp-2 text-[10px] leading-normal text-zinc-400 dark:text-zinc-500'>
 				{node.description}
 			</span>
+		</span>
+		<span className='flex h-6 w-6 shrink-0 translate-x-1 items-center justify-center rounded-lg bg-primary-100 text-primary-600 opacity-0 transition-all group-hover:translate-x-0 group-hover:opacity-100 dark:bg-primary-500/15 dark:text-primary-300'>
+			<Plus size={14} strokeWidth={2.5} />
 		</span>
 	</button>
 );
@@ -67,9 +71,9 @@ export const CategoryRow = ({ group, onSelect }: TGroupProps) => (
 		onClick={() => onSelect(group)}
 		className='group flex w-full items-center gap-3.5 rounded-2xl border border-transparent p-2.5 text-left transition hover:bg-zinc-50 dark:hover:bg-white/[0.03]'>
 		<span
-			className='flex h-11 w-11 shrink-0 items-center justify-center rounded-xl text-lg transition-all group-hover:scale-[1.03]'
+			className='flex h-11 w-11 shrink-0 items-center justify-center rounded-xl transition-all group-hover:scale-[1.03]'
 			style={tintStyle(group.colorHex)}>
-			{group.icon}
+			<CategoryIcon slug={group.slug} label={group.label} size={20} />
 		</span>
 		<span className='min-w-0 flex-1'>
 			<span className='block truncate text-sm font-bold text-zinc-900 transition group-hover:text-zinc-950 dark:text-zinc-100 dark:group-hover:text-white'>
@@ -98,9 +102,9 @@ export const AppCard = ({ group, onSelect }: TGroupProps) => (
 			/>
 		)}
 		<span
-			className='flex h-10 w-10 items-center justify-center rounded-xl text-lg transition-all group-hover:scale-105'
+			className='flex h-10 w-10 items-center justify-center rounded-xl transition-all group-hover:scale-105'
 			style={tintStyle(group.colorHex)}>
-			{group.icon}
+			<CategoryIcon slug={group.slug} label={group.label} size={18} />
 		</span>
 		<span className='mt-2 line-clamp-1 text-[10px] font-bold text-zinc-600 dark:text-zinc-300'>
 			{group.label}

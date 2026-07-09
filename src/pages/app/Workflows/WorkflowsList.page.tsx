@@ -317,6 +317,20 @@ const WorkflowsListPage = () => {
 		}
 	};
 
+	const handleQuickCreateWorkflow = async () => {
+		if (!hasWorkspace || createWorkflowMutation.isPending) return;
+		try {
+			const res = await createWorkflowMutation.mutateAsync({
+				name: 'Untitled Workflow',
+				nodes: [],
+				connections: [],
+			});
+			navigate(`${pages.editor.subPages.editWorkflow.to}/${currentWorkspaceId}/${res.id}`);
+		} catch {
+			// Error is surfaced by the mutation hook
+		}
+	};
+
 	const handleCreateFolder = async (e: React.FormEvent) => {
 		e.preventDefault();
 		if (!newFolderName.trim()) return;
@@ -683,8 +697,8 @@ const WorkflowsListPage = () => {
 							type='button'
 							whileHover={{ scale: 1.02, y: -1 }}
 							whileTap={{ scale: 0.98 }}
-							onClick={() => setIsCreateWorkflowOpen(true)}
-							disabled={!hasWorkspace}
+							onClick={handleQuickCreateWorkflow}
+							disabled={!hasWorkspace || createWorkflowMutation.isPending}
 							className='flex h-10 cursor-pointer items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 px-4.5 text-xs font-bold text-white shadow-md shadow-violet-500/20 transition-all hover:from-violet-500 hover:to-indigo-500 disabled:cursor-not-allowed disabled:opacity-60'>
 							<Plus size={15} strokeWidth={2.5} />
 							New Workflow

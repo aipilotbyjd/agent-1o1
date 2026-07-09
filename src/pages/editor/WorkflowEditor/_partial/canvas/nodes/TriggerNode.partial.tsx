@@ -32,6 +32,7 @@ import { useWorkflowRouteParams } from '../../../_hooks/useWorkflowRouteParams.h
 import { useWorkflowEditor } from '../../../_context/WorkflowEditorProvider.context';
 import { useMemo, useState } from 'react';
 import NodeFields from './NodeFields.partial';
+import { PortHandles } from './BaseNode.partial';
 import Modal from '../../dialogs/Modal.partial';
 import type { TNodeField, TNodePort } from '../../../_types/node.type';
 

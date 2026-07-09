@@ -10,21 +10,35 @@ import {
 } from 'lucide-react';
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { useCreateWorkflowVersion } from '@/api/modules/workflows';
+import { useCreateWorkflowVersion, useUpdateWorkflow } from '@/api/modules/workflows';
 import { useWorkflowEditor } from '../../_context/WorkflowEditorProvider.context';
 import { buildVersionPayload } from '../../_helper/workflowApiTransform.helper';
 import { useRunWorkflow } from '../../_hooks/useRunWorkflow.hook';
 import { useWorkflowShellStore } from '@/store/workflowShell.store';
+import { EditableWorkflowName } from './Topbar.partial';
 
 export const CanvasTopbar = () => {
 	const { state, dispatch } = useWorkflowEditor();
 	const { runWorkflow, stopRun } = useRunWorkflow();
 	const saveVersion = useCreateWorkflowVersion(state.workflow.workspaceId ?? '');
+	const updateWorkflow = useUpdateWorkflow(state.workflow.workspaceId ?? '');
 	const setGovModalOpen = useWorkflowShellStore((store) => store.setGovModalOpen);
 	const setGovModalTab = useWorkflowShellStore((store) => store.setGovModalTab);
 	const [isSaveDropdownOpen, setIsSaveDropdownOpen] = useState(false);
 	const isRunning = state.run.status === 'running';
 	const isRunDisabled = state.nodes.length === 0 && state.ui.emptyCanvasView !== 'chat-started';
+
+	const handleRenameWorkflow = (name: string) => {
+		dispatch({ type: 'SET_WORKFLOW_META', patch: { name, savingState: 'dirty' } });
+		if (!state.workflow.workspaceId || !state.workflow.apiId) return;
+		updateWorkflow.mutate(
+			{ id: state.workflow.apiId, body: { name } },
+			{
+				onSuccess: () => dispatch({ type: 'SET_WORKFLOW_META', patch: { savingState: 'saved' } }),
+				onError: () => dispatch({ type: 'SET_SAVE_STATE', savingState: 'error' }),
+			},
+		);
+	};
 
 	const handleSave = () => {
 		if (!state.workflow.workspaceId || !state.workflow.apiId) {
@@ -58,6 +72,13 @@ export const CanvasTopbar = () => {
 		<div className="flex h-14 shrink-0 items-center justify-between border-b border-zinc-200 bg-white px-5 dark:border-white/10 dark:bg-[#07080b] select-none z-10">
 			{/* Left side actions */}
 			<div className="flex items-center gap-2">
+				<EditableWorkflowName
+					name={state.workflow.name}
+					onSave={handleRenameWorkflow}
+					className="max-w-[200px] truncate rounded-md px-1.5 py-1 text-left text-sm font-bold text-zinc-800 hover:bg-zinc-100 dark:text-zinc-100 dark:hover:bg-white/[0.06]"
+					inputClassName="max-w-[200px] rounded-md border border-violet-300 bg-white px-1.5 py-1 text-sm font-bold text-zinc-800 outline-none focus:ring-1 focus:ring-violet-500 dark:border-violet-700 dark:bg-zinc-900 dark:text-zinc-100"
+				/>
+				<div className="h-6 w-px bg-zinc-200 dark:bg-zinc-800" />
 				<button
 					type="button"
 					onClick={() => dispatch({ type: 'TOGGLE_LEFT_PANEL', intent: 'home' })}

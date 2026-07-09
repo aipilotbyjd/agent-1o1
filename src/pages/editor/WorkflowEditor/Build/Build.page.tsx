@@ -118,7 +118,12 @@ const BuildPage = () => {
 				<WorkspaceSettingsPage />
 			) : (
 				<>
-					<Topbar />
+					{/* Hide the editor top header on mobile while the AI builder panel is
+					    open — the panel has its own header (history/new chat/exit).
+					    Keep it visible on desktop (md and up). */}
+					<div className={state.ui.aiPanelOpen ? 'hidden md:contents' : 'contents'}>
+						<Topbar />
+					</div>
 					<div className='relative flex flex-1 min-h-0'>
 						<AnimatePresence initial={false}>
 							{state.ui.aiPanelOpen && (

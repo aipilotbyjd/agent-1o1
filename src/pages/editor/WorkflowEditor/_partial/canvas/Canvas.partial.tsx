@@ -356,9 +356,9 @@ const Canvas = () => {
 				className='workflow-react-flow'>
 				<Background
 					variant={BackgroundVariant.Dots}
-					color={isDarkTheme ? 'rgba(255,255,255,.07)' : 'rgba(0,0,0,.06)'}
-					gap={24}
-					size={1.5}
+					color={isDarkTheme ? 'rgba(255,255,255,.14)' : 'rgba(0,0,0,.13)'}
+					gap={22}
+					size={2}
 				/>
 				{state.ui.miniMapOpen && (
 					<MiniMap
