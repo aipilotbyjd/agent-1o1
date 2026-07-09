@@ -151,9 +151,9 @@ const Sparkline = () => (
 const workspaceData: Record<string, { folders: IFolder[]; workflows: IWorkflow[] }> = {
 	'amaan-studio': {
 		folders: [
-			{ id: 'sales', name: 'Sales Operations', color: 'bg-indigo-600' },
-			{ id: 'marketing', name: 'Marketing Automations', color: 'bg-rose-500' },
-			{ id: 'ai', name: 'AI Core Agents', color: 'bg-violet-600' },
+			{ id: 'sales', name: 'Sales Operations', color: '#4f46e5' },
+			{ id: 'marketing', name: 'Marketing Automations', color: '#f43f5e' },
+			{ id: 'ai', name: 'AI Core Agents', color: '#7c3aed' },
 		],
 		workflows: [
 			{
@@ -247,8 +247,8 @@ const workspaceData: Record<string, { folders: IFolder[]; workflows: IWorkflow[]
 	},
 	personal: {
 		folders: [
-			{ id: 'quick-scripts', name: 'Quick Scripts', color: 'bg-emerald-600' },
-			{ id: 'sandbox-runs', name: 'Sandbox Runs', color: 'bg-amber-500' },
+			{ id: 'quick-scripts', name: 'Quick Scripts', color: '#059669' },
+			{ id: 'sandbox-runs', name: 'Sandbox Runs', color: '#f59e0b' },
 		],
 		workflows: [
 			{
@@ -386,7 +386,7 @@ export default function WorkspaceListPage() {
 	const [newWfApps, setNewWfApps] = useState<string[]>([]);
 
 	const [newFolderName, setNewFolderName] = useState('');
-	const [newFolderColor, setNewFolderColor] = useState('bg-indigo-600');
+	const [newFolderColor, setNewFolderColor] = useState('#4f46e5');
 
 	const handleCreateWorkflow = (e: React.FormEvent) => {
 		e.preventDefault();
@@ -440,7 +440,7 @@ export default function WorkspaceListPage() {
 
 		// Reset inputs
 		setNewFolderName('');
-		setNewFolderColor('bg-indigo-600');
+		setNewFolderColor('#4f46e5');
 		setIsCreateFolderOpen(false);
 
 		triggerToast(`Folder "${newFolder.name}" created successfully!`);
@@ -938,7 +938,8 @@ export default function WorkspaceListPage() {
 												)}
 											</span>
 											<div
-												className={`h-7 w-7 rounded-lg ${folder.color} flex shrink-0 items-center justify-center text-white shadow-sm`}>
+												style={{ backgroundColor: folder.color }}
+											className='flex h-7 w-7 shrink-0 items-center justify-center rounded-lg text-white shadow-sm'>
 												<Folder size={14} className='fill-white/10' />
 											</div>
 											<span className='text-slate-805 dark:text-zinc-250 text-xs font-black'>
@@ -1559,11 +1560,16 @@ export default function WorkspaceListPage() {
 										</label>
 										<div className='flex items-center gap-2'>
 											{[
-												{ label: 'Indigo', value: 'bg-indigo-600' },
-												{ label: 'Rose', value: 'bg-rose-500' },
-												{ label: 'Violet', value: 'bg-violet-600' },
-												{ label: 'Emerald', value: 'bg-emerald-600' },
-												{ label: 'Amber', value: 'bg-amber-500' },
+												{ label: 'Indigo', value: '#4f46e5' },
+												{ label: 'Rose', value: '#f43f5e' },
+												{ label: 'Violet', value: '#7c3aed' },
+												{ label: 'Emerald', value: '#059669' },
+												{ label: 'Amber', value: '#f59e0b' },
+												{ label: 'Blue', value: '#3b82f6' },
+												{ label: 'Teal', value: '#14b8a6' },
+												{ label: 'Fuchsia', value: '#d946ef' },
+												{ label: 'Lime', value: '#84cc16' },
+												{ label: 'Slate', value: '#64748b' },
 											].map((color) => {
 												const isSelected = newFolderColor === color.value;
 												return (
@@ -1574,7 +1580,8 @@ export default function WorkspaceListPage() {
 														onClick={() =>
 															setNewFolderColor(color.value)
 														}
-														className={`h-7 w-7 rounded-full ${color.value} border-2 transition ${
+														style={{ backgroundColor: color.value }}
+														className={`h-7 w-7 rounded-full border-2 transition ${
 															isSelected
 																? 'scale-110 border-slate-800 shadow-md dark:border-white'
 																: 'border-transparent hover:scale-105'

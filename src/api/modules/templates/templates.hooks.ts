@@ -10,12 +10,6 @@ export const useTemplates = (filters?: ITemplateFilters) =>
 		queryFn: ({ signal }) => TemplateService.list(filters, signal),
 	});
 
-export const useTemplateCategories = () =>
-	useQuery({
-		queryKey: templateKeys.categories(),
-		queryFn: ({ signal }) => TemplateService.categories(signal),
-	});
-
 export const useTemplate = (id: string) =>
 	useQuery({
 		queryKey: templateKeys.detail(id),

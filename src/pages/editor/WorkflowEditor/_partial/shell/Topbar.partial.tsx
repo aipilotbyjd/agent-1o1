@@ -7,8 +7,8 @@ import {
 	Moon,
 	Square,
 	Sun,
-	LayoutGrid,
-	Zap,
+	Boxes,
+	Rocket,
 	Share,
 	ChevronDown,
 	Save,
@@ -19,32 +19,115 @@ import {
 	Sparkles,
 } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import type { ReactNode } from 'react';
 import { Link } from 'react-router';
 import DARK_MODE from '@/constants/darkMode.constant';
 import useDarkMode from '@/hooks/useDarkMode';
-import { useCreateWorkflowVersion } from '@/api/modules/workflows';
+import { useCreateWorkflowVersion, useUpdateWorkflow } from '@/api/modules/workflows';
 import { useWorkflowEditor } from '../../_context/WorkflowEditorProvider.context';
 import { buildVersionPayload } from '../../_helper/workflowApiTransform.helper';
 import { useRunWorkflow } from '../../_hooks/useRunWorkflow.hook';
 import { useAiChatStore } from '@/store/aiChat.store';
 import { useWorkflowShellStore } from '@/store/workflowShell.store';
 
+const EditableWorkflowName = ({
+	name,
+	onSave,
+	className,
+	inputClassName,
+}: {
+	name: string;
+	onSave: (name: string) => void;
+	className?: string;
+	inputClassName?: string;
+}) => {
+	const [isEditing, setIsEditing] = useState(false);
+	const [draft, setDraft] = useState(name);
+	const inputRef = useRef<HTMLInputElement>(null);
+
+	useEffect(() => {
+		setDraft(name);
+	}, [name]);
+
+	useEffect(() => {
+		if (isEditing) {
+			inputRef.current?.focus();
+			inputRef.current?.select();
+		}
+	}, [isEditing]);
+
+	const commit = () => {
+		const trimmed = draft.trim();
+		if (!trimmed || trimmed === name) {
+			setDraft(name);
+			setIsEditing(false);
+			return;
+		}
+		setIsEditing(false);
+		onSave(trimmed);
+	};
+
+	if (isEditing) {
+		return (
+			<input
+				ref={inputRef}
+				value={draft}
+				onChange={(e) => setDraft(e.target.value)}
+				onBlur={commit}
+				onKeyDown={(e) => {
+					if (e.key === 'Enter') {
+						e.preventDefault();
+						commit();
+					} else if (e.key === 'Escape') {
+						e.preventDefault();
+						setDraft(name);
+						setIsEditing(false);
+					}
+				}}
+				className={
+					inputClassName ??
+					'rounded-md border border-violet-300 bg-white px-1.5 py-0.5 text-sm font-bold text-zinc-800 outline-none focus:ring-1 focus:ring-violet-500 dark:border-violet-700 dark:bg-zinc-900 dark:text-zinc-100'
+				}
+			/>
+		);
+	}
+
+	return (
+		<button
+			type='button'
+			title='Click to rename workflow'
+			onClick={() => setIsEditing(true)}
+			className={
+				className ??
+				'truncate rounded-md px-1 py-0.5 text-left font-bold text-zinc-800 hover:bg-zinc-100 dark:text-zinc-100 dark:hover:bg-white/[0.06]'
+			}>
+			{name}
+		</button>
+	);
+};
+
 const PurpleOutlineButton = ({
 	children,
 	onClick,
 	disabled,
+	active,
 }: {
 	children: ReactNode;
 	onClick?: () => void;
 	disabled?: boolean;
+	active?: boolean;
 }) => (
 	<button
 		type='button'
 		onClick={onClick}
 		disabled={disabled}
-		className='flex h-9 items-center gap-2 rounded-lg border border-zinc-200 bg-white px-3 text-xs font-semibold text-violet-600 shadow-xs transition hover:bg-zinc-50 disabled:cursor-not-allowed disabled:opacity-40 dark:border-zinc-800/40 dark:bg-zinc-900 dark:text-violet-400 dark:hover:bg-white/[0.04]'>
+		className={[
+			'flex h-9 items-center gap-2 rounded-lg border px-3 text-xs font-semibold shadow-xs transition disabled:cursor-not-allowed disabled:opacity-40',
+			active
+				? 'border-violet-300 bg-violet-50 text-violet-700 dark:border-violet-700/60 dark:bg-violet-950/40 dark:text-violet-300'
+				: 'border-zinc-200 bg-white text-violet-600 hover:bg-zinc-50 dark:border-zinc-800/40 dark:bg-zinc-900 dark:text-violet-400 dark:hover:bg-white/[0.04]',
+		].join(' ')}>
 		{children}
 	</button>
 );
@@ -84,11 +167,24 @@ const Topbar = () => {
 	const { isDarkTheme, setDarkModeStatus } = useDarkMode();
 	const { runWorkflow, stopRun } = useRunWorkflow();
 	const saveVersion = useCreateWorkflowVersion(state.workflow.workspaceId ?? '');
+	const updateWorkflow = useUpdateWorkflow(state.workflow.workspaceId ?? '');
 	const setGovModalOpen = useWorkflowShellStore((store) => store.setGovModalOpen);
 	const setGovModalTab = useWorkflowShellStore((store) => store.setGovModalTab);
 	const [isSaveDropdownOpen, setIsSaveDropdownOpen] = useState(false);
 	const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 	const isRunning = state.run.status === 'running';
+
+	const handleRenameWorkflow = (name: string) => {
+		dispatch({ type: 'SET_WORKFLOW_META', patch: { name, savingState: 'dirty' } });
+		if (!state.workflow.workspaceId || !state.workflow.apiId) return;
+		updateWorkflow.mutate(
+			{ id: state.workflow.apiId, body: { name } },
+			{
+				onSuccess: () => dispatch({ type: 'SET_WORKFLOW_META', patch: { savingState: 'saved' } }),
+				onError: () => dispatch({ type: 'SET_SAVE_STATE', savingState: 'error' }),
+			},
+		);
+	};
 
 	const handleSave = () => {
 		if (!state.workflow.workspaceId || !state.workflow.apiId) {
@@ -131,18 +227,8 @@ const Topbar = () => {
 						</svg>
 						<span className='hidden sm:inline'>Pipeline</span>
 						<span className='hidden sm:inline mx-1 text-zinc-300 dark:text-zinc-700'>/</span>
-						<span className='font-bold text-zinc-800 dark:text-zinc-100'>Untitled Workflow</span>
 					</span>
-					<button
-						type='button'
-						title='Rename Workflow'
-						className='flex h-6 w-6 items-center justify-center rounded-md text-zinc-400 hover:bg-zinc-100 hover:text-zinc-700 dark:hover:bg-white/[0.05] dark:hover:text-white'
-					>
-						<svg className='h-3.5 w-3.5 fill-none stroke-current' viewBox='0 0 24 24' strokeWidth='2.5' strokeLinecap='round' strokeLinejoin='round'>
-							<path d='M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7' />
-							<path d='M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4z' />
-						</svg>
-					</button>
+					<EditableWorkflowName name={state.workflow.name} onSave={handleRenameWorkflow} />
 				</div>
 
 				{/* Right Section: Notification bell with badge dot */}
@@ -182,32 +268,52 @@ const Topbar = () => {
 
 				<div className='h-6 w-px bg-zinc-200 dark:bg-zinc-800 hidden sm:block' />
 
+				<EditableWorkflowName
+					name={state.workflow.name}
+					onSave={handleRenameWorkflow}
+					className='max-w-[220px] truncate rounded-md px-1.5 py-1 text-left text-sm font-bold text-zinc-800 hover:bg-zinc-100 dark:text-zinc-100 dark:hover:bg-white/[0.06] hidden sm:block'
+					inputClassName='max-w-[220px] rounded-md border border-violet-300 bg-white px-1.5 py-1 text-sm font-bold text-zinc-800 outline-none focus:ring-1 focus:ring-violet-500 dark:border-violet-700 dark:bg-zinc-900 dark:text-zinc-100'
+				/>
+
+				<div className='h-6 w-px bg-zinc-200 dark:bg-zinc-800 hidden sm:block' />
+
 				{/* Add buttons */}
 				<div className='flex items-center gap-2'>
-					<PurpleOutlineButton>
-						<LayoutGrid size={14} className='text-violet-600 dark:text-violet-400' />
-						<span className='hidden sm:inline'>Add Interface</span>
-					</PurpleOutlineButton>
 					<PurpleOutlineButton onClick={() => dispatch({ type: 'TOGGLE_AI_PANEL' })}>
 						<Sparkles size={14} className='text-violet-600 dark:text-violet-400' />
 						<span className='hidden sm:inline'>{state.ui.aiPanelOpen ? 'Hide Chat' : 'AI Chat'}</span>
 					</PurpleOutlineButton>
-					{state.ui.leftPanelOpen ? (
+					{state.ui.leftPanelOpen && state.ui.leftPanelIntent === 'home' ? (
 						<button
 							type='button'
-							onClick={() => dispatch({ type: 'TOGGLE_LEFT_PANEL' })}
+							onClick={() => dispatch({ type: 'TOGGLE_LEFT_PANEL', intent: 'home' })}
 							className='dark:bg-violet-750 dark:hover:bg-violet-650 flex h-9 cursor-pointer items-center gap-2 rounded-lg bg-violet-600 px-3 text-xs font-semibold text-white shadow-xs transition hover:bg-violet-700'>
-							<Zap size={14} className='fill-white text-white' />
-							<span className='hidden sm:inline'>Add Trigger</span>
+							<Boxes size={14} className='text-white' />
+							<span className='hidden sm:inline'>Apps</span>
 						</button>
 					) : (
 						<PurpleOutlineButton
-							onClick={() => dispatch({ type: 'TOGGLE_LEFT_PANEL' })}>
-							<Zap
+							onClick={() => dispatch({ type: 'TOGGLE_LEFT_PANEL', intent: 'home' })}>
+							<Boxes size={14} className='text-violet-600 dark:text-violet-400' />
+							<span className='hidden sm:inline'>Apps</span>
+						</PurpleOutlineButton>
+					)}
+					{state.ui.leftPanelOpen && state.ui.leftPanelIntent === 'trigger' ? (
+						<button
+							type='button'
+							onClick={() => dispatch({ type: 'TOGGLE_LEFT_PANEL', intent: 'trigger' })}
+							className='dark:bg-violet-750 dark:hover:bg-violet-650 flex h-9 cursor-pointer items-center gap-2 rounded-lg bg-violet-600 px-3 text-xs font-semibold text-white shadow-xs transition hover:bg-violet-700'>
+							<Rocket size={14} className='fill-white text-white' />
+							<span className='hidden sm:inline'>Triggers</span>
+						</button>
+					) : (
+						<PurpleOutlineButton
+							onClick={() => dispatch({ type: 'TOGGLE_LEFT_PANEL', intent: 'trigger' })}>
+							<Rocket
 								size={14}
 								className='fill-violet-600 text-violet-600 dark:fill-violet-400 dark:text-violet-400'
 							/>
-							<span className='hidden sm:inline'>Add Trigger</span>
+							<span className='hidden sm:inline'>Triggers</span>
 						</PurpleOutlineButton>
 					)}
 				</div>

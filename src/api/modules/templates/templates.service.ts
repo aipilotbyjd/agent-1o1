@@ -5,7 +5,6 @@ import type {
 	ITemplate,
 	ITemplateDetail,
 	ITemplateFilters,
-	TTemplateCategory,
 	IAgentTemplate,
 	ITemplateCollection,
 } from '@/types/template.type';
@@ -22,11 +21,6 @@ export const TemplateService = {
 		axiosClient
 			.get<TApiResponse<ITemplateDetail>>(E.detail(id), { signal })
 			.then(unwrap<ITemplateDetail>),
-
-	categories: (signal?: AbortSignal) =>
-		axiosClient
-			.get<TApiResponse<TTemplateCategory[]>>(E.categories(), { signal })
-			.then(unwrap<TTemplateCategory[]>),
 
 	apply: (ws: string, templateId: string, workflowName?: string) =>
 		axiosClient

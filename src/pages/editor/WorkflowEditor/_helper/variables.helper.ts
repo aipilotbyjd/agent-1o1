@@ -38,7 +38,10 @@ export const collectUpstreamVariables = (
 			nodeId: node.id,
 			nodeLabel: node.data.label,
 			outputId: output.id,
-			token: `{{${node.data.label}.${output.name}}}`,
+			// Id-based, stable reference the backend resolver understands
+			// (`{{ node_2.output.city }}`). The friendly label is display-only —
+			// see nodeLabel — so renaming/duplicating a node never breaks tokens.
+			token: `{{${node.id}.output.${output.name}}}`,
 		}));
 	});
 };

@@ -8,6 +8,7 @@ import {
 	useOnboardingStripeCheckout,
 	useOnboardingSubmitDiscovery,
 	useOnboardingComplete,
+	useOnboardingState,
 } from '@/api/modules/onboarding';
 import { useOnboardingStore } from '../_context/OnboardingStore.context';
 import { parseEmails, isValidEmail } from '../_helper/onboarding.helper';
@@ -25,7 +26,8 @@ export const useOnboardingSubmit = () => {
 	const selectPlanMutation = useOnboardingSelectPlan();
 	const submitDiscoveryMutation = useOnboardingSubmitDiscovery();
 	const completeMutation = useOnboardingComplete();
-	
+	const { data: onboardingData } = useOnboardingState(false);
+
 	const { state, dispatch } = useOnboardingStore();
 	const { advanceStep } = useOnboardingNavigation();
 
@@ -122,7 +124,12 @@ export const useOnboardingSubmit = () => {
 				if (selectedPlan === 'free') {
 					await selectPlanMutation.mutateAsync({ plan_slug: 'free' });
 				} else {
-					await stripeCheckoutMutation.mutateAsync({ plan_slug: selectedPlan });
+					const plan = onboardingData?.meta?.plans?.find((p) => p.slug === selectedPlan);
+					if (!plan) return;
+					await stripeCheckoutMutation.mutateAsync({
+						plan_id: plan.id,
+						interval: 'monthly',
+					});
 					return; // Redirecting, don't advance
 				}
 			} catch {

@@ -51,7 +51,7 @@ export type TWorkflowEditorAction =
 	| { type: 'REDO' }
 	| { type: 'SET_WORKFLOW_META'; patch: Partial<TWorkflowMeta> }
 	| { type: 'SET_SAVE_STATE'; savingState: TWorkflowMeta['savingState'] }
-	| { type: 'TOGGLE_LEFT_PANEL' }
+	| { type: 'TOGGLE_LEFT_PANEL'; intent?: 'home' | 'trigger' }
 	| { type: 'TOGGLE_RUN_PANEL' }
 	| { type: 'TOGGLE_AI_PANEL' }
 	| { type: 'TOGGLE_MINIMAP' }
@@ -89,6 +89,7 @@ export type TWorkflowEditorAction =
 	| { type: 'SET_CANVAS_SEARCH'; open?: boolean; query?: string }
 	| { type: 'SET_TEMPLATE_LIBRARY'; open: boolean }
 	| { type: 'SET_NODE_DOC'; open: boolean; nodeId?: string | null }
+	| { type: 'SET_NODE_EXPANDED'; open: boolean; nodeId?: string | null }
 	| { type: 'SET_DIFF_VIEWER'; open: boolean }
 	| { type: 'SET_STEP_MODE'; enabled: boolean }
 	| { type: 'STEP_NEXT' }
@@ -133,6 +134,7 @@ export const initialWorkflowEditorState: TWorkflowEditorState = {
 	},
 	ui: {
 		leftPanelOpen: false,
+		leftPanelIntent: 'home',
 		runPanelOpen: false,
 		aiPanelOpen: false,
 		miniMapOpen: false,
@@ -148,6 +150,8 @@ export const initialWorkflowEditorState: TWorkflowEditorState = {
 		diffViewerOpen: false,
 		nodeDocOpen: false,
 		nodeDocNodeId: null,
+		nodeExpandedOpen: false,
+		nodeExpandedId: null,
 		stepMode: false,
 		waitingForStep: false,
 		linkCredentialsOpen: false,
@@ -397,12 +401,16 @@ export const workflowEditorReducer = (
 		case 'SET_SAVE_STATE':
 			return { ...state, workflow: { ...state.workflow, savingState: action.savingState } };
 		case 'TOGGLE_LEFT_PANEL': {
-			const willBeOpen = !state.ui.leftPanelOpen;
+			const requestedIntent = action.intent ?? 'home';
+			const isSwitchingIntent =
+				state.ui.leftPanelOpen && state.ui.leftPanelIntent !== requestedIntent;
+			const willBeOpen = isSwitchingIntent ? true : !state.ui.leftPanelOpen;
 			return {
 				...state,
 				ui: {
 					...state.ui,
 					leftPanelOpen: willBeOpen,
+					leftPanelIntent: willBeOpen ? requestedIntent : state.ui.leftPanelIntent,
 					aiPanelOpen: willBeOpen ? false : state.ui.aiPanelOpen,
 				},
 			};
@@ -614,6 +622,15 @@ export const workflowEditorReducer = (
 					...state.ui,
 					nodeDocOpen: action.open,
 					nodeDocNodeId: action.nodeId ?? state.ui.nodeDocNodeId,
+				},
+			};
+		case 'SET_NODE_EXPANDED':
+			return {
+				...state,
+				ui: {
+					...state.ui,
+					nodeExpandedOpen: action.open,
+					nodeExpandedId: action.nodeId ?? state.ui.nodeExpandedId,
 				},
 			};
 		case 'SET_DIFF_VIEWER':

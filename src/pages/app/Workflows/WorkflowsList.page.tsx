@@ -68,11 +68,16 @@ interface IFolder {
 
 const ROOT_FOLDER_ID = '__root__';
 const FOLDER_COLOR_OPTIONS = [
-	{ label: 'Indigo', value: 'bg-indigo-600' },
-	{ label: 'Rose', value: 'bg-rose-500' },
-	{ label: 'Violet', value: 'bg-violet-600' },
-	{ label: 'Emerald', value: 'bg-emerald-600' },
-	{ label: 'Amber', value: 'bg-amber-500' },
+	{ label: 'Indigo', value: '#4f46e5' },
+	{ label: 'Rose', value: '#f43f5e' },
+	{ label: 'Violet', value: '#7c3aed' },
+	{ label: 'Emerald', value: '#059669' },
+	{ label: 'Amber', value: '#f59e0b' },
+	{ label: 'Blue', value: '#3b82f6' },
+	{ label: 'Teal', value: '#14b8a6' },
+	{ label: 'Fuchsia', value: '#d946ef' },
+	{ label: 'Lime', value: '#84cc16' },
+	{ label: 'Slate', value: '#64748b' },
 ] as const;
 
 const getInitials = (name: string) =>
@@ -150,7 +155,7 @@ const WorkflowsListPage = () => {
 		return apiFolders.map((f) => ({
 			id: f.id,
 			name: f.name,
-			color: f.color || 'bg-indigo-600',
+			color: f.color || '#4f46e5',
 		}));
 	}, [apiFolders]);
 
@@ -214,10 +219,10 @@ const WorkflowsListPage = () => {
 	}, [searchParams, setSearchParams]);
 
 	const [newFolderName, setNewFolderName] = useState('');
-	const [newFolderColor, setNewFolderColor] = useState('bg-indigo-600');
+	const [newFolderColor, setNewFolderColor] = useState('#4f46e5');
 	const [editingFolder, setEditingFolder] = useState<IFolder | null>(null);
 	const [editFolderName, setEditFolderName] = useState('');
-	const [editFolderColor, setEditFolderColor] = useState('bg-indigo-600');
+	const [editFolderColor, setEditFolderColor] = useState('#4f46e5');
 
 	const [renamingId, setRenamingId] = useState<string | null>(null);
 	const [renameValue, setRenameValue] = useState('');
@@ -228,6 +233,8 @@ const WorkflowsListPage = () => {
 	const [searchQuery, setSearchQuery] = useState('');
 	const [isGridView, setIsGridView] = useState(true);
 	const [toast, setToast] = useState<{ message: string; type: 'success' | 'info' } | null>(null);
+	const [draggedWorkflowId, setDraggedWorkflowId] = useState<string | null>(null);
+	const [dragOverFolderId, setDragOverFolderId] = useState<string | null>(null);
 
 	useEffect(() => {
 		setHeaderLeft(<Breadcrumb list={[{ ...pages.app.subPages.workflows }]} />);
@@ -284,7 +291,7 @@ const WorkflowsListPage = () => {
 
 	const workflowGroups = useMemo<IFolder[]>(() => {
 		if (folderGrouped[ROOT_FOLDER_ID].length === 0) return folders;
-		return [{ id: ROOT_FOLDER_ID, name: 'Root workflows', color: 'bg-slate-600' }, ...folders];
+		return [{ id: ROOT_FOLDER_ID, name: 'Root workflows', color: '#475569' }, ...folders];
 	}, [folderGrouped, folders]);
 
 	const handleCreateWorkflow = async (e: React.FormEvent) => {
@@ -428,6 +435,48 @@ const WorkflowsListPage = () => {
 		} catch {
 			// Error is surfaced by the mutation hook
 		}
+	};
+
+	// Drag and drop handlers
+	const handleDragStart = (e: React.DragEvent, workflowId: string) => {
+		setDraggedWorkflowId(workflowId);
+		e.dataTransfer.effectAllowed = 'move';
+		e.dataTransfer.setData('text/plain', workflowId);
+	};
+
+	const handleDragEnd = () => {
+		setDraggedWorkflowId(null);
+		setDragOverFolderId(null);
+	};
+
+	const handleDragOver = (e: React.DragEvent) => {
+		e.preventDefault();
+		e.dataTransfer.dropEffect = 'move';
+	};
+
+	const handleDragEnter = (folderId: string) => {
+		setDragOverFolderId(folderId);
+	};
+
+	const handleDragLeave = (e: React.DragEvent, folderId: string) => {
+		// Only clear if we're leaving the folder entirely, not entering a child element
+		if (e.currentTarget === e.target) {
+			setDragOverFolderId(null);
+		}
+	};
+
+	const handleDropOnFolder = async (e: React.DragEvent, folderId: string) => {
+		e.preventDefault();
+		e.stopPropagation();
+
+		const workflowId = e.dataTransfer.getData('text/plain');
+		if (!workflowId || workflowId === '') return;
+
+		const workflow = workflows.find((w) => w.id === workflowId);
+		if (!workflow || workflow.folderId === folderId) return;
+
+		setDragOverFolderId(null);
+		await handleMoveWorkflow(workflow, folderId === ROOT_FOLDER_ID ? null : folderId);
 	};
 
 	const renderMoveWorkflowMenu = (workflow: IWorkflow) => {
@@ -852,9 +901,19 @@ const WorkflowsListPage = () => {
 										</span>
 									</div>
 								) : (
-									<div className='group/folder relative flex items-center overflow-hidden rounded-2xl border border-slate-200/80 bg-white/70 shadow-2xs backdrop-blur-md transition-all duration-300 hover:border-violet-500/25 hover:bg-white dark:border-zinc-800/80 dark:bg-zinc-900/60 dark:hover:border-violet-500/20 dark:hover:bg-zinc-900/80'>
+									<div
+										onDragOver={handleDragOver}
+										onDragEnter={() => handleDragEnter(folder.id)}
+										onDragLeave={(e) => handleDragLeave(e, folder.id)}
+										onDrop={(e) => handleDropOnFolder(e, folder.id)}
+										className={`group/folder relative flex items-center overflow-hidden rounded-2xl border shadow-2xs backdrop-blur-md transition-all duration-300 dark:border-zinc-800/80 dark:bg-zinc-900/60 dark:hover:border-violet-500/20 dark:hover:bg-zinc-900/80 ${
+											dragOverFolderId === folder.id
+												? 'border-violet-400/60 bg-violet-50/40 dark:bg-violet-950/20 dark:border-violet-500/40'
+												: 'border-slate-200/80 bg-white/70 hover:border-violet-500/25 hover:bg-white'
+										}`}>
 										<div
-											className={`absolute top-0 bottom-0 left-0 w-1.5 ${folder.color} opacity-85`}
+											style={{ backgroundColor: folder.color }}
+											className='absolute top-0 bottom-0 left-0 w-1.5 opacity-85'
 										/>
 
 										<button
@@ -881,7 +940,8 @@ const WorkflowsListPage = () => {
 													)}
 												</span>
 												<div
-													className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl ${folder.color} text-white shadow-sm shadow-black/10`}>
+													style={{ backgroundColor: folder.color }}
+													className='flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-white shadow-sm shadow-black/10'>
 													<Folder size={16} className='fill-white/10' />
 												</div>
 												<span className='truncate text-xs font-bold tracking-wide text-slate-800 dark:text-zinc-200'>
@@ -921,6 +981,9 @@ const WorkflowsListPage = () => {
 															key={wf.id}
 															role='link'
 															tabIndex={0}
+															draggable
+															onDragStart={(e) => handleDragStart(e, wf.id)}
+															onDragEnd={handleDragEnd}
 															onClick={() =>
 																navigate(
 																	`${pages.editor.subPages.editWorkflow.to}/${currentWorkspaceId}/${wf.id}`,
@@ -1552,7 +1615,8 @@ const WorkflowsListPage = () => {
 												type='button'
 												title={color.label}
 												onClick={() => setNewFolderColor(color.value)}
-												className={`h-7.5 w-7.5 rounded-full ${color.value} cursor-pointer border bg-gradient-to-br transition ${newFolderColor === color.value ? 'scale-110 border-slate-800 ring-2 ring-violet-500 dark:border-white' : 'border-slate-200/50 hover:scale-105'}`}
+												style={{ backgroundColor: color.value }}
+												className={`h-7.5 w-7.5 rounded-full cursor-pointer border transition ${newFolderColor === color.value ? 'scale-110 border-slate-800 ring-2 ring-violet-500 dark:border-white' : 'border-slate-200/50 hover:scale-105'}`}
 											/>
 										))}
 									</div>
@@ -1627,7 +1691,8 @@ const WorkflowsListPage = () => {
 												type='button'
 												title={color.label}
 												onClick={() => setEditFolderColor(color.value)}
-												className={`h-7.5 w-7.5 rounded-full ${color.value} cursor-pointer border bg-gradient-to-br transition ${editFolderColor === color.value ? 'scale-110 border-slate-800 ring-2 ring-violet-500 dark:border-white' : 'border-slate-200/50 hover:scale-105'}`}
+												style={{ backgroundColor: color.value }}
+												className={`h-7.5 w-7.5 rounded-full cursor-pointer border transition ${editFolderColor === color.value ? 'scale-110 border-slate-800 ring-2 ring-violet-500 dark:border-white' : 'border-slate-200/50 hover:scale-105'}`}
 											/>
 										))}
 									</div>

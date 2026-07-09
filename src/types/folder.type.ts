@@ -29,14 +29,20 @@ export interface IUpdateFolderDto {
 
 // Folder colors
 export const FOLDER_COLORS = [
-	{ value: 'bg-blue-500', label: 'Blue' },
-	{ value: 'bg-emerald-500', label: 'Green' },
-	{ value: 'bg-violet-500', label: 'Purple' },
-	{ value: 'bg-amber-500', label: 'Yellow' },
-	{ value: 'bg-red-500', label: 'Red' },
-	{ value: 'bg-pink-500', label: 'Pink' },
-	{ value: 'bg-cyan-500', label: 'Cyan' },
-	{ value: 'bg-orange-500', label: 'Orange' },
+	{ value: '#3b82f6', label: 'Blue' },
+	{ value: '#10b981', label: 'Green' },
+	{ value: '#8b5cf6', label: 'Purple' },
+	{ value: '#f59e0b', label: 'Yellow' },
+	{ value: '#ef4444', label: 'Red' },
+	{ value: '#ec4899', label: 'Pink' },
+	{ value: '#06b6d4', label: 'Cyan' },
+	{ value: '#f97316', label: 'Orange' },
+	{ value: '#6366f1', label: 'Indigo' },
+	{ value: '#14b8a6', label: 'Teal' },
+	{ value: '#d946ef', label: 'Fuchsia' },
+	{ value: '#84cc16', label: 'Lime' },
+	{ value: '#64748b', label: 'Slate' },
+	{ value: '#eab308', label: 'Gold' },
 ] as const;
 
 // Folder icons

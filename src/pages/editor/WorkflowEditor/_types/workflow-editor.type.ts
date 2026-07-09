@@ -17,6 +17,7 @@ export type TWorkflowMeta = {
 
 export type TEditorUiState = {
 	leftPanelOpen: boolean;
+	leftPanelIntent: 'home' | 'trigger';
 	runPanelOpen: boolean;
 	aiPanelOpen: boolean;
 	miniMapOpen: boolean;
@@ -33,6 +34,8 @@ export type TEditorUiState = {
 	diffViewerOpen: boolean;
 	nodeDocOpen: boolean;
 	nodeDocNodeId: string | null;
+	nodeExpandedOpen: boolean;
+	nodeExpandedId: string | null;
 	stepMode: boolean;
 	waitingForStep: boolean;
 	linkCredentialsOpen: boolean;

@@ -1,8 +1,7 @@
 export const TemplateEndpoints = {
-	list: () => '/templates',
-	categories: () => '/templates/categories',
-	detail: (id: string) => `/templates/${id}`,
-	applyTemplate: (ws: string, id: string) => `/workspaces/${ws}/templates/${id}/use`,
+	list: () => '/workflow-templates',
+	detail: (id: string) => `/workflow-templates/${id}`,
+	applyTemplate: (ws: string, id: string) => `/workspaces/${ws}/workflow-templates/${id}/deploy`,
 	publishWorkflow: (ws: string, wfId: string) =>
 		`/workspaces/${ws}/workflows/${wfId}/publish-as-template`,
 
