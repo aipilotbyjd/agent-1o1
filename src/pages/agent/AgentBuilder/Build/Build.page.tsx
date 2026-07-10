@@ -53,6 +53,9 @@ import {
 	RotateCcw,
 	FileJson,
 	Trash2,
+	Menu,
+	Share,
+	ImageIcon,
 } from 'lucide-react';
 import AgentTemplateCard from '../_partial/AgentTemplateCard.partial';
 import { agentTemplateTabs, agentTemplates } from '../_helper/agentBuilder.constants';
@@ -61,6 +64,8 @@ import { toast } from 'react-toastify';
 import useDarkMode from '@/hooks/useDarkMode';
 import DARK_MODE from '@/constants/darkMode.constant';
 import mockChatData from '@/mocks/agentChatData.json';
+import { LogoFyr } from '@/assets/images';
+import useAsideStatus from '@/hooks/useAsideStatus';
 
 interface TMessage {
 	id: string;
@@ -80,6 +85,19 @@ const BuildPage = () => {
 	const { isDarkTheme, setDarkModeStatus } = useDarkMode();
 	const textareaRef = useRef<HTMLTextAreaElement>(null);
 	const chatEndRef = useRef<HTMLDivElement>(null);
+	const { toggleAside } = useAsideStatus();
+
+	// Screen size state
+	const [isMobile, setIsMobile] = useState(false);
+
+	useEffect(() => {
+		const checkMobile = () => {
+			setIsMobile(window.innerWidth < 768);
+		};
+		checkMobile();
+		window.addEventListener('resize', checkMobile);
+		return () => window.removeEventListener('resize', checkMobile);
+	}, []);
 
 	// Preview / Chat states
 	const [isPreviewMode, setIsPreviewMode] = useState(false);
@@ -655,8 +673,42 @@ const BuildPage = () => {
 			) : (
 				// Premium Chat Interface View (from user screenshot)
 				<div className='flex min-h-0 flex-1 flex-col bg-zinc-50/20 dark:bg-zinc-950/80'>
-					{/* Chat Header */}
-					<header className='flex h-16 shrink-0 items-center justify-between border-b border-zinc-200 bg-white px-4 shadow-2xs backdrop-blur-md dark:border-white/10 dark:bg-zinc-950/90'>
+					{/* Responsive Chat Header */}
+					{/* Mobile Chat Header */}
+					<header className='flex h-14 shrink-0 items-center justify-between border-b border-zinc-150 bg-white px-4 md:hidden dark:border-zinc-800 dark:bg-zinc-900'>
+						<button
+							onClick={toggleAside}
+							type='button'
+							className='flex h-9 w-9 items-center justify-center rounded-lg text-zinc-500 hover:bg-zinc-100 dark:text-zinc-400 dark:hover:bg-zinc-800'
+						>
+							<Menu size={20} />
+						</button>
+						<div className='flex items-center gap-3'>
+							<button
+								onClick={() => {
+									navigator.clipboard.writeText(window.location.href);
+									toast.success('Share link copied to clipboard!');
+								}}
+								type='button'
+								className='flex h-9 w-9 items-center justify-center rounded-lg text-zinc-500 hover:bg-zinc-100 dark:text-zinc-400 dark:hover:bg-zinc-800'
+							>
+								<Share size={18} />
+							</button>
+							<button
+								onClick={() => {
+									setActiveSidebarTab('agent');
+									setIsSettingsOpen(true);
+								}}
+								type='button'
+								className='flex h-9 w-9 items-center justify-center rounded-lg text-zinc-500 hover:bg-zinc-100 dark:text-zinc-400 dark:hover:bg-zinc-800'
+							>
+								<SlidersHorizontal size={18} />
+							</button>
+						</div>
+					</header>
+
+					{/* Desktop Chat Header */}
+					<header className='hidden md:flex h-16 shrink-0 items-center justify-between border-b border-zinc-200 bg-white px-4 shadow-2xs backdrop-blur-md dark:border-white/10 dark:bg-zinc-950/90'>
 						<div className='flex items-center gap-3 min-w-0'>
 							{/* Back button */}
 							<button
@@ -795,93 +847,220 @@ const BuildPage = () => {
 
 					{/* Chat Message Box */}
 					<div className='flex-1 overflow-y-auto px-4 py-6 md:px-8 max-w-4xl w-full mx-auto space-y-6'>
-						{chatHistory.map((message) => {
-							const isUser = message.sender === 'user';
-							return (
-								<div key={message.id} className={`flex w-full ${isUser ? 'justify-end' : 'justify-start'}`}>
-									<div className={`flex gap-3 max-w-[90%] sm:max-w-[80%] ${isUser ? 'flex-row-reverse' : 'flex-row'}`}>
-										{/* Agent Avatar in body */}
-										{!isUser && (
-											<div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-zinc-950 text-white border dark:border-white/10 dark:bg-zinc-900`}>
-												<AgentIconComponent size={16} className={getIconColorClass(agentIconColor)} />
+						{isMobile && chatHistory.filter((m) => m.sender === 'user').length === 0 ? (
+							<div className='flex flex-col items-center justify-center pt-8 pb-4 px-2 select-none'>
+								{/* Centered Fire/Flame Logo */}
+								<div className='flex items-center justify-center mb-6'>
+									<img
+										src={LogoFyr}
+										alt='Fyr Logo'
+										className='h-[88px] w-[88px] object-contain'
+									/>
+								</div>
+
+								{/* Centered Title */}
+								<h2 className='text-[22px] font-black tracking-tight text-zinc-900 text-center dark:text-white mb-6 px-4'>
+									{agentName}
+								</h2>
+
+								{/* Row of circular buttons */}
+								<div className='flex items-center justify-center gap-3.5 w-full max-w-sm flex-wrap px-4'>
+									<button
+										type='button'
+										onClick={() => {
+											setChatInput('Research top competitor strategies...');
+										}}
+										className='flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-orange-100 bg-orange-50/60 text-orange-500 shadow-2xs transition hover:scale-105 active:scale-95 dark:border-orange-500/20 dark:bg-orange-500/10'
+									>
+										<Flame size={18} />
+									</button>
+									<button
+										type='button'
+										onClick={() => {
+											setChatInput('Generate competitor comparison matrix...');
+										}}
+										className='flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-blue-100 bg-blue-50/60 text-blue-500 shadow-2xs transition hover:scale-105 active:scale-95 dark:border-blue-500/20 dark:bg-blue-500/10'
+									>
+										<FileText size={18} />
+									</button>
+									<button
+										type='button'
+										className='flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-zinc-200 bg-zinc-50/60 text-zinc-500 shadow-2xs transition hover:scale-105 active:scale-95 dark:border-zinc-700 dark:bg-zinc-800'
+									>
+										<Layers size={18} />
+									</button>
+									<button
+										type='button'
+										className='flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-zinc-200 bg-zinc-50/60 text-zinc-500 shadow-2xs transition hover:scale-105 active:scale-95 dark:border-zinc-700 dark:bg-zinc-800'
+									>
+										<Globe size={18} />
+									</button>
+									<button
+										type='button'
+										className='flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-zinc-200 bg-zinc-50/60 text-zinc-500 shadow-2xs transition hover:scale-105 active:scale-95 dark:border-zinc-700 dark:bg-zinc-800'
+									>
+										<Download size={18} />
+									</button>
+									<button
+										type='button'
+										className='flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-zinc-200 bg-zinc-50/60 text-zinc-500 shadow-2xs transition hover:scale-105 active:scale-95 dark:border-zinc-700 dark:bg-zinc-800'
+									>
+										<ImageIcon size={18} />
+									</button>
+									<button
+										type='button'
+										onClick={() => {
+											const greeting = `Hi! I'm your ${agentName}. How can I help you today?`;
+											setChatHistory([
+												{
+													id: 'init-' + Date.now(),
+													sender: 'agent',
+													text: greeting,
+													timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+													type: 'text',
+												},
+											]);
+										}}
+										className='flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-zinc-200 bg-zinc-50/60 text-zinc-500 shadow-2xs transition hover:scale-105 active:scale-95 dark:border-zinc-700 dark:bg-zinc-800'
+									>
+										<RotateCcw size={18} />
+									</button>
+								</div>
+
+								{/* Get started section */}
+								<div className='w-full mt-12 px-4'>
+									<div className='flex items-center justify-between mb-4'>
+										<span className='text-[15px] font-black text-zinc-800 dark:text-zinc-100'>Get started</span>
+										<button className='text-xs font-bold text-zinc-400 hover:text-zinc-600 dark:text-zinc-500 dark:hover:text-zinc-300'>Dismiss</button>
+									</div>
+
+									{/* Horizontal scrolling grid container */}
+									<div className='flex gap-4 overflow-x-auto pb-4 scroll-smooth [scrollbar-width:none] [&::-webkit-scrollbar]:hidden'>
+										{/* Card 1 */}
+										<button
+											type='button'
+											onClick={() => {
+												sendChatMessage('Set up a trigger for Competitor Research Agent');
+											}}
+											className='flex min-w-[270px] max-w-[270px] flex-col rounded-2xl border border-zinc-150 bg-white p-5 text-left shadow-2xs hover:bg-zinc-50/30 transition dark:border-zinc-800/80 dark:bg-zinc-900'
+										>
+											<div className='flex items-center gap-2 mb-2 text-zinc-800 dark:text-zinc-200'>
+												<Zap size={16} className='text-zinc-450 dark:text-zinc-400' />
+												<span className='text-xs font-black'>Set up a trigger</span>
 											</div>
-										)}
+											<p className='text-[11px] font-semibold text-zinc-500 leading-relaxed dark:text-zinc-400'>
+												I want you to start doing things without me having to ask. Help me set up a trigger so you can run on a schedule or...
+											</p>
+										</button>
 
-										<div className='flex flex-col min-w-0'>
-											{/* Chat bubble */}
-											<div className={`rounded-2xl px-4 py-3 text-sm font-semibold leading-relaxed ${
-												isUser
-													? 'bg-violet-600/10 text-zinc-950 dark:bg-violet-500/25 dark:text-zinc-100 rounded-tr-none'
-													: 'bg-white text-zinc-800 border border-zinc-200/80 dark:bg-zinc-900/60 dark:text-zinc-200 dark:border-zinc-800/85 rounded-tl-none shadow-2xs'
-											}`}>
-												<p className='whitespace-pre-line'>{message.text}</p>
-
-												{/* Structured Table for data responses */}
-												{message.type === 'table' && message.headers && message.data && (
-													<div className='mt-4 overflow-hidden rounded-xl border border-zinc-200/80 bg-white dark:border-zinc-800 dark:bg-zinc-950'>
-														<div className='overflow-x-auto'>
-															<table className='w-full text-left text-xs font-semibold text-zinc-600 dark:text-zinc-400'>
-																<thead className='bg-zinc-50/50 text-[11px] font-black uppercase tracking-wider text-zinc-600 border-b border-zinc-200 dark:bg-zinc-900/40 dark:text-zinc-400 dark:border-zinc-800'>
-																	<tr>
-																		{message.headers.map((h) => (
-																			<th key={h} className='px-4 py-2.5 font-bold'>{h}</th>
-																		))}
-																	</tr>
-																</thead>
-																<tbody className='divide-y divide-zinc-200/80 dark:divide-zinc-800'>
-																	{message.data.map((row, rIdx) => (
-																		<tr key={rIdx} className='hover:bg-zinc-50/40 dark:hover:bg-zinc-900/20'>
-																			{message.headers!.map((h) => (
-																				<td key={h} className='px-4 py-2.5 text-zinc-900 dark:text-zinc-100 whitespace-nowrap'>
-																					{row[h]}
-																				</td>
-																			))}
-																		</tr>
-																	))}
-																</tbody>
-															</table>
-														</div>
-													</div>
-												)}
-
-												{/* Follow up text */}
-												{message.followUp && (
-													<p className='mt-4 text-xs font-bold text-zinc-500 dark:text-zinc-400'>
-														{message.followUp}
-													</p>
-												)}
+										{/* Card 2 */}
+										<button
+											type='button'
+											onClick={() => {
+												sendChatMessage('Build a competitor marketing analysis dashboard');
+											}}
+											className='flex min-w-[270px] max-w-[270px] flex-col rounded-2xl border border-zinc-150 bg-white p-5 text-left shadow-2xs hover:bg-zinc-50/30 transition dark:border-zinc-800/80 dark:bg-zinc-900'
+										>
+											<div className='flex items-center gap-2 mb-2 text-zinc-800 dark:text-zinc-200'>
+												<Layers size={16} className='text-zinc-455 dark:text-zinc-400' />
+												<span className='text-xs font-black'>Build widgets</span>
 											</div>
-
-											{/* Action Buttons for agent messages */}
-											{!isUser && message.actions && message.actions.length > 0 && (
-												<div className='mt-3.5 flex flex-wrap gap-2.5'>
-													{message.actions.map((act) => {
-														let IconComp = Sparkles;
-														if (act.type === 'export_csv' || act.type === 'pdf_digest') IconComp = Download;
-														if (act.type === 'refine' || act.type === 'set_alert') IconComp = SlidersHorizontal;
-
-														return (
-															<button
-																key={act.label}
-																onClick={() => handleActionClick(act)}
-																className='inline-flex items-center gap-1.5 rounded-full border border-zinc-200 bg-white px-4 py-1.5 text-xs font-black text-zinc-700 shadow-2xs hover:bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-400 dark:hover:border-zinc-700 dark:hover:bg-zinc-900/80 transition active:scale-95'>
-																<IconComp size={12} className='text-violet-500' />
-																<span>{act.label}</span>
-															</button>
-														);
-													})}
+											<p className='text-[11px] font-semibold text-zinc-500 leading-relaxed dark:text-zinc-400'>
+												Build me a fresh copy of your application or customize your views to match your design system and preferences.
+											</p>
+										</button>
+									</div>
+								</div>
+							</div>
+						) : (
+							chatHistory.map((message) => {
+								const isUser = message.sender === 'user';
+								return (
+									<div key={message.id} className={`flex w-full ${isUser ? 'justify-end' : 'justify-start'}`}>
+										<div className={`flex gap-3 max-w-[90%] sm:max-w-[80%] ${isUser ? 'flex-row-reverse' : 'flex-row'}`}>
+											{/* Agent Avatar in body */}
+											{!isUser && (
+												<div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-zinc-950 text-white border dark:border-white/10 dark:bg-zinc-900`}>
+													<AgentIconComponent size={16} className={getIconColorClass(agentIconColor)} />
 												</div>
 											)}
 
-											{/* Timestamp */}
-											<span className={`text-[10px] font-semibold text-zinc-400 dark:text-zinc-500 mt-1.5 ${isUser ? 'text-right' : 'text-left'}`}>
-												{message.timestamp}
-											</span>
+											<div className='flex flex-col min-w-0'>
+												{/* Chat bubble */}
+												<div className={`rounded-2xl px-4 py-3 text-sm font-semibold leading-relaxed ${
+													isUser
+														? 'bg-violet-600/10 text-zinc-950 dark:bg-violet-500/25 dark:text-zinc-100 rounded-tr-none'
+														: 'bg-white text-zinc-800 border border-zinc-200/80 dark:bg-zinc-900/60 dark:text-zinc-200 dark:border-zinc-800/85 rounded-tl-none shadow-2xs'
+												}`}>
+													<p className='whitespace-pre-line'>{message.text}</p>
+
+													{/* Structured Table for data responses */}
+													{message.type === 'table' && message.headers && message.data && (
+														<div className='mt-4 overflow-hidden rounded-xl border border-zinc-200/80 bg-white dark:border-zinc-800 dark:bg-zinc-950'>
+															<div className='overflow-x-auto'>
+																<table className='w-full text-left text-xs font-semibold text-zinc-600 dark:text-zinc-400'>
+																	<thead className='bg-zinc-50/50 text-[11px] font-black uppercase tracking-wider text-zinc-600 border-b border-zinc-200 dark:bg-zinc-900/40 dark:text-zinc-400 dark:border-zinc-800'>
+																		<tr>
+																			{message.headers.map((h) => (
+																				<th key={h} className='px-4 py-2.5 font-bold'>{h}</th>
+																			))}
+																		</tr>
+																	</thead>
+																	<tbody className='divide-y divide-zinc-200/80 dark:divide-zinc-800'>
+																		{message.data.map((row, rIdx) => (
+																			<tr key={rIdx} className='hover:bg-zinc-50/40 dark:hover:bg-zinc-900/20'>
+																				{message.headers!.map((h) => (
+																					<td key={h} className='px-4 py-2.5 text-zinc-900 dark:text-zinc-100 whitespace-nowrap'>
+																						{row[h]}
+																					</td>
+																				))}
+																			</tr>
+																		))}
+																	</tbody>
+																</table>
+															</div>
+														</div>
+													)}
+
+													{/* Follow up text */}
+													{message.followUp && (
+														<p className='mt-4 text-xs font-bold text-zinc-500 dark:text-zinc-400'>
+															{message.followUp}
+														</p>
+													)}
+												</div>
+
+												{/* Action Buttons for agent messages */}
+												{!isUser && message.actions && message.actions.length > 0 && (
+													<div className='mt-3.5 flex flex-wrap gap-2.5'>
+														{message.actions.map((act) => {
+															let IconComp = Sparkles;
+															if (act.type === 'export_csv' || act.type === 'pdf_digest') IconComp = Download;
+															if (act.type === 'refine' || act.type === 'set_alert') IconComp = SlidersHorizontal;
+
+															return (
+																<button
+																	key={act.label}
+																	onClick={() => handleActionClick(act)}
+																	className='inline-flex items-center gap-1.5 rounded-full border border-zinc-200 bg-white px-4 py-1.5 text-xs font-black text-zinc-700 shadow-2xs hover:bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-400 dark:hover:border-zinc-700 dark:hover:bg-zinc-900/80 transition active:scale-95'>
+																	<IconComp size={12} className='text-violet-500' />
+																	<span>{act.label}</span>
+																</button>
+															);
+														})}
+													</div>
+												)}
+
+												{/* Timestamp */}
+												<span className={`text-[10px] font-semibold text-zinc-400 dark:text-zinc-500 mt-1.5 ${isUser ? 'text-right' : 'text-left'}`}>
+													{message.timestamp}
+												</span>
+											</div>
 										</div>
 									</div>
-								</div>
-							);
-						})}
+								);
+							})
+						)}
 
 						{/* Typing indicator bubble */}
 						{isTyping && (
@@ -903,97 +1082,175 @@ const BuildPage = () => {
 					</div>
 
 					{/* Chat Footer Input Area */}
-					<footer className='border-t border-zinc-200 bg-white px-4 py-4 dark:border-white/10 dark:bg-zinc-950/90'>
-						<div className='mx-auto max-w-4xl w-full flex flex-col gap-3'>
-							<div className='relative flex items-center rounded-2xl border border-zinc-200 bg-white p-2 shadow-2xs focus-within:border-violet-500/50 focus-within:ring-4 focus-within:ring-violet-500/5 dark:border-zinc-800 dark:bg-zinc-900/60'>
-								{/* Left attachments & skill checkbox */}
-								<div className='flex items-center gap-1 px-1.5'>
-									<button
-										title='Attach files'
-										className='flex h-9 w-9 items-center justify-center rounded-lg text-zinc-400 hover:bg-zinc-50 hover:text-zinc-700 dark:text-zinc-500 dark:hover:bg-zinc-800 dark:hover:text-zinc-300'>
-										<Paperclip size={18} />
-									</button>
-
-									{/* Skill checkbox */}
-									<button
-										onClick={() => setSkillEnabled(!skillEnabled)}
-										title='Toggle Skills'
-										className='flex h-9 items-center gap-1.5 rounded-lg border border-zinc-100 bg-zinc-50/50 px-2.5 text-xs font-bold text-zinc-500 hover:bg-zinc-100 dark:border-zinc-800 dark:bg-zinc-950/50 dark:text-zinc-400 dark:hover:bg-zinc-800'>
-										{skillEnabled ? (
-											<CheckSquare size={14} className='text-violet-600 dark:text-violet-400' />
-										) : (
-											<Square size={14} />
-										)}
-										<span>Skill</span>
-									</button>
-								</div>
-
-								{/* Chat Input */}
-								<input
-									type='text'
-									value={chatInput}
-									onChange={(e) => setChatInput(e.target.value)}
-									onKeyDown={(e) => {
-										if (e.key === 'Enter') {
-											e.preventDefault();
-											if (chatInput.trim()) {
-												sendChatMessage(chatInput);
-												setChatInput('');
-											}
-										}
-									}}
-									placeholder='Send a message to your agent...'
-									className='flex-1 bg-transparent px-3 text-sm font-semibold text-zinc-900 placeholder:text-zinc-400 outline-none border-none focus:ring-0 dark:text-zinc-100 dark:placeholder:text-zinc-500'
-								/>
-
-								{/* Right features: Incognito & Send */}
-								<div className='flex items-center gap-3 px-1.5'>
-									{/* Incognito toggle switch */}
-									<div className='flex items-center gap-2'>
-										<button
-											onClick={() => setIncognito(!incognito)}
-											className={`relative inline-flex h-5 w-9 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
-												incognito ? 'bg-zinc-800 dark:bg-zinc-700' : 'bg-zinc-200 dark:bg-zinc-800'
-											}`}>
-											<span
-												className={`pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow-sm ring-0 transition duration-200 ease-in-out ${
-													incognito ? 'translate-x-4' : 'translate-x-0'
-												}`}
-											/>
-										</button>
-										<div className='flex items-center gap-1 text-[11px] font-black text-zinc-400 dark:text-zinc-500'>
-											<Ghost size={12} className={incognito ? 'text-zinc-700 dark:text-zinc-300' : ''} />
-											<span>Incognito</span>
-										</div>
-									</div>
-
-									{/* Mic icon */}
-									<button
-										title='Voice input'
-										className='flex h-9 w-9 items-center justify-center rounded-lg text-zinc-400 hover:bg-zinc-50 hover:text-zinc-700 dark:text-zinc-500 dark:hover:bg-zinc-800 dark:hover:text-zinc-300'>
-										<Mic size={18} />
-									</button>
-
-									{/* Send Button */}
-									<button
-										onClick={() => {
-											if (chatInput.trim()) {
-												sendChatMessage(chatInput);
-												setChatInput('');
+					{isMobile ? (
+						<footer className='border-t border-zinc-150 bg-zinc-50/50 px-4 py-4 dark:border-zinc-850 dark:bg-zinc-950/90'>
+							<div className='mx-auto max-w-4xl w-full flex flex-col gap-3'>
+								{/* Chat Input Container */}
+								<div className='flex flex-col rounded-2xl border border-zinc-200 bg-white p-3 shadow-xs dark:border-zinc-800 dark:bg-zinc-900/60'>
+									{/* Input Text Area */}
+									<textarea
+										rows={2}
+										value={chatInput}
+										onChange={(e) => setChatInput(e.target.value)}
+										onKeyDown={(e) => {
+											if (e.key === 'Enter' && !e.shiftKey) {
+												e.preventDefault();
+												if (chatInput.trim()) {
+													sendChatMessage(chatInput);
+													setChatInput('');
+												}
 											}
 										}}
-										className='flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-violet-600 text-white shadow-md transition hover:bg-violet-700 active:scale-95'>
-										<ArrowUp size={16} strokeWidth={2.5} />
+										placeholder='Send a message to your agent'
+										className='w-full resize-none bg-transparent px-1 text-sm font-semibold text-zinc-800 placeholder:text-zinc-450 outline-none border-none focus:ring-0 dark:text-zinc-100 dark:placeholder:text-zinc-500'
+									/>
+									{/* Bottom Controls Row */}
+									<div className='flex items-center justify-between mt-2 pt-2 border-t border-zinc-100/50 dark:border-zinc-800/50'>
+										{/* Plus button */}
+										<button 
+											type='button'
+											onClick={() => toast.info('File attachment is not available in draft mode.')}
+											className='flex h-8 w-8 items-center justify-center rounded-full text-zinc-400 hover:bg-zinc-50 dark:text-zinc-500 dark:hover:bg-zinc-800'
+										>
+											<Plus size={18} />
+										</button>
+										
+										{/* Right controls: Loader, Mic, Send */}
+										<div className='flex items-center gap-2.5'>
+											{/* Loading spinner */}
+											<div className='flex h-4 w-4 items-center justify-center rounded-full border border-zinc-200 border-t-zinc-400 animate-spin size-4 shrink-0' style={{ borderTopColor: '#3b82f6', borderWidth: '1.5px' }} />
+											
+											{/* Mic */}
+											<button 
+												type='button'
+												onClick={() => toast.info('Voice input is not available in draft mode.')}
+												className='flex h-8 w-8 items-center justify-center rounded-full text-zinc-400 hover:bg-zinc-50 dark:text-zinc-500 dark:hover:bg-zinc-800'
+											>
+												<Mic size={18} />
+											</button>
+
+											{/* Send button (pink/purple gradient circle with white up-arrow) */}
+											<button
+												type='button'
+												onClick={() => {
+													if (chatInput.trim()) {
+														sendChatMessage(chatInput);
+														setChatInput('');
+													}
+												}}
+												className='flex h-8 w-8 items-center justify-center rounded-full bg-linear-to-tr from-pink-400 to-purple-500 text-white shadow-2xs transition hover:opacity-90 active:scale-95'
+											>
+												<ArrowUp size={16} strokeWidth={2.5} />
+											</button>
+										</div>
+									</div>
+								</div>
+
+								{/* Footer link */}
+								<div className='flex items-center justify-center gap-1 text-[11px] font-bold text-zinc-400 dark:text-zinc-500 mt-1'>
+									<span>Having Trouble?</span>
+									<button 
+										onClick={() => toast.info('Thank you! Feedback reported.')}
+										className='underline hover:text-zinc-655 dark:hover:text-zinc-350'
+									>
+										Report an Issue or Bug
 									</button>
 								</div>
 							</div>
-							
-							<div className='flex items-center justify-center gap-1.5 text-[10px] font-bold text-zinc-400 dark:text-zinc-500'>
-								<span>Agent can make mistakes. Please verify important information.</span>
-								<button className='underline hover:text-zinc-700 dark:hover:text-zinc-300'>Report an issue</button>
+						</footer>
+					) : (
+						<footer className='border-t border-zinc-200 bg-white px-4 py-4 dark:border-white/10 dark:bg-zinc-950/90'>
+							<div className='mx-auto max-w-4xl w-full flex flex-col gap-3'>
+								<div className='relative flex items-center rounded-2xl border border-zinc-200 bg-white p-2 shadow-2xs focus-within:border-violet-500/50 focus-within:ring-4 focus-within:ring-violet-500/5 dark:border-zinc-800 dark:bg-zinc-900/60'>
+									{/* Left attachments & skill checkbox */}
+									<div className='flex items-center gap-1 px-1.5'>
+										<button
+											title='Attach files'
+											className='flex h-9 w-9 items-center justify-center rounded-lg text-zinc-400 hover:bg-zinc-50 hover:text-zinc-700 dark:text-zinc-500 dark:hover:bg-zinc-800 dark:hover:text-zinc-300'>
+											<Paperclip size={18} />
+										</button>
+
+										{/* Skill checkbox */}
+										<button
+											onClick={() => setSkillEnabled(!skillEnabled)}
+											title='Toggle Skills'
+											className='flex h-9 items-center gap-1.5 rounded-lg border border-zinc-100 bg-zinc-50/50 px-2.5 text-xs font-bold text-zinc-500 hover:bg-zinc-100 dark:border-zinc-800 dark:bg-zinc-950/50 dark:text-zinc-400 dark:hover:bg-zinc-800'>
+											{skillEnabled ? (
+												<CheckSquare size={14} className='text-violet-600 dark:text-violet-400' />
+											) : (
+												<Square size={14} />
+											)}
+											<span>Skill</span>
+										</button>
+									</div>
+
+									{/* Chat Input */}
+									<input
+										type='text'
+										value={chatInput}
+										onChange={(e) => setChatInput(e.target.value)}
+										onKeyDown={(e) => {
+											if (e.key === 'Enter') {
+												e.preventDefault();
+												if (chatInput.trim()) {
+													sendChatMessage(chatInput);
+													setChatInput('');
+												}
+											}
+										}}
+										placeholder='Send a message to your agent...'
+										className='flex-1 bg-transparent px-3 text-sm font-semibold text-zinc-900 placeholder:text-zinc-400 outline-none border-none focus:ring-0 dark:text-zinc-100 dark:placeholder:text-zinc-500'
+									/>
+
+									{/* Right features: Incognito & Send */}
+									<div className='flex items-center gap-3 px-1.5'>
+										{/* Incognito toggle switch */}
+										<div className='flex items-center gap-2'>
+											<button
+												onClick={() => setIncognito(!incognito)}
+												className={`relative inline-flex h-5 w-9 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
+													incognito ? 'bg-zinc-800 dark:bg-zinc-700' : 'bg-zinc-200 dark:bg-zinc-800'
+												}`}>
+												<span
+													className={`pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow-sm ring-0 transition duration-200 ease-in-out ${
+														incognito ? 'translate-x-4' : 'translate-x-0'
+													}`}
+												/>
+											</button>
+											<div className='flex items-center gap-1 text-[11px] font-black text-zinc-400 dark:text-zinc-500'>
+												<Ghost size={12} className={incognito ? 'text-zinc-700 dark:text-zinc-300' : ''} />
+												<span>Incognito</span>
+											</div>
+										</div>
+
+										{/* Mic icon */}
+										<button
+											title='Voice input'
+											className='flex h-9 w-9 items-center justify-center rounded-lg text-zinc-400 hover:bg-zinc-50 hover:text-zinc-700 dark:text-zinc-500 dark:hover:bg-zinc-800 dark:hover:text-zinc-300'>
+											<Mic size={18} />
+										</button>
+
+										{/* Send Button */}
+										<button
+											onClick={() => {
+												if (chatInput.trim()) {
+													sendChatMessage(chatInput);
+													setChatInput('');
+												}
+											}}
+											className='flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-violet-600 text-white shadow-md transition hover:bg-violet-700 active:scale-95'>
+											<ArrowUp size={16} strokeWidth={2.5} />
+										</button>
+									</div>
+								</div>
+								
+								<div className='flex items-center justify-center gap-1.5 text-[10px] font-bold text-zinc-400 dark:text-zinc-500'>
+									<span>Agent can make mistakes. Please verify important information.</span>
+									<button className='underline hover:text-zinc-700 dark:hover:text-zinc-300'>Report an issue</button>
+								</div>
 							</div>
-						</div>
-					</footer>
+						</footer>
+					)}
 				</div>
 			)}
 

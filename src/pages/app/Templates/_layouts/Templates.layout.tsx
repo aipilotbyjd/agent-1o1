@@ -14,7 +14,7 @@ const TemplatesLayout = () => {
 
 	return (
 		<>
-			<Header>
+			<Header className='hidden md:flex'>
 				<HeaderLeft>{headerLeft}</HeaderLeft>
 				<HeaderRight>
 					<NotificationsDropdown />
