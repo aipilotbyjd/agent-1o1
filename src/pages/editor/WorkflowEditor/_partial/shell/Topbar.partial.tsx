@@ -31,7 +31,7 @@ import { useRunWorkflow } from '../../_hooks/useRunWorkflow.hook';
 import { useAiChatStore } from '@/store/aiChat.store';
 import { useWorkflowShellStore } from '@/store/workflowShell.store';
 
-const EditableWorkflowName = ({
+export const EditableWorkflowName = ({
 	name,
 	onSave,
 	className,
@@ -277,8 +277,8 @@ const Topbar = () => {
 
 				<div className='h-6 w-px bg-zinc-200 dark:bg-zinc-800 hidden sm:block' />
 
-				{/* Add buttons */}
-				<div className='flex items-center gap-2'>
+				{/* Add buttons — hidden on mobile, only the agent logo shows */}
+				<div className='hidden md:flex items-center gap-2'>
 					<PurpleOutlineButton onClick={() => dispatch({ type: 'TOGGLE_AI_PANEL' })}>
 						<Sparkles size={14} className='text-violet-600 dark:text-violet-400' />
 						<span className='hidden sm:inline'>{state.ui.aiPanelOpen ? 'Hide Chat' : 'AI Chat'}</span>
@@ -319,8 +319,8 @@ const Topbar = () => {
 				</div>
 			</div>
 
-			{/* Right Section: Action Controls */}
-			<div className='flex items-center gap-3.5'>
+			{/* Right Section: Action Controls — hidden on mobile, only the agent logo shows */}
+			<div className='hidden md:flex items-center gap-3.5'>
 				{/* Desktop-only action groups */}
 				<div className='hidden md:flex items-center gap-3.5'>
 					{/* Undo/Redo & Darkmode & Keyboard */}

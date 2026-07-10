@@ -19,11 +19,13 @@ import {
 	Grid,
 	List,
 	Users,
+	Menu,
 } from 'lucide-react';
 import { OutletContextType } from './_layouts/Templates.layout';
 import Breadcrumb from '@/components/layout/Breadcrumb';
 import Container from '@/components/layout/Container';
 import pages from '@/Routes/pages';
+import useAsideStatus from '@/hooks/useAsideStatus';
 import { useWorkspaceContext } from '@/context/workspaceContext';
 import {
 	useTemplates,
@@ -326,6 +328,7 @@ const AgentChatMock = ({
 
 const TemplatesCatalogPage = () => {
 	const { setHeaderLeft } = useOutletContext<OutletContextType>();
+	const { toggleAside } = useAsideStatus();
 	const navigate = useNavigate();
 	const { activeWorkspaceId } = useWorkspaceContext();
 
@@ -468,7 +471,7 @@ const TemplatesCatalogPage = () => {
 		}
 	};
 	return (
-		<div className='min-h-screen bg-[#F8F9FC] bg-[radial-gradient(#e2e8f0_1px,transparent_1px)] [background-size:20px_20px] dark:bg-zinc-950 dark:bg-[radial-gradient(#27272a_1px,transparent_1px)]'>
+		<Container className='relative overflow-x-hidden overflow-y-auto bg-[#F8F9FC] bg-[radial-gradient(#e2e8f0_1px,transparent_1px)] [background-size:20px_20px] !p-0 dark:bg-zinc-950 dark:bg-[radial-gradient(#27272a_1px,transparent_1px)]'>
 			{/* Custom 3D float keyframes */}
 			<style>{`
 				@keyframes float {
@@ -499,8 +502,18 @@ const TemplatesCatalogPage = () => {
 				<div className='relative mb-8 overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-r from-[#501EE3] via-[#7B37FC] to-[#2B1B9A] px-6 py-8 text-white shadow-xl sm:px-10 sm:py-12 dark:from-[#311196] dark:via-[#4c1ba1] dark:to-[#170e54]'>
 					<div className='grid grid-cols-1 items-center gap-8 lg:grid-cols-12'>
 						<div className='relative z-10 lg:col-span-8'>
-							<div className='mb-4 inline-block rounded-md border border-white/10 bg-white/10 px-2.5 py-1 text-[10px] font-bold tracking-wider text-white uppercase backdrop-blur-md'>
-								Ready to use
+							<div className='flex items-center gap-3 mb-4'>
+								{/* Mobile Toggle Aside Menu Button */}
+								<button
+									onClick={toggleAside}
+									type='button'
+									className='flex h-8 w-8 items-center justify-center rounded-xl border border-white/20 bg-white/10 text-white shadow-sm md:hidden hover:bg-white/20'
+								>
+									<Menu size={16} />
+								</button>
+								<div className='inline-block rounded-md border border-white/10 bg-white/10 px-2.5 py-1 text-[10px] font-bold tracking-wider text-white uppercase backdrop-blur-md'>
+									Ready to use
+								</div>
 							</div>
 							<h1 className='mb-3 text-3xl font-extrabold tracking-tight text-white sm:text-4xl'>
 								Templates Center
@@ -581,13 +594,13 @@ const TemplatesCatalogPage = () => {
 				{/* Tabs & Search controls */}
 				<div className='mb-8 flex flex-col items-stretch justify-between gap-4 border-b border-zinc-200/50 pb-5 md:flex-row md:items-center dark:border-zinc-800'>
 					{/* Tab pills */}
-					<div className='flex items-center gap-2'>
+					<div className='flex items-center gap-2 overflow-x-auto no-scrollbar pb-1.5 scroll-smooth'>
 						<button
 							onClick={() => {
 								setActiveTab('workflows');
 								setSelectedCategory('');
 							}}
-							className={`flex cursor-pointer items-center gap-2 rounded-full px-4 py-2 text-xs font-bold transition-all duration-200 ${
+							className={`flex cursor-pointer shrink-0 items-center gap-2 rounded-full px-4 py-2 text-xs font-bold transition-all duration-200 ${
 								activeTab === 'workflows'
 									? 'border border-[#DED4FA] bg-[#F5F2FF] text-[#6E3FF3] shadow-2xs dark:border-violet-800/40 dark:bg-violet-950/30 dark:text-violet-400'
 									: 'border border-transparent text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200'
@@ -600,7 +613,7 @@ const TemplatesCatalogPage = () => {
 								setActiveTab('agents');
 								setSelectedCategory('');
 							}}
-							className={`flex cursor-pointer items-center gap-2 rounded-full px-4 py-2 text-xs font-bold transition-all duration-200 ${
+							className={`flex cursor-pointer shrink-0 items-center gap-2 rounded-full px-4 py-2 text-xs font-bold transition-all duration-200 ${
 								activeTab === 'agents'
 									? 'border border-[#DED4FA] bg-[#F5F2FF] text-[#6E3FF3] shadow-2xs dark:border-violet-800/40 dark:bg-violet-950/30 dark:text-violet-400'
 									: 'border border-transparent text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200'
@@ -613,7 +626,7 @@ const TemplatesCatalogPage = () => {
 								setActiveTab('collections');
 								setSelectedCategory('');
 							}}
-							className={`flex cursor-pointer items-center gap-2 rounded-full px-4 py-2 text-xs font-bold transition-all duration-200 ${
+							className={`flex cursor-pointer shrink-0 items-center gap-2 rounded-full px-4 py-2 text-xs font-bold transition-all duration-200 ${
 								activeTab === 'collections'
 									? 'border border-[#DED4FA] bg-[#F5F2FF] text-[#6E3FF3] shadow-2xs dark:border-violet-800/40 dark:bg-violet-950/30 dark:text-violet-400'
 									: 'border border-transparent text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200'
@@ -624,9 +637,9 @@ const TemplatesCatalogPage = () => {
 					</div>
 
 					{/* Filter & Search actions */}
-					<div className='flex items-center gap-3'>
+					<div className='flex flex-col gap-3 sm:flex-row sm:items-center w-full sm:w-auto'>
 						{/* Search field */}
-						<div className='relative w-64'>
+						<div className='relative w-full sm:w-64'>
 							<Search className='pointer-events-none absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-zinc-400 dark:text-zinc-600' />
 							<input
 								type='text'
@@ -639,13 +652,13 @@ const TemplatesCatalogPage = () => {
 
 						{/* Category Select (only for workflows / agents) */}
 						{activeTab !== 'collections' && (
-							<div className='relative'>
+							<div className='relative w-full sm:w-auto'>
 								<SlidersHorizontal className='pointer-events-none absolute top-1/2 left-3 h-3.5 w-3.5 -translate-y-1/2 text-zinc-400 dark:text-zinc-600' />
 								<select
 									value={selectedCategory}
 									onChange={(e) => setSelectedCategory(e.target.value)}
 									style={{ WebkitAppearance: 'none', MozAppearance: 'none' }}
-									className='shadow-3xs cursor-pointer appearance-none rounded-xl border border-zinc-200/80 bg-white py-2 pr-8 pl-9 text-xs text-zinc-700 focus:ring-1 focus:ring-violet-500 focus:outline-none dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-300'>
+									className='shadow-3xs w-full cursor-pointer appearance-none rounded-xl border border-zinc-200/80 bg-white py-2 pr-8 pl-9 text-xs text-zinc-700 focus:ring-1 focus:ring-violet-500 focus:outline-none dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-300'>
 									<option value=''>All Categories</option>
 									{activeTab === 'workflows'
 										? wfCategories?.map((cat: any) => (
@@ -1891,7 +1904,7 @@ const TemplatesCatalogPage = () => {
 					</div>
 				)}
 			</AnimatePresence>
-		</div>
+		</Container>
 	);
 };
 

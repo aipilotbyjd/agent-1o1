@@ -14,6 +14,7 @@ import {
 	Layers,
 	Database,
 	ChevronDown,
+	Trash2,
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import type { TCanvasNode } from '../../../_types/canvas.type';
@@ -29,8 +30,11 @@ import {
 } from '@/api/modules/workflows/workflows.hooks';
 import { useWorkflowRouteParams } from '../../../_hooks/useWorkflowRouteParams.hook';
 import { useWorkflowEditor } from '../../../_context/WorkflowEditorProvider.context';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import NodeFields from './NodeFields.partial';
+import { PortHandles } from './BaseNode.partial';
+import Modal from '../../dialogs/Modal.partial';
+import type { TNodeField, TNodePort } from '../../../_types/node.type';
 
 const iconMap: Record<
 	string,
@@ -153,6 +157,7 @@ const brandNameMap: Record<string, string> = {
 };
 
 const TriggerNode = ({ id, data, selected }: NodeProps<TCanvasNode>) => {
+	const { dispatch } = useWorkflowEditor();
 	const def = getNodeDefinition(data.defKey, data.definition);
 	const hasError = Boolean(def?.requiresCredential) && !data.values.credential_id;
 	const brand = brandNameMap[data.defKey] || 'Trigger';
@@ -165,7 +170,47 @@ const TriggerNode = ({ id, data, selected }: NodeProps<TCanvasNode>) => {
 	};
 	const NodeIcon = iconMap[data.defKey] || Webhook;
 
-	const { dispatch } = useWorkflowEditor();
+	const [configureOpen, setConfigureOpen] = useState(false);
+	const [localFields, setLocalFields] = useState<TNodeField[]>([]);
+
+	const handleOpenConfigure = () => {
+		const currentFields = def?.fields ?? [];
+		setLocalFields(structuredClone(currentFields));
+		setConfigureOpen(true);
+	};
+
+	const handleAddField = () => {
+		const newKey = `input_${Date.now()}`;
+		setLocalFields((prev) => [
+			...prev,
+			{
+				key: newKey,
+				label: `Input Parameter ${prev.length + 1}`,
+				kind: 'text',
+				required: false,
+				help: 'Custom workflow input parameter',
+			},
+		]);
+	};
+
+	const handleRemoveField = (key: string) => {
+		setLocalFields((prev) => prev.filter((f) => f.key !== key));
+	};
+
+	const handleFieldChange = (index: number, patch: Partial<TNodeField>) => {
+		setLocalFields((prev) =>
+			prev.map((f, i) => (i === index ? { ...f, ...patch } : f))
+		);
+	};
+
+	const handleSaveFields = () => {
+		dispatch({
+			type: 'CONFIGURE_NODE_FIELDS',
+			id,
+			fields: localFields,
+		});
+		setConfigureOpen(false);
+	};
 	const { workspaceId, workflowId } = useWorkflowRouteParams();
 	const { data: triggerData } = useWorkflowTrigger(workspaceId, workflowId);
 
@@ -399,50 +444,65 @@ const TriggerNode = ({ id, data, selected }: NodeProps<TCanvasNode>) => {
 				</Handle>
 			)}
 
-			{/* Output Handle */}
+			{/* Output Handles */}
 			{def && (
-				<Handle
-					id={def.outputs && def.outputs.length > 0 ? def.outputs[0].id : 'out'}
-					type='source'
-					position={Position.Bottom}
-					style={{
-						left: 'calc(50% - 12px)',
-						bottom: -12,
-						top: 'auto',
-						backgroundColor: 'white',
-						borderColor: '#8b5cf6',
-						borderWidth: 2,
-						height: 24,
-						width: 24,
-						display: 'flex',
-						alignItems: 'center',
-						justifyContent: 'center',
-						fontSize: 10,
-						fontWeight: 'bold',
-						color: '#8b5cf6',
-						zIndex: 10,
-					}}
-					className='transition-transform duration-150 hover:scale-110 shadow-sm rounded-full cursor-crosshair dark:bg-zinc-900 dark:border-zinc-800'
-				>
-					<span className='pointer-events-none'>1</span>
-				</Handle>
+				<PortHandles ports={def.outputs ?? []} type='source' color='#8b5cf6' />
 			)}
 
 			{selected && (
 				<div className='absolute -top-11 left-1/2 -translate-x-1/2 flex items-center gap-1 bg-white border border-zinc-200 rounded-lg px-2.5 py-1.5 shadow-md z-50 text-[10px] font-bold text-zinc-600 select-none pointer-events-auto dark:bg-zinc-900 dark:border-zinc-800 dark:text-zinc-300 whitespace-nowrap shadow-zinc-200/50 dark:shadow-none'>
-					<button type='button' className='flex items-center gap-1 px-1.5 py-0.5 hover:bg-zinc-50 dark:hover:bg-zinc-850 rounded text-zinc-500 hover:text-zinc-800 dark:hover:text-white'>
+					<button
+						type='button'
+						onClick={(e) => {
+							e.stopPropagation();
+							dispatch({ type: 'DUPLICATE_SELECTED' });
+						}}
+						className='flex items-center gap-1 px-1.5 py-0.5 hover:bg-zinc-50 dark:hover:bg-zinc-850 rounded text-zinc-500 hover:text-zinc-800 dark:hover:text-white'
+					>
 						<svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5"><path strokeLinecap="round" strokeLinejoin="round" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2" /></svg>
 						<span>Duplicate</span>
 					</button>
-					<button type='button' className='flex items-center gap-1 px-1.5 py-0.5 hover:bg-zinc-50 dark:hover:bg-zinc-850 rounded text-zinc-500 hover:text-zinc-800 dark:hover:text-white'>
+					<button
+						type='button'
+						onClick={(e) => {
+							e.stopPropagation();
+							const newLabel = prompt('Rename node', data.label || def?.label || 'Trigger');
+							if (newLabel && newLabel.trim()) {
+								dispatch({ type: 'RENAME_NODE', id, label: newLabel.trim() });
+							}
+						}}
+						className='flex items-center gap-1 px-1.5 py-0.5 hover:bg-zinc-50 dark:hover:bg-zinc-850 rounded text-zinc-500 hover:text-zinc-800 dark:hover:text-white'
+					>
 						<svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5"><path strokeLinecap="round" strokeLinejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
 						<span>Rename</span>
 					</button>
-					<button type='button' className='flex items-center gap-1 px-1.5 py-0.5 hover:bg-zinc-50 dark:hover:bg-zinc-850 rounded text-zinc-500 hover:text-zinc-800 dark:hover:text-white'>
+					<button
+						type='button'
+						onClick={(e) => {
+							e.stopPropagation();
+							handleOpenConfigure();
+						}}
+						className='flex items-center gap-1 px-1.5 py-0.5 hover:bg-zinc-50 dark:hover:bg-zinc-850 rounded text-zinc-500 hover:text-zinc-800 dark:hover:text-white'
+					>
 						<svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5"><path strokeLinecap="round" strokeLinejoin="round" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" /></svg>
 						<span>Configure Inputs</span>
 					</button>
-					<button type='button' className='flex items-center gap-1 px-1.5 py-0.5 hover:bg-zinc-50 dark:hover:bg-zinc-850 rounded text-zinc-500 hover:text-zinc-800 dark:hover:text-white'>
+					<button
+						type='button'
+						onClick={(e) => {
+							e.stopPropagation();
+							dispatch({ type: 'SET_NODE_TEST_STATUS', id, status: 'running' });
+							setTimeout(() => {
+								dispatch({
+									type: 'SET_NODE_TEST_STATUS',
+									id,
+									status: 'success',
+									output: { result: 'OK', message: 'Test execution finished successfully.', timestamp: Date.now() },
+								});
+							}, 1000);
+						}}
+						className='flex items-center gap-1 px-1.5 py-0.5 hover:bg-zinc-50 dark:hover:bg-zinc-850 rounded text-zinc-500 hover:text-zinc-800 dark:hover:text-white'
+					>
 						<svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5"><path strokeLinecap="round" strokeLinejoin="round" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" /><path strokeLinecap="round" strokeLinejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
 						<span>Test</span>
 					</button>
@@ -451,6 +511,81 @@ const TriggerNode = ({ id, data, selected }: NodeProps<TCanvasNode>) => {
 						<span>Delete</span>
 					</button>
 				</div>
+			)}
+
+			{configureOpen && (
+				<Modal title="Configure Inputs" onClose={() => setConfigureOpen(false)} size="md">
+					<div className="flex flex-col gap-4 text-sm text-zinc-800 dark:text-zinc-200">
+						<div className="text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">
+							Define the inputs that will be passed into this trigger node.
+						</div>
+						<div className="flex flex-col gap-3 max-h-[350px] overflow-y-auto pr-1">
+							{localFields.map((field, idx) => (
+								<div key={field.key} className="flex items-center gap-3 p-3 rounded-lg border border-zinc-200 bg-zinc-50/50 dark:border-zinc-800 dark:bg-zinc-900/40">
+									<div className="flex-1 flex flex-col gap-1.5">
+										<label className="text-[10px] font-bold text-zinc-400 uppercase">Parameter Name</label>
+										<input
+											type="text"
+											value={field.label}
+											onChange={(e) => handleFieldChange(idx, { label: e.target.value })}
+											className="w-full rounded-lg border border-zinc-200 bg-white px-3 py-1.5 text-xs text-zinc-700 outline-none focus:border-zinc-300 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-200"
+											placeholder="e.g. Email Address"
+										/>
+									</div>
+									<div className="w-32 flex flex-col gap-1.5">
+										<label className="text-[10px] font-bold text-zinc-400 uppercase">Type</label>
+										<select
+											value={field.kind}
+											onChange={(e) => handleFieldChange(idx, { kind: e.target.value as any })}
+											className="w-full rounded-lg border border-zinc-200 bg-white px-2 py-1.5 text-xs text-zinc-700 outline-none focus:border-zinc-300 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-200"
+										>
+											<option value="text">Text</option>
+											<option value="number">Number</option>
+											<option value="toggle">Boolean</option>
+										</select>
+									</div>
+									<button
+										type="button"
+										onClick={() => handleRemoveField(field.key)}
+										className="mt-5 flex h-8 w-8 items-center justify-center rounded-lg border border-zinc-200 text-rose-500 hover:bg-rose-50 dark:border-zinc-800 dark:hover:bg-rose-950/20"
+									>
+										<Trash2 size={14} />
+									</button>
+								</div>
+							))}
+							{localFields.length === 0 && (
+								<div className="py-6 text-center text-xs text-zinc-400 dark:text-zinc-500">
+									No input parameters defined yet. Click "+ Add Parameter" below.
+								</div>
+							)}
+						</div>
+						<div className="flex items-center justify-between border-t border-zinc-150 pt-4 dark:border-zinc-800">
+							<button
+								type="button"
+								onClick={handleAddField}
+								className="flex items-center gap-1.5 rounded-lg border border-zinc-200 bg-white hover:bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900 dark:hover:bg-zinc-800 px-4 py-2 text-xs font-bold text-zinc-700 dark:text-zinc-300 shadow-xs transition active:scale-97"
+							>
+								+ Add Parameter
+							</button>
+							<div className="flex items-center gap-2">
+								<button
+									type="button"
+									onClick={() => setConfigureOpen(false)}
+									className="rounded-lg bg-zinc-100 hover:bg-zinc-200 dark:bg-zinc-800 dark:hover:bg-zinc-700 px-4 py-2 text-xs font-bold text-zinc-700 dark:text-zinc-300 transition"
+								>
+									Cancel
+								</button>
+								<button
+									type="button"
+									onClick={handleSaveFields}
+									className="rounded-lg bg-violet-600 hover:bg-violet-750 px-5 py-2 text-xs font-bold text-white shadow-md transition active:scale-97"
+								>
+									Save Inputs
+								</button>
+							</div>
+						</div>
+					</div>
+				</Modal>
 			)}
 
 			{selected && data.defKey === 'trigger.google_calendar' && (

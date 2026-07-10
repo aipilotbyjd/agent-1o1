@@ -7,6 +7,7 @@ import type { TNodeCategoryGroup } from '../../_helper/apiNodeCatalog.helper';
 import type { TNodeDefinition } from '../../_types/node.type';
 import { useNodeCategories } from '@/api/modules/node-types';
 import NodeLibrarySearch from './NodeLibrarySearch.partial';
+import CategoryIcon from './CategoryIcon.partial';
 import { PanelLoader } from './LibraryItems.partial';
 import { tintStyle } from './library.util';
 import HomePanel from './HomePanel.partial';
@@ -83,20 +84,25 @@ const NodeLibrary = () => {
 		<aside className='relative flex h-full w-full shrink-0 flex-col overflow-hidden border-r border-zinc-200 bg-white text-zinc-950 shadow-[8px_0_28px_rgba(24,24,27,0.03)] dark:border-white/10 dark:bg-zinc-950 dark:text-zinc-100'>
 			{showCategoryHeader ? (
 				<div className='flex items-center justify-between px-5 pt-5 pb-2.5'>
-					<div className='flex items-center gap-2.5'>
+					<div className='flex min-w-0 items-center gap-2.5'>
 						<button
 							type='button'
 							onClick={() => setSelected(null)}
-							className='flex h-6 w-6 cursor-pointer items-center justify-center rounded-md text-zinc-500 transition hover:bg-zinc-100 hover:text-zinc-800 dark:hover:bg-white/[0.05] dark:hover:text-white'>
+							className='flex h-7 w-7 shrink-0 cursor-pointer items-center justify-center rounded-lg text-zinc-500 transition hover:bg-primary-50 hover:text-primary-600 dark:hover:bg-primary-500/10 dark:hover:text-primary-300'>
 							<ArrowLeft size={16} />
 						</button>
 						<span
-							className='flex h-6 w-6 items-center justify-center rounded-lg text-sm'
+							className='flex h-8 w-8 shrink-0 items-center justify-center rounded-xl'
 							style={tintStyle(selected.colorHex)}>
-							{selected.icon}
+							<CategoryIcon slug={selected.slug} label={selected.label} size={17} />
 						</span>
-						<span className='truncate text-sm font-extrabold text-zinc-900 dark:text-white'>
-							{selected.label}
+						<span className='flex min-w-0 flex-col'>
+							<span className='truncate text-sm font-extrabold text-zinc-900 dark:text-white'>
+								{selected.label}
+							</span>
+							<span className='truncate text-[10px] font-semibold text-zinc-400 dark:text-zinc-500'>
+								{selected.nodesCount} node{selected.nodesCount === 1 ? '' : 's'}
+							</span>
 						</span>
 					</div>
 					<button
@@ -125,8 +131,8 @@ const NodeLibrary = () => {
 			)}
 
 			<div className='px-5 pb-3'>
-				<div className='flex h-11 items-center gap-2.5 rounded-xl border border-zinc-200 bg-zinc-50/50 px-3.5 text-zinc-400 transition focus-within:border-zinc-300 focus-within:bg-white focus-within:shadow-xs dark:border-white/10 dark:bg-white/[0.02] dark:focus-within:border-white/20 dark:focus-within:bg-transparent'>
-					<Search size={16} className='text-zinc-400 dark:text-zinc-500' />
+				<div className='group flex h-11 items-center gap-2.5 rounded-xl border border-zinc-200 bg-zinc-50/50 px-3.5 text-zinc-400 transition focus-within:border-primary-300 focus-within:bg-white focus-within:ring-2 focus-within:ring-primary-100 dark:border-white/10 dark:bg-white/[0.02] dark:focus-within:border-primary-500/40 dark:focus-within:bg-transparent dark:focus-within:ring-primary-500/10'>
+					<Search size={16} className='text-zinc-400 transition group-focus-within:text-primary-500 dark:text-zinc-500' />
 					<NodeLibrarySearch value={query} onChange={setQuery} />
 					{query && (
 						<button
@@ -145,10 +151,10 @@ const NodeLibrary = () => {
 				<button
 					type='button'
 					onClick={() => dispatch({ type: 'TOGGLE_AI_PANEL' })}
-					className='text-violet-650 flex h-9 w-full cursor-pointer items-center justify-center gap-1.5 rounded-lg border border-zinc-200 bg-white px-4 py-1.5 text-xs font-bold shadow-xs transition hover:bg-zinc-50 dark:border-zinc-800/40 dark:bg-zinc-900 dark:text-violet-400'>
+					className='flex h-9 w-full cursor-pointer items-center justify-center gap-1.5 rounded-lg border border-primary-200 bg-primary-50/60 px-4 py-1.5 text-xs font-bold text-primary-700 shadow-xs transition hover:border-primary-300 hover:bg-primary-50 dark:border-primary-500/20 dark:bg-primary-500/[0.08] dark:text-primary-300 dark:hover:bg-primary-500/[0.14]'>
 					<Sparkles
 						size={13}
-						className='fill-violet-600/20 text-violet-600 dark:fill-violet-400/20 dark:text-violet-400'
+						className='fill-primary-500/20 text-primary-600 dark:fill-primary-400/20 dark:text-primary-400'
 					/>
 					<span>+ Ask AI for help</span>
 				</button>

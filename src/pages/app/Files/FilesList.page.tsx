@@ -15,6 +15,7 @@ import {
 	Trash2,
 	Download,
 	Layers,
+	Menu,
 	X as CloseIcon,
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -22,6 +23,7 @@ import { OutletContextType } from './_layouts/Files.layout';
 import Breadcrumb from '@/components/layout/Breadcrumb';
 import Container from '@/components/layout/Container';
 import pages from '@/Routes/pages';
+import useAsideStatus from '@/hooks/useAsideStatus';
 
 interface IFileItem {
 	id: string;
@@ -126,6 +128,7 @@ const getOwnerBadgeClass = (owner: string) => {
 
 const FilesListPage = () => {
 	const { setHeaderLeft } = useOutletContext<OutletContextType>();
+	const { toggleAside } = useAsideStatus();
 
 	useEffect(() => {
 		setHeaderLeft(<Breadcrumb list={[{ ...pages.app.subPages.files }]} />);
@@ -346,17 +349,28 @@ const FilesListPage = () => {
 			<div className='mx-auto flex w-full max-w-7xl flex-col space-y-8 p-4 sm:p-6 md:p-8'>
 				{/* Header panel */}
 				<div className='flex flex-col justify-between gap-4 sm:flex-row sm:items-center'>
-					<div>
-						<h1 className='text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white'>
-							Files
-						</h1>
-						<p className='mt-1 text-[11px] font-extrabold tracking-widest text-[#503ef5] uppercase dark:text-violet-400'>
-							Workspace library
-						</p>
-						<p className='mt-1 text-xs font-medium text-slate-500 dark:text-zinc-400'>
-							Upload and manage your secure workspace files, documents, and generated
-							assets.
-						</p>
+					<div className='flex items-start gap-4'>
+						{/* Mobile Toggle Aside Menu Button */}
+						<button
+							onClick={toggleAside}
+							type='button'
+							className='flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-slate-200 bg-white text-slate-600 shadow-sm md:hidden dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-300'
+						>
+							<Menu size={18} />
+						</button>
+
+						<div className='flex flex-col text-left'>
+							<h1 className='text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white leading-none'>
+								Files
+							</h1>
+							<p className='mt-1 text-[11px] font-extrabold tracking-widest text-[#503ef5] uppercase dark:text-violet-400'>
+								Workspace library
+							</p>
+							<p className='mt-1 text-xs font-medium text-slate-500 dark:text-zinc-400 leading-normal'>
+								Upload and manage your secure workspace files, documents, and generated
+								assets.
+							</p>
+						</div>
 					</div>
 
 					<button

@@ -19,6 +19,7 @@ import {
 	Activity,
 	Link2,
 	MoreVertical,
+	Menu,
 	type LucideIcon,
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -26,6 +27,7 @@ import { OutletContextType } from './_layouts/History.layout';
 import Breadcrumb from '@/components/layout/Breadcrumb';
 import Container from '@/components/layout/Container';
 import pages from '@/Routes/pages';
+import useAsideStatus from '@/hooks/useAsideStatus';
 import { useWorkspaceContext } from '@/context/workspaceContext';
 import { useExecutions, useExecutionLogs } from '@/api/modules/executions/executions.hooks';
 import type { TExecution } from '@/types/execution.type';
@@ -280,6 +282,7 @@ const ExecutionLogsViewer = ({ ws, executionId }: { ws: string; executionId: str
 
 const HistoryListPage = () => {
 	const { setHeaderLeft } = useOutletContext<OutletContextType>();
+	const { toggleAside } = useAsideStatus();
 
 	useEffect(() => {
 		setHeaderLeft(<Breadcrumb list={[{ ...pages.app.subPages.history }]} />);
@@ -453,7 +456,16 @@ const HistoryListPage = () => {
 			<div className='mx-auto flex w-full max-w-7xl flex-col space-y-6 p-4 sm:p-6 md:p-8'>
 				{/* Title Row with Clock Icon */}
 				<div className='flex items-center gap-4.5'>
-					<div className='flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-[#eedeff]/60 text-[#8b5cf6] shadow-[inset_0_1px_2px_rgba(255,255,255,0.4)] dark:bg-violet-950/40 dark:text-[#a78bfa]'>
+					{/* Mobile Toggle Aside Menu Button */}
+					<button
+						onClick={toggleAside}
+						type='button'
+						className='flex h-11 w-11 items-center justify-center rounded-2xl border border-slate-200 bg-white text-slate-600 shadow-sm md:hidden dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-300'
+					>
+						<Menu size={18} />
+					</button>
+
+					<div className='hidden md:flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-[#eedeff]/60 text-[#8b5cf6] shadow-[inset_0_1px_2px_rgba(255,255,255,0.4)] dark:bg-violet-950/40 dark:text-[#a78bfa]'>
 						<Clock className='h-6 w-6' strokeWidth={2.2} />
 					</div>
 					<div className='flex flex-col gap-0.5 text-left'>
@@ -529,9 +541,9 @@ const HistoryListPage = () => {
 								setSelectedType('All');
 								setCurrentPage(1);
 							}}
-							className={`flex h-12 cursor-pointer items-center justify-center rounded-2xl px-5 text-xs font-black shadow-sm transition ${
+							className={`flex h-12 cursor-pointer items-center justify-center rounded-2xl px-5 text-xs font-black transition-all duration-300 ${
 								selectedType === 'All'
-									? 'bg-violet-600 text-white hover:bg-violet-700 dark:bg-violet-500 dark:hover:bg-violet-600'
+									? 'bg-linear-to-r from-violet-600 to-indigo-600 text-white shadow-md shadow-violet-600/25 dark:shadow-none'
 									: 'dark:text-zinc-350 dark:hover:bg-zinc-800 border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 dark:border-zinc-800 dark:bg-zinc-900/60'
 							}`}>
 							All
@@ -540,25 +552,36 @@ const HistoryListPage = () => {
 				</div>
 
 				{/* Statistics Cards Section */}
-				<div className='grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4'>
+				<div className='grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4'>
 					{/* Card 1: Total Runs */}
-					<div className='dark:border-zinc-800 flex items-center justify-between rounded-[20px] border border-slate-100 bg-white p-5 shadow-[0_4px_20px_rgba(0,0,0,0.015)] dark:bg-zinc-900/40'>
+					<div className='group relative flex items-center justify-between rounded-3xl border border-slate-200/60 bg-white p-6 shadow-sm transition-all duration-350 hover:-translate-y-1 hover:border-violet-500/20 hover:shadow-md dark:border-zinc-800/80 dark:bg-[#11131c]'>
 						<div className='flex flex-col gap-1 text-left'>
-							<span className='text-[10px] font-black tracking-wider text-violet-600 uppercase dark:text-violet-400'>
+							<span className='text-[10px] font-black tracking-widest text-violet-600 uppercase dark:text-violet-400'>
 								Total Runs
 							</span>
-							<span className='text-3xl font-black text-slate-900 dark:text-white'>
+							<span className='text-3.5xl font-black tracking-tight text-slate-900 dark:text-white'>
 								128
 							</span>
 						</div>
 						{/* SVG sparkline chart */}
-						<div className='h-12 w-24 text-violet-500'>
+						<div className='h-12 w-24 text-violet-500 drop-shadow-[0_2px_4px_rgba(139,92,246,0.15)]'>
 							<svg viewBox='0 0 100 40' className='h-full w-full overflow-visible'>
+								<defs>
+									<linearGradient id='violet-glow' x1='0' y1='0' x2='0' y2='1'>
+										<stop offset='0%' stopColor='rgb(139, 92, 246)' stopOpacity='0.15' />
+										<stop offset='100%' stopColor='rgb(139, 92, 246)' stopOpacity='0.0' />
+									</linearGradient>
+								</defs>
+								<path
+									d='M 0,30 Q 15,35 30,20 T 60,10 T 80,25 T 100,5'
+									fill='url(#violet-glow)'
+									className='transition-all duration-300'
+								/>
 								<path
 									d='M 0,30 Q 15,35 30,20 T 60,10 T 80,25 T 100,5'
 									fill='none'
 									stroke='currentColor'
-									strokeWidth='2.5'
+									strokeWidth='2.8'
 									strokeLinecap='round'
 									strokeLinejoin='round'
 								/>
@@ -567,53 +590,64 @@ const HistoryListPage = () => {
 					</div>
 
 					{/* Card 2: Chats */}
-					<div className='dark:border-zinc-800 flex items-center justify-between rounded-[20px] border border-slate-100 bg-white p-5 shadow-[0_4px_20px_rgba(0,0,0,0.015)] dark:bg-zinc-900/40'>
+					<div className='group relative flex items-center justify-between rounded-3xl border border-slate-200/60 bg-white p-6 shadow-sm transition-all duration-350 hover:-translate-y-1 hover:border-violet-500/20 hover:shadow-md dark:border-zinc-800/80 dark:bg-[#11131c]'>
 						<div className='flex flex-col gap-1 text-left'>
-							<span className='text-[10px] font-black tracking-wider text-violet-600 uppercase dark:text-violet-400'>
+							<span className='text-[10px] font-black tracking-widest text-violet-600 uppercase dark:text-violet-400'>
 								Chats
 							</span>
-							<span className='text-3xl font-black text-slate-900 dark:text-white'>
+							<span className='text-3.5xl font-black tracking-tight text-slate-900 dark:text-white'>
 								82
 							</span>
 						</div>
-						<div className='flex h-11 w-11 items-center justify-center rounded-2xl bg-violet-50 text-violet-600 dark:bg-violet-950/30 dark:text-violet-400'>
+						<div className='flex h-12 w-12 items-center justify-center rounded-2xl bg-violet-50 text-violet-600 shadow-inner transition-transform duration-300 group-hover:scale-105 dark:bg-violet-950/30 dark:text-violet-400'>
 							<MessageSquare className='h-5 w-5' />
 						</div>
 					</div>
 
 					{/* Card 3: Workflow Runs */}
-					<div className='dark:border-zinc-800 flex items-center justify-between rounded-[20px] border border-slate-100 bg-white p-5 shadow-[0_4px_20px_rgba(0,0,0,0.015)] dark:bg-zinc-900/40'>
+					<div className='group relative flex items-center justify-between rounded-3xl border border-slate-200/60 bg-white p-6 shadow-sm transition-all duration-350 hover:-translate-y-1 hover:border-violet-500/20 hover:shadow-md dark:border-zinc-800/80 dark:bg-[#11131c]'>
 						<div className='flex flex-col gap-1 text-left'>
-							<span className='text-[10px] font-black tracking-wider text-violet-600 uppercase dark:text-violet-400'>
+							<span className='text-[10px] font-black tracking-widest text-violet-600 uppercase dark:text-violet-400'>
 								Workflow Runs
 							</span>
-							<span className='text-3xl font-black text-slate-900 dark:text-white'>
+							<span className='text-3.5xl font-black tracking-tight text-slate-900 dark:text-white'>
 								46
 							</span>
 						</div>
-						<div className='flex h-11 w-11 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-600 dark:bg-emerald-950/30 dark:text-emerald-400'>
+						<div className='flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-600 shadow-inner transition-transform duration-300 group-hover:scale-105 dark:bg-emerald-950/30 dark:text-emerald-400'>
 							<Workflow className='h-5 w-5' />
 						</div>
 					</div>
 
 					{/* Card 4: Success Rate */}
-					<div className='dark:border-zinc-800 flex items-center justify-between rounded-[20px] border border-slate-100 bg-white p-5 shadow-[0_4px_20px_rgba(0,0,0,0.015)] dark:bg-zinc-900/40'>
+					<div className='group relative flex items-center justify-between rounded-3xl border border-slate-200/60 bg-white p-6 shadow-sm transition-all duration-350 hover:-translate-y-1 hover:border-violet-500/20 hover:shadow-md dark:border-zinc-800/80 dark:bg-[#11131c]'>
 						<div className='flex flex-col gap-1 text-left'>
-							<span className='text-[10px] font-black tracking-wider text-violet-600 uppercase dark:text-violet-400'>
+							<span className='text-[10px] font-black tracking-widest text-violet-600 uppercase dark:text-violet-400'>
 								Success Rate
 							</span>
-							<span className='text-3xl font-black text-slate-900 dark:text-white'>
+							<span className='text-3.5xl font-black tracking-tight text-slate-900 dark:text-white'>
 								98.2%
 							</span>
 						</div>
 						{/* SVG sparkline chart */}
-						<div className='h-12 w-24 text-[#3b82f6]'>
+						<div className='h-12 w-24 text-[#3b82f6] drop-shadow-[0_2px_4px_rgba(59,130,246,0.15)]'>
 							<svg viewBox='0 0 100 40' className='h-full w-full overflow-visible'>
+								<defs>
+									<linearGradient id='blue-glow' x1='0' y1='0' x2='0' y2='1'>
+										<stop offset='0%' stopColor='rgb(59, 130, 246)' stopOpacity='0.15' />
+										<stop offset='100%' stopColor='rgb(59, 130, 246)' stopOpacity='0.0' />
+									</linearGradient>
+								</defs>
+								<path
+									d='M 0,35 Q 20,20 40,30 T 70,10 T 100,8'
+									fill='url(#blue-glow)'
+									className='transition-all duration-300'
+								/>
 								<path
 									d='M 0,35 Q 20,20 40,30 T 70,10 T 100,8'
 									fill='none'
 									stroke='currentColor'
-									strokeWidth='2.5'
+									strokeWidth='2.8'
 									strokeLinecap='round'
 									strokeLinejoin='round'
 								/>
@@ -660,151 +694,281 @@ const HistoryListPage = () => {
 							</div>
 						</div>
 					) : (
-						<div className='no-scrollbar flex flex-col overflow-x-auto'>
-							<div className='min-w-[768px]'>
-								{/* Table Header */}
-								<div className='grid grid-cols-12 gap-4 border-b border-slate-100 bg-[#fafbfe]/70 px-6 py-4.5 text-left text-[11px] font-black tracking-wider text-slate-400 uppercase dark:border-zinc-800/80 dark:bg-zinc-950/20'>
-									<div className='col-span-5'>Activity</div>
-									<div className='col-span-2'>Type</div>
-									<div className='col-span-2'>Connections</div>
-									<div className='col-span-2'>Date & Time</div>
-									<div className='col-span-1'></div>
-								</div>
+						<div className='no-scrollbar flex flex-col'>
+							{/* Desktop View Table */}
+							<div className='hidden md:block no-scrollbar overflow-x-auto'>
+								<div className='min-w-[768px]'>
+									{/* Table Header */}
+									<div className='grid grid-cols-12 gap-4 border-b border-slate-100 bg-[#fafbfe]/70 px-6 py-4.5 text-left text-[11px] font-black tracking-wider text-slate-400 uppercase dark:border-zinc-800/80 dark:bg-zinc-950/20'>
+										<div className='col-span-5'>Activity</div>
+										<div className='col-span-2'>Type</div>
+										<div className='col-span-2'>Connections</div>
+										<div className='col-span-2'>Date & Time</div>
+										<div className='col-span-1'></div>
+									</div>
 
-								{/* Table Body */}
-								<div className='divide-y divide-slate-100 dark:divide-zinc-800/60'>
-									{paginatedItems.map((item) => {
-										const isMock = 'timestamp' in item;
-										let displayItem;
+									{/* Table Body */}
+									<div className='divide-y divide-slate-100 dark:divide-zinc-800/60'>
+										{paginatedItems.map((item) => {
+											const isMock = 'timestamp' in item;
+											let displayItem;
 
-										if (isMock) {
-											const mock = item as IHistoryItem;
-											displayItem = {
-												id: mock.id,
-												title: mock.title,
-												type: mock.type,
-												timestamp: mock.timestamp,
-												credits: mock.credits,
-												status: mock.status,
-												icon: mock.icon,
-											};
-										} else {
-											const real = item as TExecution;
-											const isAgent = real.type === 'agent';
+											if (isMock) {
+												const mock = item as IHistoryItem;
+												displayItem = {
+													id: mock.id,
+													title: mock.title,
+													type: mock.type,
+													timestamp: mock.timestamp,
+													credits: mock.credits,
+													status: mock.status,
+													icon: mock.icon,
+												};
+											} else {
+												const real = item as TExecution;
+												const isAgent = real.type === 'agent';
 
-											let displayStatus = 'Pending';
-											if (real.status === 'completed')
-												displayStatus = 'Complete';
-											else if (real.status === 'failed')
-												displayStatus = 'Failed';
-											else if (real.status === 'cancelled')
-												displayStatus = 'Cancelled';
-											else if (real.status) {
-												displayStatus =
-													real.status.charAt(0).toUpperCase() +
-													real.status.slice(1);
+												let displayStatus = 'Pending';
+												if (real.status === 'completed')
+													displayStatus = 'Complete';
+												else if (real.status === 'failed')
+													displayStatus = 'Failed';
+												else if (real.status === 'cancelled')
+													displayStatus = 'Cancelled';
+												else if (real.status) {
+													displayStatus =
+														real.status.charAt(0).toUpperCase() +
+														real.status.slice(1);
+												}
+
+												displayItem = {
+													id: real.id,
+													title: isAgent
+														? real.agent_name || 'Agent Run'
+														: real.workflow_name || 'Workflow Run',
+													type: isAgent ? 'Chat' : 'Workflow run',
+													timestamp: real.started_at
+														? dayjs(real.started_at).format(
+																'MMM D, YYYY • h:mm A',
+															)
+														: 'Pending',
+													credits: real.credits_consumed ?? 0,
+													status: displayStatus,
+													icon: isAgent ? Bot : Workflow,
+												};
 											}
 
-											displayItem = {
-												id: real.id,
-												title: isAgent
-													? real.agent_name || 'Agent Run'
-													: real.workflow_name || 'Workflow Run',
-												type: isAgent ? 'Chat' : 'Workflow run',
-												timestamp: real.started_at
-													? dayjs(real.started_at).format(
-															'MMM D, YYYY • h:mm A',
-														)
-													: 'Pending',
-												credits: real.credits_consumed ?? 0,
-												status: displayStatus,
-												icon: isAgent ? Bot : Workflow,
-											};
+											const IconComponent = displayItem.icon;
+											const isSelected = selectedItem?.id === displayItem.id;
+											return (
+												<div
+													key={displayItem.id}
+													onClick={() => setSelectedItem(item)}
+													className={`grid cursor-pointer grid-cols-12 items-center gap-4 px-6 py-4.5 transition-all duration-300 hover:bg-slate-50/50 dark:hover:bg-zinc-800/20 ${
+														isSelected
+															? 'border-l-4 border-violet-500 bg-violet-500/[0.02] dark:bg-violet-500/[0.02]'
+															: ''
+													}`}>
+													{/* Activity col */}
+													<div className='col-span-5 flex min-w-0 items-center gap-4'>
+														<div
+															className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl shadow-xs ${
+																displayItem.type === 'Chat'
+																	? 'bg-violet-50 text-violet-600 dark:bg-violet-950/40 dark:text-violet-400'
+																	: 'bg-blue-50 text-blue-600 dark:bg-blue-950/40 dark:text-blue-400'
+															}`}>
+															<IconComponent className='h-5.5 w-5.5' />
+														</div>
+														<div className='flex min-w-0 flex-col items-start'>
+															<span className='w-full truncate text-[14px] font-black text-slate-850 dark:text-white leading-tight mb-0.5'>
+																{displayItem.title}
+															</span>
+															<span className='dark:text-zinc-550 text-[10.5px] font-bold text-slate-400 uppercase tracking-wider'>
+																{displayItem.type === 'Chat'
+																	? 'Chat Activity'
+																	: 'Workflow Run'}
+															</span>
+														</div>
+													</div>
+
+													{/* Type tag col */}
+													<div className='col-span-2 flex justify-start'>
+														<span
+															className={`inline-flex items-center rounded-lg px-2.5 py-1 text-[9px] font-black tracking-widest ${
+																displayItem.type === 'Chat'
+																	? 'border border-purple-100 bg-purple-50 text-purple-600 dark:border-purple-900/30 dark:bg-purple-950/30 dark:text-purple-400'
+																	: 'border border-blue-100 bg-blue-55 bg-blue-50 text-blue-600 dark:border-blue-900/30 dark:bg-blue-950/30 dark:text-blue-400'
+															}`}>
+															{displayItem.type === 'Chat'
+																? 'CHAT'
+																: 'WORKFLOW'}
+														</span>
+													</div>
+
+													{/* Connections col */}
+													<div className='text-slate-655 col-span-2 flex items-center justify-start gap-1.5 text-xs font-bold dark:text-zinc-400'>
+														<div className='flex h-7 items-center gap-1.5 rounded-lg border border-slate-100 bg-slate-50/50 px-2 dark:border-zinc-800 dark:bg-zinc-950/40'>
+															<Link2
+																size={12}
+																className='shrink-0 text-emerald-500'
+															/>
+															<span className='dark:text-zinc-250 font-black text-slate-750'>
+																{displayItem.credits} cr
+															</span>
+														</div>
+													</div>
+
+													{/* Date Time col */}
+													<div className='col-span-2 flex items-center gap-1.5 text-[11.5px] font-bold text-slate-500 dark:text-zinc-400'>
+														<Calendar
+															size={12.5}
+															className='shrink-0 text-slate-400'
+														/>
+														<span>{displayItem.timestamp}</span>
+													</div>
+
+													{/* Action button col */}
+													<div className='col-span-1 flex justify-end'>
+														<button
+															type='button'
+															aria-label='More actions'
+															onClick={(e) => {
+																e.stopPropagation();
+															}}
+															className='rounded-lg p-1.5 text-slate-400 hover:bg-slate-50 hover:text-slate-750 dark:hover:bg-zinc-800 dark:hover:text-zinc-200'>
+															<MoreVertical size={16} />
+														</button>
+													</div>
+												</div>
+											);
+										})}
+									</div>
+								</div>
+							</div>
+
+							{/* Mobile View Card List */}
+							<div className='block md:hidden divide-y divide-slate-100 dark:divide-zinc-800/60'>
+								{paginatedItems.map((item) => {
+									const isMock = 'timestamp' in item;
+									let displayItem;
+
+									if (isMock) {
+										const mock = item as IHistoryItem;
+										displayItem = {
+											id: mock.id,
+											title: mock.title,
+											type: mock.type,
+											timestamp: mock.timestamp,
+											credits: mock.credits,
+											status: mock.status,
+											icon: mock.icon,
+										};
+									} else {
+										const real = item as TExecution;
+										const isAgent = real.type === 'agent';
+
+										let displayStatus = 'Pending';
+										if (real.status === 'completed')
+											displayStatus = 'Complete';
+										else if (real.status === 'failed')
+											displayStatus = 'Failed';
+										else if (real.status === 'cancelled')
+											displayStatus = 'Cancelled';
+										else if (real.status) {
+											displayStatus =
+												real.status.charAt(0).toUpperCase() +
+												real.status.slice(1);
 										}
 
-										const IconComponent = displayItem.icon;
-										const isSelected = selectedItem?.id === displayItem.id;
-										return (
-											<div
-												key={displayItem.id}
-												onClick={() => setSelectedItem(item)}
-												className={`grid cursor-pointer grid-cols-12 items-center gap-4 px-6 py-4.5 transition-all duration-200 hover:bg-[#6366f1]/[0.015] dark:hover:bg-violet-500/[0.01] ${
-													isSelected
-														? 'border-l-2 border-violet-500 bg-violet-500/[0.03] dark:bg-violet-500/[0.03]'
-														: ''
-												}`}>
-												{/* Activity col */}
-												<div className='col-span-5 flex min-w-0 items-center gap-4'>
-													<div
-														className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl ${
-															displayItem.type === 'Chat'
-																? 'bg-[#f5f3ff] text-violet-600 dark:bg-violet-950/40 dark:text-violet-400'
-																: 'bg-[#eff6ff] text-blue-600 dark:bg-blue-950/40 dark:text-blue-400'
-														}`}>
-														<IconComponent className='h-5 w-5' />
-													</div>
-													<div className='flex min-w-0 flex-col items-start'>
-														<span className='w-full truncate text-[13.5px] font-extrabold text-[#0f111a] dark:text-white'>
-															{displayItem.title}
-														</span>
-														<span className='dark:text-zinc-550 text-[11px] font-semibold text-slate-400'>
-															{displayItem.type === 'Chat'
-																? 'Chat'
-																: 'Workflow Run'}
-														</span>
-													</div>
-												</div>
+										displayItem = {
+											id: real.id,
+											title: isAgent
+												? real.agent_name || 'Agent Run'
+												: real.workflow_name || 'Workflow Run',
+											type: isAgent ? 'Chat' : 'Workflow run',
+											timestamp: real.started_at
+												? dayjs(real.started_at).format(
+														'MMM D, YYYY • h:mm A',
+													)
+												: 'Pending',
+											credits: real.credits_consumed ?? 0,
+											status: displayStatus,
+											icon: isAgent ? Bot : Workflow,
+										};
+									}
 
-												{/* Type tag col */}
-												<div className='col-span-2 flex justify-start'>
-													<span
-														className={`inline-flex items-center rounded-md px-2.5 py-0.5 text-[10px] font-black tracking-wide ${
-															displayItem.type === 'Chat'
-																? 'border border-purple-100/50 bg-[#faf5ff] text-[#9333ea] dark:border-purple-900/30 dark:bg-purple-950/30 dark:text-purple-400'
-																: 'border border-blue-100/50 bg-[#eff6ff] text-[#3b82f6] dark:border-blue-900/30 dark:bg-blue-950/30 dark:text-blue-400'
-														}`}>
-														{displayItem.type === 'Chat'
-															? 'CHAT'
-															: 'WORKFLOW'}
+									const IconComponent = displayItem.icon;
+									const isSelected = selectedItem?.id === displayItem.id;
+									return (
+										<div
+											key={displayItem.id}
+											onClick={() => setSelectedItem(item)}
+											className={`flex items-start justify-between gap-3 p-5 transition-all duration-300 hover:bg-slate-50/50 dark:hover:bg-zinc-800/10 ${
+												isSelected
+													? 'border-l-4 border-violet-500 bg-violet-500/[0.02] dark:bg-violet-500/[0.02]'
+													: ''
+											}`}
+										>
+											<div className='flex items-start gap-3.5 min-w-0 flex-1 text-left'>
+												{/* Icon */}
+												<div
+													className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl shadow-xs ${
+														displayItem.type === 'Chat'
+															? 'bg-violet-50 text-violet-600 dark:bg-violet-950/40 dark:text-violet-400'
+															: 'bg-[#eff6ff] text-blue-600 dark:bg-blue-950/40 dark:text-blue-400'
+													}`}
+												>
+													<IconComponent className='h-5.5 w-5.5' />
+												</div>
+												
+												{/* Text Info */}
+												<div className='flex min-w-0 flex-1 flex-col text-left'>
+													<span className='truncate text-[14px] font-black text-slate-850 dark:text-white leading-tight mb-1.5'>
+														{displayItem.title}
 													</span>
-												</div>
+													
+													{/* Meta details row */}
+													<div className='flex flex-wrap items-center gap-x-2.5 gap-y-1.5 mt-0.5'>
+														<span
+															className={`inline-flex items-center rounded-lg px-2 py-0.5 text-[8.5px] font-black tracking-widest ${
+																displayItem.type === 'Chat'
+																	? 'bg-purple-50 text-purple-650 border border-purple-100 dark:border-purple-900/30 dark:bg-purple-950/30 dark:text-purple-400'
+																	: 'bg-[#eff6ff] text-[#3b82f6] border border-blue-100 dark:border-blue-900/30 dark:bg-blue-950/30 dark:text-blue-400'
+															}`}
+														>
+															{displayItem.type === 'Chat' ? 'CHAT' : 'WORKFLOW'}
+														</span>
+														
+														<span className='text-[10px] font-bold text-slate-400 dark:text-zinc-500 flex items-center gap-1'>
+															<Link2 size={10} className='text-emerald-500' />
+															<span className='font-black text-slate-700 dark:text-zinc-250'>{displayItem.credits} cr</span>
+														</span>
 
-												{/* Connections col */}
-												<div className='text-slate-650 col-span-2 flex items-center justify-start gap-1.5 text-xs font-bold dark:text-zinc-400'>
-													<Link2
-														size={13}
-														className='shrink-0 text-emerald-500'
-													/>
-													<span className='dark:text-zinc-250 font-extrabold text-[#0f111a]'>
-														{displayItem.credits}
-													</span>
-												</div>
-
-												{/* Date Time col */}
-												<div className='col-span-2 flex items-center gap-1.5 text-xs font-bold text-slate-500 dark:text-zinc-400'>
-													<Calendar
-														size={13}
-														className='shrink-0 text-slate-400'
-													/>
-													<span>{displayItem.timestamp}</span>
-												</div>
-
-												{/* Action button col */}
-												<div className='col-span-1 flex justify-end'>
-													<button
-														type='button'
-														aria-label='More actions'
-														onClick={(e) => {
-															e.stopPropagation();
-														}}
-														className='rounded-lg p-1.5 text-slate-400 hover:bg-slate-50 hover:text-slate-700 dark:hover:bg-zinc-800 dark:hover:text-zinc-200'>
-														<MoreVertical size={16} />
-													</button>
+														<span className='text-[10px] font-semibold text-slate-450 dark:text-zinc-500'>
+															{displayItem.timestamp}
+														</span>
+													</div>
 												</div>
 											</div>
-										);
-									})}
-								</div>
+											
+											{/* Right: Status and Chevron */}
+											<div className='flex flex-col items-end shrink-0 gap-3'>
+												<span
+													className={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-[9px] font-bold tracking-wide ${
+														displayItem.status === 'Complete'
+															? 'border-emerald-500/20 bg-emerald-500/10 text-emerald-700 dark:border-emerald-500/10 dark:bg-emerald-500/5 dark:text-emerald-400'
+															: displayItem.status === 'Failed'
+																? 'border-rose-500/20 bg-rose-500/10 text-rose-700 dark:border-rose-500/10 dark:bg-rose-500/5 dark:text-rose-400'
+																: 'border-zinc-500/20 bg-zinc-500/10 text-zinc-700 dark:border-zinc-500/10 dark:bg-zinc-500/5 dark:text-zinc-400'
+													}`}
+												>
+													{displayItem.status}
+												</span>
+												<ChevronRight size={15} className='text-slate-400 dark:text-zinc-500' />
+											</div>
+										</div>
+									);
+								})}
 							</div>
 						</div>
 					)}

@@ -65,7 +65,7 @@ const profilerColor = (ms?: number): string => {
 	return 'rgba(244,63,94,0.12)';
 };
 
-const PortHandles = ({
+export const PortHandles = ({
 	ports,
 	type,
 	color,
