@@ -13,7 +13,9 @@ export const useWorkflowApiLoader = (workspaceId: string, workflowId: string) =>
 	const versionsQuery = useWorkflowVersions(workspaceId, workflowId);
 
 	// Load dynamic node categories/definitions from the API
-	const { data: apiCategories } = useNodeCategories({ include_nodes: true });
+	const { data: apiCategories, isLoading: categoriesLoading } = useNodeCategories({
+		include_nodes: true,
+	});
 
 	// Register dynamic definitions so they are globally resolvable in the editor
 	useEffect(() => {
@@ -43,6 +45,12 @@ export const useWorkflowApiLoader = (workspaceId: string, workflowId: string) =>
 	useEffect(() => {
 		if (!workspaceId || !workflowId || !workflowQuery.data) return;
 		if (versionsQuery.isLoading) return;
+		// Wait for the node catalog to load/register first. NODE_CATALOG_MAP is a
+		// plain module object mutated in the effect above; mutating it does not
+		// re-render already-mounted nodes, so if we load the workflow before the
+		// definitions are registered the nodes render as generic "· Node" with no
+		// fields. Gating here guarantees definitions exist before nodes mount.
+		if (categoriesLoading) return;
 
 		const versionKey = selectedVersion?.id ?? 'empty';
 		const loadKey = `${workspaceId}:${workflowId}:${versionKey}`;
@@ -62,6 +70,7 @@ export const useWorkflowApiLoader = (workspaceId: string, workflowId: string) =>
 		dispatch,
 		selectedVersion,
 		versionsQuery.isLoading,
+		categoriesLoading,
 		workflowId,
 		workflowQuery.data,
 		workspaceId,

@@ -24,6 +24,8 @@ export type TOAuthConfig = {
 	extra_params?: Record<string, string>;
 };
 
+export type TCredentialAuthType = 'api_key' | 'oauth' | 'basic' | string;
+
 export type TCredentialType = {
 	id: string;
 	type: string;
@@ -31,6 +33,7 @@ export type TCredentialType = {
 	description: string;
 	icon: string;
 	color: string;
+	auth_type: TCredentialAuthType;
 	fields_schema: TCredentialFieldsSchema;
 	oauth_config: TOAuthConfig | null;
 	docs_url?: string | null;

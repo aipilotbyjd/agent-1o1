@@ -2,8 +2,14 @@ import { motion } from 'framer-motion';
 import { X, Info, User, Check, AlertCircle } from 'lucide-react';
 import { useWorkflowEditor } from '../../_context/WorkflowEditorProvider.context';
 import { getNodeDefinition } from '../../_helper/nodeCatalog.constants';
-import { useState } from 'react';
-import { useCredentials, useConnectOAuthCredential } from '@/api/modules/credentials';
+import { useMemo, useState } from 'react';
+import {
+	useCredentials,
+	useConnectOAuthCredential,
+	useCreateCredential,
+} from '@/api/modules/credentials';
+import { useCredentialTypes } from '@/api/modules/credential-types';
+import type { TCredentialType } from '@/types/credentialType.type';
 import { useWorkspaceContext } from '@/context/workspaceContext';
 import { useQueryClient } from '@tanstack/react-query';
 
@@ -19,8 +25,23 @@ const LinkCredentialsDialog = () => {
 		{ per_page: 100 },
 	);
 	const connectOAuthMutation = useConnectOAuthCredential(activeWorkspaceId);
+	const createCredentialMutation = useCreateCredential(activeWorkspaceId);
+	const { data: credentialTypes = [] } = useCredentialTypes({ per_page: 200 });
 	const [selectedCredentials, setSelectedCredentials] = useState<Record<string, string>>({});
 	const [isConnecting, setIsConnecting] = useState<Record<string, boolean>>({});
+	// Inline "create credential" forms, keyed by node id.
+	const [forms, setForms] = useState<
+		Record<string, { name: string; data: Record<string, string>; error?: string }>
+	>({});
+
+	// Look up a credential type definition by its key (e.g. "slack").
+	const credTypeByKey = useMemo(() => {
+		const map: Record<string, TCredentialType> = {};
+		credentialTypes.forEach((ct) => {
+			map[(ct.type || '').toLowerCase()] = ct;
+		});
+		return map;
+	}, [credentialTypes]);
 
 	if (!open) return null;
 
@@ -70,22 +91,90 @@ const LinkCredentialsDialog = () => {
 		}
 	};
 
+	// "+ Connect New" — OAuth types open the provider popup; everything else
+	// (api_key / basic) opens an inline form to enter the key/token manually.
 	const handleConnect = async (nodeId: string, credentialType: string) => {
+		const credType = credTypeByKey[credentialType.toLowerCase()];
+
+		if (credType?.auth_type === 'oauth') {
+			setIsConnecting((prev) => ({ ...prev, [nodeId]: true }));
+			try {
+				const res = await connectOAuthMutation.mutateAsync({ credentialType });
+				if (res.success && res.credentialId) {
+					handleLink(nodeId, res.credentialId);
+					queryClient.invalidateQueries({ queryKey: ['credentials', activeWorkspaceId] });
+				}
+			} catch (error) {
+				console.error('OAuth connection error:', error);
+			} finally {
+				setIsConnecting((prev) => ({ ...prev, [nodeId]: false }));
+			}
+			return;
+		}
+
+		// Toggle the manual credential form for this node.
+		setForms((prev) => {
+			if (prev[nodeId]) {
+				const { [nodeId]: _omit, ...rest } = prev;
+				return rest;
+			}
+			return {
+				...prev,
+				[nodeId]: { name: `${credType?.name ?? credentialType} account`, data: {} },
+			};
+		});
+	};
+
+	const setFormField = (nodeId: string, key: string, value: string) => {
+		setForms((prev) => ({
+			...prev,
+			[nodeId]: {
+				...prev[nodeId],
+				data: { ...prev[nodeId].data, [key]: value },
+				error: undefined,
+			},
+		}));
+	};
+
+	const submitCredentialForm = async (
+		nodeId: string,
+		credentialType: string,
+		credType?: TCredentialType,
+	) => {
+		const form = forms[nodeId];
+		if (!form) return;
+
+		const required = credType?.fields_schema?.required ?? [];
+		const missing = required.filter((key) => !form.data[key]?.trim());
+		if (!form.name.trim() || missing.length > 0) {
+			setForms((prev) => ({
+				...prev,
+				[nodeId]: {
+					...prev[nodeId],
+					error: !form.name.trim() ? 'Please enter a name.' : 'Please fill in all required fields.',
+				},
+			}));
+			return;
+		}
+
 		setIsConnecting((prev) => ({ ...prev, [nodeId]: true }));
 		try {
-			const res = await connectOAuthMutation.mutateAsync({ credentialType });
-			if (res.success && res.credentialId) {
-				dispatch({
-					type: 'UPDATE_NODE_VALUE',
-					id: nodeId,
-					fieldKey: 'credential_id',
-					value: res.credentialId,
-				});
-				setLinkedIds((prev) => ({ ...prev, [nodeId]: true }));
-				queryClient.invalidateQueries({ queryKey: ['credentials', activeWorkspaceId] });
-			}
-		} catch (error) {
-			console.error('OAuth connection error:', error);
+			const created = await createCredentialMutation.mutateAsync({
+				name: form.name.trim(),
+				type: credentialType,
+				data: form.data,
+			});
+			handleLink(nodeId, created.id);
+			setForms((prev) => {
+				const { [nodeId]: _omit, ...rest } = prev;
+				return rest;
+			});
+			queryClient.invalidateQueries({ queryKey: ['credentials', activeWorkspaceId] });
+		} catch {
+			setForms((prev) => ({
+				...prev,
+				[nodeId]: { ...prev[nodeId], error: 'Failed to create credential. Please try again.' },
+			}));
 		} finally {
 			setIsConnecting((prev) => ({ ...prev, [nodeId]: false }));
 		}
@@ -182,6 +271,10 @@ const LinkCredentialsDialog = () => {
 								{missingNodes.map((node) => {
 									const def = getNodeDefinition(node.data.defKey, node.data.definition);
 									const credentialType = getCredentialType(node, def);
+									const credType = credTypeByKey[credentialType.toLowerCase()];
+									const isOAuth = credType?.auth_type === 'oauth';
+									const form = forms[node.id];
+									const fieldEntries = Object.entries(credType?.fields_schema?.properties ?? {});
 
 									const matchingCredentials = credentials.filter(
 										(c) => (c.type || '').toLowerCase() === credentialType.toLowerCase()
@@ -233,12 +326,95 @@ const LinkCredentialsDialog = () => {
 													disabled={isConnecting[node.id]}
 													onClick={() => handleConnect(node.id, credentialType)}
 													className='flex items-center justify-center rounded-lg border border-zinc-200 bg-white hover:bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900 dark:hover:bg-zinc-800 px-3 py-1.5 text-xs font-bold text-zinc-700 dark:text-zinc-300 shadow-2xs transition active:scale-97 disabled:opacity-50 disabled:cursor-not-allowed'>
-													{isConnecting[node.id] ? 'Connecting…' : '+ Connect New'}
+													{isConnecting[node.id]
+														? 'Connecting…'
+														: form
+															? 'Cancel'
+															: isOAuth
+																? '+ Connect New'
+																: '+ Add Key'}
 												</button>
 											</div>
 
+											{/* Manual credential form (api_key / basic types) */}
+											{form && (
+												<div className='flex flex-col gap-2.5 border-t border-zinc-100 dark:border-zinc-800/60 pt-3'>
+													<div>
+														<label className='mb-1 block text-[10px] font-bold uppercase tracking-wide text-zinc-500 dark:text-zinc-400'>
+															Name
+														</label>
+														<input
+															type='text'
+															value={form.name}
+															onChange={(e) =>
+																setForms((prev) => ({
+																	...prev,
+																	[node.id]: { ...prev[node.id], name: e.target.value, error: undefined },
+																}))
+															}
+															placeholder='My connection'
+															className='w-full rounded-lg border border-zinc-200 bg-white px-2.5 py-1.5 text-xs text-zinc-800 outline-none transition focus:border-zinc-300 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-200'
+														/>
+													</div>
+
+													{fieldEntries.length === 0 && (
+														<p className='text-[10px] text-zinc-400'>
+															No fields defined for this credential type.
+														</p>
+													)}
+
+													{fieldEntries.map(([key, field]) => {
+														const isRequired = (
+															credType?.fields_schema?.required ?? []
+														).includes(key);
+														return (
+															<div key={key}>
+																<label className='mb-1 block text-[10px] font-bold uppercase tracking-wide text-zinc-500 dark:text-zinc-400'>
+																	{field.label || key}
+																	{isRequired && <span className='ml-0.5 text-rose-500'>*</span>}
+																</label>
+																<input
+																	type={field.secret ? 'password' : 'text'}
+																	autoComplete='off'
+																	value={form.data[key] ?? ''}
+																	onChange={(e) => setFormField(node.id, key, e.target.value)}
+																	placeholder={field.placeholder ?? ''}
+																	className='w-full rounded-lg border border-zinc-200 bg-white px-2.5 py-1.5 text-xs text-zinc-800 outline-none transition focus:border-zinc-300 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-200'
+																/>
+																{field.description && (
+																	<p className='mt-0.5 text-[9px] text-zinc-400'>{field.description}</p>
+																)}
+															</div>
+														);
+													})}
+
+													{form.error && (
+														<p className='text-[10px] font-semibold text-rose-500'>{form.error}</p>
+													)}
+
+													<div className='flex items-center justify-end gap-2 pt-0.5'>
+														{credType?.docs_url && (
+															<a
+																href={credType.docs_url}
+																target='_blank'
+																rel='noreferrer'
+																className='mr-auto text-[10px] font-semibold text-violet-500 hover:underline'>
+																How to get this?
+															</a>
+														)}
+														<button
+															type='button'
+															disabled={isConnecting[node.id]}
+															onClick={() => submitCredentialForm(node.id, credentialType, credType)}
+															className='flex items-center justify-center rounded-lg bg-emerald-600 hover:bg-emerald-700 px-4 py-1.5 text-xs font-bold text-white shadow-xs transition active:scale-97 disabled:opacity-50'>
+															{isConnecting[node.id] ? 'Saving…' : 'Create & Link'}
+														</button>
+													</div>
+												</div>
+											)}
+
 											{/* Select existing workspace connection */}
-											{matchingCredentials.length > 0 ? (
+											{!form && matchingCredentials.length > 0 ? (
 												<div className='flex items-center gap-2 border-t border-zinc-100 dark:border-zinc-800/60 pt-3'>
 													<select
 														value={currentSelectedId}
@@ -258,11 +434,11 @@ const LinkCredentialsDialog = () => {
 														Link
 													</button>
 												</div>
-											) : (
+											) : !form ? (
 												<div className='text-[10px] text-zinc-400 dark:text-zinc-500 border-t border-zinc-100 dark:border-zinc-800/60 pt-2.5'>
-													No matching connections in workspace. Click "+ Connect New" to authenticate.
+													No matching connections. Click "{isOAuth ? '+ Connect New' : '+ Add Key'}" to add one.
 												</div>
-											)}
+											) : null}
 										</div>
 									);
 								})}

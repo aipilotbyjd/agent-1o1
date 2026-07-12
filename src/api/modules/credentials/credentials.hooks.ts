@@ -9,6 +9,7 @@ import type {
 	IStartOAuthDto,
 } from '@/types/credential.type';
 import { CredentialService, OAuthService, connectOAuthCredential } from './credentials.service';
+import type { IInitiateOAuthDto } from './credentials.service';
 import { credentialKeys, oauthKeys } from './credentials.keys';
 import { authKeys } from '../auth/auth.keys';
 
@@ -139,7 +140,7 @@ export const useGetOAuthAuthorizeUrl = (ws: string) =>
 
 export const useStartOAuth = (ws: string) =>
 	useMutation({
-		mutationFn: (body: IStartOAuthDto) => OAuthService.initiate(ws, body),
+		mutationFn: (body: IInitiateOAuthDto) => OAuthService.initiate(ws, body),
 		onError: notify.fromError('Failed to start OAuth flow'),
 	});
 
@@ -149,10 +150,12 @@ export const useConnectOAuthCredential = (ws: string) => {
 		mutationFn: ({
 			credentialType,
 			credentialId,
+			name,
 		}: {
 			credentialType: string;
 			credentialId?: string | null;
-		}) => connectOAuthCredential(ws, credentialType, credentialId),
+			name?: string;
+		}) => connectOAuthCredential(ws, credentialType, credentialId, name),
 		onSuccess: (result) => {
 			qc.invalidateQueries({ queryKey: credentialKeys.all(ws) });
 			qc.invalidateQueries({ queryKey: authKeys.user() });

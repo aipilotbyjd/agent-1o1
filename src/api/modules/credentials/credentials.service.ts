@@ -103,11 +103,26 @@ export const OAuthService = {
 			>(O.authorizeUrl(ws), typeof params === 'string' ? { credential_type: params, credential_id: null } : params)
 			.then(unwrap<IOAuthAuthResponse>),
 
-	initiate: (ws: string, body: IStartOAuthDto) =>
+	initiate: (ws: string, body: IInitiateOAuthDto) =>
 		axiosClient
 			.post<TApiResponse<IOAuthAuthResponse>>(O.initiate(ws), body)
 			.then(unwrap<IOAuthAuthResponse>),
 };
+
+/** Request body the backend's oauth/initiate endpoint expects. */
+export interface IInitiateOAuthDto {
+	credential_type_key: string;
+	name: string;
+	credential_id?: string | null;
+}
+
+/** Human-friendly default credential name from a type key (e.g. "google_sheets" → "Google Sheets"). */
+const defaultCredentialName = (key: string) =>
+	key
+		.split(/[_.\-/]/)
+		.filter(Boolean)
+		.map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+		.join(' ') || 'Connection';
 
 const OAUTH_POPUP_FEATURES = 'width=600,height=700,left=400,top=100,scrollbars=yes,resizable=yes';
 
@@ -115,9 +130,11 @@ export const connectOAuthCredential = async (
 	workspaceId: string,
 	credentialType: string,
 	existingCredentialId?: string | null,
+	name?: string,
 ): Promise<IOAuthResult> => {
 	const { authorization_url } = await OAuthService.initiate(workspaceId, {
-		credential_type: credentialType,
+		credential_type_key: credentialType,
+		name: name?.trim() || defaultCredentialName(credentialType),
 		credential_id: existingCredentialId ?? null,
 	});
 

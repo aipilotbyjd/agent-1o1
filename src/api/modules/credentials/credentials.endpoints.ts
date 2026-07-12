@@ -14,7 +14,7 @@ export const CredentialEndpoints = {
 
 export const OAuthEndpoints = {
 	providers: () => '/oauth/providers',
-	authorizeUrl: (ws: string) => `/workspaces/${ws}/oauth/initiate`,
-	initiate: (ws: string) => `/workspaces/${ws}/oauth/initiate`,
-	callback: () => `/oauth/callback`,
+	authorizeUrl: (ws: string) => `/workspaces/${ws}/credentials/oauth/initiate`,
+	initiate: (ws: string) => `/workspaces/${ws}/credentials/oauth/initiate`,
+	callback: () => `/oauth-credentials/callback`,
 } as const;

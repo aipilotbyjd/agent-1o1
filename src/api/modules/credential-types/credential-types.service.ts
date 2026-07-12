@@ -8,17 +8,21 @@ type TCredentialTypeWire = Partial<TCredentialType> & {
 	id: string;
 	name: string;
 	type?: string;
+	key?: string;
+	auth_type?: string;
+	oauth?: unknown;
 	fields?: TCredentialType['fields_schema'];
 	schema?: TCredentialType['fields_schema'];
 };
 
 const normalizeCredentialType = (item: TCredentialTypeWire): TCredentialType => ({
 	id: item.id,
-	type: item.type ?? item.id,
+	type: item.type ?? item.key ?? item.id,
 	name: item.name,
 	description: item.description ?? '',
 	icon: item.icon ?? '',
 	color: item.color ?? '#6D28D9',
+	auth_type: item.auth_type ?? (item.oauth_config || item.oauth ? 'oauth' : 'api_key'),
 	fields_schema: item.fields_schema ??
 		item.schema ??
 		item.fields ?? {
