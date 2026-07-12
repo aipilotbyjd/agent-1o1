@@ -73,6 +73,7 @@ export type TWorkflowEditorAction =
 			outputPreview?: unknown;
 	  }
 	| { type: 'LOAD_WORKFLOW'; workflow: TExportedWorkflow }
+	| { type: 'APPLY_BUILDER_DRAFT'; nodes: TCanvasNode[]; edges: TCanvasEdge[] }
 	// Node customization
 	| { type: 'SET_NODE_COLOR'; id: string; color: string | null }
 	| { type: 'TOGGLE_NODE_BREAKPOINT'; id: string }
@@ -528,6 +529,16 @@ export const workflowEditorReducer = (
 					linkCredentialsOpen: false,
 				},
 			};
+		case 'APPLY_BUILDER_DRAFT': {
+			const next = withHistory(state);
+			return {
+				...next,
+				nodes: action.nodes,
+				edges: action.edges,
+				workflow: { ...next.workflow, savingState: 'dirty' },
+				ui: { ...next.ui, selectedNodeId: null },
+			};
+		}
 		case 'SET_NODE_COLOR': {
 			const next = withHistory(state);
 			return {

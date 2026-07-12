@@ -24,6 +24,7 @@ import WorkflowsPage from '@/pages/app/Workflows/WorkflowsList.page';
 import WorkspaceSidebar from '@/templates/asides/AgentAside.template';
 import useAsideStatus from '@/hooks/useAsideStatus';
 import useDeviceScreen from '@/hooks/useDeviceScreen';
+import { useAiBuilderBridge } from '../_hooks/useAiBuilderBridge.hook';
 import { useAutosave } from '../_hooks/useAutosave.hook';
 import { useEditorHotkeys } from '../_hooks/useEditorHotkeys.hook';
 import { useWorkflowApiLoader } from '../_hooks/useWorkflowApiLoader.hook';
@@ -53,6 +54,7 @@ const BuildPage = () => {
 
 	useAutosave();
 	useEditorHotkeys();
+	useAiBuilderBridge();
 
 	useEffect(() => {
 		if (window.location.pathname.startsWith('/editor') || (workspaceId && workflowId)) {

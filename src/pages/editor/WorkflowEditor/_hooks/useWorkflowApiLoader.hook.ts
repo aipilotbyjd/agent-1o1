@@ -2,7 +2,6 @@ import { useEffect, useMemo, useRef } from 'react';
 import { useWorkflow, useWorkflowVersions } from '@/api/modules/workflows';
 import { versionToExportedWorkflow } from '../_helper/workflowApiTransform.helper';
 import { useWorkflowEditor } from '../_context/WorkflowEditorProvider.context';
-import { useAiChatStore } from '@/store/aiChat.store';
 import { useNodeCategories } from '@/api/modules/node-types';
 import { mapApiCategoriesToGroups } from '../_helper/apiNodeCatalog.helper';
 import { NODE_CATALOG_MAP } from '../_helper/nodeCatalog.constants';
@@ -50,8 +49,10 @@ export const useWorkflowApiLoader = (workspaceId: string, workflowId: string) =>
 		if (loadedKey.current === loadKey) return;
 		loadedKey.current = loadKey;
 
-		// Exit and clear any active AI chats from other workflows
-		useAiChatStore.getState().exitChat();
+		// NOTE: we intentionally do NOT reset the AI chat here. The builder store
+		// keys its session per-workflow (setBuilderContext) and resumes/clears the
+		// conversation to match the active workflow, so wiping it here would drop a
+		// valid in-progress or resumable session for the workflow being loaded.
 
 		dispatch({
 			type: 'LOAD_WORKFLOW',

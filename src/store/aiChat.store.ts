@@ -1,5 +1,12 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import { WorkflowBuilderService } from '@/api/modules/workflow-builder/workflow-builder.service';
+import { isSessionQueued } from '@/types/workflowBuilder.type';
+import type {
+	IBuilderMessage,
+	IBuilderMessageReadyEvent,
+	IBuilderSession,
+} from '@/types/workflowBuilder.type';
 
 export type TAiChatMessage = {
 	id: string;
@@ -8,6 +15,7 @@ export type TAiChatMessage = {
 	timestamp?: string;
 	avatarUrl?: string;
 	isThought?: boolean;
+	isError?: boolean;
 };
 
 export type TAiChatSession = {
@@ -22,11 +30,35 @@ type TAiChatState = {
 	isChatActive: boolean;
 	isThinking: boolean;
 	messages: TAiChatMessage[];
-	workflowBuildStep: number; // 0 = none, 1 = first card, 2 = second card, 3 = third card
+	workflowBuildStep: number; // 0 = none, 3 = draft applied
 	sessions: TAiChatSession[];
 	activeSessionId: string;
+	errorText: string | null;
+
+	// Builder backend wiring
+	builderSessionId: string | null;
+	pendingMessageId: string | null;
+	workspaceId: string | null;
+	workflowId: string | null;
+	// Persisted map of workflow → its builder session, so a reload resumes the
+	// same backend conversation instead of showing stale local chat.
+	sessionByWorkflow: Record<string, string>;
+	// The builder session id the bridge has already hydrated chat/canvas from.
+	hydratedSessionId: string | null;
+
+	// Set by the editor once route params are known so the store can call the API.
+	setBuilderContext: (workspaceId: string | null, workflowId?: string | null) => void;
+
 	startChat: (initialPrompt: string) => void;
 	sendMessage: (prompt: string) => void;
+	submitPrompt: (prompt: string) => void;
+
+	// Called by the realtime bridge when the backend finishes processing.
+	applyReadyMessage: (event: IBuilderMessageReadyEvent) => void;
+	failPending: (message?: string) => void;
+	// Rebuilds chat state from the authoritative backend session (on reload/resume).
+	hydrateFromBackend: (session: IBuilderSession) => void;
+
 	setThinking: (thinking: boolean) => void;
 	resetChat: () => void;
 	exitChat: () => void;
@@ -55,17 +87,36 @@ const WELCOME_MESSAGE: TAiChatMessage = {
 	timestamp: getCurrentTimeStr(),
 };
 
-const GUMMIE_RESPONSE = `Hey there! 👋 Welcome to agent101!
-I'm your AI flow-building assistant.
-I'm here to help you create powerful automations — no coding required! 🚀
-
-What would you like to automate today?
-Feel free to describe your idea and I'll get to work building it for you!`;
-
 const makeTitle = (prompt: string) => {
 	const clean = prompt.trim().replace(/\s+/g, ' ');
 	return clean.length > 48 ? `${clean.slice(0, 48)}…` : clean || 'New chat';
 };
+
+/** Stable key for the per-workflow builder-session map. */
+const workflowKey = (workflowId: string | null) => workflowId ?? '__default__';
+
+const formatTs = (iso?: string) => {
+	if (!iso) return getCurrentTimeStr();
+	const d = new Date(iso);
+	return Number.isNaN(d.getTime()) ? getCurrentTimeStr() : formatTime(d);
+};
+
+const formatTime = (d: Date) => {
+	let hours = d.getHours();
+	const minutes = d.getMinutes().toString().padStart(2, '0');
+	const ampm = hours >= 12 ? 'PM' : 'AM';
+	hours = hours % 12 || 12;
+	return `${hours}:${minutes} ${ampm}`;
+};
+
+/** Map a backend builder message into the chat UI shape. */
+const mapBackendMessage = (m: IBuilderMessage): TAiChatMessage => ({
+	id: m.id,
+	role: m.role === 'user' ? 'user' : 'assistant',
+	text: m.processing_status === 'failed' ? (m.error_message ?? 'Something went wrong.') : m.content,
+	timestamp: formatTs(m.created_at),
+	isError: m.processing_status === 'failed',
+});
 
 const INITIAL_SESSION_ID = makeSessionId();
 
@@ -100,162 +151,205 @@ export const useAiChatStore = create<TAiChatState>()(
 			workflowBuildStep: 0,
 			sessions: [],
 			activeSessionId: INITIAL_SESSION_ID,
+			errorText: null,
+			builderSessionId: null,
+			pendingMessageId: null,
+			workspaceId: null,
+			workflowId: null,
+			sessionByWorkflow: {},
+			hydratedSessionId: null,
+
+			setBuilderContext: (workspaceId, workflowId) =>
+				set((state) => {
+					const wfId = workflowId ?? null;
+					// Resolve the builder session bound to this workflow (if any) so a
+					// reload or workflow switch resumes the correct conversation.
+					const resumed = state.sessionByWorkflow[workflowKey(wfId)] ?? null;
+					const switched = resumed !== state.builderSessionId;
+
+					return {
+						workspaceId,
+						workflowId: wfId,
+						builderSessionId: resumed,
+						// If we switched to a different session, force re-hydration and
+						// clear stale live chat until the backend session loads.
+						...(switched
+							? {
+									hydratedSessionId: null,
+									pendingMessageId: null,
+									isThinking: false,
+									messages: [WELCOME_MESSAGE],
+									isChatActive: false,
+									workflowBuildStep: 0,
+									errorText: null,
+								}
+							: {}),
+					};
+				}),
 
 			startChat: (initialPrompt) => {
-				const timeStr = getCurrentTimeStr();
+				const clean = initialPrompt.trim();
+				if (!clean) return;
+
 				const userMsg: TAiChatMessage = {
 					id: makeId(),
 					role: 'user',
-					text: initialPrompt,
-					timestamp: timeStr,
+					text: clean,
+					timestamp: getCurrentTimeStr(),
 				};
 
 				const messages = [WELCOME_MESSAGE, userMsg];
 				set((state) => ({
 					isChatActive: true,
 					isThinking: true,
-					messages,
+					errorText: null,
 					workflowBuildStep: 0,
+					builderSessionId: null, // fresh conversation → new backend session
+					messages,
 					sessions: syncActiveSessionIntoList(state.sessions, state.activeSessionId, messages),
 				}));
 
-				// Trigger mock assistant response after a short thinking delay
-				setTimeout(() => {
-					const replyId = makeId();
-					const replyMsg: TAiChatMessage = {
-						id: replyId,
-						role: 'assistant',
-						text: '',
-						timestamp: getCurrentTimeStr(),
-						isThought: true, // will display the "Thought for a couple of seconds"
-					};
-					const nextMessages = [...get().messages, replyMsg];
-					set((state) => ({
-						isThinking: false,
-						messages: nextMessages,
-						sessions: syncActiveSessionIntoList(
-							state.sessions,
-							state.activeSessionId,
-							nextMessages,
-						),
-					}));
-
-					// Stream GUMMIE_RESPONSE
-					let currentLen = 0;
-					const fullText = GUMMIE_RESPONSE;
-					const interval = setInterval(() => {
-						currentLen += Math.min(
-							3 + Math.floor(Math.random() * 3),
-							fullText.length - currentLen,
-						);
-						const streamedText = fullText.slice(0, currentLen);
-
-						// Determine build step based on progress
-						const progress = currentLen / fullText.length;
-						let buildStep = 0;
-						if (progress >= 0.85) {
-							buildStep = 3;
-						} else if (progress >= 0.5) {
-							buildStep = 2;
-						} else if (progress >= 0.15) {
-							buildStep = 1;
-						}
-
-						set((state) => {
-							const updatedMessages = state.messages.map((m) =>
-								m.id === replyId ? { ...m, text: streamedText } : m,
-							);
-							return {
-								messages: updatedMessages,
-								workflowBuildStep: buildStep,
-								sessions: syncActiveSessionIntoList(
-									state.sessions,
-									state.activeSessionId,
-									updatedMessages,
-								),
-							};
-						});
-
-						if (currentLen >= fullText.length) {
-							clearInterval(interval);
-						}
-					}, 30);
-				}, 1800);
+				get().submitPrompt(clean);
 			},
 
 			sendMessage: (prompt) => {
-				const timeStr = getCurrentTimeStr();
+				const clean = prompt.trim();
+				if (!clean) return;
+
 				const userMsg: TAiChatMessage = {
 					id: makeId(),
 					role: 'user',
-					text: prompt,
-					timestamp: timeStr,
+					text: clean,
+					timestamp: getCurrentTimeStr(),
 				};
 
 				const messages = [...get().messages, userMsg];
 				set((state) => ({
+					isChatActive: true,
 					isThinking: true,
+					errorText: null,
 					messages,
 					sessions: syncActiveSessionIntoList(state.sessions, state.activeSessionId, messages),
 				}));
 
-				// Respond to follow-up messages
-				setTimeout(() => {
-					let responseText = '';
-					if (prompt.toLowerCase().includes('hello') || prompt.toLowerCase().includes('hi')) {
-						responseText =
-							'Hi! I am here to help you design, configure, and customize your workflow. What specific integration or logic would you like to add next?';
-					} else {
-						responseText = `I've analyzed your request: "${prompt}". I recommend adding an action step to connect your services. Would you like me to build it on the canvas?`;
-					}
+				get().submitPrompt(clean);
+			},
 
-					const replyId = makeId();
-					const replyMsg: TAiChatMessage = {
-						id: replyId,
-						role: 'assistant',
-						text: '',
-						timestamp: getCurrentTimeStr(),
-					};
+			/**
+			 * Fire the prompt at the backend builder. Creates a session on the first
+			 * message, then reuses it for follow-ups. The assistant reply + generated
+			 * nodes arrive asynchronously over the `builder.session.*` realtime channel
+			 * (handled by the editor's builder bridge), so we only start the request
+			 * here and surface transport-level failures.
+			 */
+			submitPrompt: (prompt) => {
+				const { workspaceId, workflowId, builderSessionId } = get();
 
-					const nextMessages = [...get().messages, replyMsg];
-					set((state) => ({
-						isThinking: false,
-						messages: nextMessages,
-						sessions: syncActiveSessionIntoList(
-							state.sessions,
-							state.activeSessionId,
-							nextMessages,
-						),
-					}));
+				if (!workspaceId) {
+					get().failPending('No active workspace — open a workspace to build workflows.');
+					return;
+				}
 
-					// Stream responseText
-					let currentLen = 0;
-					const interval = setInterval(() => {
-						currentLen += Math.min(
-							3 + Math.floor(Math.random() * 3),
-							responseText.length - currentLen,
-						);
-						const streamedText = responseText.slice(0, currentLen);
-
-						set((state) => {
-							const updatedMessages = state.messages.map((m) =>
-								m.id === replyId ? { ...m, text: streamedText } : m,
-							);
-							return {
-								messages: updatedMessages,
-								sessions: syncActiveSessionIntoList(
-									state.sessions,
-									state.activeSessionId,
-									updatedMessages,
-								),
-							};
+				const request = builderSessionId
+					? WorkflowBuilderService.sendMessage(workspaceId, builderSessionId, {
+							message: prompt,
+						}).then((res) => set({ pendingMessageId: res.message_id }))
+					: WorkflowBuilderService.createSession(workspaceId, {
+							prompt,
+							workflow_id: workflowId ?? undefined,
+						}).then((res) => {
+							const newId = isSessionQueued(res) ? res.session_id : res.id;
+							set((state) => ({
+								builderSessionId: newId,
+								hydratedSessionId: newId, // freshly created — nothing to re-hydrate
+								pendingMessageId: isSessionQueued(res) ? res.message_id : null,
+								sessionByWorkflow: {
+									...state.sessionByWorkflow,
+									[workflowKey(workflowId)]: newId,
+								},
+							}));
 						});
 
-						if (currentLen >= responseText.length) {
-							clearInterval(interval);
-						}
-					}, 30);
-				}, 1500);
+				Promise.resolve(request).catch((error: unknown) => {
+					const message =
+						(error as { response?: { data?: { message?: string } } })?.response?.data?.message ??
+						'Could not reach the workflow builder. Please try again.';
+					get().failPending(message);
+				});
+			},
+
+			applyReadyMessage: (event) => {
+				const assistantMsg: TAiChatMessage = {
+					id: event.message.id,
+					role: 'assistant',
+					text: event.message.content,
+					timestamp: getCurrentTimeStr(),
+				};
+
+				set((state) => {
+					// Avoid duplicating a message we've already appended.
+					if (state.messages.some((m) => m.id === assistantMsg.id)) {
+						return { isThinking: false };
+					}
+					const messages = [...state.messages, assistantMsg];
+					return {
+						isThinking: false,
+						errorText: null,
+						builderSessionId: event.session.id,
+						pendingMessageId: null,
+						workflowBuildStep: (event.draft?.nodes?.length ?? 0) > 0 ? 3 : 0,
+						messages,
+						sessions: syncActiveSessionIntoList(state.sessions, state.activeSessionId, messages),
+					};
+				});
+			},
+
+			failPending: (message) => {
+				const text = message ?? 'Something went wrong generating the workflow.';
+				set((state) => {
+					const errMsg: TAiChatMessage = {
+						id: makeId(),
+						role: 'assistant',
+						text,
+						timestamp: getCurrentTimeStr(),
+						isError: true,
+					};
+					const messages = [...state.messages, errMsg];
+					return {
+						isThinking: false,
+						errorText: text,
+						pendingMessageId: null,
+						messages,
+						sessions: syncActiveSessionIntoList(state.sessions, state.activeSessionId, messages),
+					};
+				});
+			},
+
+			hydrateFromBackend: (session) => {
+				const backendMsgs = (session.messages ?? []).filter(
+					(m) => m.role === 'user' || m.processing_status === 'completed' || m.processing_status === 'failed',
+				);
+				const messages: TAiChatMessage[] = [WELCOME_MESSAGE, ...backendMsgs.map(mapBackendMessage)];
+
+				// If the newest message is still processing, keep the thinking state so
+				// the poll/realtime picks it up and appends the reply.
+				const last = (session.messages ?? [])[session.messages!.length - 1];
+				const stillPending =
+					!!last &&
+					last.role === 'assistant' &&
+					(last.processing_status === 'pending' || last.processing_status === 'processing');
+
+				set((state) => ({
+					builderSessionId: session.id,
+					hydratedSessionId: session.id,
+					isChatActive: backendMsgs.some((m) => m.role === 'user'),
+					isThinking: stillPending,
+					pendingMessageId: stillPending ? last.id : null,
+					workflowBuildStep: (session.nodes_draft?.length ?? 0) > 0 ? 3 : 0,
+					errorText: null,
+					messages,
+					sessions: syncActiveSessionIntoList(state.sessions, state.activeSessionId, messages),
+				}));
 			},
 
 			setThinking: (thinking) => set({ isThinking: thinking }),
@@ -265,6 +359,8 @@ export const useAiChatStore = create<TAiChatState>()(
 				set((state) => ({
 					isThinking: false,
 					workflowBuildStep: 0,
+					errorText: null,
+					builderSessionId: null,
 					messages,
 					sessions: syncActiveSessionIntoList(state.sessions, state.activeSessionId, messages),
 				}));
@@ -275,19 +371,28 @@ export const useAiChatStore = create<TAiChatState>()(
 					isChatActive: false,
 					isThinking: false,
 					workflowBuildStep: 0,
+					errorText: null,
+					builderSessionId: null,
 					messages: [WELCOME_MESSAGE],
 				});
 			},
 
-			/** Archives the current session (if it has any content) and starts a fresh one. */
+			/** Archives the current session and starts a fresh backend conversation. */
 			newChat: () => {
-				const newId = makeSessionId();
-				set({
-					isChatActive: false,
-					isThinking: false,
-					workflowBuildStep: 0,
-					messages: [WELCOME_MESSAGE],
-					activeSessionId: newId,
+				set((state) => {
+					const { [workflowKey(state.workflowId)]: _removed, ...rest } = state.sessionByWorkflow;
+					return {
+						isChatActive: false,
+						isThinking: false,
+						workflowBuildStep: 0,
+						errorText: null,
+						builderSessionId: null,
+						pendingMessageId: null,
+						hydratedSessionId: null,
+						sessionByWorkflow: rest,
+						messages: [WELCOME_MESSAGE],
+						activeSessionId: makeSessionId(),
+					};
 				});
 			},
 
@@ -300,6 +405,8 @@ export const useAiChatStore = create<TAiChatState>()(
 					isChatActive: session.messages.some((m) => m.role === 'user'),
 					isThinking: false,
 					workflowBuildStep: 0,
+					errorText: null,
+					builderSessionId: null, // continuing an old chat starts a fresh backend session
 				});
 			},
 
@@ -316,17 +423,22 @@ export const useAiChatStore = create<TAiChatState>()(
 						isChatActive: false,
 						isThinking: false,
 						workflowBuildStep: 0,
+						errorText: null,
+						builderSessionId: null,
 					};
 				});
 			},
 		}),
 		{
 			name: 'agent101-ai-chat-history',
+			// Persist only the workflow→session binding (so reloads resume the right
+			// backend conversation) and the local session list. Live chat state
+			// (messages/isChatActive) is NOT persisted — it is rehydrated from the
+			// authoritative backend session to avoid showing stale/disconnected chat.
 			partialize: (state) => ({
 				sessions: state.sessions,
 				activeSessionId: state.activeSessionId,
-				messages: state.messages,
-				isChatActive: state.isChatActive,
+				sessionByWorkflow: state.sessionByWorkflow,
 			}),
 		},
 	),
