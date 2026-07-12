@@ -294,7 +294,7 @@ const WorkflowGovernanceModal = () => {
 															onClick={() =>
 																publishVersion.mutate({
 																	id: workflowId,
-																	version: version.version_number.toString(),
+																	version: version.id,
 																})
 															}
 															disabled={publishVersion.isPending}
@@ -309,7 +309,7 @@ const WorkflowGovernanceModal = () => {
 															onClick={() =>
 																rollbackVersion.mutate({
 																	id: workflowId,
-																	version: version.version_number.toString(),
+																	version: version.id,
 																})
 															}
 															disabled={rollbackVersion.isPending}
