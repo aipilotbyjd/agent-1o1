@@ -248,7 +248,7 @@ const AiBuilderPanel = () => {
 								type='button'
 								onClick={handleSend}
 								disabled={!promptInput.trim() || isThinking}
-								className='flex h-7 w-7 items-center justify-center rounded-full bg-primary-400 text-primary-950 transition hover:bg-primary-700 active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed'
+								className='flex h-7 w-7 items-center justify-center rounded-full bg-primary-400 text-primary-950 transition hover:bg-primary-500 active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed'
 							>
 								<ArrowUp size={14} strokeWidth={2.5} />
 							</button>
@@ -294,7 +294,7 @@ const AiBuilderPanel = () => {
 					<button
 						type='button'
 						onClick={handleNewChat}
-						className='flex w-full items-center justify-center gap-1.5 rounded-lg bg-primary-400 px-3 py-2 text-xs font-bold text-primary-950 shadow-xs transition hover:bg-primary-700'
+						className='flex w-full items-center justify-center gap-1.5 rounded-lg bg-primary-400 px-3 py-2 text-xs font-bold text-primary-950 shadow-xs transition hover:bg-primary-500'
 					>
 						<Plus size={13} />
 						<span>New Chat</span>

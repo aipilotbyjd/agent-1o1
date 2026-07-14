@@ -415,7 +415,7 @@ const WorkflowGovernanceModal = () => {
 									<button
 										type="submit"
 										disabled={createShare.isPending}
-										className="flex items-center gap-1.5 rounded-lg bg-primary-400 px-4 py-2 text-xs font-bold text-primary-950 hover:bg-primary-700 disabled:opacity-50 transition"
+										className="flex items-center gap-1.5 rounded-lg bg-primary-400 px-4 py-2 text-xs font-bold text-primary-950 hover:bg-primary-500 disabled:opacity-50 transition"
 									>
 										<Plus size={13} />
 										Generate Link
@@ -543,7 +543,7 @@ const WorkflowGovernanceModal = () => {
 									<button
 										type="submit"
 										disabled={requestApproval.isPending}
-										className="flex items-center gap-1.5 rounded-lg bg-primary-400 px-4 py-2 text-xs font-bold text-primary-950 hover:bg-primary-700 disabled:opacity-50 transition"
+										className="flex items-center gap-1.5 rounded-lg bg-primary-400 px-4 py-2 text-xs font-bold text-primary-950 hover:bg-primary-500 disabled:opacity-50 transition"
 									>
 										<Send size={12} />
 										Submit Request
@@ -752,7 +752,7 @@ const WorkflowGovernanceModal = () => {
 									<button
 										type="submit"
 										disabled={deployRelease.isPending}
-										className="flex items-center gap-1.5 rounded-lg bg-primary-400 px-4 py-2 text-xs font-bold text-primary-950 hover:bg-primary-700 disabled:opacity-50 transition"
+										className="flex items-center gap-1.5 rounded-lg bg-primary-400 px-4 py-2 text-xs font-bold text-primary-950 hover:bg-primary-500 disabled:opacity-50 transition"
 									>
 										<Disc size={13} className="animate-spin-slow" />
 										Deploy Release

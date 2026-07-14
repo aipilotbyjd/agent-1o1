@@ -233,7 +233,7 @@ const UsagePage = ({ hideHeader = false }: { hideHeader?: boolean }) => {
 					>
 						<Link
 							to={pages.settings.subPages.billing.subPages.credits.to}
-							className='flex h-10 items-center gap-2 rounded-xl bg-gradient-to-r from-primary-400 to-primary-400 px-5 text-sm font-bold text-primary-950 shadow-md shadow-primary-600/15 hover:shadow-primary-600/25 transition-all duration-200 border border-primary-500/20'>
+							className='flex h-10 items-center gap-2 rounded-xl bg-gradient-to-r from-primary-400 to-primary-400 px-5 text-sm font-bold text-primary-950 shadow-md shadow-primary-500/15 hover:shadow-primary-500/25 transition-all duration-200 border border-primary-500/20'>
 							<CreditCard size={15} />
 							<span>Buy credits</span>
 						</Link>

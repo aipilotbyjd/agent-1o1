@@ -275,7 +275,7 @@ const DashboardPage = () => {
 					initial={{ opacity: 0, y: -15 }}
 					animate={{ opacity: 1, y: 0 }}
 					transition={{ duration: 0.4 }}
-					className='dark:border-zinc-800 relative overflow-hidden rounded-3xl border border-zinc-800/80 bg-gradient-to-r from-[#090b1a] via-[#111438] to-[#250d4f] p-6 shadow-xl shadow-primary-950/20 md:p-8 dark:from-[#05060f] dark:via-[#0c0d24] dark:to-[#170932]'>
+					className='dark:border-zinc-800 relative overflow-hidden rounded-3xl border border-zinc-800/80 bg-gradient-to-r from-[#090b1a] via-[#111438] to-[#250d4f] p-6 shadow-xl shadow-primary-500/20 md:p-8 dark:from-[#05060f] dark:via-[#0c0d24] dark:to-[#170932]'>
 					{/* Grid Overlay inside Banner */}
 					<div className='pointer-events-none absolute inset-0 bg-[radial-gradient(rgba(255,255,255,0.03)_1px,transparent_1px)] [background-size:16px_16px] opacity-60' />
 
@@ -363,7 +363,7 @@ const DashboardPage = () => {
 
 							{/* Main Analytics Card */}
 							<div
-								className='relative z-10 flex h-24 w-44 flex-col justify-between rounded-2xl border border-white/20 bg-white/95 p-3 shadow-2xl shadow-primary-950/40 dark:bg-zinc-900/90'
+								className='relative z-10 flex h-24 w-44 flex-col justify-between rounded-2xl border border-white/20 bg-white/95 p-3 shadow-2xl shadow-primary-500/40 dark:bg-zinc-900/90'
 								style={{
 									transform:
 										'perspective(800px) rotateY(-20deg) rotateX(15deg) rotateZ(-2deg)',
@@ -509,7 +509,7 @@ const DashboardPage = () => {
 									if (item.done) {
 										if (isNext) {
 											cardBorder =
-												'border-primary-400 bg-white shadow-md shadow-primary-500/[0.02] dark:border-primary-500/40 dark:bg-[#11131c]';
+												'border-primary-400 bg-white shadow-md shadow-primary-500/20/[0.02] dark:border-primary-500/40 dark:bg-[#11131c]';
 											iconStyle =
 												'bg-primary-100/60 text-primary-600 dark:bg-primary-950/40 dark:text-primary-400';
 											statusIcon = (
@@ -531,7 +531,7 @@ const DashboardPage = () => {
 									} else {
 										if (isNext) {
 											cardBorder =
-												'border-primary-400 bg-white shadow-md shadow-primary-500/[0.02] dark:border-primary-500/40 dark:bg-[#11131c]';
+												'border-primary-400 bg-white shadow-md shadow-primary-500/20/[0.02] dark:border-primary-500/40 dark:bg-[#11131c]';
 											iconStyle =
 												'bg-primary-100/60 text-primary-600 dark:bg-primary-950/40 dark:text-primary-400';
 											statusIcon = (
@@ -545,7 +545,7 @@ const DashboardPage = () => {
 											key={item.key}
 											type='button'
 											onClick={() => handleOnboardingAction(item.key)}
-											className={`flex items-center justify-between gap-3 rounded-2xl border p-4 text-left transition-all duration-200 hover:border-primary-400 hover:shadow-md hover:shadow-primary-500/[0.01] ${cardBorder}`}>
+											className={`flex items-center justify-between gap-3 rounded-2xl border p-4 text-left transition-all duration-200 hover:border-primary-400 hover:shadow-md hover:shadow-primary-500/20/[0.01] ${cardBorder}`}>
 											<div className='flex min-w-0 flex-1 items-center gap-3.5'>
 												{/* Left step icon */}
 												<div

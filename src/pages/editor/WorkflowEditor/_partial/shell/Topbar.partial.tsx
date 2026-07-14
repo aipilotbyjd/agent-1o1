@@ -287,7 +287,7 @@ const Topbar = () => {
 						<button
 							type='button'
 							onClick={() => dispatch({ type: 'TOGGLE_LEFT_PANEL', intent: 'home' })}
-							className='dark:bg-primary-700 dark:hover:bg-primary-500 flex h-9 cursor-pointer items-center gap-1.5 sm:gap-2 rounded-lg bg-primary-400 px-2.5 sm:px-3 text-xs font-semibold text-primary-950 shadow-xs transition hover:bg-primary-700'>
+							className='dark:bg-primary-400 dark:hover:bg-primary-500 flex h-9 cursor-pointer items-center gap-1.5 sm:gap-2 rounded-lg bg-primary-400 px-2.5 sm:px-3 text-xs font-semibold text-primary-950 shadow-xs transition hover:bg-primary-500'>
 							<Boxes size={14} className='text-white' />
 							<span className='hidden sm:inline'>Apps</span>
 						</button>
@@ -302,7 +302,7 @@ const Topbar = () => {
 						<button
 							type='button'
 							onClick={() => dispatch({ type: 'TOGGLE_LEFT_PANEL', intent: 'trigger' })}
-							className='dark:bg-primary-700 dark:hover:bg-primary-500 flex h-9 cursor-pointer items-center gap-1.5 sm:gap-2 rounded-lg bg-primary-400 px-2.5 sm:px-3 text-xs font-semibold text-primary-950 shadow-xs transition hover:bg-primary-700'>
+							className='dark:bg-primary-400 dark:hover:bg-primary-500 flex h-9 cursor-pointer items-center gap-1.5 sm:gap-2 rounded-lg bg-primary-400 px-2.5 sm:px-3 text-xs font-semibold text-primary-950 shadow-xs transition hover:bg-primary-500'>
 							<Rocket size={14} className='fill-white text-white' />
 							<span className='hidden sm:inline'>Triggers</span>
 						</button>
@@ -590,7 +590,7 @@ const Topbar = () => {
 							: 'cursor-pointer',
 						isRunning
 							? 'bg-rose-500 shadow-rose-950/20 hover:bg-rose-400'
-							: 'dark:bg-primary-700 dark:hover:bg-primary-500 bg-primary-400 shadow-primary-600/10 hover:bg-primary-500',
+							: 'dark:bg-primary-400 dark:hover:bg-primary-500 bg-primary-400 shadow-primary-500/10 hover:bg-primary-500',
 					].join(' ')}>
 					{isRunning ? (
 						<Square size={12} fill='currentColor' />

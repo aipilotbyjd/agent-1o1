@@ -627,7 +627,7 @@ const MyWorkspacePage = () => {
 					<div className='relative z-10 flex min-w-0 items-center gap-4.5'>
 						<div className='group relative shrink-0'>
 							{/* Circular initials avatar with soft glow */}
-							<div className='shadow-primary-600/30 relative flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-tr from-primary-400 to-fuchsia-600 text-lg font-black text-primary-950 shadow-lg'>
+							<div className='shadow-primary-500/30 relative flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-tr from-primary-400 to-fuchsia-600 text-lg font-black text-primary-950 shadow-lg'>
 								{getInitials(workspaceName)}
 							</div>
 							{/* Green status indicator dot at the bottom left */}

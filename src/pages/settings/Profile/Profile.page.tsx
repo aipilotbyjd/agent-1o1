@@ -24,6 +24,7 @@ import {
 	useUploadAvatar,
 } from '@/api/modules/auth';
 import { useAuth } from '@/context/authContext';
+import { primaryBtn, secondaryBtn, dangerBtn } from '@/pages/settings/_shared/buttons';
 
 type TProfileForm = {
 	firstName: string;
@@ -35,9 +36,6 @@ const inputClass =
 	'h-12 w-full rounded-xl border border-zinc-200 bg-white px-4 text-sm font-semibold text-zinc-800 shadow-xs outline-none placeholder:text-zinc-400 focus:border-primary-400 focus:ring-4 focus:ring-primary-200 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100 dark:placeholder:text-zinc-500 dark:focus:border-primary-500 dark:focus:ring-primary-500/25';
 
 const errorClass = 'mt-2 text-xs font-semibold text-red-500';
-
-const secondaryButtonClass =
-	'h-12 rounded-xl border border-zinc-200 bg-white px-5 text-sm font-bold text-zinc-500 shadow-xs transition hover:bg-zinc-50 hover:text-zinc-800 disabled:cursor-not-allowed disabled:opacity-60 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-400 dark:hover:bg-zinc-700 dark:hover:text-zinc-200';
 
 const splitName = (name?: string): Pick<TProfileForm, 'firstName' | 'lastName'> => {
 	const parts = (name ?? '').trim().split(/\s+/).filter(Boolean);
@@ -283,7 +281,7 @@ const ProfilePage = () => {
 									type='button'
 									disabled={uploadAvatar.isPending}
 									onClick={() => fileInputRef.current?.click()}
-									className='flex h-10 items-center gap-2 rounded-xl bg-primary-400 px-5 text-sm font-bold text-primary-950 shadow-lg shadow-primary-400/20 transition hover:bg-primary-500 active:scale-95 disabled:opacity-60 dark:bg-primary-400 dark:hover:bg-primary-500'>
+									className={primaryBtn}>
 									<Upload size={16} />
 									<span>
 										{uploadAvatar.isPending ? 'Uploading...' : 'Upload Photo'}
@@ -293,7 +291,7 @@ const ProfilePage = () => {
 									type='button'
 									disabled={deleteAvatar.isPending}
 									onClick={() => deleteAvatar.mutate()}
-									className='h-10 rounded-xl border border-zinc-200 bg-white px-5 text-sm font-bold text-zinc-500 shadow-xs transition hover:bg-zinc-50 hover:text-zinc-800 disabled:opacity-60 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-200'>
+									className={secondaryBtn}>
 									Remove
 								</button>
 							</div>
@@ -411,13 +409,13 @@ const ProfilePage = () => {
 						type='button'
 						disabled={!isProfileDirty || updateProfile.isPending}
 						onClick={resetForm}
-						className={secondaryButtonClass}>
+						className={secondaryBtn}>
 						Reset
 					</button>
 					<button
 						type='submit'
 						disabled={!isProfileDirty || updateProfile.isPending}
-						className='h-12 rounded-xl bg-primary-400 px-6 text-sm font-bold text-primary-950 shadow-lg shadow-primary-400/20 transition hover:bg-primary-500 active:scale-95 disabled:opacity-60 dark:bg-primary-400 dark:hover:bg-primary-500'>
+						className={primaryBtn}>
 						{updateProfile.isPending ? 'Saving...' : 'Save changes'}
 					</button>
 				</div>
@@ -459,7 +457,7 @@ const ProfilePage = () => {
 							type='button'
 							disabled={deleteAccount.isPending}
 							onClick={handleDeleteAccount}
-							className='h-10 rounded-xl bg-red-500 px-5 text-sm font-bold text-white shadow-md shadow-red-500/10 transition hover:bg-red-600 active:scale-95 disabled:opacity-60'>
+							className={dangerBtn}>
 							{deleteAccount.isPending ? 'Deleting...' : 'Delete account'}
 						</button>
 					</div>

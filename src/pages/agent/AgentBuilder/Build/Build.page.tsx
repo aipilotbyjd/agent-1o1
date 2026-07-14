@@ -535,7 +535,7 @@ const BuildPage = () => {
 										<button
 											type='button'
 											onClick={handleSendMessage}
-											className='flex items-center gap-1.5 rounded-full bg-primary-400 px-5 py-2 text-xs font-bold text-primary-950 shadow-md shadow-primary-600/25 transition hover:bg-primary-700 active:scale-95 dark:shadow-none'>
+											className='flex items-center gap-1.5 rounded-full bg-primary-400 px-5 py-2 text-xs font-bold text-primary-950 shadow-md shadow-primary-500/25 transition hover:bg-primary-500 active:scale-95 dark:shadow-none'>
 											<Sparkles size={13} />
 											Generate agent
 										</button>
@@ -655,7 +655,7 @@ const BuildPage = () => {
 									<button
 										type='button'
 										onClick={handleSendMessage}
-										className='flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary-400 text-primary-950 shadow-md transition hover:bg-primary-700 active:scale-95'>
+										className='flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary-400 text-primary-950 shadow-md transition hover:bg-primary-500 active:scale-95'>
 										<Send size={15} />
 									</button>
 								</div>
@@ -838,7 +838,7 @@ const BuildPage = () => {
 
 							<button
 								onClick={() => setIsPreviewMode(false)}
-								className='flex h-9 items-center gap-1.5 rounded-lg bg-primary-400 px-4 text-xs font-bold text-primary-950 shadow-md shadow-primary-600/20 hover:bg-primary-700 transition active:scale-95 dark:shadow-none'>
+								className='flex h-9 items-center gap-1.5 rounded-lg bg-primary-400 px-4 text-xs font-bold text-primary-950 shadow-md shadow-primary-500/20 hover:bg-primary-500 transition active:scale-95 dark:shadow-none'>
 								<SquarePen size={13} />
 								<span>Edit Draft</span>
 							</button>
@@ -1238,7 +1238,7 @@ const BuildPage = () => {
 													setChatInput('');
 												}
 											}}
-											className='flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary-400 text-primary-950 shadow-md transition hover:bg-primary-700 active:scale-95'>
+											className='flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary-400 text-primary-950 shadow-md transition hover:bg-primary-500 active:scale-95'>
 											<ArrowUp size={16} strokeWidth={2.5} />
 										</button>
 									</div>
@@ -1329,7 +1329,7 @@ const BuildPage = () => {
 											toast.success('Agent configuration saved!');
 											setIsSettingsOpen(false);
 										}}
-										className='flex h-8 items-center gap-1 rounded-lg bg-primary-400 px-3 text-[11px] font-bold text-primary-950 shadow-md shadow-primary-600/20 hover:bg-primary-700 transition active:scale-95 dark:shadow-none'>
+										className='flex h-8 items-center gap-1 rounded-lg bg-primary-400 px-3 text-[11px] font-bold text-primary-950 shadow-md shadow-primary-500/20 hover:bg-primary-500 transition active:scale-95 dark:shadow-none'>
 										<CheckCircle2 size={13} />
 										<span>Save</span>
 									</button>
@@ -1598,7 +1598,7 @@ const BuildPage = () => {
 												>
 													<AgentIconComponent size={44} className={getIconColorClass(agentIconColor)} />
 													{/* Pencil edit badge overlay */}
-													<div className='absolute -bottom-1 -right-1 flex h-6.5 w-6.5 items-center justify-center rounded-full bg-primary-400 text-primary-950 border border-white dark:border-zinc-900 shadow-md shadow-primary-600/10 cursor-pointer'>
+													<div className='absolute -bottom-1 -right-1 flex h-6.5 w-6.5 items-center justify-center rounded-full bg-primary-400 text-primary-950 border border-white dark:border-zinc-900 shadow-md shadow-primary-500/10 cursor-pointer'>
 														<SquarePen size={11} />
 													</div>
 												</div>

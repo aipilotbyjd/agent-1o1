@@ -4,6 +4,7 @@ import { useWorkspaceContext } from '@/context/workspaceContext';
 import { useCreditBalance, useCreditPacks } from '@/api/modules/credits';
 import { useBuyCredits, usePackCatalog } from '@/api/modules/billing';
 import type { TCreditPack } from '@/types/credit.type';
+import { primaryBtn } from '@/pages/settings/_shared/buttons';
 
 const formatPrice = (cents: number) =>
 	new Intl.NumberFormat('en-US', {
@@ -160,7 +161,7 @@ const CreditsPage = () => {
 							type='button'
 							disabled={buyCredits.isPending || !selectedPack.available}
 							onClick={() => buyCredits.mutate({ pack_key: selectedPack.key })}
-							className='mt-4 flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-zinc-950 text-sm font-black text-white shadow-sm transition hover:bg-zinc-800 disabled:opacity-60 dark:bg-zinc-50 dark:text-zinc-950 dark:hover:bg-zinc-200'>
+							className={`${primaryBtn} mt-4 w-full`}>
 							<CreditCard size={16} />
 							{buyCredits.isPending
 								? 'Redirecting to checkout…'

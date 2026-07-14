@@ -877,14 +877,14 @@ const WorkflowLaunchSurface = () => {
 							</div>
 
 							<div className='flex flex-1 flex-col items-center justify-center px-6 pb-9 text-center sm:px-10 sm:pb-12'>
-								<div className='mb-7 flex h-16 w-16 items-center justify-center rounded-full bg-[linear-gradient(135deg,#ec4899,#60a5fa)] text-white shadow-lg shadow-primary-200'>
+								<div className='mb-7 flex h-16 w-16 items-center justify-center rounded-full bg-[linear-gradient(135deg,#ec4899,#60a5fa)] text-white shadow-lg shadow-primary-500/20'>
 									<Sparkles size={34} strokeWidth={2.2} />
 								</div>
 								<div className='flex flex-wrap items-center justify-center gap-3'>
 									<div className='text-2xl font-bold tracking-tight text-zinc-950'>
 										Pro Feature
 									</div>
-									<span className='rounded-lg bg-primary-400 px-2.5 py-1 text-xs font-bold text-primary-950 shadow-sm shadow-primary-200'>
+									<span className='rounded-lg bg-primary-400 px-2.5 py-1 text-xs font-bold text-primary-950 shadow-sm shadow-primary-500/20'>
 										Upgrade Required
 									</span>
 								</div>
@@ -895,7 +895,7 @@ const WorkflowLaunchSurface = () => {
 								</p>
 								<button
 									type='button'
-									className='mt-8 flex h-12 items-center gap-3 rounded-xl bg-primary-400 px-6 text-base font-bold text-primary-950 shadow-lg shadow-primary-200 transition hover:-translate-y-0.5 hover:bg-primary-500'>
+									className='mt-8 flex h-12 items-center gap-3 rounded-xl bg-primary-400 px-6 text-base font-bold text-primary-950 shadow-lg shadow-primary-500/20 transition hover:-translate-y-0.5 hover:bg-primary-500'>
 									<Sparkles size={18} />
 									Upgrade to Pro
 									<ChevronRight size={19} />

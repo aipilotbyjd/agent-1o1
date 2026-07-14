@@ -26,6 +26,7 @@ import type {
 	TCreateNotificationChannelDto,
 } from '@/types/notification.type';
 import { ApiError } from '@/api/core';
+import { primaryBtn, secondaryBtn } from '@/pages/settings/_shared/buttons';
 
 const inputClass =
 	'h-11 w-full rounded-xl border border-zinc-200 bg-white px-4 text-sm font-medium text-zinc-900 shadow-xs outline-none placeholder:text-zinc-400 focus:border-primary-300 focus:ring-4 focus:ring-primary-100 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100 dark:placeholder:text-zinc-500 dark:focus:border-primary-500 dark:focus:ring-primary-500/20';
@@ -512,14 +513,14 @@ const CreateChannelForm = ({ onCancel }: { onCancel: () => void }) => {
 				<button
 					type='submit'
 					disabled={createChannel.isPending}
-					className='flex h-10 items-center gap-2 rounded-xl bg-primary-400 px-5 text-sm font-bold text-primary-950 shadow-lg shadow-primary-500/20 transition hover:bg-primary-500 disabled:cursor-not-allowed disabled:opacity-60'>
+					className={primaryBtn}>
 					<Plus size={15} />
 					{createChannel.isPending ? 'Creating...' : 'Create channel'}
 				</button>
 				<button
 					type='button'
 					onClick={onCancel}
-					className='h-10 rounded-xl border border-zinc-200 bg-white px-5 text-sm font-bold text-zinc-500 shadow-xs transition hover:bg-zinc-50 hover:text-zinc-800 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-400 dark:hover:bg-zinc-700'>
+					className={secondaryBtn}>
 					Cancel
 				</button>
 			</div>
@@ -547,7 +548,7 @@ const NotificationChannelsPage = () => {
 					<button
 						type='button'
 						onClick={() => setShowCreateForm(true)}
-						className='flex h-10 items-center gap-2 rounded-xl bg-primary-400 px-5 text-sm font-bold text-primary-950 shadow-lg shadow-primary-500/20 transition hover:bg-primary-500'>
+						className={primaryBtn}>
 						<Plus size={15} />
 						Add Channel
 					</button>

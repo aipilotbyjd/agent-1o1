@@ -105,7 +105,7 @@ const NodeCommentsPanel = ({
 								type='button'
 								onClick={submit}
 								disabled={!text.trim()}
-								className='flex h-7 w-7 items-center justify-center rounded-lg bg-primary-400 text-primary-950 hover:bg-primary-700 disabled:opacity-40'>
+								className='flex h-7 w-7 items-center justify-center rounded-lg bg-primary-400 text-primary-950 hover:bg-primary-500 disabled:opacity-40'>
 								<Send size={11} />
 							</button>
 						</div>

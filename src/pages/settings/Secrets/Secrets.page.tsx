@@ -16,6 +16,7 @@ import Modal, {
 	ModalFooterChild,
 } from '@/components/ui/Modal';
 import Table, { TBody, THead, Td, Th, Tr } from '@/components/ui/Table';
+import { primaryBtn, secondaryBtn, dangerBtn } from '@/pages/settings/_shared/buttons';
 
 // ── shared styles ─────────────────────────────────────────────
 const inputCls =
@@ -188,13 +189,13 @@ const SecretModal = ({ open, target, isPending, onClose, onSubmit }: SecretModal
 						<button
 							type='button'
 							onClick={onClose}
-							className='h-11 cursor-pointer rounded-xl border border-zinc-200 bg-white px-5 text-sm font-bold text-zinc-600 transition hover:bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700'>
+							className={secondaryBtn}>
 							Cancel
 						</button>
 						<button
 							type='submit'
 							disabled={isPending}
-							className='h-11 cursor-pointer rounded-xl bg-primary-400 px-5 text-sm font-bold text-primary-950 shadow-sm transition hover:bg-primary-700 active:bg-primary-800 disabled:opacity-60'>
+							className={primaryBtn}>
 							{isPending
 								? isEdit
 									? 'Saving…'
@@ -348,7 +349,7 @@ const SecretsPage = () => {
 				<button
 					type='button'
 					onClick={openAdd}
-					className='flex h-10 items-center justify-center gap-2 rounded-xl bg-zinc-950 px-5 text-sm font-bold text-white shadow-xs transition hover:bg-zinc-800 dark:bg-zinc-800 dark:hover:bg-zinc-700'>
+					className={primaryBtn}>
 					<Plus size={15} />
 					Add Secret
 				</button>
@@ -385,7 +386,7 @@ const SecretsPage = () => {
 						<button
 							type='button'
 							onClick={openAdd}
-							className='flex h-11 items-center gap-2 rounded-xl bg-zinc-950 px-6 text-sm font-bold text-white shadow-sm transition hover:bg-zinc-800 dark:bg-zinc-800 dark:hover:bg-zinc-700'>
+							className={primaryBtn}>
 							<Plus size={16} />
 							Add Secret
 						</button>
@@ -563,14 +564,14 @@ const SecretsPage = () => {
 						<button
 							type='button'
 							onClick={() => setDeleteTarget(null)}
-							className='h-11 cursor-pointer rounded-xl border border-zinc-200 bg-white px-5 text-sm font-bold text-zinc-600 transition hover:bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700'>
+							className={secondaryBtn}>
 							Cancel
 						</button>
 						<button
 							type='button'
 							disabled={deleteVar.isPending}
 							onClick={handleDelete}
-							className='h-11 cursor-pointer rounded-xl bg-red-600 px-5 text-sm font-bold text-white shadow-sm transition hover:bg-red-700 disabled:opacity-60'>
+							className={dangerBtn}>
 							{deleteVar.isPending ? 'Deleting…' : 'Delete'}
 						</button>
 					</ModalFooterChild>

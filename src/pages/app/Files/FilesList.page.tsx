@@ -780,7 +780,7 @@ const FilesListPage = () => {
 
 									<button
 										onClick={handleStartUpload}
-										className='mt-6 flex h-11 w-full cursor-pointer items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-primary-400 to-primary-400 text-xs font-black text-primary-950 shadow-lg shadow-primary-600/20 transition-all hover:from-primary-400 hover:to-primary-400 hover:shadow-xl hover:shadow-primary-600/30 active:scale-95 dark:shadow-none'>
+										className='mt-6 flex h-11 w-full cursor-pointer items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-primary-400 to-primary-400 text-xs font-black text-primary-950 shadow-lg shadow-primary-500/20 transition-all hover:from-primary-400 hover:to-primary-400 hover:shadow-xl hover:shadow-primary-500/30 active:scale-95 dark:shadow-none'>
 										<Upload size={14} />
 										<span>Start Upload</span>
 									</button>

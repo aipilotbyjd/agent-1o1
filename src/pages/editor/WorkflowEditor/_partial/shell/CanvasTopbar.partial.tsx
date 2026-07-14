@@ -98,7 +98,7 @@ export const CanvasTopbar = () => {
 					onClick={() => dispatch({ type: 'TOGGLE_AI_PANEL' })}
 					className={`flex h-9 items-center gap-1.5 rounded-xl border px-3.5 text-xs font-bold shadow-xs transition ${
 						state.ui.aiPanelOpen
-							? 'border-primary-200 bg-primary-400 text-primary-950 hover:bg-primary-700 dark:border-primary-800 dark:bg-primary-700 dark:hover:bg-primary-500'
+							? 'border-primary-200 bg-primary-400 text-primary-950 hover:bg-primary-500 dark:border-primary-800 dark:bg-primary-400 dark:hover:bg-primary-500'
 							: 'border-zinc-200 bg-white text-zinc-650 hover:bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-350 dark:hover:bg-zinc-800'
 					}`}
 				>
@@ -214,7 +214,7 @@ export const CanvasTopbar = () => {
 					"flex items-center shadow-md rounded-xl overflow-hidden transition",
 					isRunDisabled
 						? "bg-primary-400 opacity-40 cursor-not-allowed"
-						: "bg-primary-400 hover:bg-primary-700"
+						: "bg-primary-400 hover:bg-primary-500"
 				].join(' ')}>
 					<motion.button
 						whileTap={!isRunDisabled ? { scale: 0.98 } : undefined}
@@ -238,7 +238,7 @@ export const CanvasTopbar = () => {
 						disabled={isRunDisabled}
 						className={[
 							"flex h-9 items-center justify-center border-l border-white/20 px-2.5 text-white",
-							isRunDisabled ? "cursor-not-allowed" : "hover:bg-primary-700"
+							isRunDisabled ? "cursor-not-allowed" : "hover:bg-primary-500"
 						].join(' ')}
 					>
 						<ChevronDown size={13} />

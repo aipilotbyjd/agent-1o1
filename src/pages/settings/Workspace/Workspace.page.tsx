@@ -12,15 +12,13 @@ import {
 } from 'lucide-react';
 import { useWorkspaceContext } from '@/context/workspaceContext';
 import { useUpdateWorkspace, useDeleteWorkspace } from '@/api/modules/workspaces';
+import { primaryBtn, secondaryBtn, dangerBtn } from '@/pages/settings/_shared/buttons';
 
 const inputClass =
 	'h-12 w-full rounded-xl border border-zinc-200 bg-white px-4 text-sm font-semibold text-zinc-800 shadow-xs outline-none placeholder:text-zinc-400 focus:border-primary-300 focus:ring-4 focus:ring-primary-100 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100 dark:placeholder:text-zinc-500 dark:focus:border-primary-500 dark:focus:ring-primary-500/20';
 
 const readOnlyClass =
 	'h-12 w-full rounded-xl border border-zinc-200 bg-zinc-50 px-4 flex items-center text-sm font-semibold text-zinc-400 dark:border-zinc-700 dark:bg-zinc-800/60 dark:text-zinc-500';
-
-const secondaryButtonClass =
-	'h-12 rounded-xl border border-zinc-200 bg-white px-5 text-sm font-bold text-zinc-500 shadow-xs transition hover:bg-zinc-50 hover:text-zinc-800 disabled:cursor-not-allowed disabled:opacity-60 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-400 dark:hover:bg-zinc-700 dark:hover:text-zinc-200';
 
 const DEFAULT_TIMEZONE = 'Asia/Kolkata';
 
@@ -247,13 +245,13 @@ const WorkspacePage = () => {
 						type='button'
 						disabled={!isDirty || updateWorkspace.isPending}
 						onClick={handleReset}
-						className={secondaryButtonClass}>
+						className={secondaryBtn}>
 						Reset
 					</button>
 					<button
 						type='submit'
 						disabled={!isDirty || updateWorkspace.isPending}
-						className='h-12 rounded-xl bg-primary-400 px-6 text-sm font-bold text-primary-950 shadow-lg shadow-primary-600/20 transition hover:bg-primary-700 active:scale-95 disabled:opacity-60 dark:bg-primary-700 dark:hover:bg-primary-500'>
+						className={primaryBtn}>
 						{updateWorkspace.isPending ? 'Saving...' : 'Save changes'}
 					</button>
 				</div>
@@ -296,7 +294,7 @@ const WorkspacePage = () => {
 								type='button'
 								disabled={deleteWorkspace.isPending}
 								onClick={handleDeleteWorkspace}
-								className='h-10 rounded-xl bg-red-500 px-5 text-sm font-bold text-white shadow-md shadow-red-500/10 transition hover:bg-red-600 active:scale-95 disabled:opacity-60'>
+								className={dangerBtn}>
 								{deleteWorkspace.isPending ? 'Deleting...' : 'Delete workspace'}
 							</button>
 						</div>

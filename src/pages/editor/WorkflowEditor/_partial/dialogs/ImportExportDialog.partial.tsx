@@ -143,7 +143,7 @@ const ImportExportDialog = () => {
 										format === 'json' ? 'application/json' : 'text/yaml',
 									)
 								}
-								className='flex-1 rounded-lg bg-primary-400 px-3 py-2 text-xs font-black text-primary-950 hover:bg-primary-700'>
+								className='flex-1 rounded-lg bg-primary-400 px-3 py-2 text-xs font-black text-primary-950 hover:bg-primary-500'>
 								Download .{format}
 							</button>
 						</div>

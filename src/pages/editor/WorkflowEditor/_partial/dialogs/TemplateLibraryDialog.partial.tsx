@@ -168,7 +168,7 @@ const TemplateLibraryDialog = () => {
 						<div
 							key={template.id}
 							onClick={() => applyTemplate(template)}
-							className='group flex cursor-pointer flex-col justify-between rounded-xl border border-zinc-200 bg-white p-4 transition-all hover:border-primary-300 hover:shadow-md hover:shadow-primary-50 active:scale-[0.98] dark:border-zinc-800 dark:bg-zinc-900 dark:hover:border-primary-800/50'>
+							className='group flex cursor-pointer flex-col justify-between rounded-xl border border-zinc-200 bg-white p-4 transition-all hover:border-primary-300 hover:shadow-md hover:shadow-primary-500/20 active:scale-[0.98] dark:border-zinc-800 dark:bg-zinc-900 dark:hover:border-primary-800/50'>
 							<div>
 								<div className='mb-1 flex items-start justify-between gap-2'>
 									<div className='text-sm font-bold text-zinc-800 transition-colors group-hover:text-primary-600 dark:text-zinc-100 dark:group-hover:text-primary-400'>

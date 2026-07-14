@@ -25,6 +25,7 @@ import Modal, {
 	ModalFooterChild,
 	ModalHeader,
 } from '@/components/ui/Modal';
+import { primaryBtn, secondaryBtn, dangerBtn } from '@/pages/settings/_shared/buttons';
 
 // ── helpers ──────────────────────────────────────────────────
 const SECRET_PATTERN = /(_KEY|_SECRET|_TOKEN|_PASSWORD)$/i;
@@ -341,13 +342,13 @@ const EnvModal = ({ open, env, isPending, onClose, onSubmit }: EnvModalProps) =>
 						<button
 							type='button'
 							onClick={onClose}
-							className='h-11 rounded-xl border border-zinc-200 bg-white px-5 text-sm font-bold text-zinc-600 transition hover:bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700'>
+							className={secondaryBtn}>
 							Cancel
 						</button>
 						<button
 							type='submit'
 							disabled={isPending}
-							className='h-11 rounded-xl bg-primary-400 px-6 text-sm font-bold text-primary-950 shadow-sm shadow-primary-500/20 transition hover:bg-primary-500 disabled:opacity-60'>
+							className={primaryBtn}>
 							{isPending ? 'Saving…' : env ? 'Update' : 'Create'}
 						</button>
 					</ModalFooterChild>
@@ -423,7 +424,7 @@ const EnvironmentsPage = () => {
 				<button
 					type='button'
 					onClick={openCreate}
-					className='flex h-11 items-center gap-2 rounded-xl bg-zinc-950 px-5 text-sm font-black text-white shadow-sm transition hover:bg-zinc-800 dark:bg-zinc-50 dark:text-zinc-950 dark:hover:bg-zinc-200'>
+					className={primaryBtn}>
 					<Plus size={16} />
 					New environment
 				</button>
@@ -455,7 +456,7 @@ const EnvironmentsPage = () => {
 						<button
 							type='button'
 							onClick={openCreate}
-							className='flex h-10 items-center gap-2 rounded-xl bg-primary-400 px-5 text-sm font-bold text-primary-950 shadow-sm shadow-primary-500/20 hover:bg-primary-500'>
+							className={primaryBtn}>
 							<Plus size={15} />
 							Create environment
 						</button>
@@ -498,14 +499,14 @@ const EnvironmentsPage = () => {
 						<button
 							type='button'
 							onClick={() => setDeleteTarget(null)}
-							className='h-11 rounded-xl border border-zinc-200 bg-white px-5 text-sm font-bold text-zinc-600 transition hover:bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-300'>
+							className={secondaryBtn}>
 							Cancel
 						</button>
 						<button
 							type='button'
 							disabled={deleteEnv.isPending}
 							onClick={handleDelete}
-							className='h-11 rounded-xl bg-red-500 px-6 text-sm font-bold text-white shadow-sm shadow-red-500/20 transition hover:bg-red-600 disabled:opacity-60'>
+							className={dangerBtn}>
 							{deleteEnv.isPending ? 'Deleting…' : 'Delete'}
 						</button>
 					</ModalFooterChild>

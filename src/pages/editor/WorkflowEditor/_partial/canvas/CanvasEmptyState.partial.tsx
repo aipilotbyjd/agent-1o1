@@ -638,7 +638,7 @@ const CanvasEmptyState = () => {
 														<button
 															type='button'
 															onClick={handleGenerate}
-															className='flex h-8 w-8 items-center justify-center rounded-full bg-primary-400 text-primary-950 shadow-md shadow-primary-600/10 transition hover:bg-primary-700 active:scale-95'
+															className='flex h-8 w-8 items-center justify-center rounded-full bg-primary-400 text-primary-950 shadow-md shadow-primary-500/10 transition hover:bg-primary-500 active:scale-95'
 															title='Generate Workflow'>
 															<ArrowUp size={16} strokeWidth={2.5} />
 														</button>
@@ -797,7 +797,7 @@ const CanvasEmptyState = () => {
 							<button
 								type='button'
 								aria-label='Add node'
-								className='flex h-6 w-6 items-center justify-center rounded-full bg-primary-400 text-primary-950 shadow-md shadow-primary-600/25 transition hover:bg-primary-700 active:scale-95'>
+								className='flex h-6 w-6 items-center justify-center rounded-full bg-primary-400 text-primary-950 shadow-md shadow-primary-500/25 transition hover:bg-primary-500 active:scale-95'>
 								<span className='text-base leading-none font-bold'>+</span>
 							</button>
 							<button
@@ -958,7 +958,7 @@ const CanvasEmptyState = () => {
 										exit={{ opacity: 0, scale: 0.9, y: 15 }}
 										whileHover={{ y: -4, scale: 1.02 }}
 										transition={{ duration: 0.3 }}
-										className='absolute left-[280px] top-[45px] z-10 w-[220px] rounded-xl border-2 p-1 text-left shadow-lg bg-white dark:bg-zinc-950 border-primary-500 dark:border-primary-500 ring-4 shadow-primary-100/50 ring-primary-500/10 dark:shadow-none'>
+										className='absolute left-[280px] top-[45px] z-10 w-[220px] rounded-xl border-2 p-1 text-left shadow-lg bg-white dark:bg-zinc-950 border-primary-500 dark:border-primary-500 ring-4 shadow-primary-500/50 ring-primary-500/10 dark:shadow-none'>
 										
 										{/* Floating Toolbar like Mockup 1 */}
 										<div className='absolute -top-[44px] left-1/2 -translate-x-1/2 flex items-center gap-1 bg-white border border-zinc-200 rounded-lg px-2 py-1 shadow-md z-20 text-[9px] font-bold text-zinc-650 dark:bg-zinc-900 dark:border-zinc-800 dark:text-zinc-350 whitespace-nowrap shadow-zinc-250/50'>
@@ -1149,7 +1149,7 @@ const CanvasEmptyState = () => {
 							<button
 								type='button'
 								onClick={() => dispatch({ type: 'TOGGLE_LEFT_PANEL' })}
-								className='flex h-10 items-center gap-1.5 rounded-xl bg-primary-400 px-5 text-sm font-bold text-primary-950 shadow-md shadow-primary-600/15 hover:bg-primary-700 transition active:scale-97'
+								className='flex h-10 items-center gap-1.5 rounded-xl bg-primary-400 px-5 text-sm font-bold text-primary-950 shadow-md shadow-primary-500/15 hover:bg-primary-500 transition active:scale-97'
 							>
 								<span className='text-base font-extrabold'>+</span>
 								<span>Add Step</span>

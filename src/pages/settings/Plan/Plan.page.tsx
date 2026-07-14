@@ -349,7 +349,7 @@ const PlanPage = () => {
 							>
 								<Link
 									to={pages.settings.subPages.plan.subPages.upgrade.to}
-									className='flex h-10 items-center gap-2 rounded-xl bg-gradient-to-r from-primary-400 to-primary-400 px-5 text-sm font-bold text-primary-950 shadow-md shadow-primary-600/15 hover:shadow-primary-600/25 transition-all duration-200 border border-primary-500/20'
+									className='flex h-10 items-center gap-2 rounded-xl bg-gradient-to-r from-primary-400 to-primary-400 px-5 text-sm font-bold text-primary-950 shadow-md shadow-primary-500/15 hover:shadow-primary-500/25 transition-all duration-200 border border-primary-500/20'
 								>
 									<Zap size={14} className="fill-white/10" />
 									Upgrade plan
@@ -388,7 +388,7 @@ const PlanPage = () => {
 								whileTap={{ scale: 0.98 }}
 								type='button'
 								onClick={() => setActiveTab('billing')}
-								className='flex h-10 items-center gap-2 rounded-xl bg-gradient-to-r from-primary-400 to-primary-400 px-5 text-sm font-bold text-primary-950 shadow-md shadow-primary-600/15 hover:shadow-primary-600/25 transition-all duration-200 border border-primary-500/20'
+								className='flex h-10 items-center gap-2 rounded-xl bg-gradient-to-r from-primary-400 to-primary-400 px-5 text-sm font-bold text-primary-950 shadow-md shadow-primary-500/15 hover:shadow-primary-500/25 transition-all duration-200 border border-primary-500/20'
 							>
 								<CreditCard size={14} />
 								<span>Buy credits</span>

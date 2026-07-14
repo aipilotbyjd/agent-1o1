@@ -142,7 +142,7 @@ const BaseNode = ({ id, data, selected }: NodeProps<TCanvasNode>) => {
 				'group relative w-[340px] rounded-xl border-2 p-1 text-left shadow-2xl transition-all duration-200',
 				'bg-white text-zinc-950 dark:bg-zinc-950 dark:text-zinc-100',
 				selected
-					? 'border-primary-500 ring-4 shadow-primary-100/50 ring-primary-500/10 dark:border-primary-500 dark:shadow-none'
+					? 'border-primary-500 ring-4 shadow-primary-500/50 ring-primary-500/10 dark:border-primary-500 dark:shadow-none'
 					: 'border-zinc-200 dark:border-zinc-800',
 				hasError ? 'border-rose-400/80 ring-4 ring-rose-500/10' : '',
 				isActiveRunNode ? 'ring-4 shadow-emerald-500/20 ring-emerald-400/20' : '',

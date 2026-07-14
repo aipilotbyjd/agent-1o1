@@ -203,7 +203,7 @@ const BillingOverviewPage = () => {
 						</p>
 						<Link
 							to={pages.settings.subPages.billing.subPages.credits.to}
-							className='mt-4 inline-flex items-center gap-1.5 rounded-xl bg-primary-400 px-5 py-2.5 text-xs font-bold text-primary-950 shadow-md shadow-primary-600/10 transition hover:bg-primary-700 active:scale-95'>
+							className='mt-4 inline-flex items-center gap-1.5 rounded-xl bg-primary-400 px-5 py-2.5 text-xs font-bold text-primary-950 shadow-md shadow-primary-500/10 transition hover:bg-primary-500 active:scale-95'>
 							<Sparkles size={12} />
 							<span>Buy your first pack</span>
 						</Link>
@@ -335,7 +335,7 @@ const BillingOverviewPage = () => {
 								type='button'
 								onClick={() => buyCredits.mutate({ pack_key: pack.key })}
 								disabled={buyCredits.isPending || !pack.available}
-								className='mt-4 w-full rounded-xl bg-primary-400 py-2.5 text-center text-xs font-bold text-primary-950 shadow-md shadow-primary-600/10 transition hover:bg-primary-700 active:scale-95 disabled:opacity-60'>
+								className='mt-4 w-full rounded-xl bg-primary-400 py-2.5 text-center text-xs font-bold text-primary-950 shadow-md shadow-primary-500/10 transition hover:bg-primary-500 active:scale-95 disabled:opacity-60'>
 								Buy now
 							</button>
 						</div>

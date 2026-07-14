@@ -251,7 +251,7 @@ const TriggerNode = ({ id, data, selected }: NodeProps<TCanvasNode>) => {
 				'relative w-[340px] rounded-xl border-2 p-1 text-left shadow-2xl transition-all duration-200',
 				'bg-white text-zinc-950 dark:bg-zinc-950 dark:text-zinc-100',
 				selected
-					? 'border-primary-500 ring-4 shadow-primary-100/50 ring-primary-500/10 dark:border-primary-500 dark:shadow-none'
+					? 'border-primary-500 ring-4 shadow-primary-500/50 ring-primary-500/10 dark:border-primary-500 dark:shadow-none'
 					: 'border-zinc-200 dark:border-zinc-800',
 			].join(' ')}>
 			{/* Top Bar */}
@@ -578,7 +578,7 @@ const TriggerNode = ({ id, data, selected }: NodeProps<TCanvasNode>) => {
 								<button
 									type="button"
 									onClick={handleSaveFields}
-									className="rounded-lg bg-primary-400 hover:bg-primary-700 px-5 py-2 text-xs font-bold text-primary-950 shadow-md transition active:scale-97"
+									className="rounded-lg bg-primary-400 hover:bg-primary-500 px-5 py-2 text-xs font-bold text-primary-950 shadow-md transition active:scale-97"
 								>
 									Save Inputs
 								</button>

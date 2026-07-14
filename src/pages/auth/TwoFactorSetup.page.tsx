@@ -164,7 +164,7 @@ const TwoFactorSetupPage = () => {
 								value={digit}
 								onChange={(e) => handleChange(index, e.target.value)}
 								onKeyDown={(e) => handleKeyDown(index, e)}
-								className='focus:border-primary-600 focus:shadow-primary-100 h-14 w-11 rounded-2xl border border-slate-200 bg-slate-50 text-center text-xl font-black text-slate-950 transition-all outline-none focus:bg-white focus:shadow-xl'
+								className='focus:border-primary-600 focus:shadow-primary-500/20 h-14 w-11 rounded-2xl border border-slate-200 bg-slate-50 text-center text-xl font-black text-slate-950 transition-all outline-none focus:bg-white focus:shadow-xl'
 							/>
 						))}
 					</div>

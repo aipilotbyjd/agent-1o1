@@ -78,7 +78,7 @@ const getModelColor = (model: string) => {
 
 const getAgentHeaderIcon = (id: string) => {
 	if (id === 'agent-2') {
-		return { IconComponent: Cpu, bgClass: 'bg-primary-400 shadow-primary-600/20' };
+		return { IconComponent: Cpu, bgClass: 'bg-primary-400 shadow-primary-500/20' };
 	}
 	if (id === 'agent-3') {
 		return { IconComponent: Briefcase, bgClass: 'bg-amber-600 shadow-amber-600/20' };
@@ -176,7 +176,7 @@ const AgentsListPage = () => {
 
 						<button
 							onClick={() => navigate(pages.agent.subPages.addAgent.to)}
-							className='flex h-11 cursor-pointer items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-primary-400 to-primary-400 px-5 text-xs font-black text-primary-950 shadow-lg shadow-primary-600/20 transition-all hover:from-primary-400 hover:to-primary-400 hover:shadow-xl hover:shadow-primary-600/30 active:scale-95 dark:shadow-none'>
+							className='flex h-11 cursor-pointer items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-primary-400 to-primary-400 px-5 text-xs font-black text-primary-950 shadow-lg shadow-primary-500/20 transition-all hover:from-primary-400 hover:to-primary-400 hover:shadow-xl hover:shadow-primary-500/30 active:scale-95 dark:shadow-none'>
 							<Sparkles size={14} className='animate-pulse' />
 							<span>Build Agent</span>
 						</button>
@@ -535,7 +535,7 @@ const AgentsListPage = () => {
 														`Starting interactive run with Agent: ${agent.name}`,
 													)
 												}
-												className='flex h-9 w-9 cursor-pointer items-center justify-center rounded-xl bg-primary-400 text-primary-950 shadow-md shadow-primary-600/10 transition-transform hover:scale-105 hover:bg-primary-500 active:scale-95'
+												className='flex h-9 w-9 cursor-pointer items-center justify-center rounded-xl bg-primary-400 text-primary-950 shadow-md shadow-primary-500/10 transition-transform hover:scale-105 hover:bg-primary-500 active:scale-95'
 												title='Run agent'>
 												<Play size={12} className='fill-current' />
 											</button>

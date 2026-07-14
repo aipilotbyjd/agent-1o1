@@ -928,7 +928,7 @@ const WorkspaceCard = ({
 			transition={{ duration: 0.3, delay: index * 0.05 }}
 			whileHover={{ y: -5 }}
 			onClick={() => onSelect(wsp.id)}
-			className='group relative cursor-pointer overflow-hidden rounded-3xl border border-slate-200/60 bg-white p-5 shadow-[0_4px_25px_rgba(0,0,0,0.01)] transition-all duration-300 dark:border-zinc-800/80 dark:bg-[#10131e]/50 hover:border-primary-500/30 hover:shadow-md hover:shadow-primary-500/[0.02]'>
+			className='group relative cursor-pointer overflow-hidden rounded-3xl border border-slate-200/60 bg-white p-5 shadow-[0_4px_25px_rgba(0,0,0,0.01)] transition-all duration-300 dark:border-zinc-800/80 dark:bg-[#10131e]/50 hover:border-primary-500/30 hover:shadow-md hover:shadow-primary-500/20/[0.02]'>
 			{/* Hover Accent Glow */}
 			<div
 				className='pointer-events-none absolute inset-[-30%] rounded-full opacity-0 transition-opacity duration-500 group-hover:opacity-[0.05] dark:group-hover:opacity-[0.08]'
@@ -1092,7 +1092,7 @@ const WorkspaceCard = ({
 				</div>
 
 				{/* Arrow enter button */}
-				<button className='flex h-10 w-10 cursor-pointer items-center justify-center rounded-xl border border-slate-200 bg-white text-primary-600 dark:border-zinc-800 dark:bg-zinc-900 dark:text-primary-400 transition-all duration-300 group-hover:border-transparent group-hover:bg-gradient-to-r group-hover:from-primary-400 group-hover:to-primary-400 group-hover:text-primary-950 group-hover:shadow-md group-hover:shadow-primary-600/10 active:scale-95'>
+				<button className='flex h-10 w-10 cursor-pointer items-center justify-center rounded-xl border border-slate-200 bg-white text-primary-600 dark:border-zinc-800 dark:bg-zinc-900 dark:text-primary-400 transition-all duration-300 group-hover:border-transparent group-hover:bg-gradient-to-r group-hover:from-primary-400 group-hover:to-primary-400 group-hover:text-primary-950 group-hover:shadow-md group-hover:shadow-primary-500/10 active:scale-95'>
 					<ArrowRight
 						size={16}
 						strokeWidth={2.5}

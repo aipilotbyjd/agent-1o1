@@ -124,7 +124,7 @@ const ResetPasswordPage = () => {
 									value={formik.values.password}
 									onChange={formik.handleChange}
 									onBlur={formik.handleBlur}
-									className='focus:border-primary-600 focus:shadow-primary-100 block w-full rounded-2xl border border-slate-200 bg-slate-50 py-4 pr-12 pl-11 text-base font-medium text-slate-950 transition-all outline-none placeholder:text-slate-400 focus:bg-white focus:shadow-xl'
+									className='focus:border-primary-600 focus:shadow-primary-500/20 block w-full rounded-2xl border border-slate-200 bg-slate-50 py-4 pr-12 pl-11 text-base font-medium text-slate-950 transition-all outline-none placeholder:text-slate-400 focus:bg-white focus:shadow-xl'
 								/>
 								<button
 									type='button'
@@ -171,7 +171,7 @@ const ResetPasswordPage = () => {
 									value={formik.values.confirmPassword}
 									onChange={formik.handleChange}
 									onBlur={formik.handleBlur}
-									className='focus:border-primary-600 focus:shadow-primary-100 block w-full rounded-2xl border border-slate-200 bg-slate-50 py-4 pr-12 pl-11 text-base font-medium text-slate-950 transition-all outline-none placeholder:text-slate-400 focus:bg-white focus:shadow-xl'
+									className='focus:border-primary-600 focus:shadow-primary-500/20 block w-full rounded-2xl border border-slate-200 bg-slate-50 py-4 pr-12 pl-11 text-base font-medium text-slate-950 transition-all outline-none placeholder:text-slate-400 focus:bg-white focus:shadow-xl'
 								/>
 								<button
 									type='button'

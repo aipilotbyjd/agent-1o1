@@ -166,7 +166,7 @@ const RegisterPage = () => {
 								value={formikRegister.values.name}
 								onChange={formikRegister.handleChange}
 								onBlur={formikRegister.handleBlur}
-								className='focus:border-primary-600 focus:shadow-primary-100 block w-full rounded-2xl border border-slate-200 bg-slate-50 py-4 pr-4 pl-11 text-sm font-medium text-slate-950 transition-all outline-none placeholder:text-slate-400 focus:bg-white focus:shadow-xl'
+								className='focus:border-primary-600 focus:shadow-primary-500/20 block w-full rounded-2xl border border-slate-200 bg-slate-50 py-4 pr-4 pl-11 text-sm font-medium text-slate-950 transition-all outline-none placeholder:text-slate-400 focus:bg-white focus:shadow-xl'
 							/>
 						</div>
 						<AnimatePresence>
@@ -205,7 +205,7 @@ const RegisterPage = () => {
 								value={formikRegister.values.registerEmail}
 								onChange={formikRegister.handleChange}
 								onBlur={formikRegister.handleBlur}
-								className='focus:border-primary-600 focus:shadow-primary-100 block w-full rounded-2xl border border-slate-200 bg-slate-50 py-4 pr-4 pl-11 text-sm font-medium text-slate-950 transition-all outline-none placeholder:text-slate-400 focus:bg-white focus:shadow-xl'
+								className='focus:border-primary-600 focus:shadow-primary-500/20 block w-full rounded-2xl border border-slate-200 bg-slate-50 py-4 pr-4 pl-11 text-sm font-medium text-slate-950 transition-all outline-none placeholder:text-slate-400 focus:bg-white focus:shadow-xl'
 							/>
 						</div>
 						<AnimatePresence>
@@ -246,7 +246,7 @@ const RegisterPage = () => {
 							value={formikRegister.values.newPassword}
 							onChange={formikRegister.handleChange}
 							onBlur={formikRegister.handleBlur}
-							className='focus:border-primary-600 focus:shadow-primary-100 block w-full rounded-2xl border border-slate-200 bg-slate-50 py-4 pr-12 pl-11 text-sm font-medium text-slate-950 transition-all outline-none placeholder:text-slate-400 focus:bg-white focus:shadow-xl'
+							className='focus:border-primary-600 focus:shadow-primary-500/20 block w-full rounded-2xl border border-slate-200 bg-slate-50 py-4 pr-12 pl-11 text-sm font-medium text-slate-950 transition-all outline-none placeholder:text-slate-400 focus:bg-white focus:shadow-xl'
 						/>
 						<button
 							type='button'
@@ -292,7 +292,7 @@ const RegisterPage = () => {
 							value={formikRegister.values.repeatPassword}
 							onChange={formikRegister.handleChange}
 							onBlur={formikRegister.handleBlur}
-							className='focus:border-primary-600 focus:shadow-primary-100 block w-full rounded-2xl border border-slate-200 bg-slate-50 py-4 pr-12 pl-11 text-sm font-medium text-slate-950 transition-all outline-none placeholder:text-slate-400 focus:bg-white focus:shadow-xl'
+							className='focus:border-primary-600 focus:shadow-primary-500/20 block w-full rounded-2xl border border-slate-200 bg-slate-50 py-4 pr-12 pl-11 text-sm font-medium text-slate-950 transition-all outline-none placeholder:text-slate-400 focus:bg-white focus:shadow-xl'
 						/>
 						<button
 							type='button'

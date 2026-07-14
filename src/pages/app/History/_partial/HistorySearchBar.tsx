@@ -73,7 +73,7 @@ const HistorySearchBar = ({
 					onClick={() => onTypeChange('All')}
 					className={`flex h-12 cursor-pointer items-center justify-center rounded-2xl px-5 text-xs font-black transition-all duration-300 ${
 						selectedType === 'All'
-							? 'bg-linear-to-r from-primary-400 to-primary-400 text-primary-950 shadow-md shadow-primary-600/25 dark:shadow-none'
+							? 'bg-linear-to-r from-primary-400 to-primary-400 text-primary-950 shadow-md shadow-primary-500/25 dark:shadow-none'
 							: 'dark:text-zinc-350 dark:hover:bg-zinc-800 border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 dark:border-zinc-800 dark:bg-zinc-900/60'
 					}`}>
 					All

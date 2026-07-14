@@ -165,7 +165,7 @@ const AppAsideTemplate = () => {
 						{/* Upgrade Plan Button */}
 						<button
 							onClick={() => navigate('/settings/plan')}
-							className='mt-1 flex w-full items-center justify-center rounded-xl bg-primary-400 py-2 text-xs font-black text-primary-950 shadow-md shadow-primary-600/20 transition hover:bg-primary-700 active:scale-95 dark:shadow-none'>
+							className='mt-1 flex w-full items-center justify-center rounded-xl bg-primary-400 py-2 text-xs font-black text-primary-950 shadow-md shadow-primary-500/20 transition hover:bg-primary-500 active:scale-95 dark:shadow-none'>
 							Upgrade Plan
 						</button>
 					</div>

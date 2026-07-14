@@ -13,6 +13,7 @@ import type {
 } from '@/types/notification.type';
 import pages from '@/Routes/pages';
 import { useNotificationChannels } from '@/api/modules/notification-channels';
+import { primaryBtn, secondaryBtn } from '@/pages/settings/_shared/buttons';
 
 const CHANNEL_LABELS: Record<TDeliveryChannel, string> = {
 	database: 'In-app',
@@ -291,14 +292,14 @@ const NotificationsPage = () => {
 							type='button'
 							onClick={handleReset}
 							disabled={updatePreferences.isPending}
-							className='h-10 rounded-xl border border-zinc-200 bg-white px-5 text-sm font-bold text-zinc-500 shadow-xs transition hover:bg-zinc-50 hover:text-zinc-800 disabled:cursor-not-allowed disabled:opacity-60 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-400 dark:hover:bg-zinc-700 dark:hover:text-zinc-200'>
+							className={secondaryBtn}>
 							Reset
 						</button>
 						<button
 							type='button'
 							onClick={handleSave}
 							disabled={updatePreferences.isPending}
-							className='flex h-10 items-center gap-2 rounded-xl bg-primary-400 px-5 text-sm font-bold text-primary-950 shadow-lg shadow-primary-500/20 transition hover:bg-primary-500 disabled:cursor-not-allowed disabled:opacity-60'>
+							className={primaryBtn}>
 							<Save size={15} />
 							{updatePreferences.isPending ? 'Saving...' : 'Save changes'}
 						</button>
