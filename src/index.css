@@ -14,29 +14,29 @@ layer(base);
 		'Urbanist', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
 		'Segoe UI Symbol', 'Noto Color Emoji';
 
-	--color-primary-50: #f5fff4;
-	--color-primary-100: #e6ffec;
-	--color-primary-200: #ccffd8;
-	--color-primary-300: #99ffad;
-	--color-primary-400: #80ff94;
-	--color-primary-500: #66ff4c;
-	--color-primary-600: #59e644;
-	--color-primary-700: #4cc63b;
-	--color-primary-800: #3e9e32;
-	--color-primary-900: #307729;
-	--color-primary-950: #1c4e1f;
+	--color-primary-50: #faf5ff;
+	--color-primary-100: #f3e8ff;
+	--color-primary-200: #e9d5ff;
+	--color-primary-300: #d8b4fe;
+	--color-primary-400: #c084fc;
+	--color-primary-500: #a855f7;
+	--color-primary-600: #9333ea;
+	--color-primary-700: #7e22ce;
+	--color-primary-800: #6b21a8;
+	--color-primary-900: #581c87;
+	--color-primary-950: #3b0764;
 
-	--color-secondary-50: #fff4ef;
-	--color-secondary-100: #ffe4da;
-	--color-secondary-200: #ffc6b0;
-	--color-secondary-300: #ffa388;
-	--color-secondary-400: #ff8c66;
-	--color-secondary-500: #ff7a47;
-	--color-secondary-600: #e66e40;
-	--color-secondary-700: #cc6138;
-	--color-secondary-800: #b35430;
-	--color-secondary-900: #8a3f24;
-	--color-secondary-950: #4a2113;
+	--color-secondary-50: #ecfdf5;
+	--color-secondary-100: #d1fae5;
+	--color-secondary-200: #a7f3d0;
+	--color-secondary-300: #6ee7b7;
+	--color-secondary-400: #34d399;
+	--color-secondary-500: #10b981;
+	--color-secondary-600: #059669;
+	--color-secondary-700: #047857;
+	--color-secondary-800: #065f46;
+	--color-secondary-900: #064e3b;
+	--color-secondary-950: #022c22;
 }
 
 @layer base {

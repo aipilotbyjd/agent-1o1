@@ -6,10 +6,11 @@ import useAsideStatus from '@/hooks/useAsideStatus';
 interface IWrapperProps {
 	children: ReactNode;
 	className?: string;
+	hasAside?: boolean;
 }
 // @end-snippet:: interface
 const Wrapper: FC<IWrapperProps> = (props) => {
-	const { children, className, ...rest } = props;
+	const { children, className, hasAside = true, ...rest } = props;
 
 	const { asideStatus } = useAsideStatus();
 
@@ -23,9 +24,10 @@ const Wrapper: FC<IWrapperProps> = (props) => {
 				'transition-all duration-300 ease-in-out',
 				className,
 				{
-					'md:peer-[&]:ltr:pl-[20rem] md:peer-[&]:rtl:pr-[20rem]': asideStatus,
+					'md:peer-[&]:ltr:pl-[20rem] md:peer-[&]:rtl:pr-[20rem]': hasAside && asideStatus,
 					// Mobile Design
-					'md:peer-[&]:ltr:pl-[5.25em] md:peer-[&]:rtl:pr-[5.25em]': !asideStatus,
+					'md:peer-[&]:ltr:pl-[5.25em] md:peer-[&]:rtl:pr-[5.25em]': hasAside && !asideStatus,
+					'md:peer-[&]:ltr:pl-0 md:peer-[&]:rtl:pr-0': !hasAside,
 				},
 			)}
 			{...rest}>
