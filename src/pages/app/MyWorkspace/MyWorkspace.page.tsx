@@ -582,7 +582,7 @@ const MyWorkspacePage = () => {
 			<div className='pointer-events-none absolute right-[-10%] bottom-[-10%] h-[35rem] w-[35rem] rounded-full bg-indigo-200/20 blur-[120px] dark:bg-indigo-900/5' />
 
 			<div className='relative z-10 mx-auto w-full max-w-7xl space-y-6 p-4 sm:p-6 md:p-8'>
-				<header className='relative flex flex-col justify-between gap-6 overflow-hidden rounded-3xl border border-slate-200/80 bg-white/70 p-6 shadow-sm backdrop-blur-md lg:flex-row lg:items-center dark:border-zinc-800/80 dark:bg-zinc-900/40'>
+				<header className='relative mt-4 sm:mt-0 flex flex-col justify-between gap-6 overflow-hidden rounded-3xl border border-slate-200/80 bg-white/70 p-6 shadow-sm backdrop-blur-md lg:flex-row lg:items-center dark:border-zinc-800/80 dark:bg-zinc-900/40'>
 					{/* Banner background glow effect */}
 					<div className='absolute -top-24 -right-24 h-48 w-48 rounded-full bg-violet-500/10 blur-3xl' />
 					<div className='absolute -bottom-24 -left-24 h-48 w-48 rounded-full bg-indigo-500/10 blur-3xl' />

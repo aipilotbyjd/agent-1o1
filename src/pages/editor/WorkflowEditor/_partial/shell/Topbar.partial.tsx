@@ -123,7 +123,7 @@ const PurpleOutlineButton = ({
 		onClick={onClick}
 		disabled={disabled}
 		className={[
-			'flex h-9 items-center gap-2 rounded-lg border px-3 text-xs font-semibold shadow-xs transition disabled:cursor-not-allowed disabled:opacity-40',
+			'flex h-9 items-center gap-1.5 sm:gap-2 rounded-lg border px-2.5 sm:px-3 text-xs font-semibold shadow-xs transition disabled:cursor-not-allowed disabled:opacity-40',
 			active
 				? 'border-violet-300 bg-violet-50 text-violet-700 dark:border-violet-700/60 dark:bg-violet-950/40 dark:text-violet-300'
 				: 'border-zinc-200 bg-white text-violet-600 hover:bg-zinc-50 dark:border-zinc-800/40 dark:bg-zinc-900 dark:text-violet-400 dark:hover:bg-white/[0.04]',
@@ -277,8 +277,8 @@ const Topbar = () => {
 
 				<div className='h-6 w-px bg-zinc-200 dark:bg-zinc-800 hidden sm:block' />
 
-				{/* Add buttons — hidden on mobile, only the agent logo shows */}
-				<div className='hidden md:flex items-center gap-2'>
+				{/* Add buttons — visible as icon-only on mobile, full buttons on desktop */}
+				<div className='flex items-center gap-1.5 sm:gap-2'>
 					<PurpleOutlineButton onClick={() => dispatch({ type: 'TOGGLE_AI_PANEL' })}>
 						<Sparkles size={14} className='text-violet-600 dark:text-violet-400' />
 						<span className='hidden sm:inline'>{state.ui.aiPanelOpen ? 'Hide Chat' : 'AI Chat'}</span>
@@ -287,7 +287,7 @@ const Topbar = () => {
 						<button
 							type='button'
 							onClick={() => dispatch({ type: 'TOGGLE_LEFT_PANEL', intent: 'home' })}
-							className='dark:bg-violet-750 dark:hover:bg-violet-650 flex h-9 cursor-pointer items-center gap-2 rounded-lg bg-violet-600 px-3 text-xs font-semibold text-white shadow-xs transition hover:bg-violet-700'>
+							className='dark:bg-violet-750 dark:hover:bg-violet-650 flex h-9 cursor-pointer items-center gap-1.5 sm:gap-2 rounded-lg bg-violet-600 px-2.5 sm:px-3 text-xs font-semibold text-white shadow-xs transition hover:bg-violet-700'>
 							<Boxes size={14} className='text-white' />
 							<span className='hidden sm:inline'>Apps</span>
 						</button>
@@ -302,7 +302,7 @@ const Topbar = () => {
 						<button
 							type='button'
 							onClick={() => dispatch({ type: 'TOGGLE_LEFT_PANEL', intent: 'trigger' })}
-							className='dark:bg-violet-750 dark:hover:bg-violet-650 flex h-9 cursor-pointer items-center gap-2 rounded-lg bg-violet-600 px-3 text-xs font-semibold text-white shadow-xs transition hover:bg-violet-700'>
+							className='dark:bg-violet-750 dark:hover:bg-violet-650 flex h-9 cursor-pointer items-center gap-1.5 sm:gap-2 rounded-lg bg-violet-600 px-2.5 sm:px-3 text-xs font-semibold text-white shadow-xs transition hover:bg-violet-700'>
 							<Rocket size={14} className='fill-white text-white' />
 							<span className='hidden sm:inline'>Triggers</span>
 						</button>
@@ -320,7 +320,7 @@ const Topbar = () => {
 			</div>
 
 			{/* Right Section: Action Controls — hidden on mobile, only the agent logo shows */}
-			<div className='hidden md:flex items-center gap-3.5'>
+			<div className='flex items-center gap-1.5 sm:gap-3.5'>
 				{/* Desktop-only action groups */}
 				<div className='hidden md:flex items-center gap-3.5'>
 					{/* Undo/Redo & Darkmode & Keyboard */}

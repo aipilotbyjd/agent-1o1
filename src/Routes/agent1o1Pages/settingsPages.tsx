@@ -1,5 +1,16 @@
 import pages from '@/Routes/pages';
 import { lazy } from 'react';
+import { Navigate, useLocation } from 'react-router';
+
+const RedirectToPlan = ({ tab }: { tab: string }) => {
+	const location = useLocation();
+	return (
+		<Navigate
+			to={`/settings/plan?tab=${tab}${location.search ? `&${location.search.slice(1)}` : ''}`}
+			replace
+		/>
+	);
+};
 
 // ── Billing ───────────────────────────────────────────────────────────────────
 const BillingLayout = lazy(() => import('@/pages/settings/Billing/_layouts/Billing.layout'));
@@ -62,25 +73,24 @@ const SettingsPages = [
 		],
 	},
 
-	// /settings/usage
+	// /settings/usage (redirects to /settings/plan?tab=usage)
 	{
-		path: pages.settings.subPages.usage.to,
-		element: <UsageLayout />,
-		children: [{ index: true, element: <UsagePage /> }],
+		path: '/settings/usage',
+		element: <RedirectToPlan tab='usage' />,
 	},
 
-	// /settings/billing + /settings/billing/credits + /settings/billing/history
+	// /settings/billing (redirects to /settings/plan?tab=billing, keeps subpages active)
 	{
-		path: pages.settings.subPages.billing.to,
+		path: '/settings/billing',
 		element: <BillingLayout />,
 		children: [
-			{ index: true, element: <BillingOverviewPage /> },
+			{ index: true, element: <RedirectToPlan tab='billing' /> },
 			{
-				path: pages.settings.subPages.billing.subPages.credits.to,
+				path: 'credits',
 				element: <BillingCreditsPage />,
 			},
 			{
-				path: pages.settings.subPages.billing.subPages.history.to,
+				path: 'history',
 				element: <BillingHistoryPage />,
 			},
 		],

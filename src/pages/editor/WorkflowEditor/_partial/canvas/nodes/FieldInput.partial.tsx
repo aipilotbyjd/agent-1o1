@@ -114,7 +114,7 @@ const FieldInput = ({ field, value, onChange, compact, nodeId }: FieldInputProps
 				value={String(value ?? '')}
 				onChange={(event) => onChange(event.target.value)}
 				aria-label={field.label}
-				className={`${cls} ${compact ? 'cursor-pointer appearance-none pr-7' : ''}`}>
+				className={`${cls} ${compact ? 'cursor-pointer appearance-none bg-none pr-7' : ''}`}>
 				<option value=''>Select…</option>
 				{field.options?.map((option) => (
 					<option key={option.value} value={option.value}>

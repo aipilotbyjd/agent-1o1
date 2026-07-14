@@ -32,7 +32,7 @@ type TProfileForm = {
 };
 
 const inputClass =
-	'h-12 w-full rounded-xl border border-zinc-200 bg-white px-4 text-sm font-semibold text-zinc-800 shadow-xs outline-none placeholder:text-zinc-400 focus:border-pink-300 focus:ring-4 focus:ring-pink-100 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-150 dark:placeholder:text-zinc-500 dark:focus:border-pink-500 dark:focus:ring-pink-500/20';
+	'h-12 w-full rounded-xl border border-zinc-200 bg-white px-4 text-sm font-semibold text-zinc-800 shadow-xs outline-none placeholder:text-zinc-400 focus:border-violet-300 focus:ring-4 focus:ring-violet-100 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100 dark:placeholder:text-zinc-500 dark:focus:border-violet-500 dark:focus:ring-violet-500/20';
 
 const errorClass = 'mt-2 text-xs font-semibold text-red-500';
 
@@ -242,7 +242,7 @@ const ProfilePage = () => {
 						<div className='flex items-center gap-5'>
 							{/* Squircle Avatar with Camera Overlay */}
 							<div className='relative'>
-								<div className='flex h-20 w-20 items-center justify-center rounded-[22px] bg-pink-100 text-3xl font-black text-pink-600 dark:bg-pink-500/15 dark:text-pink-300'>
+								<div className='flex h-20 w-20 items-center justify-center rounded-[22px] bg-violet-100 text-3xl font-black text-violet-600 dark:bg-violet-500/15 dark:text-violet-300'>
 									{getInitials(displayName)}
 								</div>
 								<button
@@ -283,7 +283,7 @@ const ProfilePage = () => {
 									type='button'
 									disabled={uploadAvatar.isPending}
 									onClick={() => fileInputRef.current?.click()}
-									className='flex h-10 items-center gap-2 rounded-xl bg-pink-500 px-5 text-sm font-bold text-white shadow-lg shadow-pink-500/10 transition hover:bg-pink-600 active:scale-95 disabled:opacity-60'>
+									className='flex h-10 items-center gap-2 rounded-xl bg-violet-600 px-5 text-sm font-bold text-white shadow-lg shadow-violet-600/10 transition hover:bg-violet-700 active:scale-95 disabled:opacity-60 dark:bg-violet-750 dark:hover:bg-violet-650'>
 									<Upload size={16} />
 									<span>
 										{uploadAvatar.isPending ? 'Uploading...' : 'Upload Photo'}
@@ -293,7 +293,7 @@ const ProfilePage = () => {
 									type='button'
 									disabled={deleteAvatar.isPending}
 									onClick={() => deleteAvatar.mutate()}
-									className='h-10 rounded-xl border border-zinc-200 bg-white px-5 text-sm font-bold text-zinc-500 shadow-xs transition hover:bg-zinc-50 hover:text-zinc-800 disabled:opacity-60 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800'>
+									className='h-10 rounded-xl border border-zinc-200 bg-white px-5 text-sm font-bold text-zinc-500 shadow-xs transition hover:bg-zinc-50 hover:text-zinc-800 disabled:opacity-60 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-200'>
 									Remove
 								</button>
 							</div>
@@ -417,7 +417,7 @@ const ProfilePage = () => {
 					<button
 						type='submit'
 						disabled={!isProfileDirty || updateProfile.isPending}
-						className='h-12 rounded-xl bg-pink-500 px-6 text-sm font-bold text-white shadow-lg shadow-pink-500/20 transition hover:bg-pink-600 active:scale-95 disabled:opacity-60'>
+						className='h-12 rounded-xl bg-violet-600 px-6 text-sm font-bold text-white shadow-lg shadow-violet-600/20 transition hover:bg-violet-700 active:scale-95 disabled:opacity-60 dark:bg-violet-750 dark:hover:bg-violet-650'>
 						{updateProfile.isPending ? 'Saving...' : 'Save changes'}
 					</button>
 				</div>

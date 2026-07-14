@@ -19,7 +19,7 @@ const OrbitAnimation = ({
 	connectedApps,
 }: IOrbitAnimationProps) => {
 	return (
-		<div className='relative flex min-h-[520px] flex-col items-center justify-center border-l border-slate-100 bg-slate-50/50 p-8 dark:border-zinc-800/80 dark:bg-zinc-950/20'>
+		<div className='relative hidden lg:flex min-h-[520px] flex-col items-center justify-center border-l border-slate-100 bg-slate-50/50 p-8 dark:border-zinc-800/80 dark:bg-zinc-950/20'>
 			<div className='pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_1px_1px,#000_1px,transparent_0)] bg-[size:16px_16px] opacity-[0.03] dark:bg-[radial-gradient(circle_at_1px_1px,#fff_1px,transparent_0)] dark:opacity-[0.04]' />
 
 			<div className='absolute top-6 right-6 flex items-center gap-1.5 rounded-lg bg-violet-500/10 px-2.5 py-1 text-[10px] font-black tracking-wider text-violet-600 uppercase dark:text-violet-400'>

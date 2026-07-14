@@ -83,8 +83,6 @@ const SettingsAsideTemplate = () => {
 						<SectionTitle>Plan & Credits</SectionTitle>
 						<div className='space-y-1'>
 							<SettingsNavItem {...pages.settings.subPages.plan} />
-							<SettingsNavItem {...pages.settings.subPages.usage} />
-							<SettingsNavItem {...pages.settings.subPages.billing} />
 						</div>
 					</section>
 

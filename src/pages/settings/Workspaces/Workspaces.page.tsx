@@ -13,12 +13,12 @@ import {
 	UserPlus,
 	ArrowRight,
 	Zap,
-	Grid,
 	Info,
 	Check,
 	X,
 	Layers,
 	Cpu,
+	Crown,
 } from 'lucide-react';
 import useDarkMode from '@/hooks/useDarkMode';
 import DARK_MODE from '@/constants/darkMode.constant';
@@ -82,17 +82,6 @@ interface IInvitation {
 	membersCount: number;
 	gradientFrom: string;
 	gradientTo: string;
-}
-
-interface Theme {
-	surface: string;
-	surface2: string;
-	bodyBg: string;
-	lineSoft: string;
-	textColor: string;
-	mutedColor: string;
-	faintColor: string;
-	isDark: boolean;
 }
 
 const GRADIENTS = [
@@ -224,7 +213,6 @@ const WorkspacesPage = () => {
 		const newParams = new URLSearchParams(searchParams);
 		newParams.delete('create');
 		setSearchParams(newParams, { replace: true });
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	useEffect(() => {
@@ -354,26 +342,6 @@ const WorkspacesPage = () => {
 		triggerToast(`Declined invitation from "${name}"`, 'info');
 	};
 
-	// ─── theme ─────────────────────────────────────────────────────────────────
-	const surface = isDarkTheme ? '#181526' : '#ffffff';
-	const surface2 = isDarkTheme ? '#1e1b2e' : '#f4f3fa';
-	const bodyBg = isDarkTheme ? '#0f0d18' : '#f8f7fc';
-	const lineSoft = isDarkTheme ? 'rgba(100,95,160,0.28)' : 'rgba(100,95,160,0.18)';
-	const textColor = isDarkTheme ? '#f5f4f8' : '#1a1825';
-	const mutedColor = isDarkTheme ? '#b0aec0' : '#5e5a72';
-	const faintColor = isDarkTheme ? '#8e8ba0' : '#8e8ba0';
-
-	const theme: Theme = {
-		surface,
-		surface2,
-		bodyBg,
-		lineSoft,
-		textColor,
-		mutedColor,
-		faintColor,
-		isDark: isDarkTheme,
-	};
-
 	const userDisplayName =
 		(userData as { name?: string } | null)?.name ??
 		(userData as { email?: string } | null)?.email?.split('@')[0] ??
@@ -382,257 +350,138 @@ const WorkspacesPage = () => {
 	const selectedTheme = THEME_OPTIONS[newWspThemeIdx];
 
 	return (
-		<div
-			className='relative min-h-screen overflow-x-hidden transition-colors duration-500'
-			style={{ background: bodyBg, color: textColor, fontFamily: 'Manrope, sans-serif' }}>
+		<div className='relative min-h-screen overflow-x-hidden font-sans bg-zinc-50 text-slate-800 transition-colors duration-500 dark:bg-[#070911] dark:text-zinc-150'>
 			<style>{`
 				@keyframes wsGrow { from { transform: scaleY(0); } }
 				@keyframes wsPulse {
-					0%   { box-shadow: 0 0 0 0 rgba(245,158,11,0.7); }
+					0%   { box-shadow: 0 0 0 0 rgba(139,92,246,0.5); }
 					70%  { box-shadow: 0 0 0 9px transparent; }
 					100% { box-shadow: 0 0 0 0 transparent; }
 				}
-				.ws-spark-bar { flex: 1; background: linear-gradient(180deg,#7c5cff,transparent); border-radius: 3px; opacity: 0.85; transform-origin: bottom; animation: wsGrow 0.9s cubic-bezier(0.22,0.61,0.36,1) backwards; }
 				.ws-pulse-dot { animation: wsPulse 2s infinite; }
 				.ws-btn-sheen { position: relative; overflow: hidden; }
 				.ws-btn-sheen::after { content: ""; position: absolute; top: 0; left: -60%; width: 45%; height: 100%; transform: skewX(-20deg); background: linear-gradient(90deg,transparent,rgba(255,255,255,0.32),transparent); transition: left 0.6s cubic-bezier(0.22,0.61,0.36,1); }
 				.ws-btn-sheen:hover::after { left: 130%; }
 			`}</style>
 
-			{/* ── Aurora backdrop ── */}
-			<div className='pointer-events-none fixed inset-0 z-0 overflow-hidden'>
-				<div
-					className='absolute rounded-full'
-					style={{
-						width: 680,
-						height: 680,
-						left: -220,
-						top: -300,
-						filter: 'blur(120px)',
-						opacity: isDarkTheme ? 0.16 : 0.08,
-						background: 'radial-gradient(circle at 30% 30%, #7c5cff, transparent 62%)',
-					}}
-				/>
-				<div
-					className='absolute rounded-full'
-					style={{
-						width: 560,
-						height: 560,
-						right: -200,
-						top: -240,
-						filter: 'blur(120px)',
-						opacity: isDarkTheme ? 0.14 : 0.07,
-						background: 'radial-gradient(circle at 60% 40%, #9955ff, transparent 60%)',
-					}}
-				/>
-			</div>
+			{/* ── Background Patterns ── */}
+			<div className='pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(#e2e8f0_1.5px,transparent_1.5px)] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] [background-size:24px_24px] opacity-70 dark:bg-[radial-gradient(#161c2c_1.5px,transparent_1.5px)] dark:opacity-85' />
+			<div className='pointer-events-none absolute top-0 right-10 -z-10 h-[500px] w-[500px] rounded-full bg-gradient-to-tr from-violet-500/8 to-blue-500/8 blur-[120px]' />
+			<div className='pointer-events-none absolute bottom-10 left-1/4 -z-10 h-[400px] w-[400px] rounded-full bg-gradient-to-br from-pink-500/4 to-cyan-500/4 blur-[100px]' />
 
-			{/* ── Grid noise ── */}
-			<div
-				className='pointer-events-none fixed inset-0 z-0'
-				style={{
-					opacity: isDarkTheme ? 0.22 : 0.12,
-					backgroundImage: `linear-gradient(${lineSoft} 1px, transparent 1px), linear-gradient(90deg, ${lineSoft} 1px, transparent 1px)`,
-					backgroundSize: '54px 54px',
-					maskImage:
-						'radial-gradient(ellipse 80% 55% at 50% 0%, #000 30%, transparent 75%)',
-				}}
-			/>
-
-			{/* ── Toast ── */}
+			{/* ── Toast Notification ── */}
 			<AnimatePresence>
 				{toast && (
 					<motion.div
 						initial={{ opacity: 0, y: -20, scale: 0.95 }}
 						animate={{ opacity: 1, y: 0, scale: 1 }}
 						exit={{ opacity: 0, y: -20, scale: 0.95 }}
-						className='fixed top-6 right-6 z-[110] flex items-center gap-3 rounded-2xl px-4 py-3 shadow-2xl'
-						style={{
-							background: surface,
-							border: `1px solid rgba(124,92,255,0.35)`,
-							boxShadow: '0 20px 60px -20px rgba(0,0,0,0.8)',
-						}}>
-						<div
-							className='flex h-6 w-6 items-center justify-center rounded-full'
-							style={{ background: 'rgba(124,92,255,0.16)', color: '#7c5cff' }}>
+						className='fixed top-6 right-6 z-[110] flex items-center gap-3 rounded-2xl border border-slate-200/80 bg-white px-4 py-3 shadow-xl dark:border-zinc-800 dark:bg-zinc-900'>
+						<div className='flex h-6 w-6 items-center justify-center rounded-full bg-violet-100 text-violet-650 dark:bg-violet-950/50 dark:text-violet-400'>
 							<Check size={13} strokeWidth={3} />
 						</div>
-						<span className='text-xs font-bold' style={{ color: textColor }}>
+						<span className='text-xs font-bold text-slate-800 dark:text-zinc-200'>
 							{toast.message}
 						</span>
 					</motion.div>
 				)}
 			</AnimatePresence>
 
-			{/* ── NAV ── */}
-			<div className='sticky top-0 z-30 px-6 pt-4 pb-2 md:px-8'>
-				<div className='mx-auto max-w-[1240px]'>
-					<nav
-						className='flex items-center justify-between px-4 py-3'
-						style={{
-							borderRadius: 18,
-							border: `1px solid ${lineSoft}`,
-							background: surface,
-							boxShadow: isDarkTheme
-								? '0 1px 0 rgba(255,255,255,0.04) inset, 0 24px 60px -30px rgba(0,0,0,0.8)'
-								: '0 1px 0 rgba(255,255,255,0.8) inset, 0 4px 20px -8px rgba(100,95,160,0.15)',
-						}}>
-						{/* Brand */}
-						<div
-							role='button'
-							tabIndex={0}
-							className='flex cursor-pointer items-center gap-3'
-							onClick={() => navigate('/my-workspace')}
-							onKeyDown={(e) => e.key === 'Enter' && navigate('/my-workspace')}>
-							<img
-								src={isDarkTheme ? LogoDark : LogoLight}
-								alt='agent1o1'
-								className='h-[38px] w-auto'
-							/>
-							<span
-								className='ml-1 rounded-full px-2.5 py-1 text-[11px] font-semibold'
-								style={{
-									color: faintColor,
-									border: `1px solid ${lineSoft}`,
-									fontFamily: 'Space Grotesk, sans-serif',
-								}}>
-								v2.4
-							</span>
+			{/* ── Header Navigation ── */}
+			<div className='sticky top-6 z-30 mx-auto w-[calc(100%-2rem)] max-w-7xl px-4 py-3 sm:px-5 sm:py-3.5 flex items-center justify-between rounded-2xl border border-slate-200/60 bg-white/75 backdrop-blur-md dark:border-zinc-800/80 dark:bg-zinc-900/75 shadow-sm'>
+				{/* Brand Logo */}
+				<div
+					role='button'
+					tabIndex={0}
+					className='flex cursor-pointer items-center gap-3'
+					onClick={() => navigate('/my-workspace')}>
+					<img
+						src={isDarkTheme ? LogoDark : LogoLight}
+						alt='agent1o1'
+						className='h-[30px] w-auto'
+					/>
+					<span className='rounded-full border border-slate-100 bg-slate-50 px-2.5 py-0.5 text-[10px] font-semibold text-slate-500 dark:border-zinc-850 dark:bg-zinc-950 dark:text-zinc-400'>
+						v2.4
+					</span>
+				</div>
+
+				{/* Navigation Right Actions */}
+				<div className='flex items-center gap-3.5'>
+					{/* Dark Mode Toggle */}
+					<button
+						onClick={() => setDarkModeStatus(isDarkTheme ? DARK_MODE.LIGHT : DARK_MODE.DARK)}
+						className='flex h-9 w-9 cursor-pointer items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-500 hover:bg-slate-50 hover:text-slate-800 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800/60 dark:hover:text-zinc-200 transition-colors'>
+						{isDarkTheme ? <Sun size={16} className='text-amber-400' /> : <Moon size={16} />}
+					</button>
+
+					{/* Profile / Account Indicator */}
+					<div className='flex cursor-pointer items-center gap-2.5 rounded-xl border border-slate-200 bg-white px-3 py-1.5 dark:border-zinc-800 dark:bg-zinc-900'>
+						<div className='flex h-7.5 w-7.5 items-center justify-center rounded-lg text-xs font-black text-white bg-gradient-to-tr from-violet-600 to-indigo-600'>
+							{userInitials}
 						</div>
-
-						{/* Right side */}
-						<div className='flex items-center gap-3.5'>
-							<button
-								onClick={() =>
-									setDarkModeStatus(
-										isDarkTheme ? DARK_MODE.LIGHT : DARK_MODE.DARK,
-									)
-								}
-								className='flex h-10 w-10 cursor-pointer items-center justify-center rounded-xl transition-all'
-								style={{
-									border: `1px solid ${lineSoft}`,
-									background: `linear-gradient(180deg, ${surface2}, ${surface})`,
-									color: faintColor,
-								}}>
-								{isDarkTheme ? (
-									<Sun size={17} className='text-amber-400' />
-								) : (
-									<Moon size={17} />
-								)}
-							</button>
-
-							<div
-								className='flex cursor-pointer items-center gap-2.5 rounded-[14px] px-3 py-1.5 transition-all'
-								style={{ border: `1px solid ${lineSoft}`, background: surface2 }}>
-								<div
-									className='flex h-8 w-8 items-center justify-center rounded-[9px] text-xs font-bold text-white'
-									style={{
-										background: 'linear-gradient(140deg, #7c5cff, #9955ff)',
-									}}>
-									{userInitials}
-								</div>
-								<div className='hidden sm:block'>
-									<div
-										className='text-[13px] leading-tight font-bold'
-										style={{ color: textColor }}>
-										{userDisplayName}
-									</div>
-									<div className='text-[11px]' style={{ color: faintColor }}>
-										Account
-									</div>
-								</div>
+						<div className='hidden sm:block text-left'>
+							<div className='text-xs leading-tight font-bold text-slate-800 dark:text-zinc-200'>
+								{userDisplayName}
+							</div>
+							<div className='text-[10px] font-medium text-slate-400 dark:text-zinc-500'>
+								Account
 							</div>
 						</div>
-					</nav>
+					</div>
 				</div>
 			</div>
 
-			{/* ── MAIN ── */}
-			<main className='relative z-[1] mx-auto max-w-[1240px] px-6 pb-24 md:px-8'>
-				{/* HERO */}
+			{/* ── Main Content Area ── */}
+			<main className='relative z-[1] mx-auto max-w-7xl px-6 pb-24 md:px-8'>
+				{/* Hero Section */}
 				<section className='mt-12 mb-10 flex flex-wrap items-end justify-between gap-8'>
-					<div>
-						<div
-							className='mb-4 inline-flex items-center gap-2 text-xs font-semibold tracking-[0.14em] uppercase'
-							style={{ color: '#7c5cff', fontFamily: 'Space Grotesk, sans-serif' }}>
-							<span
-								className='inline-block h-[7px] w-[7px] rounded-full'
-								style={{
-									background: '#7c5cff',
-									boxShadow: '0 0 12px 2px rgba(124,92,255,0.8)',
-								}}
-							/>
+					<div className='text-left'>
+						<div className='mb-3 inline-flex items-center gap-2 text-xs font-black tracking-widest text-violet-600 uppercase dark:text-violet-400'>
+							<span className='inline-block h-1.5 w-1.5 rounded-full bg-violet-600 dark:bg-violet-400 ring-2 ring-violet-500/30' />
 							Workspace Orchestration
 						</div>
-						<h1
-							className='leading-none tracking-[-0.03em]'
-							style={{
-								fontFamily: 'Space Grotesk, sans-serif',
-								fontSize: 'clamp(40px, 5.6vw, 62px)',
-								fontWeight: 700,
-								backgroundImage: isDarkTheme
-									? 'linear-gradient(180deg, #ffffff 0%, #a78bfa 100%)'
-									: 'linear-gradient(180deg, #1a1825 30%, #7c5cff 100%)',
-								WebkitBackgroundClip: 'text',
-								backgroundClip: 'text',
-								WebkitTextFillColor: 'transparent',
-								color: 'transparent',
-							}}>
+						<h1 className='text-3.5xl md:text-5xl font-black tracking-tight bg-gradient-to-r from-violet-600 via-indigo-600 to-blue-600 dark:from-white dark:via-indigo-300 dark:to-blue-400 bg-clip-text text-transparent leading-none'>
 							Workspaces
 						</h1>
-						<p
-							className='mt-4 max-w-[460px] text-[15.5px] leading-[1.55]'
-							style={{ color: mutedColor }}>
-							Welcome back! Select a workspace to orchestrate AI workflows, monitor
-							live agents, or wire up new integrations.
+						<p className='mt-3 max-w-xl text-xs sm:text-sm font-semibold text-slate-500 dark:text-zinc-400 leading-relaxed'>
+							Welcome back! Select a workspace to orchestrate AI workflows, monitor live agents, or wire up new integrations.
 						</p>
 					</div>
 
 					<button
 						onClick={() => setIsCreateModalOpen(true)}
-						className='ws-btn-sheen inline-flex cursor-pointer items-center gap-2.5 rounded-[14px] text-[14.5px] font-bold text-white'
-						style={{
-							padding: '14px 22px',
-							background: 'linear-gradient(135deg, #7c5cff, #9955ff)',
-							boxShadow:
-								'0 1px 0 rgba(255,255,255,0.35) inset, 0 0 0 1px rgba(128,80,255,0.6), 0 8px 18px -8px rgba(128,80,255,0.85)',
-						}}>
-						<Plus size={18} strokeWidth={2.4} />
+						className='ws-btn-sheen flex h-11 cursor-pointer items-center gap-2 rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 px-6 text-xs font-bold text-white shadow-md shadow-violet-500/20 transition-all hover:brightness-110 active:scale-95'>
+						<Plus size={16} strokeWidth={2.5} />
 						Create Workspace
 					</button>
 				</section>
 
-				{/* TOOLBAR */}
+				{/* Toolbar (Filters & Search) */}
 				<div className='mb-8 flex flex-wrap items-center justify-between gap-4'>
-					<div
-						className='flex gap-[5px] rounded-[14px] p-[5px]'
-						style={{ border: `1px solid ${lineSoft}`, background: surface }}>
+					{/* Category Tabs */}
+					<div className='flex gap-1.5 rounded-xl border border-slate-200/60 bg-slate-100/60 p-1.5 backdrop-blur-md dark:border-zinc-800/80 dark:bg-zinc-900/60'>
 						{TABS.map((tab) => (
 							<button
 								key={tab.id}
 								onClick={() => setSelectedCategory(tab.id)}
-								className='cursor-pointer rounded-[10px] px-[17px] py-[9px] text-[13px] font-semibold transition-all'
-								style={{
-									fontFamily: 'Space Grotesk, sans-serif',
-									...(selectedCategory === tab.id
-										? {
-												color: '#fff',
-												background:
-													'linear-gradient(180deg, #7c5cff, #9955ff)',
-												boxShadow:
-													'0 1px 0 rgba(255,255,255,0.3) inset, 0 6px 14px -7px rgba(128,80,255,0.9)',
-											}
-										: { color: faintColor, background: 'transparent' }),
-								}}>
-								{tab.label}
+								className='relative z-10 cursor-pointer rounded-lg px-4.5 py-1.5 text-xs font-bold transition-colors duration-305'>
+								{selectedCategory === tab.id && (
+									<motion.div
+										layoutId='activeTabBackground'
+										className='absolute inset-0 z-[-1] rounded-lg border border-slate-200/40 bg-white dark:border-zinc-700/30 dark:bg-zinc-800 shadow-sm'
+										transition={{ type: 'spring', stiffness: 380, damping: 30 }}
+									/>
+								)}
+								<span className={selectedCategory === tab.id ? 'text-violet-650 dark:text-violet-400' : 'text-slate-500 dark:text-zinc-400 hover:text-slate-800 dark:hover:text-zinc-200'}>
+									{tab.label}
+								</span>
 							</button>
 						))}
 					</div>
 
-					<div
-						className='flex min-w-[280px] items-center gap-2.5 rounded-[13px] px-3.5 py-[11px] transition-all'
-						style={{ border: `1px solid ${lineSoft}`, background: surface }}>
-						<Search size={17} style={{ color: faintColor, flexShrink: 0 }} />
+					{/* Search Box */}
+					<div className='group relative min-w-[280px] w-full md:w-80'>
+						<Search className='absolute top-3 left-4 h-4 w-4 text-slate-400 transition-colors duration-200 group-focus-within:text-violet-500' />
 						<input
 							ref={searchInputRef}
 							type='text'
@@ -640,31 +489,23 @@ const WorkspacesPage = () => {
 							placeholder='Search workspaces…'
 							value={searchQuery}
 							onChange={(e) => setSearchQuery(e.target.value)}
-							className='flex-1 border-none bg-transparent text-[14px] outline-none'
-							style={{ color: textColor, fontFamily: 'Manrope, sans-serif' }}
+							className='block h-10.5 w-full rounded-xl border border-slate-200/80 bg-white/70 pr-4 pl-11 text-xs font-semibold text-slate-900 outline-none transition-all placeholder:text-slate-400 focus:border-violet-500 focus:bg-white focus:ring-4 focus:ring-violet-500/10 dark:border-zinc-800 dark:bg-zinc-900/60 dark:text-zinc-100 dark:focus:border-violet-500 dark:focus:bg-zinc-900'
 						/>
 						{searchQuery ? (
 							<button
 								onClick={() => setSearchQuery('')}
-								style={{ color: faintColor }}
-								className='transition-colors hover:text-rose-400'>
+								className='absolute top-3 right-4 text-slate-400 hover:text-rose-500 transition-colors'>
 								<X size={14} />
 							</button>
 						) : (
-							<kbd
-								className='rounded px-1.5 py-0.5 text-[11px]'
-								style={{
-									color: faintColor,
-									border: `1px solid ${lineSoft}`,
-									fontFamily: 'Space Grotesk, sans-serif',
-								}}>
+							<kbd className='absolute top-2.5 right-4 rounded border border-slate-200 bg-slate-50 px-1.5 py-0.5 text-[9px] font-bold text-slate-400 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-500'>
 								⌘K
 							</kbd>
 						)}
 					</div>
 				</div>
 
-				{/* INVITATIONS */}
+				{/* Pending Invitations Section */}
 				<AnimatePresence>
 					{invitations.length > 0 && (
 						<motion.div
@@ -673,27 +514,11 @@ const WorkspacesPage = () => {
 							exit={{ opacity: 0, y: -10 }}
 							className='mb-12'>
 							<div className='mb-4 flex items-center gap-3'>
-								<span
-									className='ws-pulse-dot inline-block h-2 w-2 rounded-full'
-									style={{
-										background: '#f59e0b',
-										boxShadow: '0 0 0 0 rgba(245,158,11,0.7)',
-									}}
-								/>
-								<span
-									className='text-[12.5px] font-semibold tracking-[0.12em] uppercase'
-									style={{
-										color: faintColor,
-										fontFamily: 'Space Grotesk, sans-serif',
-									}}>
+								<span className='ws-pulse-dot inline-block h-2 w-2 rounded-full bg-amber-500 shadow-sm' />
+								<span className='text-[10px] font-black tracking-widest text-slate-400 dark:text-zinc-500 uppercase'>
 									Pending Invitations · {invitations.length}
 								</span>
-								<div
-									className='h-px flex-1'
-									style={{
-										background: `linear-gradient(90deg, ${lineSoft}, transparent)`,
-									}}
-								/>
+								<div className='h-px flex-1 bg-gradient-to-r from-slate-200 to-transparent dark:from-zinc-800' />
 							</div>
 
 							<div className='grid grid-cols-1 gap-4 sm:grid-cols-2'>
@@ -701,70 +526,41 @@ const WorkspacesPage = () => {
 									<motion.div
 										key={invite.id}
 										whileHover={{ x: 3 }}
-										className='relative flex flex-col items-start gap-4 overflow-hidden rounded-[14px] p-[18px] transition-all sm:flex-row sm:items-center'
-										style={{
-											border: `1px solid ${lineSoft}`,
-											background: surface,
-										}}>
+										className='relative flex flex-col items-start gap-4 overflow-hidden rounded-2xl border border-amber-200 bg-amber-50/20 p-4 transition-all sm:flex-row sm:items-center dark:border-amber-900/30 dark:bg-amber-950/10'>
 										<div
-											className='absolute top-0 bottom-0 left-0 w-[3px]'
+											className='absolute top-0 bottom-0 left-0 w-1'
 											style={{
 												background: `linear-gradient(to bottom, ${invite.gradientFrom}, ${invite.gradientTo})`,
 											}}
 										/>
 										<div
-											className='flex h-[46px] w-[46px] shrink-0 items-center justify-center rounded-[13px] text-[15px] font-bold text-white'
+											className='flex h-11 w-11 shrink-0 items-center justify-center rounded-xl text-sm font-black text-white'
 											style={{
 												background: `linear-gradient(135deg, ${invite.gradientFrom}, ${invite.gradientTo})`,
 											}}>
 											{invite.name.slice(0, 2).toUpperCase()}
 										</div>
-										<div className='flex-1 pl-2 sm:pl-0'>
-											<div
-												className='text-[15px] font-semibold'
-												style={{
-													color: textColor,
-													fontFamily: 'Space Grotesk, sans-serif',
-												}}>
+										<div className='flex-1 pl-2 sm:pl-0 text-left'>
+											<div className='text-sm font-bold text-slate-800 dark:text-zinc-200'>
 												{invite.name}
 											</div>
-											<div
-												className='mt-0.5 text-[12.5px]'
-												style={{ color: faintColor }}>
+											<div className='mt-0.5 text-xs text-slate-400 dark:text-zinc-500 font-semibold'>
 												Invited by{' '}
-												<span
-													className='font-semibold'
-													style={{ color: '#7c5cff' }}>
+												<span className='font-bold text-violet-600 dark:text-violet-400'>
 													{invite.inviter}
 												</span>{' '}
-												· {invite.membersCount} members
+												• {invite.membersCount} members
 											</div>
 										</div>
 										<div className='z-10 flex items-center gap-2 pl-2 sm:pl-0'>
 											<button
-												onClick={() =>
-													handleDeclineInvite(invite.id, invite.name)
-												}
-												className='flex cursor-pointer items-center gap-1.5 rounded-[11px] px-4 py-[9px] text-[13px] font-semibold transition-all hover:border-rose-500/50 hover:bg-rose-500/10 hover:text-rose-400'
-												style={{
-													color: mutedColor,
-													border: `1px solid ${lineSoft}`,
-													background: surface2,
-													fontFamily: 'Space Grotesk, sans-serif',
-												}}>
+												onClick={() => handleDeclineInvite(invite.id, invite.name)}
+												className='flex h-8.5 cursor-pointer items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3.5 text-xs font-bold text-slate-600 transition-all hover:border-rose-500/50 hover:bg-rose-500/5 hover:text-rose-500 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-400 dark:hover:bg-rose-950/20'>
 												<X size={13} strokeWidth={2.5} /> Decline
 											</button>
 											<button
 												onClick={() => handleAcceptInvite(invite)}
-												className='ws-btn-sheen flex cursor-pointer items-center gap-1.5 rounded-[11px] px-4 py-[9px] text-[13px] font-bold text-white transition-all hover:-translate-y-px'
-												style={{
-													border: '1px solid rgba(124,92,255,0.7)',
-													background:
-														'linear-gradient(180deg, #7c5cff, #9955ff)',
-													boxShadow:
-														'0 1px 0 rgba(255,255,255,0.3) inset, 0 6px 14px -8px rgba(128,80,255,0.9)',
-													fontFamily: 'Space Grotesk, sans-serif',
-												}}>
+												className='ws-btn-sheen flex h-8.5 cursor-pointer items-center gap-1.5 rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 px-3.5 text-xs font-bold text-white shadow-sm transition-all hover:brightness-110'>
 												<Check size={13} strokeWidth={3} /> Accept
 											</button>
 										</div>
@@ -775,59 +571,42 @@ const WorkspacesPage = () => {
 					)}
 				</AnimatePresence>
 
-				{/* WORKSPACES GRID */}
+				{/* Workspaces Grid Section */}
 				<div>
-					<div className='mb-5 flex items-center gap-3'>
-						<span
-							className='text-[12.5px] font-semibold tracking-[0.12em] uppercase'
-							style={{ color: faintColor, fontFamily: 'Space Grotesk, sans-serif' }}>
+					<div className='mb-6 flex items-center gap-3'>
+						<span className='text-[10px] font-black tracking-widest text-slate-400 dark:text-zinc-500 uppercase'>
 							Available Workspaces · {filteredWorkspaces.length}
 						</span>
-						<div
-							className='h-px flex-1'
-							style={{
-								background: `linear-gradient(90deg, ${lineSoft}, transparent)`,
-							}}
-						/>
+						<div className='h-px flex-1 bg-gradient-to-r from-slate-200 to-transparent dark:from-zinc-800' />
 					</div>
 
 					{isLoading ? (
-						<div
-							className='flex flex-col items-center justify-center rounded-[22px] p-20'
-							style={{ border: `1px solid ${lineSoft}`, background: surface }}>
-							<Spinner color='primary' className='h-8 w-8 text-[#7c5cff]' />
-							<span className='mt-3 text-sm font-bold' style={{ color: mutedColor }}>
+						<div className='flex flex-col items-center justify-center rounded-3xl border border-slate-200/60 bg-white p-20 dark:border-zinc-800/80 dark:bg-zinc-900/20'>
+							<Spinner color='primary' className='h-8 w-8 text-violet-600 dark:text-violet-400' />
+							<span className='mt-3 text-xs font-black text-slate-450 dark:text-zinc-500 uppercase tracking-widest'>
 								Loading workspaces...
 							</span>
 						</div>
 					) : filteredWorkspaces.length === 0 && searchQuery ? (
-						<div
-							className='flex flex-col items-center justify-center rounded-[22px] p-20 text-center'
-							style={{ border: `1px solid ${lineSoft}`, background: surface }}>
-							<Search
-								size={32}
-								className='mb-3 opacity-40'
-								style={{ color: faintColor }}
-							/>
-							<p className='text-sm font-semibold' style={{ color: mutedColor }}>
+						<div className='flex flex-col items-center justify-center rounded-3xl border border-slate-200/60 bg-white p-20 text-center dark:border-zinc-800/80 dark:bg-zinc-900/20'>
+							<Search size={32} className='mb-3 text-slate-300 dark:text-zinc-600' />
+							<p className='text-sm font-bold text-slate-800 dark:text-zinc-200'>
 								No workspaces match "{searchQuery}"
 							</p>
 							<button
 								onClick={() => setSearchQuery('')}
-								className='mt-3 text-xs font-bold'
-								style={{ color: '#7c5cff' }}>
+								className='mt-3 text-xs font-bold text-violet-600 dark:text-violet-400 hover:underline'>
 								Clear search
 							</button>
 						</div>
-					) : filteredWorkspaces.length === 0 ? null : (
-						<div className='grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3'>
+					) : (
+						<div className='grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3'>
 							<AnimatePresence>
 								{filteredWorkspaces.map((wsp: IWorkspaceCard, i: number) => (
 									<WorkspaceCard
 										key={wsp.id}
 										wsp={wsp}
 										index={i}
-										theme={theme}
 										activeMenuId={activeMenuId}
 										onSelect={handleSelectWorkspace}
 										onMenuToggle={(id) => setActiveMenuId(id)}
@@ -838,60 +617,27 @@ const WorkspacesPage = () => {
 										}}
 										onDelete={handleDeleteWorkspace}
 										onLeave={handleLeaveWorkspace}
-										onInvite={(name) =>
-											triggerToast(
-												`Open members invite overlay for ${name}`,
-												'info',
-											)
-										}
+										onInvite={(name) => triggerToast(`Open members invite overlay for ${name}`, 'info')}
 									/>
 								))}
 							</AnimatePresence>
 
-							{/* Ghost "New Workspace" card */}
+							{/* Ghost card for "+ New Workspace" */}
 							<motion.div
 								key='add-ws'
-								whileHover={{ y: -6 }}
+								whileHover={{ y: -5 }}
 								onClick={() => setIsCreateModalOpen(true)}
-								className='group relative cursor-pointer rounded-[22px]'>
-								<div
-									className='flex min-h-[280px] flex-col items-center justify-center rounded-[21px] border-2 border-dashed text-center transition-all'
-									style={{
-										borderColor: lineSoft,
-										background: isDarkTheme ? bodyBg : '#f4f3fa',
-									}}
-									onMouseEnter={(e) => {
-										const el = e.currentTarget as HTMLDivElement;
-										el.style.borderColor = '#7c5cff';
-										el.style.background = 'rgba(124,92,255,0.06)';
-									}}
-									onMouseLeave={(e) => {
-										const el = e.currentTarget as HTMLDivElement;
-										el.style.borderColor = lineSoft;
-										el.style.background = isDarkTheme ? bodyBg : '#f4f3fa';
-									}}>
-									<div
-										className='mb-[18px] flex h-[58px] w-[58px] items-center justify-center rounded-[18px] text-white transition-all duration-300 group-hover:rotate-90'
-										style={{
-											background: 'linear-gradient(180deg, #7c5cff, #9955ff)',
-											boxShadow:
-												'0 1px 0 rgba(255,255,255,0.3) inset, 0 10px 24px -10px rgba(128,80,255,0.9)',
-										}}>
-										<Plus size={26} strokeWidth={2.4} />
+								className='group cursor-pointer rounded-3xl border-2 border-dashed border-slate-200 bg-slate-50/50 p-5 dark:border-zinc-800 dark:bg-[#10131e]/10 hover:border-violet-500/55 hover:bg-violet-500/[0.02] transition-all duration-300'>
+								<div className='flex min-h-[260px] flex-col items-center justify-center text-center'>
+									<div className='mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-r from-violet-600 to-indigo-600 text-white shadow-md shadow-violet-500/20 group-hover:rotate-90 transition-all duration-300'>
+										<Plus size={20} strokeWidth={2.5} />
 									</div>
-									<b
-										className='text-[17px]'
-										style={{
-											fontFamily: 'Space Grotesk, sans-serif',
-											color: textColor,
-										}}>
+									<b className='text-[15px] font-extrabold text-slate-800 dark:text-zinc-200'>
 										New Workspace
 									</b>
-									<small
-										className='mt-1.5 block max-w-[200px] text-[13px]'
-										style={{ color: faintColor }}>
+									<p className='mt-1 max-w-[180px] text-xs font-semibold text-slate-400 dark:text-zinc-500'>
 										Spin up a fresh environment for your agents
-									</small>
+									</p>
 								</div>
 							</motion.div>
 						</div>
@@ -899,48 +645,35 @@ const WorkspacesPage = () => {
 				</div>
 			</main>
 
-			{/* ── CREATE MODAL ── */}
+			{/* ── Create Modal ── */}
 			<AnimatePresence>
 				{isCreateModalOpen && (
 					<motion.div
 						initial={{ opacity: 0 }}
 						animate={{ opacity: 1 }}
 						exit={{ opacity: 0 }}
-						className='fixed inset-0 z-[100] flex items-center justify-center p-4'
-						style={{ background: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(10px)' }}
+						className='fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs'
 						onClick={closeCreateModal}>
 						<motion.div
 							initial={{ scale: 0.95, y: 15 }}
 							animate={{ scale: 1, y: 0 }}
 							exit={{ scale: 0.95, y: 15 }}
 							transition={{ duration: 0.2 }}
-							className='relative w-full max-w-lg overflow-hidden rounded-[28px] p-8 shadow-2xl'
-							style={{ background: surface, border: `1px solid ${lineSoft}` }}
+							className='relative w-full max-w-lg overflow-hidden rounded-3xl border border-slate-200 bg-white p-6 sm:p-8 shadow-2xl dark:border-zinc-800 dark:bg-[#0f111a]'
 							onClick={(e) => e.stopPropagation()}>
-							<div
-								className='pointer-events-none absolute top-0 right-0 h-40 w-40 rounded-full blur-2xl'
-								style={{ background: 'rgba(124,92,255,0.08)' }}
-							/>
-
 							<button
 								onClick={closeCreateModal}
-								className='absolute top-6 right-6 cursor-pointer transition-colors'
-								style={{ color: faintColor }}>
+								className='absolute top-6 right-6 cursor-pointer text-slate-400 hover:text-slate-650 dark:hover:text-zinc-200 transition-colors'>
 								<X size={18} />
 							</button>
 
-							<h3
-								className='mb-6 flex items-center gap-2 text-lg font-bold'
-								style={{
-									color: textColor,
-									fontFamily: 'Space Grotesk, sans-serif',
-								}}>
+							<h3 className='mb-6 text-lg font-black text-slate-900 dark:text-white text-left'>
 								Create New Workspace
 							</h3>
 
 							<form onSubmit={handleCreateWorkspace} className='space-y-5'>
 								<div>
-									<ModalLabel faintColor={faintColor}>Workspace Name</ModalLabel>
+									<ModalLabel>Workspace Name</ModalLabel>
 									<input
 										type='text'
 										required
@@ -948,35 +681,14 @@ const WorkspacesPage = () => {
 										placeholder='e.g. Operations Department'
 										value={newWspName}
 										onChange={(e) => handleNameChange(e.target.value)}
-										className='h-11 w-full rounded-xl px-4 text-xs font-semibold transition-all outline-none'
-										style={{
-											border: `1px solid ${lineSoft}`,
-											background: surface2,
-											color: textColor,
-											fontFamily: 'Manrope, sans-serif',
-										}}
+										className='block h-11 w-full rounded-xl border border-slate-200 bg-slate-50 px-4 text-xs font-semibold text-slate-900 outline-none focus:border-violet-500 focus:bg-white focus:ring-4 focus:ring-violet-500/10 dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-100 dark:focus:border-violet-500 dark:focus:bg-zinc-950 transition-all'
 									/>
 								</div>
 
 								<div>
-									<ModalLabel faintColor={faintColor}>
-										Workspace URL / Slug
-									</ModalLabel>
-									<div
-										className='flex h-11 overflow-hidden rounded-xl transition-all'
-										style={{
-											border: `1px solid ${lineSoft}`,
-											background: surface2,
-										}}>
-										<span
-											className='flex h-full items-center border-r px-3 text-xs font-bold'
-											style={{
-												borderColor: lineSoft,
-												background: isDarkTheme
-													? 'rgba(0,0,0,0.2)'
-													: 'rgba(100,95,160,0.07)',
-												color: faintColor,
-											}}>
+									<ModalLabel>Workspace URL / Slug</ModalLabel>
+									<div className='flex h-11 overflow-hidden rounded-xl border border-slate-200 bg-slate-50 dark:border-zinc-800 dark:bg-zinc-950'>
+										<span className='flex h-full items-center border-r border-slate-200 bg-slate-100 px-3 text-xs font-extrabold text-slate-400 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-500'>
 											linkflow.icu/
 										</span>
 										<input
@@ -986,20 +698,14 @@ const WorkspacesPage = () => {
 											placeholder='my-workspace'
 											value={newWspSlug}
 											onChange={(e) => handleSlugChange(e.target.value)}
-											className='min-w-0 flex-1 border-none bg-transparent px-3 text-xs font-semibold outline-none'
-											style={{ color: textColor }}
+											className='min-w-0 flex-1 bg-transparent px-3 text-xs font-semibold text-slate-900 dark:text-zinc-100 outline-none'
 										/>
 									</div>
 								</div>
 
 								{/* Live preview */}
-								<div
-									className='rounded-2xl p-4'
-									style={{
-										border: `1px solid ${lineSoft}`,
-										background: isDarkTheme ? bodyBg : '#f4f3fa',
-									}}>
-									<ModalLabel faintColor={faintColor}>Live Preview</ModalLabel>
+								<div className='rounded-2xl border border-slate-150 bg-slate-50/50 p-4 dark:border-zinc-850 dark:bg-zinc-950/20'>
+									<ModalLabel>Live Preview</ModalLabel>
 									<div className='flex items-center gap-3'>
 										<div
 											className='flex h-11 w-11 items-center justify-center rounded-xl text-xs font-black text-white shadow-sm'
@@ -1008,15 +714,11 @@ const WorkspacesPage = () => {
 											}}>
 											{getInitials(newWspName.trim() || 'New Workspace')}
 										</div>
-										<div>
-											<div
-												className='text-xs leading-tight font-bold'
-												style={{ color: textColor }}>
+										<div className='text-left'>
+											<div className='text-xs leading-tight font-black text-slate-800 dark:text-zinc-200'>
 												{newWspName.trim() || 'Workspace Name'}
 											</div>
-											<div
-												className='mt-0.5 text-[10px]'
-												style={{ color: faintColor }}>
+											<div className='mt-0.5 text-[10px] font-semibold text-slate-400 dark:text-zinc-500'>
 												Plan: {newWspTier}
 											</div>
 										</div>
@@ -1025,53 +727,39 @@ const WorkspacesPage = () => {
 
 								{/* Plan tier */}
 								<div>
-									<ModalLabel faintColor={faintColor}>
-										Workspace Plan Tier
-									</ModalLabel>
+									<ModalLabel>Workspace Plan Tier</ModalLabel>
 									<div className='grid grid-cols-3 gap-2.5'>
-										{PLAN_TIERS.map((tier) => (
-											<button
-												key={tier.name}
-												type='button'
-												onClick={() => setNewWspTier(tier.name)}
-												className='flex cursor-pointer flex-col items-start rounded-xl p-3 text-left transition-all duration-200'
-												style={{
-													border: `1px solid ${
-														newWspTier === tier.name
+										{PLAN_TIERS.map((tier) => {
+											const isSelected = newWspTier === tier.name;
+											return (
+												<button
+													key={tier.name}
+													type='button'
+													onClick={() => setNewWspTier(tier.name)}
+													className={`flex cursor-pointer flex-col items-start rounded-xl p-3 text-left transition-all duration-200 border ${
+														isSelected
 															? tier.name === 'Enterprise'
-																? 'rgba(59,130,246,0.5)'
+																? 'border-blue-500/50 bg-blue-500/[0.06] dark:border-blue-500/40 dark:bg-blue-950/20'
 																: tier.name === 'Pro'
-																	? 'rgba(124,92,255,0.5)'
-																	: lineSoft
-															: lineSoft
-													}`,
-													background:
-														newWspTier === tier.name
-															? tier.name === 'Enterprise'
-																? 'rgba(59,130,246,0.08)'
-																: tier.name === 'Pro'
-																	? 'rgba(124,92,255,0.08)'
-																	: surface2
-															: surface2,
-												}}>
-												<span
-													className='text-xs font-bold tracking-wider uppercase'
-													style={{ color: textColor }}>
-													{tier.name}
-												</span>
-												<span
-													className='mt-1 text-[10px] leading-normal font-semibold opacity-75'
-													style={{ color: mutedColor }}>
-													{tier.desc}
-												</span>
-											</button>
-										))}
+																	? 'border-violet-500/50 bg-violet-500/[0.06] dark:border-violet-500/40 dark:bg-violet-950/20'
+																	: 'border-slate-350 bg-slate-100 dark:border-zinc-700 dark:bg-zinc-900'
+															: 'border-slate-200 bg-slate-50 dark:border-zinc-800 dark:bg-zinc-950'
+													}`}>
+													<span className='text-xs font-black tracking-wider uppercase text-slate-850 dark:text-zinc-200'>
+														{tier.name}
+													</span>
+													<span className='mt-1 text-[10px] leading-normal font-semibold text-slate-400 dark:text-zinc-550'>
+														{tier.desc}
+													</span>
+												</button>
+											);
+										})}
 									</div>
 								</div>
 
 								{/* Theme picker */}
 								<div>
-									<ModalLabel faintColor={faintColor}>Choose Theme</ModalLabel>
+									<ModalLabel>Choose Theme</ModalLabel>
 									<div className='grid grid-cols-6 gap-2.5'>
 										{THEME_OPTIONS.map((item, i) => (
 											<button
@@ -1082,7 +770,7 @@ const WorkspacesPage = () => {
 												title={item.label}
 												className={`h-10 w-full cursor-pointer rounded-xl border transition-transform duration-200 ${
 													newWspThemeIdx === i
-														? 'scale-105 border-transparent ring-2 ring-[#7c5cff] ring-offset-2'
+														? 'scale-105 border-transparent ring-2 ring-violet-500 ring-offset-2 dark:ring-offset-zinc-950'
 														: 'border-transparent hover:scale-105'
 												}`}
 												style={{
@@ -1093,26 +781,19 @@ const WorkspacesPage = () => {
 									</div>
 								</div>
 
+								{/* Footer Buttons */}
 								<div className='flex items-center justify-end gap-2.5 pt-2'>
 									<button
 										type='button'
 										onClick={closeCreateModal}
-										className='cursor-pointer rounded-xl px-5 py-2.5 text-xs font-bold transition-colors'
-										style={{ color: faintColor }}>
+										className='cursor-pointer rounded-xl px-5 py-2.5 text-xs font-bold text-slate-400 hover:text-slate-650 dark:hover:text-zinc-200 transition-colors'>
 										Cancel
 									</button>
 									<button
 										type='submit'
 										disabled={createWorkspaceMutation.isPending}
-										className='ws-btn-sheen cursor-pointer rounded-xl px-5 py-2.5 text-xs font-bold text-white transition-all hover:brightness-110 disabled:opacity-50'
-										style={{
-											background: 'linear-gradient(135deg, #7c5cff, #9955ff)',
-											boxShadow:
-												'0 1px 0 rgba(255,255,255,0.3) inset, 0 6px 14px -8px rgba(128,80,255,0.8)',
-										}}>
-										{createWorkspaceMutation.isPending
-											? 'Creating...'
-											: 'Create Workspace'}
+										className='ws-btn-sheen flex h-9.5 cursor-pointer items-center justify-center rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 px-5 text-xs font-bold text-white shadow-md shadow-violet-500/20 transition-all hover:brightness-110 disabled:opacity-50'>
+										{createWorkspaceMutation.isPending ? 'Creating...' : 'Create Workspace'}
 									</button>
 								</div>
 							</form>
@@ -1121,43 +802,35 @@ const WorkspacesPage = () => {
 				)}
 			</AnimatePresence>
 
-			{/* ── RENAME MODAL ── */}
+			{/* ── Rename Modal ── */}
 			<AnimatePresence>
 				{isRenameModalOpen && (
 					<motion.div
 						initial={{ opacity: 0 }}
 						animate={{ opacity: 1 }}
 						exit={{ opacity: 0 }}
-						className='fixed inset-0 z-[100] flex items-center justify-center p-4'
-						style={{ background: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(10px)' }}
+						className='fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs'
 						onClick={() => setIsRenameModalOpen(false)}>
 						<motion.div
 							initial={{ scale: 0.95, y: 15 }}
 							animate={{ scale: 1, y: 0 }}
 							exit={{ scale: 0.95, y: 15 }}
 							transition={{ duration: 0.2 }}
-							className='relative w-full max-w-md overflow-hidden rounded-[28px] p-8 shadow-2xl'
-							style={{ background: surface, border: `1px solid ${lineSoft}` }}
+							className='relative w-full max-w-md overflow-hidden rounded-3xl border border-slate-200 bg-white p-6 sm:p-8 shadow-2xl dark:border-zinc-800 dark:bg-[#0f111a]'
 							onClick={(e) => e.stopPropagation()}>
 							<button
 								onClick={() => setIsRenameModalOpen(false)}
-								className='absolute top-6 right-6 cursor-pointer transition-colors'
-								style={{ color: faintColor }}>
+								className='absolute top-6 right-6 cursor-pointer text-slate-400 hover:text-slate-650 dark:hover:text-zinc-200 transition-colors'>
 								<X size={18} />
 							</button>
 
-							<h3
-								className='mb-6 text-lg font-bold'
-								style={{
-									color: textColor,
-									fontFamily: 'Space Grotesk, sans-serif',
-								}}>
+							<h3 className='mb-6 text-lg font-black text-slate-900 dark:text-white text-left'>
 								Rename Workspace
 							</h3>
 
 							<form onSubmit={handleRenameWorkspace} className='space-y-5'>
 								<div>
-									<ModalLabel faintColor={faintColor}>Workspace Name</ModalLabel>
+									<ModalLabel>Workspace Name</ModalLabel>
 									<input
 										type='text'
 										required
@@ -1165,25 +838,13 @@ const WorkspacesPage = () => {
 										placeholder='e.g. Sales Department'
 										value={renameWspName}
 										onChange={(e) => setRenameWspName(e.target.value)}
-										className='h-11 w-full rounded-xl px-4 text-xs font-semibold transition-all outline-none'
-										style={{
-											border: `1px solid ${lineSoft}`,
-											background: surface2,
-											color: textColor,
-										}}
+										className='block h-11 w-full rounded-xl border border-slate-200 bg-slate-50 px-4 text-xs font-semibold text-slate-900 outline-none focus:border-violet-500 focus:bg-white focus:ring-4 focus:ring-violet-500/10 dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-100 dark:focus:border-violet-500 dark:focus:bg-zinc-950 transition-all'
 									/>
 								</div>
 
 								{selectedWorkspace && (
-									<div
-										className='rounded-2xl p-4'
-										style={{
-											border: `1px solid ${lineSoft}`,
-											background: isDarkTheme ? bodyBg : '#f4f3fa',
-										}}>
-										<ModalLabel faintColor={faintColor}>
-											Live Preview
-										</ModalLabel>
+									<div className='rounded-2xl border border-slate-150 bg-slate-50/50 p-4 dark:border-zinc-850 dark:bg-zinc-950/20'>
+										<ModalLabel>Live Preview</ModalLabel>
 										<div className='flex items-center gap-3'>
 											<div
 												className='flex h-11 w-11 items-center justify-center rounded-xl text-xs font-black text-white shadow-sm'
@@ -1192,15 +853,11 @@ const WorkspacesPage = () => {
 												}}>
 												{getInitials(renameWspName.trim() || 'WS')}
 											</div>
-											<div>
-												<div
-													className='text-xs leading-tight font-bold'
-													style={{ color: textColor }}>
+											<div className='text-left'>
+												<div className='text-xs leading-tight font-black text-slate-800 dark:text-zinc-200'>
 													{renameWspName.trim() || 'Workspace Name'}
 												</div>
-												<div
-													className='mt-0.5 text-[10px]'
-													style={{ color: faintColor }}>
+												<div className='mt-0.5 text-[10px] font-semibold text-slate-400 dark:text-zinc-500'>
 													Plan: {selectedWorkspace.tier}
 												</div>
 											</div>
@@ -1212,19 +869,13 @@ const WorkspacesPage = () => {
 									<button
 										type='button'
 										onClick={() => setIsRenameModalOpen(false)}
-										className='cursor-pointer rounded-xl px-5 py-2.5 text-xs font-bold transition-colors'
-										style={{ color: faintColor }}>
+										className='cursor-pointer rounded-xl px-5 py-2.5 text-xs font-bold text-slate-400 hover:text-slate-655 dark:hover:text-zinc-200 transition-colors'>
 										Cancel
 									</button>
 									<button
 										type='submit'
 										disabled={updateWorkspaceMutation.isPending}
-										className='ws-btn-sheen cursor-pointer rounded-xl px-5 py-2.5 text-xs font-bold text-white transition-all hover:brightness-110 disabled:opacity-50'
-										style={{
-											background: 'linear-gradient(135deg, #7c5cff, #9955ff)',
-											boxShadow:
-												'0 1px 0 rgba(255,255,255,0.3) inset, 0 6px 14px -8px rgba(128,80,255,0.8)',
-										}}>
+										className='ws-btn-sheen flex h-9.5 cursor-pointer items-center justify-center rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 px-5 text-xs font-bold text-white shadow-md shadow-violet-500/20 transition-all hover:brightness-110 disabled:opacity-50'>
 										{updateWorkspaceMutation.isPending ? 'Saving...' : 'Save'}
 									</button>
 								</div>
@@ -1237,105 +888,17 @@ const WorkspacesPage = () => {
 	);
 };
 
-// ─── Shared small components ───────────────────────────────────────────────────
-const StatCard = ({ theme, children }: { theme: Theme; children: React.ReactNode }) => (
-	<div
-		className='group relative overflow-hidden rounded-[22px] p-6 transition-all duration-300 hover:-translate-y-1'
-		style={{
-			border: `1px solid ${theme.lineSoft}`,
-			background: theme.surface,
-			boxShadow: theme.isDark
-				? '0 1px 0 rgba(255,255,255,0.04) inset, 0 24px 60px -30px rgba(0,0,0,0.8)'
-				: '0 1px 0 rgba(255,255,255,0.8) inset, 0 8px 30px -12px rgba(100,95,160,0.12)',
-		}}>
-		{children}
-	</div>
-);
-
-const StatIcon = ({ theme, children }: { theme: Theme; children: React.ReactNode }) => (
-	<div
-		className='flex h-[42px] w-[42px] items-center justify-center rounded-[13px]'
-		style={{ border: `1px solid ${theme.lineSoft}`, background: theme.surface2 }}>
-		{children}
-	</div>
-);
-
-const StatLabel = ({ theme, children }: { theme: Theme; children: React.ReactNode }) => (
-	<span
-		className='text-[11px] font-semibold tracking-[0.13em] uppercase'
-		style={{ color: theme.faintColor, fontFamily: 'Space Grotesk, sans-serif' }}>
-		{children}
-	</span>
-);
-
-const StatNumber = ({ theme, children }: { theme: Theme; children: React.ReactNode }) => (
-	<div
-		className='mt-4 leading-none tracking-[-0.02em]'
-		style={{
-			fontFamily: 'Space Grotesk, sans-serif',
-			fontSize: 42,
-			fontWeight: 700,
-			color: theme.textColor,
-		}}>
-		{children}
-	</div>
-);
-
-const ModalLabel = ({
-	faintColor,
-	children,
-}: {
-	faintColor: string;
-	children: React.ReactNode;
-}) => (
-	<label
-		className='mb-2 block text-[10px] font-bold tracking-wider uppercase'
-		style={{ color: faintColor }}>
+// ─── Modal Label Helper ────────────────────────────────────────────────────────
+const ModalLabel = ({ children }: { children: React.ReactNode }) => (
+	<label className='mb-2 block text-[10.5px] font-black tracking-wider uppercase text-slate-400 dark:text-zinc-500 text-left'>
 		{children}
 	</label>
 );
 
-const MetricCell = ({
-	icon,
-	label,
-	value,
-	theme,
-}: {
-	icon: React.ReactNode;
-	label: string;
-	value: string;
-	theme: Theme;
-}) => (
-	<div className='flex items-center gap-[11px]'>
-		<div
-			className='flex h-9 w-9 shrink-0 items-center justify-center rounded-[11px]'
-			style={{
-				border: `1px solid ${theme.lineSoft}`,
-				background: theme.surface2,
-				color: '#7c5cff',
-			}}>
-			{icon}
-		</div>
-		<div className='leading-tight'>
-			<div
-				className='text-[10px] font-semibold tracking-[0.08em] uppercase'
-				style={{ color: theme.faintColor, fontFamily: 'Space Grotesk, sans-serif' }}>
-				{label}
-			</div>
-			<div
-				className='text-[15px] font-semibold'
-				style={{ color: theme.textColor, fontFamily: 'Space Grotesk, sans-serif' }}>
-				{value}
-			</div>
-		</div>
-	</div>
-);
-
-// ─── Workspace Card ────────────────────────────────────────────────────────────
+// ─── Workspace Card Component ──────────────────────────────────────────────────
 interface WorkspaceCardProps {
 	wsp: IWorkspaceCard;
 	index: number;
-	theme: Theme;
 	activeMenuId: string | null;
 	onSelect: (id: string) => void;
 	onMenuToggle: (id: string | null) => void;
@@ -1348,7 +911,6 @@ interface WorkspaceCardProps {
 const WorkspaceCard = ({
 	wsp,
 	index,
-	theme,
 	activeMenuId,
 	onSelect,
 	onMenuToggle,
@@ -1357,250 +919,186 @@ const WorkspaceCard = ({
 	onLeave,
 	onInvite,
 }: WorkspaceCardProps) => {
-	const { surface, surface2, bodyBg, lineSoft, textColor, mutedColor, faintColor, isDark } =
-		theme;
-
 	return (
 		<motion.div
 			layout
-			initial={{ opacity: 0, y: 18 }}
+			initial={{ opacity: 0, y: 16 }}
 			animate={{ opacity: 1, y: 0 }}
-			exit={{ opacity: 0, scale: 0.97 }}
-			transition={{ duration: 0.3, delay: index * 0.06 }}
-			whileHover={{ y: -6 }}
+			exit={{ opacity: 0, scale: 0.95 }}
+			transition={{ duration: 0.3, delay: index * 0.05 }}
+			whileHover={{ y: -5 }}
 			onClick={() => onSelect(wsp.id)}
-			className='group relative cursor-pointer rounded-[22px] p-px transition-all'
-			style={{ background: `linear-gradient(160deg, ${lineSoft}, transparent 55%)` }}>
-			{/* Hover glow */}
+			className='group relative cursor-pointer overflow-hidden rounded-3xl border border-slate-200/60 bg-white p-5 shadow-[0_4px_25px_rgba(0,0,0,0.01)] transition-all duration-300 dark:border-zinc-800/80 dark:bg-[#10131e]/50 hover:border-violet-500/30 hover:shadow-md hover:shadow-violet-500/[0.02]'>
+			{/* Hover Accent Glow */}
 			<div
-				className='pointer-events-none absolute inset-[-40%] rounded-full opacity-0 transition-opacity duration-500 group-hover:opacity-[0.08]'
+				className='pointer-events-none absolute inset-[-30%] rounded-full opacity-0 transition-opacity duration-500 group-hover:opacity-[0.05] dark:group-hover:opacity-[0.08]'
 				style={{
 					background: `radial-gradient(circle, ${wsp.accentColor}, transparent 60%)`,
-					filter: 'blur(60px)',
+					filter: 'blur(50px)',
 				}}
 			/>
 
-			{/* Card inner */}
+			{/* Top accent bar */}
 			<div
-				className='relative h-full overflow-hidden rounded-[21px] p-[22px]'
+				className='absolute top-0 right-0 left-0 h-[3px]'
 				style={{
-					background: surface,
-					boxShadow: isDark
-						? '0 1px 0 rgba(255,255,255,0.04) inset, 0 24px 60px -30px rgba(0,0,0,0.8)'
-						: '0 1px 0 rgba(255,255,255,0.8) inset, 0 8px 30px -12px rgba(100,95,160,0.1)',
-				}}>
-				{/* Top accent bar */}
-				<div
-					className='absolute top-0 right-0 left-0 h-[3px] rounded-t-[21px]'
-					style={{
-						background: `linear-gradient(to right, ${wsp.gradientFrom}, ${wsp.gradientTo})`,
-						opacity: 0.85,
-					}}
-				/>
+					background: `linear-gradient(to right, ${wsp.gradientFrom}, ${wsp.gradientTo})`,
+				}}
+			/>
 
-				{/* Avatar + badge + kebab */}
-				<div className='mt-1 flex items-start justify-between'>
-					<div className='relative'>
-						<div
-							className='flex h-[50px] w-[50px] items-center justify-center rounded-[15px] text-[18px] font-bold text-white'
-							style={{
-								background: `linear-gradient(135deg, ${wsp.gradientFrom}, ${wsp.gradientTo})`,
-								boxShadow: `0 8px 22px -8px ${wsp.accentColor}, 0 0 0 1px rgba(255,255,255,0.14) inset`,
-								fontFamily: 'Space Grotesk, sans-serif',
-							}}>
-							{getInitials(wsp.name)}
-						</div>
-						{wsp.hasActiveRuns && (
-							<span
-								className='absolute -top-1 -right-1 h-[13px] w-[13px] rounded-full border-[2.5px] border-white bg-[#34d399]'
-								style={{ boxShadow: '0 0 8px rgba(52,211,153,0.8)' }}
-							/>
-						)}
+			{/* Top bar header */}
+			<div className='flex items-start justify-between mt-1'>
+				{/* Avatar container */}
+				<div className='relative shrink-0'>
+					<div
+						className='flex h-12 w-12 items-center justify-center rounded-2xl text-base font-black text-white shadow-sm ring-1 ring-white/10'
+						style={{
+							background: `linear-gradient(135deg, ${wsp.gradientFrom}, ${wsp.gradientTo})`,
+							boxShadow: `0 6px 16px -6px ${wsp.accentColor}`,
+						}}>
+						{getInitials(wsp.name)}
 					</div>
-
-					<div className='flex items-center gap-2'>
-						<span
-							className='inline-flex items-center gap-[5px] rounded-full px-[11px] py-[5px] text-[10px] font-bold tracking-[0.1em] uppercase'
-							style={{
-								color: '#7c5cff',
-								border: '1px solid rgba(124,92,255,0.3)',
-								background: 'rgba(124,92,255,0.1)',
-								fontFamily: 'Space Grotesk, sans-serif',
-							}}>
-							<span
-								className='inline-block h-[5px] w-[5px] rounded-full'
-								style={{ background: '#7c5cff', boxShadow: '0 0 6px #7c5cff' }}
-							/>
-							{wsp.tier === 'Enterprise'
-								? 'Enterprise'
-								: wsp.tier === 'Pro'
-									? 'Pro'
-									: 'Standard'}
+					{wsp.hasActiveRuns && (
+						<span className='absolute -top-1 -right-1 flex h-3 w-3'>
+							<span className='absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75'></span>
+							<span className='relative inline-flex h-3 w-3 rounded-full border border-white bg-emerald-500 dark:border-zinc-950'></span>
 						</span>
-
-						<div className='relative'>
-							<button
-								aria-label='Workspace options'
-								onClick={(e) => {
-									e.stopPropagation();
-									onMenuToggle(activeMenuId === wsp.id ? null : wsp.id);
-								}}
-								className='flex h-[30px] w-[30px] cursor-pointer items-center justify-center rounded-[9px] transition-all'
-								style={{ color: faintColor, border: '1px solid transparent' }}
-								onMouseEnter={(e) => {
-									const el = e.currentTarget as HTMLButtonElement;
-									el.style.borderColor = lineSoft;
-									el.style.background = surface2;
-									el.style.color = textColor;
-								}}
-								onMouseLeave={(e) => {
-									const el = e.currentTarget as HTMLButtonElement;
-									el.style.borderColor = 'transparent';
-									el.style.background = 'transparent';
-									el.style.color = faintColor;
-								}}>
-								<MoreVertical size={15} />
-							</button>
-
-							<AnimatePresence>
-								{activeMenuId === wsp.id && (
-									<motion.div
-										initial={{ opacity: 0, scale: 0.95, y: 5 }}
-										animate={{ opacity: 1, scale: 1, y: 0 }}
-										exit={{ opacity: 0, scale: 0.95, y: 5 }}
-										className='absolute right-0 z-50 mt-1.5 w-36 overflow-hidden rounded-xl p-1 shadow-lg'
-										style={{
-											background: surface,
-											border: `1px solid ${lineSoft}`,
-										}}>
-										<button
-											onClick={() => {
-												onMenuToggle(null);
-												onRename(wsp);
-											}}
-											className='flex w-full cursor-pointer items-center gap-2 rounded-lg px-3 py-2 text-xs font-semibold transition-colors'
-											style={{ color: textColor }}
-											onMouseEnter={(e) =>
-												((
-													e.currentTarget as HTMLButtonElement
-												).style.background = surface2)
-											}
-											onMouseLeave={(e) =>
-												((
-													e.currentTarget as HTMLButtonElement
-												).style.background = 'transparent')
-											}>
-											<Edit2 size={12} style={{ color: '#7c5cff' }} /> Rename
-										</button>
-										{wsp.role === 'Owner' ? (
-											<button
-												onClick={() => {
-													onMenuToggle(null);
-													onDelete(wsp.id, wsp.name);
-												}}
-												className='flex w-full cursor-pointer items-center gap-2 rounded-lg px-3 py-2 text-xs font-semibold transition-colors hover:bg-rose-500/10'
-												style={{ color: '#f43f5e' }}>
-												<Trash2 size={12} /> Delete
-											</button>
-										) : (
-											<button
-												onClick={() => {
-													onMenuToggle(null);
-													onLeave(wsp.id, wsp.name);
-												}}
-												className='flex w-full cursor-pointer items-center gap-2 rounded-lg px-3 py-2 text-xs font-semibold transition-colors hover:bg-rose-500/10'
-												style={{ color: '#f43f5e' }}>
-												<LogOut size={12} /> Leave
-											</button>
-										)}
-									</motion.div>
-								)}
-							</AnimatePresence>
-						</div>
-					</div>
+					)}
 				</div>
 
-				{/* Name & role */}
-				<h3
-					className='mt-[22px] mb-[6px] text-[21px] font-semibold tracking-[-0.01em] transition-colors group-hover:text-[#7c5cff]'
-					style={{ color: textColor, fontFamily: 'Space Grotesk, sans-serif' }}>
-					{wsp.name}
-				</h3>
-				<div className='text-[13px]' style={{ color: faintColor }}>
-					Role:{' '}
-					<span className='font-semibold' style={{ color: mutedColor }}>
-						{wsp.role}
-					</span>{' '}
-					· {wsp.lastActive}
-				</div>
+				{/* Tier tag & option kebab menu */}
+				<div className='flex items-center gap-2'>
+					<span className='rounded-full border border-violet-100 bg-violet-55 bg-violet-50 px-2.5 py-0.5 text-[9px] font-black tracking-wide text-violet-600 uppercase dark:border-violet-900/30 dark:bg-violet-950/20 dark:text-violet-400 shadow-2xs'>
+						{wsp.tier}
+					</span>
 
-				{/* Metrics */}
-				<div
-					className='my-[22px] grid grid-cols-2 gap-3 rounded-[14px] p-4'
-					style={{
-						border: `1px solid ${lineSoft}`,
-						background: isDark ? bodyBg : '#f4f3fa',
-					}}>
-					<MetricCell
-						icon={<Layers size={17} />}
-						label='Active Flows'
-						value={`${wsp.activeFlowsCount} flows`}
-						theme={theme}
-					/>
-					<MetricCell
-						icon={<Cpu size={17} />}
-						label='Deployments'
-						value={`${wsp.activeAgentsCount} agent${wsp.activeAgentsCount !== 1 ? 's' : ''}`}
-						theme={theme}
-					/>
-				</div>
-
-				{/* Footer */}
-				<div className='flex items-center justify-between'>
-					<div className='flex items-center'>
-						{wsp.members.map((member, idx) => (
-							<motion.div
-								whileHover={{ y: -2, zIndex: 10 }}
-								key={idx}
-								title={member.name}
-								className={`flex h-[30px] w-[30px] items-center justify-center rounded-full border-2 text-[11px] font-bold text-white ${member.color}`}
-								style={{ borderColor: surface, marginLeft: idx > 0 ? -8 : 0 }}>
-								{member.initials}
-							</motion.div>
-						))}
+					{/* Kebab Popover Dropdown */}
+					<div className='relative'>
 						<button
+							aria-label='Workspace options'
 							onClick={(e) => {
 								e.stopPropagation();
-								onInvite(wsp.name);
+								onMenuToggle(activeMenuId === wsp.id ? null : wsp.id);
 							}}
-							className='flex h-[30px] w-[30px] cursor-pointer items-center justify-center rounded-full border-[1.5px] border-dashed transition-all hover:scale-110 hover:border-solid hover:border-transparent hover:bg-gradient-to-b hover:from-[#7c5cff] hover:to-[#9955ff] hover:text-white'
-							style={{
-								borderColor: lineSoft,
-								background: surface2,
-								color: faintColor,
-								marginLeft: -8,
-							}}>
-							<UserPlus size={11} />
+							className='flex h-7.5 w-7.5 items-center justify-center rounded-lg border border-transparent text-slate-400 hover:border-slate-200 hover:bg-slate-50 hover:text-slate-700 dark:hover:border-zinc-800 dark:hover:bg-zinc-900 dark:hover:text-zinc-200 transition-colors'>
+							<MoreVertical size={14} />
 						</button>
-					</div>
 
+						<AnimatePresence>
+							{activeMenuId === wsp.id && (
+								<motion.div
+									initial={{ opacity: 0, scale: 0.95, y: 5 }}
+									animate={{ opacity: 1, scale: 1, y: 0 }}
+									exit={{ opacity: 0, scale: 0.95, y: 5 }}
+									className='absolute right-0 z-50 mt-1.5 w-36 overflow-hidden rounded-xl border border-slate-200 bg-white p-1 shadow-lg dark:border-zinc-800 dark:bg-zinc-900'>
+									<button
+										onClick={(e) => {
+											e.stopPropagation();
+											onMenuToggle(null);
+											onRename(wsp);
+										}}
+										className='flex w-full cursor-pointer items-center gap-2 rounded-lg px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50 dark:text-zinc-200 dark:hover:bg-zinc-800 transition-colors'>
+										<Edit2 size={12} className='text-violet-500' /> Rename
+									</button>
+									{wsp.role === 'Owner' ? (
+										<button
+											onClick={(e) => {
+												e.stopPropagation();
+												onMenuToggle(null);
+												onDelete(wsp.id, wsp.name);
+											}}
+											className='flex w-full cursor-pointer items-center gap-2 rounded-lg px-3 py-2 text-xs font-semibold text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-955 dark:hover:bg-rose-950/20 transition-colors'>
+											<Trash2 size={12} /> Delete
+										</button>
+									) : (
+										<button
+											onClick={(e) => {
+												e.stopPropagation();
+												onMenuToggle(null);
+												onLeave(wsp.id, wsp.name);
+											}}
+											className='flex w-full cursor-pointer items-center gap-2 rounded-lg px-3 py-2 text-xs font-semibold text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-955 dark:hover:bg-rose-950/20 transition-colors'>
+											<LogOut size={12} /> Leave
+										</button>
+									)}
+								</motion.div>
+							)}
+						</AnimatePresence>
+					</div>
+				</div>
+			</div>
+
+			{/* Title & Info */}
+			<div className='text-left'>
+				<h3 className='mt-5 text-lg font-black tracking-tight text-slate-900 dark:text-white group-hover:text-violet-600 dark:group-hover:text-violet-400 transition-colors'>
+					{wsp.name}
+				</h3>
+				<p className='mt-1 text-[11px] font-semibold text-slate-400 dark:text-zinc-500'>
+					Role: <span className='font-bold text-slate-650 dark:text-zinc-350'>{wsp.role}</span> • {wsp.lastActive}
+				</p>
+			</div>
+
+			{/* Metrics block */}
+			<div className='my-5 grid grid-cols-2 gap-3.5 rounded-2xl border border-slate-150/60 bg-slate-50/50 p-3.5 dark:border-zinc-850 dark:bg-zinc-950/20'>
+				<div className='flex items-center gap-2.5 text-left'>
+					<div className='flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-violet-50 text-violet-600 dark:bg-violet-950/30 dark:text-violet-400 shadow-2xs'>
+						<Layers size={15} />
+					</div>
+					<div className='min-w-0'>
+						<span className='block text-[9px] font-black tracking-wider text-slate-400 uppercase dark:text-zinc-500'>
+							Active Flows
+						</span>
+						<span className='block text-xs font-extrabold text-slate-700 dark:text-zinc-350 truncate'>
+							{wsp.activeFlowsCount} flows
+						</span>
+					</div>
+				</div>
+
+				<div className='flex items-center gap-2.5 text-left'>
+					<div className='flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-blue-50 text-blue-600 dark:bg-blue-950/30 dark:text-blue-400 shadow-2xs'>
+						<Cpu size={15} />
+					</div>
+					<div className='min-w-0'>
+						<span className='block text-[9px] font-black tracking-wider text-slate-400 uppercase dark:text-zinc-500'>
+							Deployments
+						</span>
+						<span className='block text-xs font-extrabold text-slate-700 dark:text-zinc-350 truncate'>
+							{wsp.activeAgentsCount} agent{wsp.activeAgentsCount !== 1 ? 's' : ''}
+						</span>
+					</div>
+				</div>
+			</div>
+
+			{/* Card Footer */}
+			<div className='flex items-center justify-between'>
+				{/* Members circle avatares */}
+				<div className='flex items-center -space-x-1.5'>
+					{wsp.members.map((member, idx) => (
+						<div
+							key={idx}
+							title={member.name}
+							className={`flex h-7.5 w-7.5 items-center justify-center rounded-full border border-white text-[9px] font-black text-white shadow-2xs ${member.color} dark:border-zinc-950`}>
+							{member.initials}
+						</div>
+					))}
 					<button
-						className='flex h-[46px] w-[46px] cursor-pointer items-center justify-center rounded-[14px] transition-all duration-300 group-hover:border-transparent group-hover:bg-gradient-to-b group-hover:from-[#7c5cff] group-hover:to-[#9955ff] group-hover:text-white'
-						style={{
-							border: `1px solid ${lineSoft}`,
-							background: `linear-gradient(180deg, ${surface2}, ${surface})`,
-							color: '#7c5cff',
-							boxShadow: isDark
-								? '0 1px 0 rgba(255,255,255,0.05) inset, 0 2px 6px -3px rgba(0,0,0,0.5)'
-								: '0 1px 0 rgba(255,255,255,0.8) inset',
-						}}>
-						<ArrowRight
-							size={18}
-							strokeWidth={2.4}
-							className='transition-transform duration-300 group-hover:translate-x-0.5'
-						/>
+						onClick={(e) => {
+							e.stopPropagation();
+							onInvite(wsp.name);
+						}}
+						className='flex h-7.5 w-7.5 items-center justify-center rounded-full border border-dashed border-slate-300 bg-slate-50 text-slate-555 hover:scale-105 hover:bg-violet-600 hover:text-white dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-400 transition-all'>
+						<UserPlus size={10} />
 					</button>
 				</div>
+
+				{/* Arrow enter button */}
+				<button className='flex h-10 w-10 cursor-pointer items-center justify-center rounded-xl border border-slate-200 bg-white text-violet-600 dark:border-zinc-800 dark:bg-zinc-900 dark:text-violet-400 transition-all duration-300 group-hover:border-transparent group-hover:bg-gradient-to-r group-hover:from-violet-600 group-hover:to-indigo-600 group-hover:text-white group-hover:shadow-md group-hover:shadow-violet-600/10 active:scale-95'>
+					<ArrowRight
+						size={16}
+						strokeWidth={2.5}
+						className='transition-transform duration-300 group-hover:translate-x-0.5'
+					/>
+				</button>
 			</div>
 		</motion.div>
 	);
