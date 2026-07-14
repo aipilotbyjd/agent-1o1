@@ -333,13 +333,13 @@ const settings = {
 		},
 		usage: {
 			id: 'usageSettings',
-			to: '/settings/usage',
+			to: '/settings/plan?tab=usage',
 			text: 'Usage',
 			icon: 'PieChart09' as TIcons,
 		},
 		billing: {
 			id: 'billingSettings',
-			to: '/settings/billing',
+			to: '/settings/plan?tab=billing',
 			text: 'Billing',
 			icon: 'CreditCard' as TIcons,
 			subPages: {

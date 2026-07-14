@@ -70,7 +70,7 @@ const TX_LABELS: Record<TCreditTransactionType, { label: string; color: string; 
 
 // ── component ─────────────────────────────────────────────────────────────────
 
-const UsagePage = () => {
+const UsagePage = ({ hideHeader = false }: { hideHeader?: boolean }) => {
 	const { activeWorkspaceId } = useWorkspaceContext();
 	const { data: balance, isLoading: balanceLoading } = useCreditBalance(activeWorkspaceId);
 	const { data: txData, isLoading: txLoading } = useCreditTransactions(activeWorkspaceId, {
@@ -189,55 +189,57 @@ const UsagePage = () => {
 	return (
 		<div className='space-y-8 text-zinc-950 dark:text-zinc-50'>
 			{/* Header */}
-			<div className='flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-2'>
-				<div>
-					<div className="flex items-center gap-2.5">
-						<h1 className='text-3xl font-black tracking-tight text-zinc-950 dark:text-zinc-50'>
-							Usage
-						</h1>
-						{balance?.plan?.name && (
-							<span className="rounded-full bg-indigo-50 px-2.5 py-0.5 text-xs font-bold text-indigo-600 dark:bg-indigo-950/40 dark:text-indigo-400 border border-indigo-100/50 dark:border-indigo-900/30">
-								{balance.plan.name} Plan
-							</span>
+			{!hideHeader && (
+				<div className='flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-2'>
+					<div>
+						<div className="flex items-center gap-2.5">
+							<h1 className='text-3xl font-black tracking-tight text-zinc-950 dark:text-zinc-50'>
+								Usage
+							</h1>
+							{balance?.plan?.name && (
+								<span className="rounded-full bg-indigo-50 px-2.5 py-0.5 text-xs font-bold text-indigo-600 dark:bg-indigo-950/40 dark:text-indigo-400 border border-indigo-100/50 dark:border-indigo-900/30">
+									{balance.plan.name} Plan
+								</span>
+							)}
+						</div>
+						{period?.start && period?.end ? (
+							<div className='mt-2 flex items-center gap-1.5 text-xs font-bold text-zinc-400 dark:text-zinc-500'>
+								<Calendar size={13.5} className='text-zinc-400' />
+								<span>
+									Billing period:{' '}
+									{new Date(period.start).toLocaleDateString(undefined, {
+										month: 'short',
+										day: 'numeric',
+									})}
+									{' – '}
+									{new Date(period.end).toLocaleDateString(undefined, {
+										month: 'short',
+										day: 'numeric',
+										year: 'numeric',
+									})}
+								</span>
+							</div>
+						) : (
+							<div className='mt-2 flex items-center gap-1.5 text-xs font-bold text-zinc-400 dark:text-zinc-500'>
+								<Calendar size={13.5} className='text-zinc-400' />
+								<span>Billing period: Jun 9 – Jul 9, 2026</span>
+							</div>
 						)}
 					</div>
-					{period?.start && period?.end ? (
-						<div className='mt-2 flex items-center gap-1.5 text-xs font-bold text-zinc-400 dark:text-zinc-500'>
-							<Calendar size={13.5} className='text-zinc-400' />
-							<span>
-								Billing period:{' '}
-								{new Date(period.start).toLocaleDateString(undefined, {
-									month: 'short',
-									day: 'numeric',
-								})}
-								{' – '}
-								{new Date(period.end).toLocaleDateString(undefined, {
-									month: 'short',
-									day: 'numeric',
-									year: 'numeric',
-								})}
-							</span>
-						</div>
-					) : (
-						<div className='mt-2 flex items-center gap-1.5 text-xs font-bold text-zinc-400 dark:text-zinc-500'>
-							<Calendar size={13.5} className='text-zinc-400' />
-							<span>Billing period: Jun 9 – Jul 9, 2026</span>
-						</div>
-					)}
-				</div>
 
-				<motion.div
-					whileHover={{ scale: 1.02, translateY: -1 }}
-					whileTap={{ scale: 0.98 }}
-				>
-					<Link
-						to={pages.settings.subPages.billing.subPages.credits.to}
-						className='flex h-10 items-center gap-2 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 px-5 text-sm font-bold text-white shadow-md shadow-indigo-600/15 hover:shadow-indigo-600/25 transition-all duration-200 border border-indigo-500/20'>
-						<CreditCard size={15} />
-						<span>Buy credits</span>
-					</Link>
-				</motion.div>
-			</div>
+					<motion.div
+						whileHover={{ scale: 1.02, translateY: -1 }}
+						whileTap={{ scale: 0.98 }}
+					>
+						<Link
+							to={pages.settings.subPages.billing.subPages.credits.to}
+							className='flex h-10 items-center gap-2 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 px-5 text-sm font-bold text-white shadow-md shadow-indigo-600/15 hover:shadow-indigo-600/25 transition-all duration-200 border border-indigo-500/20'>
+							<CreditCard size={15} />
+							<span>Buy credits</span>
+						</Link>
+					</motion.div>
+				</div>
+			)}
 
 			{/* Credit health card */}
 			{balanceLoading ? (

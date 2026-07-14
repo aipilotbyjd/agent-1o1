@@ -1,4 +1,4 @@
-import { Link } from 'react-router';
+import { Link, useSearchParams } from 'react-router';
 import {
 	AlertTriangle,
 	ArrowRight,
@@ -19,6 +19,7 @@ import {
 	Calendar,
 	XCircle,
 	RotateCcw,
+	CreditCard,
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useWorkspaceContext } from '@/context/workspaceContext';
@@ -31,6 +32,8 @@ import { useCreditBalance } from '@/api/modules/credits';
 import { useBillingPortal } from '@/api/modules/billing';
 import pages from '@/Routes/pages';
 import type { TPlanFeatures, TPlanLimits, TSubscriptionStatus } from '@/types/billing.type';
+import UsagePage from '../Usage/Usage.page';
+import BillingOverviewPage from '../Billing/index.page';
 
 // ── helpers ─────────────────────────────────────────────────────────────────
 
@@ -135,6 +138,13 @@ const PlanPage = () => {
 		);
 	}
 
+	const [searchParams, setSearchParams] = useSearchParams();
+	const activeTab = (searchParams.get('tab') as 'overview' | 'usage' | 'billing') || 'overview';
+
+	const setActiveTab = (tab: 'overview' | 'usage' | 'billing') => {
+		setSearchParams({ tab });
+	};
+
 	const plan = subscription?.plan;
 	const status = subscription?.status ?? 'active';
 	const statusCfg = statusConfig[status] || statusConfig.active;
@@ -220,6 +230,13 @@ const PlanPage = () => {
 			iconBg: 'bg-violet-50/70 text-violet-600 dark:bg-violet-950/30 dark:text-violet-400',
 		},
 	];
+
+	let subtitle = 'Your current plan, limits, and included features.';
+	if (activeTab === 'usage') {
+		subtitle = 'Detailed credit consumption and usage trends for this billing period.';
+	} else if (activeTab === 'billing') {
+		subtitle = 'Workspace credit packs, transaction logs, and billing settings.';
+	}
 
 	return (
 		<motion.div
@@ -309,268 +326,372 @@ const PlanPage = () => {
 						</span>
 					</div>
 					<p className='mt-1 text-sm font-medium text-zinc-400 dark:text-zinc-500'>
-						Your current plan, limits, and included features.
+						{subtitle}
 					</p>
 				</div>
 				<div className='flex flex-wrap items-center gap-3'>
-					<motion.button
-						whileHover={{ scale: 1.02, translateY: -1 }}
-						whileTap={{ scale: 0.98 }}
-						type='button'
-						onClick={() => portal.mutate()}
-						disabled={portal.isPending}
-						className='flex h-10 items-center gap-2 rounded-xl border border-zinc-200 bg-white px-4 text-sm font-bold text-zinc-700 shadow-sm transition hover:bg-zinc-50 disabled:opacity-60 dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-300 dark:hover:bg-zinc-900'
-					>
-						<ExternalLink size={14} />
-						{portal.isPending ? 'Opening…' : 'Manage billing'}
-					</motion.button>
-					<motion.div
-						whileHover={{ scale: 1.02, translateY: -1 }}
-						whileTap={{ scale: 0.98 }}
-					>
-						<Link
-							to={pages.settings.subPages.plan.subPages.upgrade.to}
-							className='flex h-10 items-center gap-2 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 px-5 text-sm font-bold text-white shadow-md shadow-indigo-600/15 hover:shadow-indigo-600/25 transition-all duration-200 border border-indigo-500/20'
-						>
-							<Zap size={14} className="fill-white/10" />
-							Upgrade plan
-						</Link>
-					</motion.div>
-					{canCancel && (
-						<motion.button
-							whileHover={{ scale: 1.02, translateY: -1 }}
-							whileTap={{ scale: 0.98 }}
-							type='button'
-							onClick={handleCancel}
-							disabled={cancelSubscription.isPending}
-							className='flex h-10 items-center gap-2 rounded-xl border border-red-200 bg-white px-4 text-sm font-bold text-red-600 shadow-sm transition hover:bg-red-50 disabled:opacity-60 dark:border-red-900/40 dark:bg-zinc-950 dark:text-red-400 dark:hover:bg-red-950/20'
-						>
-							<XCircle size={14} />
-							{cancelSubscription.isPending ? 'Canceling…' : 'Cancel plan'}
-						</motion.button>
+					{activeTab === 'overview' && (
+						<>
+							<motion.button
+								whileHover={{ scale: 1.02, translateY: -1 }}
+								whileTap={{ scale: 0.98 }}
+								type='button'
+								onClick={() => portal.mutate()}
+								disabled={portal.isPending}
+								className='flex h-10 items-center gap-2 rounded-xl border border-zinc-200 bg-white px-4 text-sm font-bold text-zinc-700 shadow-sm transition hover:bg-zinc-50 disabled:opacity-60 dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-300 dark:hover:bg-zinc-900'
+							>
+								<ExternalLink size={14} />
+								{portal.isPending ? 'Opening…' : 'Manage billing'}
+							</motion.button>
+							<motion.div
+								whileHover={{ scale: 1.02, translateY: -1 }}
+								whileTap={{ scale: 0.98 }}
+							>
+								<Link
+									to={pages.settings.subPages.plan.subPages.upgrade.to}
+									className='flex h-10 items-center gap-2 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 px-5 text-sm font-bold text-white shadow-md shadow-indigo-600/15 hover:shadow-indigo-600/25 transition-all duration-200 border border-indigo-500/20'
+								>
+									<Zap size={14} className="fill-white/10" />
+									Upgrade plan
+								</Link>
+							</motion.div>
+							{canCancel && (
+								<motion.button
+									whileHover={{ scale: 1.02, translateY: -1 }}
+									whileTap={{ scale: 0.98 }}
+									type='button'
+									onClick={handleCancel}
+									disabled={cancelSubscription.isPending}
+									className='flex h-10 items-center gap-2 rounded-xl border border-red-200 bg-white px-4 text-sm font-bold text-red-600 shadow-sm transition hover:bg-red-50 disabled:opacity-60 dark:border-red-900/40 dark:bg-zinc-950 dark:text-red-400 dark:hover:bg-red-950/20'
+								>
+									<XCircle size={14} />
+									{cancelSubscription.isPending ? 'Canceling…' : 'Cancel plan'}
+								</motion.button>
+							)}
+						</>
+					)}
+					{activeTab === 'usage' && (
+						<>
+							<motion.button
+								whileHover={{ scale: 1.02, translateY: -1 }}
+								whileTap={{ scale: 0.98 }}
+								type='button'
+								onClick={() => portal.mutate()}
+								disabled={portal.isPending}
+								className='flex h-10 items-center gap-2 rounded-xl border border-zinc-200 bg-white px-4 text-sm font-bold text-zinc-700 shadow-sm transition hover:bg-zinc-50 disabled:opacity-60 dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-300 dark:hover:bg-zinc-900'
+							>
+								<ExternalLink size={14} />
+								{portal.isPending ? 'Opening…' : 'Manage billing'}
+							</motion.button>
+							<motion.button
+								whileHover={{ scale: 1.02, translateY: -1 }}
+								whileTap={{ scale: 0.98 }}
+								type='button'
+								onClick={() => setActiveTab('billing')}
+								className='flex h-10 items-center gap-2 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 px-5 text-sm font-bold text-white shadow-md shadow-indigo-600/15 hover:shadow-indigo-600/25 transition-all duration-200 border border-indigo-500/20'
+							>
+								<CreditCard size={14} />
+								<span>Buy credits</span>
+							</motion.button>
+						</>
+					)}
+					{activeTab === 'billing' && (
+						<>
+							<motion.button
+								whileHover={{ scale: 1.02, translateY: -1 }}
+								whileTap={{ scale: 0.98 }}
+								type='button'
+								onClick={() => portal.mutate()}
+								disabled={portal.isPending}
+								className='flex h-10 items-center gap-2 rounded-xl border border-zinc-200 bg-white px-4 text-sm font-bold text-zinc-700 shadow-sm transition hover:bg-zinc-50 disabled:opacity-60 dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-300 dark:hover:bg-zinc-900'
+							>
+								<ExternalLink size={14} />
+								{portal.isPending ? 'Opening…' : 'Manage billing'}
+							</motion.button>
+						</>
 					)}
 				</div>
 			</motion.div>
 
-			{/* Current plan card */}
-			{isLoading ? (
-				<div className='h-36 animate-pulse rounded-2xl bg-zinc-100 dark:bg-zinc-900' />
-			) : (
-				<motion.div
-					variants={itemVariants}
-					className='relative overflow-hidden rounded-2xl border border-zinc-100 bg-white p-6 shadow-xs dark:border-zinc-800 dark:bg-zinc-950/60 backdrop-blur-md'
-				>
-					{/* Decorative glows */}
-					<div className="absolute -right-10 -top-10 -z-10 h-36 w-36 rounded-full bg-indigo-500/10 blur-3xl dark:bg-indigo-500/5" />
-					<div className="absolute -left-10 -bottom-10 -z-10 h-36 w-36 rounded-full bg-purple-500/10 blur-3xl dark:bg-purple-500/5" />
+			{/* Tabs Header */}
+			<motion.div variants={itemVariants} className='flex'>
+				<div className='inline-flex items-center gap-1.5 rounded-2xl bg-zinc-100/80 p-1.5 border border-zinc-200/60 dark:bg-zinc-900/60 dark:border-zinc-800/80 backdrop-blur-xs'>
+					<button
+						type='button'
+						onClick={() => setActiveTab('overview')}
+						className={`px-4.5 py-2.5 text-xs font-black transition rounded-xl relative cursor-pointer outline-hidden select-none ${activeTab === 'overview' ? 'text-zinc-950 dark:text-white' : 'text-zinc-400 hover:text-zinc-850 dark:text-zinc-500 dark:hover:text-zinc-300'}`}
+					>
+						<span className="relative z-10">Plan Overview</span>
+						{activeTab === 'overview' && (
+							<motion.div
+								layoutId="activeTabPill"
+								transition={{ type: 'spring', stiffness: 350, damping: 26 }}
+								className="absolute inset-0 bg-white dark:bg-zinc-800 shadow-sm border border-zinc-200/10 dark:border-zinc-700/30 rounded-xl"
+							/>
+						)}
+					</button>
+					<button
+						type='button'
+						onClick={() => setActiveTab('usage')}
+						className={`px-4.5 py-2.5 text-xs font-black transition rounded-xl relative cursor-pointer outline-hidden select-none ${activeTab === 'usage' ? 'text-zinc-950 dark:text-white' : 'text-zinc-400 hover:text-zinc-850 dark:text-zinc-500 dark:hover:text-zinc-300'}`}
+					>
+						<span className="relative z-10">Usage & Trends</span>
+						{activeTab === 'usage' && (
+							<motion.div
+								layoutId="activeTabPill"
+								transition={{ type: 'spring', stiffness: 350, damping: 26 }}
+								className="absolute inset-0 bg-white dark:bg-zinc-800 shadow-sm border border-zinc-200/10 dark:border-zinc-700/30 rounded-xl"
+							/>
+						)}
+					</button>
+					<button
+						type='button'
+						onClick={() => setActiveTab('billing')}
+						className={`px-4.5 py-2.5 text-xs font-black transition rounded-xl relative cursor-pointer outline-hidden select-none ${activeTab === 'billing' ? 'text-zinc-950 dark:text-white' : 'text-zinc-400 hover:text-zinc-850 dark:text-zinc-500 dark:hover:text-zinc-300'}`}
+					>
+						<span className="relative z-10">Billing & Top-ups</span>
+						{activeTab === 'billing' && (
+							<motion.div
+								layoutId="activeTabPill"
+								transition={{ type: 'spring', stiffness: 350, damping: 26 }}
+								className="absolute inset-0 bg-white dark:bg-zinc-800 shadow-sm border border-zinc-200/10 dark:border-zinc-700/30 rounded-xl"
+							/>
+						)}
+					</button>
+				</div>
+			</motion.div>
 
-					<div className='flex flex-wrap items-start justify-between gap-4'>
-						<div className="flex items-start gap-4">
-							<div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-50 to-purple-50 text-indigo-600 shadow-xs dark:from-indigo-950/30 dark:to-purple-950/30 dark:text-indigo-400 border border-indigo-100/30 dark:border-indigo-900/30">
-								<Crown size={26} className="text-indigo-600 dark:text-indigo-400 fill-indigo-600/5" />
-							</div>
-							<div>
-								<p className='text-[10px] font-black tracking-wider text-zinc-400 uppercase dark:text-zinc-500'>
-									Current plan
-								</p>
-								<div className='mt-1 flex items-center gap-2'>
-									<h2 className='text-3xl font-black text-zinc-950 dark:text-zinc-50 tracking-tight'>{plan?.name ?? 'Free'}</h2>
-									{isLifetime && (
-										<span className='inline-flex items-center gap-1 rounded-full bg-amber-100 px-2.5 py-0.5 text-[10px] font-black text-amber-700 dark:bg-amber-950 dark:text-amber-300 border border-amber-200/20'>
-											<Crown size={11} className="fill-amber-700/10" />
-											Lifetime
-										</span>
-									)}
-								</div>
-								{billingInterval && !isLifetime && (
-									<p className='mt-1 text-xs font-semibold text-zinc-500 capitalize dark:text-zinc-400'>
-										Billed {billingInterval === 'yearly' ? 'yearly' : 'monthly'} ·{' '}
-										{fmtPrice(
-											billingInterval === 'yearly'
-												? (plan?.price_yearly ?? 0)
-												: (plan?.price_monthly ?? 0),
+			{activeTab === 'overview' && (
+				<>
+					{/* Current plan card */}
+					{isLoading ? (
+						<div className='h-36 animate-pulse rounded-2xl bg-zinc-100 dark:bg-zinc-900' />
+					) : (
+						<motion.div
+							variants={itemVariants}
+							className='relative overflow-hidden rounded-2xl border border-zinc-100 bg-white p-6 shadow-xs dark:border-zinc-800 dark:bg-zinc-950/60 backdrop-blur-md'
+						>
+							{/* Decorative glows */}
+							<div className="absolute -right-10 -top-10 -z-10 h-36 w-36 rounded-full bg-indigo-500/10 blur-3xl dark:bg-indigo-500/5" />
+							<div className="absolute -left-10 -bottom-10 -z-10 h-36 w-36 rounded-full bg-purple-500/10 blur-3xl dark:bg-purple-500/5" />
+
+							<div className='flex flex-wrap items-start justify-between gap-4'>
+								<div className="flex items-start gap-4">
+									<div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-50 to-purple-50 text-indigo-600 shadow-xs dark:from-indigo-950/30 dark:to-purple-950/30 dark:text-indigo-400 border border-indigo-100/30 dark:border-indigo-900/30">
+										<Crown size={26} className="text-indigo-600 dark:text-indigo-400 fill-indigo-600/5" />
+									</div>
+									<div>
+										<p className='text-[10px] font-black tracking-wider text-zinc-400 uppercase dark:text-zinc-500'>
+											Current plan
+										</p>
+										<div className='mt-1 flex items-center gap-2'>
+											<h2 className='text-3xl font-black text-zinc-950 dark:text-zinc-50 tracking-tight'>{plan?.name ?? 'Free'}</h2>
+											{isLifetime && (
+												<span className='inline-flex items-center gap-1 rounded-full bg-amber-100 px-2.5 py-0.5 text-[10px] font-black text-amber-700 dark:bg-amber-950 dark:text-amber-300 border border-amber-200/20'>
+													<Crown size={11} className="fill-amber-700/10" />
+													Lifetime
+												</span>
+											)}
+										</div>
+										{billingInterval && !isLifetime && (
+											<p className='mt-1 text-xs font-semibold text-zinc-500 capitalize dark:text-zinc-400'>
+												Billed {billingInterval === 'yearly' ? 'yearly' : 'monthly'} ·{' '}
+												{fmtPrice(
+													billingInterval === 'yearly'
+														? (plan?.price_yearly ?? 0)
+														: (plan?.price_monthly ?? 0),
+												)}
+											</p>
 										)}
-									</p>
+										{isLifetime && (
+											<p className='mt-1 text-xs font-semibold text-amber-600 dark:text-amber-400'>
+												One-time purchase · Never expires
+											</p>
+										)}
+									</div>
+								</div>
+								<span
+									className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-bold border border-zinc-100/30 dark:border-zinc-800/30 ${statusCfg.bg} ${statusCfg.text}`}
+								>
+									<CheckCircle2 size={12} />
+									{statusCfg.label}
+								</span>
+							</div>
+							<div className='mt-5 flex flex-wrap gap-4 border-t border-zinc-100 pt-4 text-xs text-zinc-400 dark:border-zinc-800 dark:text-zinc-500 font-semibold'>
+								{isLifetime ? (
+									<span className='text-amber-600 dark:text-amber-400'>
+										Lifetime access — no renewal required
+									</span>
+								) : (
+									<div className="flex items-center gap-4">
+										{periodEnd && (
+											<span className="flex items-center gap-1">
+												<Calendar size={12} className="text-zinc-400 dark:text-zinc-500" />
+												Renews{' '}
+												{new Date(periodEnd).toLocaleDateString(undefined, {
+													month: 'short',
+													day: 'numeric',
+													year: 'numeric',
+												})}
+											</span>
+										)}
+										{trialEnd && (
+											<span className='font-bold text-sky-600 dark:text-sky-400'>
+												Trial ends{' '}
+												{new Date(trialEnd).toLocaleDateString(undefined, {
+													month: 'short',
+													day: 'numeric',
+													year: 'numeric',
+												})}
+											</span>
+										)}
+										{canceledAt && (
+											<span className='font-bold text-red-500 dark:text-red-400'>
+												Cancels{' '}
+												{new Date(canceledAt).toLocaleDateString(undefined, {
+													month: 'short',
+													day: 'numeric',
+													year: 'numeric',
+												})}
+											</span>
+										)}
+									</div>
 								)}
-								{isLifetime && (
-									<p className='mt-1 text-xs font-semibold text-amber-600 dark:text-amber-400'>
-										One-time purchase · Never expires
-									</p>
-								)}
+							</div>
+						</motion.div>
+					)}
+
+					{/* Limits */}
+					<motion.section variants={itemVariants}>
+						<h3 className='mb-4 mt-8 text-xs font-black tracking-wider text-zinc-400 dark:text-zinc-500 uppercase'>Your Limits</h3>
+						<div className='grid gap-4 sm:grid-cols-2 lg:grid-cols-3'>
+							{limitCards.map((card, idx) => (
+								<motion.div
+									key={idx}
+									whileHover={{ y: -2, scale: 1.01 }}
+									whileTap={{ scale: 0.99 }}
+									transition={{ duration: 0.25, ease: 'easeOut' }}
+									className='relative overflow-hidden rounded-2xl border border-zinc-100 bg-white p-5 shadow-xs dark:border-zinc-800 dark:bg-zinc-950/40 backdrop-blur-xs flex flex-col justify-between min-h-[140px] hover:border-zinc-300 dark:hover:border-zinc-700/80 transition-all duration-200'
+								>
+									<div className="w-full">
+										<div className="flex items-center gap-3">
+											<div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl ${card.iconBg} border border-zinc-100/15`}>
+												<card.icon size={16} />
+											</div>
+											<p className='text-[10px] font-black tracking-wider text-zinc-400 dark:text-zinc-500 uppercase'>
+												{card.title}
+											</p>
+										</div>
+
+										<p className='mt-3.5 text-2xl font-black text-zinc-950 dark:text-zinc-50 tracking-tight'>
+											{card.value}
+										</p>
+
+										{card.isCredits && limits?.credits_monthly && limits.credits_monthly > 0 && (
+											<div className="w-full mt-3">
+												<div className='h-2 w-full overflow-hidden rounded-full bg-zinc-100 dark:bg-zinc-800 p-[1px] border border-zinc-200/10'>
+													<motion.div
+														initial={{ width: 0 }}
+														animate={{ width: `${creditsUsedPct}%` }}
+														transition={{ duration: 0.8, ease: 'easeOut' }}
+														className={`h-full rounded-full ${creditsUsedPct >= 80 ? 'bg-rose-500' : 'bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500'}`}
+													/>
+												</div>
+												<p className='mt-1.5 text-[10px] font-bold text-zinc-400 dark:text-zinc-500'>
+													{creditsUsedPct}% used ({used.toLocaleString()} / {limit.toLocaleString()})
+												</p>
+											</div>
+										)}
+									</div>
+
+									{card.link && (
+										<div className="mt-4 pt-3 border-t border-zinc-50 dark:border-zinc-800/50">
+											<Link
+												to={card.link}
+												className='inline-flex items-center gap-1 text-xs font-bold text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 transition-colors'
+											>
+												<span>{card.linkLabel}</span>
+												<ArrowRight size={11} className="transition-transform group-hover:translate-x-0.5" />
+											</Link>
+										</div>
+									)}
+								</motion.div>
+							))}
+						</div>
+					</motion.section>
+
+					{/* Features */}
+					<motion.section variants={itemVariants}>
+						<h3 className='mb-4 mt-8 text-xs font-black tracking-wider text-zinc-400 dark:text-zinc-500 uppercase'>Included Features</h3>
+						<div className='rounded-2xl border border-zinc-100 bg-white/50 dark:border-zinc-800 dark:bg-zinc-950/20 backdrop-blur-xs p-5'>
+							<div className='grid gap-4 sm:grid-cols-2 lg:grid-cols-3'>
+								{features &&
+									(Object.keys(FEATURE_LABELS) as (keyof TPlanFeatures)[]).map(
+										(key) => {
+											const enabled = features[key];
+											return (
+												<div
+													key={key}
+													className={`flex items-center gap-3 rounded-xl border p-3 transition-all ${
+														enabled
+															? 'border-emerald-100/50 bg-emerald-50/10 dark:border-emerald-950/25 dark:bg-emerald-950/5'
+															: 'border-zinc-100/40 bg-zinc-50/10 dark:border-zinc-800/20 opacity-50'
+													}`}
+												>
+													<div
+														className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full border ${
+															enabled
+																? 'border-emerald-200 bg-emerald-50 text-emerald-600 dark:border-emerald-800/40 dark:bg-emerald-950/40 dark:text-emerald-400'
+																: 'border-zinc-200 bg-zinc-100 text-zinc-400 dark:border-zinc-800 dark:bg-zinc-900'
+														}`}
+													>
+														{enabled ? (
+															<Check size={11} className="stroke-[3]" />
+														) : (
+															<X size={11} className="stroke-[2.5]" />
+														)}
+													</div>
+													<span
+														className={`text-xs font-bold ${
+															enabled
+																? 'text-zinc-900 dark:text-zinc-100'
+																: 'text-zinc-400 dark:text-zinc-600'
+														}`}
+													>
+														{FEATURE_LABELS[key]}
+													</span>
+												</div>
+											);
+										},
+									)}
 							</div>
 						</div>
-						<span
-							className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-bold border border-zinc-100/30 dark:border-zinc-800/30 ${statusCfg.bg} ${statusCfg.text}`}
-						>
-							<CheckCircle2 size={12} />
-							{statusCfg.label}
-						</span>
-					</div>
-					<div className='mt-5 flex flex-wrap gap-4 border-t border-zinc-100 pt-4 text-xs text-zinc-400 dark:border-zinc-800 dark:text-zinc-500 font-semibold'>
-						{isLifetime ? (
-							<span className='text-amber-600 dark:text-amber-400'>
-								Lifetime access — no renewal required
-							</span>
-						) : (
-							<div className="flex items-center gap-4">
-								{periodEnd && (
-									<span className="flex items-center gap-1">
-										<Calendar size={12} className="text-zinc-400 dark:text-zinc-500" />
-										Renews{' '}
-										{new Date(periodEnd).toLocaleDateString(undefined, {
-											month: 'short',
-											day: 'numeric',
-											year: 'numeric',
-										})}
-									</span>
-								)}
-								{trialEnd && (
-									<span className='font-bold text-sky-600 dark:text-sky-400'>
-										Trial ends{' '}
-										{new Date(trialEnd).toLocaleDateString(undefined, {
-											month: 'short',
-											day: 'numeric',
-											year: 'numeric',
-										})}
-									</span>
-								)}
-								{canceledAt && (
-									<span className='font-bold text-red-500 dark:text-red-400'>
-										Cancels{' '}
-										{new Date(canceledAt).toLocaleDateString(undefined, {
-											month: 'short',
-											day: 'numeric',
-											year: 'numeric',
-										})}
-									</span>
-								)}
-							</div>
-						)}
-					</div>
-				</motion.div>
+					</motion.section>
+
+					{/* Compare plans */}
+					<motion.section variants={itemVariants}>
+						<div className='mb-4 mt-8 flex items-center justify-between'>
+							<h3 className='text-xs font-black tracking-wider text-zinc-400 dark:text-zinc-500 uppercase'>Other Plans</h3>
+							<Link
+								to={pages.settings.subPages.plan.subPages.upgrade.to}
+								className='flex items-center gap-1 text-xs font-bold text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 transition-colors'
+							>
+								<span>See full comparison</span>
+								<ArrowRight size={12} />
+							</Link>
+						</div>
+						<ComparePlanCards currentSlug={plan?.slug} />
+					</motion.section>
+				</>
 			)}
 
-			{/* Limits */}
-			<motion.section variants={itemVariants}>
-				<h3 className='mb-4 text-xs font-black tracking-wider text-zinc-400 dark:text-zinc-500 uppercase'>Your Limits</h3>
-				<div className='grid gap-4 sm:grid-cols-2 lg:grid-cols-3'>
-					{limitCards.map((card, idx) => (
-						<motion.div
-							key={idx}
-							whileHover={{ y: -2, scale: 1.01 }}
-							whileTap={{ scale: 0.99 }}
-							transition={{ duration: 0.25, ease: 'easeOut' }}
-							className='relative overflow-hidden rounded-2xl border border-zinc-100 bg-white p-5 shadow-xs dark:border-zinc-800 dark:bg-zinc-950/40 backdrop-blur-xs flex flex-col justify-between min-h-[140px] hover:border-zinc-300 dark:hover:border-zinc-700/80 transition-all duration-200'
-						>
-							<div className="w-full">
-								<div className="flex items-center gap-3">
-									<div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl ${card.iconBg} border border-zinc-100/15`}>
-										<card.icon size={16} />
-									</div>
-									<p className='text-[10px] font-black tracking-wider text-zinc-400 dark:text-zinc-500 uppercase'>
-										{card.title}
-									</p>
-								</div>
+			{activeTab === 'usage' && (
+				<UsagePage hideHeader />
+			)}
 
-								<p className='mt-3.5 text-2xl font-black text-zinc-950 dark:text-zinc-50 tracking-tight'>
-									{card.value}
-								</p>
-
-								{card.isCredits && limits?.credits_monthly && limits.credits_monthly > 0 && (
-									<div className="w-full mt-3">
-										<div className='h-2 w-full overflow-hidden rounded-full bg-zinc-100 dark:bg-zinc-800 p-[1px] border border-zinc-200/10'>
-											<motion.div
-												initial={{ width: 0 }}
-												animate={{ width: `${creditsUsedPct}%` }}
-												transition={{ duration: 0.8, ease: 'easeOut' }}
-												className={`h-full rounded-full ${creditsUsedPct >= 80 ? 'bg-rose-500' : 'bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500'}`}
-											/>
-										</div>
-										<p className='mt-1.5 text-[10px] font-bold text-zinc-400 dark:text-zinc-500'>
-											{creditsUsedPct}% used ({used.toLocaleString()} / {limit.toLocaleString()})
-										</p>
-									</div>
-								)}
-							</div>
-
-							{card.link && (
-								<div className="mt-4 pt-3 border-t border-zinc-50 dark:border-zinc-800/50">
-									<Link
-										to={card.link}
-										className='inline-flex items-center gap-1 text-xs font-bold text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 transition-colors'
-									>
-										<span>{card.linkLabel}</span>
-										<ArrowRight size={11} className="transition-transform group-hover:translate-x-0.5" />
-									</Link>
-								</div>
-							)}
-						</motion.div>
-					))}
-				</div>
-			</motion.section>
-
-			{/* Features */}
-			<motion.section variants={itemVariants}>
-				<h3 className='mb-4 text-xs font-black tracking-wider text-zinc-400 dark:text-zinc-500 uppercase'>Included Features</h3>
-				<div className='rounded-2xl border border-zinc-100 bg-white/50 dark:border-zinc-800 dark:bg-zinc-950/20 backdrop-blur-xs p-5'>
-					<div className='grid gap-4 sm:grid-cols-2 lg:grid-cols-3'>
-						{features &&
-							(Object.keys(FEATURE_LABELS) as (keyof TPlanFeatures)[]).map(
-								(key) => {
-									const enabled = features[key];
-									return (
-										<div
-											key={key}
-											className={`flex items-center gap-3 rounded-xl border p-3 transition-all ${
-												enabled
-													? 'border-emerald-100/50 bg-emerald-50/10 dark:border-emerald-950/25 dark:bg-emerald-950/5'
-													: 'border-zinc-100/40 bg-zinc-50/10 dark:border-zinc-800/20 opacity-50'
-											}`}
-										>
-											<div
-												className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full border ${
-													enabled
-														? 'border-emerald-200 bg-emerald-50 text-emerald-600 dark:border-emerald-800/40 dark:bg-emerald-950/40 dark:text-emerald-400'
-														: 'border-zinc-200 bg-zinc-100 text-zinc-400 dark:border-zinc-800 dark:bg-zinc-900'
-												}`}
-											>
-												{enabled ? (
-													<Check size={11} className="stroke-[3]" />
-												) : (
-													<X size={11} className="stroke-[2.5]" />
-												)}
-											</div>
-											<span
-												className={`text-xs font-bold ${
-													enabled
-														? 'text-zinc-900 dark:text-zinc-100'
-														: 'text-zinc-400 dark:text-zinc-600'
-												}`}
-											>
-												{FEATURE_LABELS[key]}
-											</span>
-										</div>
-									);
-								},
-							)}
-					</div>
-				</div>
-			</motion.section>
-
-			{/* Compare plans */}
-			<motion.section variants={itemVariants}>
-				<div className='mb-4 flex items-center justify-between'>
-					<h3 className='text-xs font-black tracking-wider text-zinc-400 dark:text-zinc-500 uppercase'>Other Plans</h3>
-					<Link
-						to={pages.settings.subPages.plan.subPages.upgrade.to}
-						className='flex items-center gap-1 text-xs font-bold text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 transition-colors'
-					>
-						<span>See full comparison</span>
-						<ArrowRight size={12} />
-					</Link>
-				</div>
-				<ComparePlanCards currentSlug={plan?.slug} />
-			</motion.section>
+			{activeTab === 'billing' && (
+				<BillingOverviewPage />
+			)}
 		</motion.div>
 	);
 };

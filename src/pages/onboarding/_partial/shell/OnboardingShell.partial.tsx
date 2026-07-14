@@ -131,7 +131,7 @@ const OnboardingShellInner = () => {
 				/>
 			</div>
 
-			<header className='relative z-10 w-full px-6 py-5'>
+			<header className='relative z-10 w-full px-6 py-5 sm:block hidden'>
 				<div className='mx-auto flex max-w-7xl items-center justify-between'>
 					<div className='flex items-center gap-3'>
 						<div className='flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-tr from-violet-600 to-indigo-600 text-white shadow-lg shadow-violet-500/25'>
@@ -141,27 +141,50 @@ const OnboardingShellInner = () => {
 							Agent1o1
 						</span>
 					</div>
-					<button
-						type='button'
-						onClick={handleDismissAll}
-						className='text-xs font-black text-slate-400 hover:text-slate-600 dark:hover:text-zinc-200 transition-colors'
-					>
-						Skip Onboarding
-					</button>
+					{step > 1 && (
+						<button
+							type='button'
+							onClick={handleDismissAll}
+							className='text-xs font-black text-slate-400 hover:text-slate-600 dark:hover:text-zinc-200 transition-colors'
+						>
+							Skip Onboarding
+						</button>
+					)}
 				</div>
 			</header>
 
 			{/* Main Wizard Card */}
-			<section className='relative z-10 flex flex-1 items-center justify-center px-4 py-8 md:py-16'>
+			<section className='relative z-10 flex flex-1 items-center justify-center sm:px-4 sm:py-8 md:py-16 px-0 py-0'>
 				<motion.div
 					layout
 					transition={{ type: 'spring', stiffness: 220, damping: 26 }}
 					style={{ maxWidth: isDualColumn ? '1024px' : '480px' }}
-					className='w-full overflow-hidden rounded-[2rem] border border-slate-200/80 bg-white/95 shadow-2xl backdrop-blur-xl dark:border-zinc-800/80 dark:bg-zinc-900/95'>
-					<div className={`grid ${isDualColumn ? 'lg:grid-cols-2' : 'grid-cols-1'}`}>
+					className='w-full overflow-hidden sm:rounded-[2rem] sm:border border-slate-200/80 bg-white/95 shadow-2xl backdrop-blur-xl dark:border-zinc-800/80 dark:bg-zinc-900/95 max-sm:min-h-screen max-sm:rounded-none max-sm:border-none max-sm:shadow-none max-sm:flex max-sm:flex-col max-sm:bg-white dark:max-sm:bg-zinc-900'>
+					<div className={`grid ${isDualColumn ? 'lg:grid-cols-2' : 'grid-cols-1'} max-sm:flex max-sm:flex-col max-sm:flex-1`}>
 						{/* Left: Form */}
-						<div className='flex min-h-[520px] flex-col justify-between p-6 md:p-10'>
+						<div className='flex min-h-[520px] max-sm:min-h-0 max-sm:flex-1 flex-col justify-between p-6 md:p-10 max-sm:px-5 max-sm:py-6'>
 							<div>
+								{/* Mobile Header (only visible on mobile) */}
+								<div className='mb-6 flex items-center justify-between sm:hidden'>
+									<div className='flex items-center gap-3'>
+										<div className='flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-tr from-violet-600 to-indigo-600 text-white shadow-lg shadow-violet-500/25'>
+											<span className='text-sm font-extrabold tracking-tighter'>A1</span>
+										</div>
+										<span className='bg-gradient-to-r from-slate-900 via-slate-800 to-slate-950 bg-clip-text text-lg font-black text-transparent dark:from-white dark:via-zinc-200 dark:to-zinc-100'>
+											Agent1o1
+										</span>
+									</div>
+									{step > 1 && (
+										<button
+											type='button'
+											onClick={handleDismissAll}
+											className='text-xs font-black text-slate-400 hover:text-slate-600 dark:hover:text-zinc-200 transition-colors'
+										>
+											Skip Onboarding
+										</button>
+									)}
+								</div>
+
 								{/* Step indicator */}
 								<StepIndicator step={step} />
 
@@ -224,7 +247,7 @@ const OnboardingShellInner = () => {
 			{/* App Auth Modal */}
 			<ConnectAppModal />
 
-			<footer className='relative z-10 w-full py-6 text-center text-[10px] font-bold text-slate-400 dark:text-zinc-600'>
+			<footer className='relative z-10 w-full py-6 text-center text-[10px] font-bold text-slate-400 dark:text-zinc-600 sm:block hidden'>
 				© {new Date().getFullYear()} Agent1o1. Built with premium micro-interactions.
 			</footer>
 		</main>

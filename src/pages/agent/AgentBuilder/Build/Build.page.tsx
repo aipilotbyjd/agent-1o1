@@ -1281,7 +1281,7 @@ const BuildPage = () => {
 									{/* Tab: Agent */}
 									<button 
 										onClick={() => setActiveSidebarTab('agent')}
-										className={`flex items-center gap-1.5 px-3 pb-4 text-xs font-bold transition-all border-b-50 ${
+										className={`flex items-center gap-1.5 px-3 pb-4 text-xs font-bold transition-all border-b-2 ${
 											activeSidebarTab === 'agent'
 												? 'text-violet-600 border-violet-600 dark:text-violet-400 dark:border-violet-400'
 												: 'text-zinc-400 border-transparent hover:text-zinc-600 dark:text-zinc-500 dark:hover:text-zinc-300'
@@ -1293,7 +1293,7 @@ const BuildPage = () => {
 									{/* Tab: Settings */}
 									<button 
 										onClick={() => setActiveSidebarTab('settings')}
-										className={`flex items-center gap-1.5 px-3 pb-4 text-xs font-bold transition-all border-b-50 ${
+										className={`flex items-center gap-1.5 px-3 pb-4 text-xs font-bold transition-all border-b-2 ${
 											activeSidebarTab === 'settings'
 												? 'text-violet-600 border-violet-600 dark:text-violet-400 dark:border-violet-400'
 												: 'text-zinc-400 border-transparent hover:text-zinc-600 dark:text-zinc-500 dark:hover:text-zinc-300'
@@ -1305,7 +1305,7 @@ const BuildPage = () => {
 									{/* Tab: Chat Details */}
 									<button 
 										onClick={() => setActiveSidebarTab('chatDetails')}
-										className={`flex items-center gap-1.5 px-3 pb-4 text-xs font-bold transition-all border-b-50 ${
+										className={`flex items-center gap-1.5 px-3 pb-4 text-xs font-bold transition-all border-b-2 ${
 											activeSidebarTab === 'chatDetails'
 												? 'text-violet-600 border-violet-600 dark:text-violet-400 dark:border-violet-400'
 												: 'text-zinc-400 border-transparent hover:text-zinc-600 dark:text-zinc-500 dark:hover:text-zinc-300'

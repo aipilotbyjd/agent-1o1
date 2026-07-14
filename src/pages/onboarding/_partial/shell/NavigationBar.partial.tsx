@@ -63,8 +63,8 @@ const NavigationBar = ({
 
 			{/* Actions */}
 			<div className='flex items-center gap-3'>
-				{/* Skip — available on all steps except step 1 (workspace required) */}
-				{step !== 1 && (
+				{/* Skip — available on all steps except the first 2 steps */}
+				{step > 1 && (
 					<button
 						onClick={onSkip}
 						className='h-11 rounded-xl px-4 text-xs font-black text-slate-400 hover:text-slate-600 dark:hover:text-zinc-300'>
