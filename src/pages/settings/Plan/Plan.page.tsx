@@ -320,12 +320,12 @@ const PlanPage = () => {
 			<motion.div variants={itemVariants} className='flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between'>
 				<div>
 					<div className="flex items-center gap-2.5">
-						<h1 className='text-3xl font-black tracking-tight sm:text-4xl text-zinc-950 dark:text-zinc-50'>Plan</h1>
+						<h1 className='text-3xl font-black tracking-tight text-zinc-950 dark:text-zinc-50'>Plan</h1>
 						<span className="rounded-full bg-indigo-50 px-2.5 py-0.5 text-xs font-bold text-indigo-600 dark:bg-indigo-950/40 dark:text-indigo-400 border border-indigo-100/50 dark:border-indigo-900/30">
 							Settings
 						</span>
 					</div>
-					<p className='mt-1 text-sm font-medium text-zinc-400 dark:text-zinc-500'>
+					<p className='mt-1 text-sm font-medium text-zinc-500 dark:text-zinc-400'>
 						{subtitle}
 					</p>
 				</div>

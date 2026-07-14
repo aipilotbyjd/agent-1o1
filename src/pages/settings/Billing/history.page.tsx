@@ -58,8 +58,8 @@ const HistoryPage = () => {
 		<div className='space-y-6 text-zinc-950 dark:text-zinc-50'>
 			{/* Header */}
 			<div>
-				<h1 className='text-3xl font-black tracking-tight sm:text-4xl'>History</h1>
-				<p className='mt-1 text-base font-medium text-zinc-500 dark:text-zinc-400'>
+				<h1 className='text-3xl font-black tracking-tight text-zinc-950 dark:text-zinc-50'>History</h1>
+				<p className='mt-1 text-sm font-medium text-zinc-500 dark:text-zinc-400'>
 					Full credit transaction log for this workspace.
 				</p>
 			</div>

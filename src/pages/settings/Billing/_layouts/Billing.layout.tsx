@@ -20,7 +20,7 @@ const tabs = [
 
 const BillingLayout = () => {
 	return (
-		<div className='mx-auto w-full max-w-[1180px] px-6 py-8 sm:px-10 lg:px-14 lg:py-12'>
+		<div className='mx-auto w-full max-w-[1180px] px-6 py-8 sm:px-10 lg:px-14'>
 			<div className='mb-6 flex items-center gap-1 rounded-2xl border border-zinc-200 bg-zinc-50 p-1 dark:border-zinc-700 dark:bg-zinc-800/50'>
 				{tabs.map(({ to, label, icon: Icon, end }) => (
 					<NavLink

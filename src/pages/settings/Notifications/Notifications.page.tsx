@@ -211,7 +211,7 @@ const NotificationsPage = () => {
 
 	if (isLoading) {
 		return (
-			<div className='mx-auto w-full max-w-[1180px] px-6 py-10 sm:px-10 lg:px-14 lg:py-16'>
+			<div className='mx-auto w-full max-w-[1180px] px-6 py-8 sm:px-10 lg:px-14'>
 				<div className='space-y-3'>
 					{[...Array(8)].map((_, i) => (
 						<div
@@ -228,13 +228,13 @@ const NotificationsPage = () => {
 	const availableChannels = data?.available_channels ?? [];
 
 	return (
-		<div className='mx-auto w-full max-w-[1180px] px-6 py-10 sm:px-10 lg:px-14 lg:py-16'>
+		<div className='mx-auto w-full max-w-[1180px] px-6 py-8 sm:px-10 lg:px-14'>
 			<div className='mb-8 flex flex-wrap items-start justify-between gap-4'>
 				<div>
-					<h1 className='text-3xl font-bold tracking-tight text-zinc-950 sm:text-4xl dark:text-zinc-50'>
+					<h1 className='text-3xl font-black tracking-tight text-zinc-950 dark:text-zinc-50'>
 						Notifications
 					</h1>
-					<p className='mt-2 text-base font-medium text-zinc-500 dark:text-zinc-400'>
+					<p className='mt-1 text-sm font-medium text-zinc-500 dark:text-zinc-400'>
 						Choose which events notify you and how you receive them.
 					</p>
 				</div>

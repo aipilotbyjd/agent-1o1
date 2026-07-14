@@ -533,13 +533,13 @@ const NotificationChannelsPage = () => {
 	const [showCreateForm, setShowCreateForm] = useState(false);
 
 	return (
-		<div className='mx-auto w-full max-w-[1180px] px-6 py-10 sm:px-10 lg:px-14 lg:py-16'>
+		<div className='mx-auto w-full max-w-[1180px] px-6 py-8 sm:px-10 lg:px-14'>
 			<div className='mb-8 flex flex-wrap items-start justify-between gap-4'>
 				<div>
-					<h1 className='text-3xl font-bold tracking-tight text-zinc-950 sm:text-4xl dark:text-zinc-50'>
+					<h1 className='text-3xl font-black tracking-tight text-zinc-950 dark:text-zinc-50'>
 						Notification Channels
 					</h1>
-					<p className='mt-2 text-base font-medium text-zinc-500 dark:text-zinc-400'>
+					<p className='mt-1 text-sm font-medium text-zinc-500 dark:text-zinc-400'>
 						Configure where to deliver notifications — Slack, Discord, webhooks, or SMS.
 					</p>
 				</div>

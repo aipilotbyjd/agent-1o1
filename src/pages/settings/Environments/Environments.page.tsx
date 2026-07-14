@@ -410,13 +410,13 @@ const EnvironmentsPage = () => {
 	const isPending = createEnv.isPending || updateEnv.isPending;
 
 	return (
-		<div className='mx-auto w-full max-w-[1180px] px-6 py-8 sm:px-10 lg:px-14 lg:py-12'>
+		<div className='mx-auto w-full max-w-[1180px] px-6 py-8 sm:px-10 lg:px-14'>
 			<div className='flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between'>
 				<div>
-					<h1 className='text-3xl font-black tracking-tight text-zinc-950 sm:text-4xl dark:text-zinc-50'>
+					<h1 className='text-3xl font-black tracking-tight text-zinc-950 dark:text-zinc-50'>
 						Environments
 					</h1>
-					<p className='mt-2 text-base font-medium text-zinc-500 dark:text-zinc-400'>
+					<p className='mt-1 text-sm font-medium text-zinc-500 dark:text-zinc-400'>
 						Manage separate variable sets for development, staging, and production.
 					</p>
 				</div>

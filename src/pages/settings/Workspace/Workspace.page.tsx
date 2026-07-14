@@ -1,80 +1,111 @@
+import { useEffect, useMemo, useState } from 'react';
+import type { ComponentType, ReactNode } from 'react';
+import { useNavigate } from 'react-router';
 import {
-	ArrowLeft,
-	BriefcaseBusiness,
+	Building2,
+	Calendar,
 	ChevronDown,
+	Globe,
+	Link2,
 	ShieldCheck,
-	Sparkles,
 	Trash2,
 } from 'lucide-react';
-import { useState, useEffect, useMemo, type ReactNode } from 'react';
-import { useNavigate } from 'react-router';
-import { useWorkflowShellStore } from '@/store/workflowShell.store';
 import { useWorkspaceContext } from '@/context/workspaceContext';
 import { useUpdateWorkspace, useDeleteWorkspace } from '@/api/modules/workspaces';
 
-const SettingsRow = ({
+const inputClass =
+	'h-12 w-full rounded-xl border border-zinc-200 bg-white px-4 text-sm font-semibold text-zinc-800 shadow-xs outline-none placeholder:text-zinc-400 focus:border-violet-300 focus:ring-4 focus:ring-violet-100 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100 dark:placeholder:text-zinc-500 dark:focus:border-violet-500 dark:focus:ring-violet-500/20';
+
+const readOnlyClass =
+	'h-12 w-full rounded-xl border border-zinc-200 bg-zinc-50 px-4 flex items-center text-sm font-semibold text-zinc-400 dark:border-zinc-700 dark:bg-zinc-800/60 dark:text-zinc-500';
+
+const secondaryButtonClass =
+	'h-12 rounded-xl border border-zinc-200 bg-white px-5 text-sm font-bold text-zinc-500 shadow-xs transition hover:bg-zinc-50 hover:text-zinc-800 disabled:cursor-not-allowed disabled:opacity-60 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-400 dark:hover:bg-zinc-700 dark:hover:text-zinc-200';
+
+const DEFAULT_TIMEZONE = 'Asia/Kolkata';
+
+const getInitials = (name: string) => {
+	const parts = name.trim().split(/\s+/).filter(Boolean);
+	if (parts.length === 0) return 'W';
+	return parts
+		.slice(0, 2)
+		.map((part) => part[0]?.toUpperCase())
+		.join('');
+};
+
+const formatDate = (value?: string | null) => {
+	if (!value) return 'Not available';
+	const date = new Date(value);
+	if (Number.isNaN(date.getTime())) return 'Not available';
+	return new Intl.DateTimeFormat('en', {
+		month: 'short',
+		day: 'numeric',
+		year: 'numeric',
+	}).format(date);
+};
+
+const formatRole = (role?: string | null) => {
+	if (!role) return 'Member';
+	return `${role.charAt(0).toUpperCase()}${role.slice(1)}`;
+};
+
+const SettingsFieldRow = ({
+	icon: FieldIcon,
 	title,
 	description,
 	children,
 }: {
+	icon: ComponentType<{ size?: number; className?: string }>;
 	title: string;
-	description?: string;
+	description: string;
 	children: ReactNode;
 }) => (
-	<div className='grid gap-4 border-b border-zinc-200 py-6 lg:grid-cols-[minmax(240px,1fr)_minmax(420px,1.05fr)] lg:items-center dark:border-zinc-700'>
-		<div>
-			<div className='text-base font-bold tracking-tight text-zinc-950 dark:text-zinc-50'>
-				{title}
+	<div className='grid gap-4 border-b border-zinc-100/80 py-5 lg:grid-cols-[260px_1fr] lg:items-center dark:border-zinc-800/80'>
+		<div className='flex items-start gap-4'>
+			<div className='flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-violet-50 text-violet-500 dark:bg-violet-950/30 dark:text-violet-400'>
+				<FieldIcon size={16} />
 			</div>
-			{description && (
-				<div className='mt-1 text-sm font-medium text-zinc-500 dark:text-zinc-400'>
+			<div>
+				<div className='text-sm font-bold text-zinc-950 dark:text-zinc-50'>{title}</div>
+				<div className='mt-0.5 text-xs leading-normal font-semibold text-zinc-400 dark:text-zinc-500'>
 					{description}
 				</div>
-			)}
+			</div>
 		</div>
-		<div className='flex min-w-0 items-center justify-end gap-3'>{children}</div>
+		<div className='flex w-full min-w-0 items-center justify-start'>{children}</div>
 	</div>
 );
 
-const inputClass =
-	'h-12 w-full rounded-xl border border-zinc-200 bg-white px-4 text-base font-medium text-zinc-900 shadow-xs outline-none placeholder:text-zinc-400 focus:border-pink-350 focus:ring-4 focus:ring-pink-100 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100 dark:placeholder:text-zinc-550 dark:focus:border-pink-500 dark:focus:ring-pink-500/25';
-
-const secondaryButtonClass =
-	'h-12 rounded-xl border border-zinc-200 bg-white px-5 text-base font-bold text-zinc-500 shadow-xs transition hover:bg-zinc-50 hover:text-zinc-800 disabled:cursor-not-allowed disabled:opacity-60 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-400 dark:hover:bg-zinc-700 dark:hover:text-zinc-200';
-
-const SettingsSurface = () => {
+const WorkspacePage = () => {
 	const navigate = useNavigate();
-	const setActiveWorkspaceView = useWorkflowShellStore((store) => store.setActiveWorkspaceView);
-
 	const { activeWorkspaceId, activeWorkspace, role } = useWorkspaceContext();
 
 	const updateWorkspace = useUpdateWorkspace();
 	const deleteWorkspace = useDeleteWorkspace();
 
 	const [workspaceName, setWorkspaceName] = useState('');
-	const [timezone, setTimezone] = useState('Asia/Kolkata');
+	const [timezone, setTimezone] = useState(DEFAULT_TIMEZONE);
+	const [isDangerZoneOpen, setIsDangerZoneOpen] = useState(false);
 
 	useEffect(() => {
 		if (activeWorkspace) {
 			setWorkspaceName(activeWorkspace.name);
-			if (activeWorkspace.settings?.timezone) {
-				setTimezone(activeWorkspace.settings.timezone);
-			}
+			setTimezone(activeWorkspace.settings?.timezone ?? DEFAULT_TIMEZONE);
 		}
 	}, [activeWorkspace]);
 
 	const isDirty = useMemo(() => {
 		if (!activeWorkspace) return false;
 		return (
-			workspaceName !== activeWorkspace.name ||
-			timezone !== (activeWorkspace.settings?.timezone ?? 'Asia/Kolkata')
+			workspaceName.trim() !== activeWorkspace.name ||
+			timezone !== (activeWorkspace.settings?.timezone ?? DEFAULT_TIMEZONE)
 		);
 	}, [activeWorkspace, workspaceName, timezone]);
 
-	const goBack = () => {
-		setActiveWorkspaceView('workflows');
-		navigate('/app/editor/new');
-	};
+	const displayName = workspaceName || activeWorkspace?.name || 'Workspace';
+	const createdAt = formatDate(activeWorkspace?.created_at);
+	const workspaceRole = formatRole(role);
+	const isOwner = role === 'owner';
 
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
@@ -85,9 +116,7 @@ const SettingsSurface = () => {
 				id: activeWorkspaceId,
 				body: {
 					name: workspaceName.trim(),
-					settings: {
-						timezone,
-					},
+					settings: { timezone },
 				},
 			});
 		} catch {
@@ -98,11 +127,9 @@ const SettingsSurface = () => {
 	const handleReset = () => {
 		if (activeWorkspace) {
 			setWorkspaceName(activeWorkspace.name);
-			setTimezone(activeWorkspace.settings?.timezone ?? 'Asia/Kolkata');
+			setTimezone(activeWorkspace.settings?.timezone ?? DEFAULT_TIMEZONE);
 		}
 	};
-
-	const isOwner = role === 'owner';
 
 	const handleDeleteWorkspace = async () => {
 		if (!activeWorkspaceId || !activeWorkspace) return;
@@ -120,32 +147,45 @@ const SettingsSurface = () => {
 	};
 
 	return (
-		<div className='mx-auto w-full max-w-[1180px] px-6 py-10 text-zinc-950 sm:px-10 lg:px-14 lg:py-16 dark:text-zinc-50'>
-			<div className='mb-10 flex items-start justify-between gap-5'>
+		<div className='mx-auto w-full max-w-[1180px] px-6 py-8 sm:px-10 lg:px-14'>
+			<div className='mb-6 flex items-start justify-between'>
 				<div>
-					<h1 className='text-3xl font-bold tracking-tight text-zinc-950 sm:text-4xl dark:text-white'>
-						Workspace Settings
+					<h1 className='text-3xl font-black tracking-tight text-zinc-950 dark:text-zinc-50'>
+						Workspace
 					</h1>
-					<p className='mt-2 text-base font-medium text-zinc-500 dark:text-zinc-400'>
+					<p className='mt-1 text-sm font-medium text-zinc-500 dark:text-zinc-400'>
 						Manage your workspace configuration and preferences
 					</p>
 				</div>
-				<button
-					type='button'
-					onClick={goBack}
-					className='flex h-10 items-center gap-2 rounded-xl border border-zinc-200 bg-white px-3 text-sm font-bold text-zinc-700 shadow-xs transition hover:bg-zinc-50 md:hidden dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700'>
-					<ArrowLeft size={17} />
-					Back
-				</button>
 			</div>
 
 			<form onSubmit={handleSubmit}>
-				<section>
-					<div className='border-b border-zinc-200 pb-5 text-base font-bold text-zinc-500 dark:border-zinc-700 dark:text-zinc-400'>
-						General Workspace Information
+				{/* Workspace Identity Card */}
+				<div className='dark:border-zinc-800 mb-6 rounded-2xl border border-zinc-100 bg-white p-5 shadow-sm dark:bg-zinc-950'>
+					<div className='flex flex-wrap items-center gap-5'>
+						<div className='flex h-20 w-20 items-center justify-center rounded-[22px] bg-violet-100 text-3xl font-black text-violet-600 dark:bg-violet-500/15 dark:text-violet-300'>
+							{getInitials(displayName)}
+						</div>
+						<div>
+							<h2 className='flex items-center gap-2 text-lg font-black tracking-tight text-zinc-950 dark:text-zinc-50'>
+								<span>{displayName}</span>
+								<span className='rounded-md bg-purple-50 px-2 py-0.5 text-[10px] font-bold text-purple-600 dark:bg-purple-950 dark:text-purple-400'>
+									{workspaceRole}
+								</span>
+							</h2>
+							<div className='mt-1.5 flex items-center gap-1.5 text-xs font-semibold text-zinc-400 dark:text-zinc-500'>
+								<Calendar size={13.5} />
+								<span>Created on {createdAt}</span>
+							</div>
+						</div>
 					</div>
+				</div>
 
-					<SettingsRow
+				{/* Fields Card */}
+				<div className='dark:border-zinc-800 rounded-2xl border border-zinc-100 bg-white px-6 py-2 shadow-sm dark:bg-zinc-950'>
+					{/* Workspace Name */}
+					<SettingsFieldRow
+						icon={Building2}
 						title='Workspace Name'
 						description='Visible to members inside this environment.'>
 						<div className='w-full'>
@@ -153,31 +193,36 @@ const SettingsSurface = () => {
 								className={inputClass}
 								value={workspaceName}
 								onChange={(e) => setWorkspaceName(e.target.value)}
+								placeholder='Workspace name'
 								aria-label='Workspace name'
 							/>
 						</div>
-					</SettingsRow>
+					</SettingsFieldRow>
 
-					<SettingsRow
+					{/* Workspace URL / Slug */}
+					<SettingsFieldRow
+						icon={Link2}
 						title='Workspace URL / Slug'
 						description='Unique identifier for the workspace path.'>
-						<div className='w-full rounded-xl border border-zinc-200 bg-zinc-50 px-4 py-3 text-base font-bold text-zinc-400 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-500'>
+						<div className={readOnlyClass}>
 							{activeWorkspace?.slug || 'Not available'}
 						</div>
-					</SettingsRow>
+					</SettingsFieldRow>
 
-					<SettingsRow
+					{/* Access Role */}
+					<SettingsFieldRow
+						icon={ShieldCheck}
 						title='Your Access Role'
 						description='Your permissions within this workspace.'>
-						<div className='w-full rounded-xl border border-zinc-200 bg-zinc-50 px-4 py-3 text-base font-bold text-zinc-400 capitalize dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-500'>
-							{role || 'member'}
-						</div>
-					</SettingsRow>
+						<div className={`${readOnlyClass} capitalize`}>{role || 'member'}</div>
+					</SettingsFieldRow>
 
-					<SettingsRow
+					{/* Timezone */}
+					<SettingsFieldRow
+						icon={Globe}
 						title='Workspace Timezone'
 						description='Timezone for scheduling cron events and executions.'>
-						<div className='relative w-full max-w-[520px]'>
+						<div className='relative w-full'>
 							<select
 								aria-label='Timezone'
 								value={timezone}
@@ -193,69 +238,73 @@ const SettingsSurface = () => {
 								className='pointer-events-none absolute top-1/2 right-4 -translate-y-1/2 text-zinc-400'
 							/>
 						</div>
-					</SettingsRow>
+					</SettingsFieldRow>
+				</div>
 
-					<div className='mt-6 flex flex-wrap justify-end gap-3'>
-						<button
-							type='button'
-							disabled={!isDirty || updateWorkspace.isPending}
-							onClick={handleReset}
-							className={secondaryButtonClass}>
-							Reset
-						</button>
-						<button
-							type='submit'
-							disabled={!isDirty || updateWorkspace.isPending}
-							className='h-12 rounded-xl bg-pink-500 px-6 text-base font-bold text-white shadow-lg shadow-pink-500/20 transition hover:bg-pink-600 disabled:cursor-not-allowed disabled:opacity-60'>
-							{updateWorkspace.isPending ? 'Saving...' : 'Save changes'}
-						</button>
-					</div>
-				</section>
+				{/* Save / Reset Actions */}
+				<div className='mt-5 flex items-center justify-end gap-3'>
+					<button
+						type='button'
+						disabled={!isDirty || updateWorkspace.isPending}
+						onClick={handleReset}
+						className={secondaryButtonClass}>
+						Reset
+					</button>
+					<button
+						type='submit'
+						disabled={!isDirty || updateWorkspace.isPending}
+						className='h-12 rounded-xl bg-violet-600 px-6 text-sm font-bold text-white shadow-lg shadow-violet-600/20 transition hover:bg-violet-700 active:scale-95 disabled:opacity-60 dark:bg-violet-750 dark:hover:bg-violet-650'>
+						{updateWorkspace.isPending ? 'Saving...' : 'Save changes'}
+					</button>
+				</div>
 			</form>
 
+			{/* Collapsible Danger Zone */}
 			{isOwner && (
-				<section className='mt-9 border-t border-zinc-100 pt-9 dark:border-zinc-800'>
-					<h2 className='dark:text-zinc-105 text-xl font-bold tracking-tight text-zinc-950'>
-						Danger zone
-					</h2>
-					<div className='mt-7 flex flex-col gap-5 border-t border-zinc-100 pt-7 lg:flex-row lg:items-center lg:justify-between dark:border-zinc-800'>
+				<div className='dark:border-zinc-800 mt-8 rounded-2xl border border-zinc-100 bg-white p-5 shadow-sm dark:bg-zinc-950'>
+					<button
+						type='button'
+						onClick={() => setIsDangerZoneOpen(!isDangerZoneOpen)}
+						className='flex w-full items-center justify-between text-left'>
 						<div>
-							<div className='flex items-center gap-2 text-lg font-bold text-red-500'>
-								<Trash2 size={19} />
-								Delete workspace
-							</div>
-							<p className='mt-1 max-w-2xl text-base font-medium text-zinc-500 dark:text-zinc-400'>
-								This action cannot be undone. This will permanently delete your
-								workspace and all resources, workflows, and logs inside it.
+							<h2 className='text-base font-bold text-red-500'>Danger zone</h2>
+							<p className='mt-1 text-xs font-semibold text-zinc-400 dark:text-zinc-500'>
+								Irreversible and sensitive actions.
 							</p>
 						</div>
-						<button
-							type='button'
-							disabled={deleteWorkspace.isPending}
-							onClick={handleDeleteWorkspace}
-							className='h-12 rounded-xl border border-red-700 bg-red-500 px-6 text-base font-bold text-white shadow-sm shadow-red-500/20 transition hover:bg-red-600 disabled:cursor-not-allowed disabled:opacity-60 lg:min-w-40'>
-							{deleteWorkspace.isPending ? 'Deleting...' : 'Delete workspace'}
-						</button>
-					</div>
-				</section>
-			)}
+						<ChevronDown
+							size={20}
+							className={`text-zinc-400 transition-transform duration-200 ${
+								isDangerZoneOpen ? 'rotate-180' : ''
+							}`}
+						/>
+					</button>
 
-			<div className='mt-12 grid gap-3 border-t border-zinc-100 pt-6 text-sm text-zinc-400 sm:grid-cols-3 dark:border-zinc-800 dark:text-zinc-500'>
-				<div className='flex items-center gap-2'>
-					<Sparkles size={15} />
-					Timezone configured
+					{isDangerZoneOpen && (
+						<div className='mt-5 flex flex-wrap items-center justify-between gap-4 border-t border-zinc-100 pt-5 dark:border-zinc-800'>
+							<div className='max-w-2xl'>
+								<div className='flex items-center gap-2 text-sm font-bold text-red-500'>
+									<Trash2 size={16} />
+									<span>Delete workspace</span>
+								</div>
+								<p className='mt-1 text-xs leading-normal font-semibold text-zinc-400 dark:text-zinc-500'>
+									This action cannot be undone. This will permanently delete your
+									workspace and all resources, workflows, and logs inside it.
+								</p>
+							</div>
+							<button
+								type='button'
+								disabled={deleteWorkspace.isPending}
+								onClick={handleDeleteWorkspace}
+								className='h-10 rounded-xl bg-red-500 px-5 text-sm font-bold text-white shadow-md shadow-red-500/10 transition hover:bg-red-600 active:scale-95 disabled:opacity-60'>
+								{deleteWorkspace.isPending ? 'Deleting...' : 'Delete workspace'}
+							</button>
+						</div>
+					)}
 				</div>
-				<div className='flex items-center gap-2'>
-					<ShieldCheck size={15} />
-					Security reviewed
-				</div>
-				<div className='flex items-center gap-2'>
-					<BriefcaseBusiness size={15} />
-					Active workspace
-				</div>
-			</div>
+			)}
 		</div>
 	);
 };
 
-export default SettingsSurface;
+export default WorkspacePage;

@@ -89,6 +89,7 @@ const SettingsAsideTemplate = () => {
 					<section>
 						<SectionTitle>Organization</SectionTitle>
 						<div className='space-y-1'>
+							<SettingsNavItem {...pages.settings.subPages.workspace} />
 							{pages.app.subPages?.myWorkspace && (
 								<SettingsNavItem {...pages.app.subPages.myWorkspace} />
 							)}
@@ -96,6 +97,7 @@ const SettingsAsideTemplate = () => {
 								<SettingsNavItem {...pages.onboarding.subPages.workspaceList} />
 							)}
 							<SettingsNavItem {...pages.settings.subPages.members} />
+							<SettingsNavItem {...pages.settings.subPages.environments} />
 						</div>
 					</section>
 

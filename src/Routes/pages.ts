@@ -314,7 +314,7 @@ const settings = {
 		workspace: {
 			id: 'workspaceSettings',
 			to: '/settings/workspace',
-			text: 'Workspace',
+			text: 'Workspace Settings',
 			icon: 'Settings01' as TIcons,
 		},
 		plan: {
@@ -385,7 +385,7 @@ const settings = {
 			id: 'environmentsSettings',
 			to: '/settings/environments',
 			text: 'Environments',
-			icon: 'Container01' as TIcons,
+			icon: 'ServerStack01' as TIcons,
 		},
 	},
 };
