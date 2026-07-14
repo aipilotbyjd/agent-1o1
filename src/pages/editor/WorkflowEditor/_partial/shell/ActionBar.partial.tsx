@@ -29,7 +29,7 @@ const ToolButton = ({
 			danger && active
 				? 'bg-rose-50 text-rose-600 ring-1 ring-rose-200 dark:bg-rose-500/10 dark:text-rose-400 dark:ring-rose-500/20'
 				: active
-					? 'bg-violet-50 text-violet-600 ring-1 ring-violet-200 dark:bg-violet-500/10 dark:text-violet-400 dark:ring-violet-500/20'
+					? 'bg-primary-50 text-primary-600 ring-1 ring-primary-200 dark:bg-primary-400/10 dark:text-primary-400 dark:ring-primary-500/20'
 					: 'text-zinc-500 hover:bg-zinc-100 hover:text-zinc-800 dark:text-zinc-400 dark:hover:bg-white/[0.04] dark:hover:text-white',
 			className,
 		].filter(Boolean).join(' ')}>

@@ -32,10 +32,10 @@ const getInitials = (name: string) =>
 const getWorkspaceColor = (name: string) => {
 	const hash = name.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
 	const gradients = [
-		'from-violet-600 to-indigo-600 shadow-violet-500/25',
+		'from-primary-400 to-primary-400 shadow-primary-500/25',
 		'from-emerald-500 to-teal-600 shadow-emerald-500/25',
 		'from-amber-500 to-orange-600 shadow-amber-500/25',
-		'from-fuchsia-500 to-pink-600 shadow-fuchsia-500/25',
+		'from-fuchsia-500 to-primary-400 shadow-fuchsia-500/25',
 		'from-cyan-500 to-blue-600 shadow-cyan-500/25',
 		'from-rose-500 to-red-600 shadow-rose-500/25',
 	];
@@ -79,8 +79,8 @@ const DropdownWorkspaceSwitcherExample = () => {
 				{initials}
 				{isSelected && (
 					<span className='absolute -top-0.5 -right-0.5 flex h-2 w-2'>
-						<span className='absolute inline-flex h-full w-full animate-ping rounded-full bg-violet-400 opacity-75'></span>
-						<span className='relative inline-flex h-2 w-2 rounded-full bg-violet-500'></span>
+						<span className='absolute inline-flex h-full w-full animate-ping rounded-full bg-primary-400 opacity-75'></span>
+						<span className='relative inline-flex h-2 w-2 rounded-full bg-primary-400'></span>
 					</span>
 				)}
 			</div>
@@ -94,7 +94,7 @@ const DropdownWorkspaceSwitcherExample = () => {
 			<DropdownToggle>
 				<button
 					type='button'
-					className='group flex h-9 cursor-pointer items-center gap-2 rounded-full border border-slate-200 bg-white pr-3.5 pl-2 text-xs font-extrabold text-slate-700 shadow-xs transition-all duration-300 select-none hover:border-violet-500/40 hover:bg-white hover:text-violet-600 dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-300 dark:hover:border-violet-500/30 dark:hover:bg-zinc-900 dark:hover:text-violet-400'>
+					className='group flex h-9 cursor-pointer items-center gap-2 rounded-full border border-slate-200 bg-white pr-3.5 pl-2 text-xs font-extrabold text-slate-700 shadow-xs transition-all duration-300 select-none hover:border-primary-500/40 hover:bg-white hover:text-primary-600 dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-300 dark:hover:border-primary-500/30 dark:hover:bg-zinc-900 dark:hover:text-primary-400'>
 					{/* Circular initials avatar with a premium dynamic gradient background */}
 					<div
 						className={`relative flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-gradient-to-tr ${activeColorGradient} text-[10px] font-black text-white shadow-2xs transition-transform duration-300 group-hover:scale-105`}>
@@ -105,13 +105,13 @@ const DropdownWorkspaceSwitcherExample = () => {
 					</span>
 					<ChevronDown
 						size={12}
-						className='ml-0.5 shrink-0 text-slate-400 transition-transform duration-300 group-hover:text-violet-500 group-aria-expanded:rotate-180 group-[.show]:rotate-180 dark:text-zinc-500 dark:group-hover:text-violet-400'
+						className='ml-0.5 shrink-0 text-slate-400 transition-transform duration-300 group-hover:text-primary-500 group-aria-expanded:rotate-180 group-[.show]:rotate-180 dark:text-zinc-500 dark:group-hover:text-primary-400'
 					/>
 				</button>
 			</DropdownToggle>
 			<DropdownMenu className='max-w-xs min-w-xs rounded-2xl border border-slate-100 bg-white/95 p-3 shadow-2xl backdrop-blur-md transition-all duration-300 dark:border-zinc-800 dark:bg-zinc-950/95'>
 				<div className='flex items-center gap-1.5 px-2 py-1.5 text-[10px] font-extrabold tracking-wider text-slate-400 uppercase dark:text-zinc-500'>
-					<LayoutGrid size={11} className='text-violet-500/80' />
+					<LayoutGrid size={11} className='text-primary-500/80' />
 					<span>Workspaces</span>
 				</div>
 
@@ -125,14 +125,14 @@ const DropdownWorkspaceSwitcherExample = () => {
 									onClick={() => switchWorkspace?.(wsp.id)}
 									className={`group flex cursor-pointer items-center gap-3 rounded-xl border px-3 py-2.5 transition-all duration-300 ${
 										isSelected
-											? 'border-violet-500/20 bg-violet-500/5 shadow-2xs dark:border-violet-500/10 dark:bg-violet-950/20'
+											? 'border-primary-500/20 bg-primary-400/5 shadow-2xs dark:border-primary-500/10 dark:bg-primary-950/20'
 											: 'border-transparent hover:border-slate-100 hover:bg-slate-50/50 dark:hover:border-zinc-900 dark:hover:bg-zinc-900/50'
 									}`}>
 									<div className='shrink-0'>
 										{renderWorkspaceAvatar(wsp.name, isSelected)}
 									</div>
 									<div className='flex min-w-0 flex-1 flex-col'>
-										<div className='truncate text-[12.5px] font-bold text-slate-900 transition-colors duration-200 group-hover:text-violet-600 dark:text-white dark:group-hover:text-violet-400'>
+										<div className='truncate text-[12.5px] font-bold text-slate-900 transition-colors duration-200 group-hover:text-primary-600 dark:text-white dark:group-hover:text-primary-400'>
 											{wsp.name}
 										</div>
 										<div className='mt-0.5 truncate text-[10.5px] font-semibold text-slate-400 dark:text-zinc-500'>
@@ -140,7 +140,7 @@ const DropdownWorkspaceSwitcherExample = () => {
 										</div>
 									</div>
 									{isSelected && (
-										<div className='mr-1 shrink-0 rounded-full bg-violet-100/50 p-1 text-violet-600 shadow-2xs dark:bg-violet-500/20 dark:text-violet-400'>
+										<div className='mr-1 shrink-0 rounded-full bg-primary-100/50 p-1 text-primary-600 shadow-2xs dark:bg-primary-400/20 dark:text-primary-400'>
 											<Check size={11} strokeWidth={3.5} />
 										</div>
 									)}
@@ -149,7 +149,7 @@ const DropdownWorkspaceSwitcherExample = () => {
 						})
 					) : (
 						<>
-							<DropdownItem className='group flex cursor-pointer items-center gap-3 rounded-xl border border-violet-500/20 bg-violet-500/5 px-3 py-2.5 transition-all duration-300 dark:border-violet-500/10 dark:bg-violet-950/20'>
+							<DropdownItem className='group flex cursor-pointer items-center gap-3 rounded-xl border border-primary-500/20 bg-primary-400/5 px-3 py-2.5 transition-all duration-300 dark:border-primary-500/10 dark:bg-primary-950/20'>
 								<div className='shrink-0'>
 									{renderWorkspaceAvatar('GitHub', true)}
 								</div>
@@ -161,7 +161,7 @@ const DropdownWorkspaceSwitcherExample = () => {
 										github.com
 									</div>
 								</div>
-								<div className='mr-1 shrink-0 rounded-full bg-violet-100/50 p-1 text-violet-600 shadow-2xs dark:bg-violet-500/20 dark:text-violet-400'>
+								<div className='mr-1 shrink-0 rounded-full bg-primary-100/50 p-1 text-primary-600 shadow-2xs dark:bg-primary-400/20 dark:text-primary-400'>
 									<Check size={11} strokeWidth={3.5} />
 								</div>
 							</DropdownItem>
@@ -187,10 +187,10 @@ const DropdownWorkspaceSwitcherExample = () => {
 				<div className='flex flex-col gap-0.5'>
 					<DropdownItem
 						onClick={() => navigate('/workspaces?create=true')}
-						className='group relative flex cursor-pointer items-center justify-center gap-2 rounded-xl border border-dashed border-slate-200 bg-slate-50/40 px-3 py-2.5 text-xs font-bold text-slate-600 transition-all duration-300 hover:border-violet-500/30 hover:bg-violet-500/5 hover:text-violet-600 dark:border-zinc-800 dark:bg-zinc-900/20 dark:text-zinc-400 dark:hover:border-violet-500/20 dark:hover:bg-violet-500/5 dark:hover:text-violet-400'>
+						className='group relative flex cursor-pointer items-center justify-center gap-2 rounded-xl border border-dashed border-slate-200 bg-slate-50/40 px-3 py-2.5 text-xs font-bold text-slate-600 transition-all duration-300 hover:border-primary-500/30 hover:bg-primary-500/5 hover:text-primary-600 dark:border-zinc-800 dark:bg-zinc-900/20 dark:text-zinc-400 dark:hover:border-primary-500/20 dark:hover:bg-primary-500/5 dark:hover:text-primary-400'>
 						<PlusCircle
 							size={14.5}
-							className='text-slate-400 transition-transform duration-300 group-hover:rotate-90 group-hover:text-violet-500 dark:text-zinc-500 dark:group-hover:text-violet-400'
+							className='text-slate-400 transition-transform duration-300 group-hover:rotate-90 group-hover:text-primary-500 dark:text-zinc-500 dark:group-hover:text-primary-400'
 						/>
 						<span>Add a workspace</span>
 					</DropdownItem>
@@ -199,10 +199,10 @@ const DropdownWorkspaceSwitcherExample = () => {
 
 					<DropdownItem
 						onClick={() => navigate('/settings/members')}
-						className='group relative flex cursor-pointer items-center gap-3 rounded-xl border border-transparent px-3 py-2.5 text-xs font-bold text-slate-700 transition-all duration-300 hover:bg-slate-50/50 hover:text-violet-600 dark:text-zinc-300 dark:hover:bg-zinc-900/30 dark:hover:text-violet-400'>
+						className='group relative flex cursor-pointer items-center gap-3 rounded-xl border border-transparent px-3 py-2.5 text-xs font-bold text-slate-700 transition-all duration-300 hover:bg-slate-50/50 hover:text-primary-600 dark:text-zinc-300 dark:hover:bg-zinc-900/30 dark:hover:text-primary-400'>
 						<UserPlus
 							size={14.5}
-							className='text-slate-400 transition-all duration-300 group-hover:scale-110 group-hover:text-violet-500 dark:text-zinc-500 dark:group-hover:text-violet-400'
+							className='text-slate-400 transition-all duration-300 group-hover:scale-110 group-hover:text-primary-500 dark:text-zinc-500 dark:group-hover:text-primary-400'
 						/>
 						<span className='transition-transform duration-300 group-hover:translate-x-0.5'>
 							Invite members
@@ -210,10 +210,10 @@ const DropdownWorkspaceSwitcherExample = () => {
 					</DropdownItem>
 					<DropdownItem
 						onClick={() => navigate('/settings/members')}
-						className='group relative flex cursor-pointer items-center gap-3 rounded-xl border border-transparent px-3 py-2.5 text-xs font-bold text-slate-700 transition-all duration-300 hover:bg-slate-50/50 hover:text-violet-600 dark:text-zinc-300 dark:hover:bg-zinc-900/30 dark:hover:text-violet-400'>
+						className='group relative flex cursor-pointer items-center gap-3 rounded-xl border border-transparent px-3 py-2.5 text-xs font-bold text-slate-700 transition-all duration-300 hover:bg-slate-50/50 hover:text-primary-600 dark:text-zinc-300 dark:hover:bg-zinc-900/30 dark:hover:text-primary-400'>
 						<Users
 							size={14.5}
-							className='text-slate-400 transition-all duration-300 group-hover:scale-110 group-hover:text-violet-500 dark:text-zinc-500 dark:group-hover:text-violet-400'
+							className='text-slate-400 transition-all duration-300 group-hover:scale-110 group-hover:text-primary-500 dark:text-zinc-500 dark:group-hover:text-primary-400'
 						/>
 						<span className='transition-transform duration-300 group-hover:translate-x-0.5'>
 							Manage members
@@ -221,10 +221,10 @@ const DropdownWorkspaceSwitcherExample = () => {
 					</DropdownItem>
 					<DropdownItem
 						onClick={() => navigate('/settings/workspace')}
-						className='group relative flex cursor-pointer items-center gap-3 rounded-xl border border-transparent px-3 py-2.5 text-xs font-bold text-slate-700 transition-all duration-300 hover:bg-slate-50/50 hover:text-violet-600 dark:text-zinc-300 dark:hover:bg-zinc-900/30 dark:hover:text-violet-400'>
+						className='group relative flex cursor-pointer items-center gap-3 rounded-xl border border-transparent px-3 py-2.5 text-xs font-bold text-slate-700 transition-all duration-300 hover:bg-slate-50/50 hover:text-primary-600 dark:text-zinc-300 dark:hover:bg-zinc-900/30 dark:hover:text-primary-400'>
 						<Settings
 							size={14.5}
-							className='text-slate-400 transition-all duration-300 group-hover:scale-110 group-hover:text-violet-500 dark:text-zinc-500 dark:group-hover:text-violet-400'
+							className='text-slate-400 transition-all duration-300 group-hover:scale-110 group-hover:text-primary-500 dark:text-zinc-500 dark:group-hover:text-primary-400'
 						/>
 						<span className='transition-transform duration-300 group-hover:translate-x-0.5'>
 							Workspace settings
@@ -232,10 +232,10 @@ const DropdownWorkspaceSwitcherExample = () => {
 					</DropdownItem>
 					<DropdownItem
 						onClick={() => navigate('/settings/subscription')}
-						className='group relative flex cursor-pointer items-center gap-3 rounded-xl border border-transparent px-3 py-2.5 text-xs font-bold text-slate-700 transition-all duration-300 hover:bg-slate-50/50 hover:text-violet-600 dark:text-zinc-300 dark:hover:bg-zinc-900/30 dark:hover:text-violet-400'>
+						className='group relative flex cursor-pointer items-center gap-3 rounded-xl border border-transparent px-3 py-2.5 text-xs font-bold text-slate-700 transition-all duration-300 hover:bg-slate-50/50 hover:text-primary-600 dark:text-zinc-300 dark:hover:bg-zinc-900/30 dark:hover:text-primary-400'>
 						<CreditCard
 							size={14.5}
-							className='text-slate-400 transition-all duration-300 group-hover:scale-110 group-hover:text-violet-500 dark:text-zinc-500 dark:group-hover:text-violet-400'
+							className='text-slate-400 transition-all duration-300 group-hover:scale-110 group-hover:text-primary-500 dark:text-zinc-500 dark:group-hover:text-primary-400'
 						/>
 						<span className='transition-transform duration-300 group-hover:translate-x-0.5'>
 							Billing & subscription

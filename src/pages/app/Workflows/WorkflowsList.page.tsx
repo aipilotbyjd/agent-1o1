@@ -108,7 +108,7 @@ const getAppNames = (nodes: { type?: string }[] | undefined) => {
 };
 
 const AppBadge = ({ name }: { name: string }) => (
-	<span className='text-violet-650 shadow-3xs rounded-full border border-violet-100/60 bg-violet-50/30 px-2.5 py-0.5 text-[10px] font-bold capitalize transition-all duration-200 hover:border-violet-200/50 hover:bg-violet-50 dark:border-zinc-800/80 dark:bg-zinc-800/20 dark:text-violet-400 dark:hover:bg-violet-950/20'>
+	<span className='text-primary-600 shadow-3xs rounded-full border border-primary-100/60 bg-primary-50/30 px-2.5 py-0.5 text-[10px] font-bold capitalize transition-all duration-200 hover:border-primary-200/50 hover:bg-primary-50 dark:border-zinc-800/80 dark:bg-zinc-800/20 dark:text-primary-400 dark:hover:bg-primary-950/20'>
 		{name}
 	</span>
 );
@@ -341,7 +341,7 @@ const WorkflowsListPage = () => {
 			});
 			setExpandedFolders((prev) => ({ ...prev, [res.id]: true }));
 			setNewFolderName('');
-			setNewFolderColor('bg-indigo-600');
+			setNewFolderColor('bg-primary-400');
 			setIsCreateFolderOpen(false);
 			triggerToast(`Folder "${res.name}" created successfully!`);
 		} catch {
@@ -504,7 +504,7 @@ const WorkflowsListPage = () => {
 					<button
 						onClick={() => handleMoveWorkflow(workflow, null)}
 						className='dark:hover:bg-zinc-800 flex w-full items-center gap-2 rounded-lg px-3 py-1.5 text-[11px] font-black text-slate-700 hover:bg-slate-50 dark:text-zinc-200'>
-						<Workflow size={11} className='text-violet-500' /> Root level
+						<Workflow size={11} className='text-primary-500' /> Root level
 					</button>
 				)}
 				{folders
@@ -529,7 +529,7 @@ const WorkflowsListPage = () => {
 				value={workflow.folderId || ''}
 				onClick={(e) => e.stopPropagation()}
 				onChange={(e) => handleMoveWorkflow(workflow, e.target.value || null)}
-				className='dark:text-zinc-355 mr-3 max-w-32 rounded-lg border border-slate-200 bg-white px-2 py-1 text-[10.5px] font-bold text-slate-600 transition outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500/20 dark:border-zinc-800 dark:bg-zinc-900'>
+				className='dark:text-zinc-355 mr-3 max-w-32 rounded-lg border border-slate-200 bg-white px-2 py-1 text-[10.5px] font-bold text-slate-600 transition outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500/20 dark:border-zinc-800 dark:bg-zinc-900'>
 				<option value=''>Root level</option>
 				{folders.map((folder) => (
 					<option key={folder.id} value={folder.id}>
@@ -568,7 +568,7 @@ const WorkflowsListPage = () => {
 			{renderMoveWorkflowSelect(workflow)}
 			<button
 				onClick={(e) => handleRunNow(workflow.id, e)}
-				className='hover:text-violet-550 mr-3 text-xs font-bold text-violet-600 dark:text-violet-400 dark:hover:text-violet-300'>
+				className='hover:text-primary-500 mr-3 text-xs font-bold text-primary-600 dark:text-primary-400 dark:hover:text-primary-300'>
 				Run
 			</button>
 			<button
@@ -599,7 +599,7 @@ const WorkflowsListPage = () => {
 			<Container className='relative flex min-h-screen items-center justify-center overflow-x-hidden overflow-y-auto bg-[#fafbfe] !p-0 dark:bg-[#07090e]'>
 				<div className='pointer-events-none absolute inset-0 -z-10 bg-[linear-gradient(to_right,#e2e8f0_1px,transparent_1px),linear-gradient(to_bottom,#e2e8f0_1px,transparent_1px)] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] bg-[size:4rem_4rem] opacity-50 dark:bg-[linear-gradient(to_right,#161b26_1px,transparent_1px),linear-gradient(to_bottom,#161b26_1px,transparent_1px)] dark:opacity-80' />
 				<div className='z-10 mx-auto flex w-full max-w-xl flex-col items-center justify-center px-4 py-16 text-center sm:px-6'>
-					<div className='flex h-14 w-14 items-center justify-center rounded-2xl border border-violet-500/20 bg-violet-500/5 text-violet-600 shadow-md shadow-violet-500/5 dark:bg-violet-500/10 dark:text-violet-400'>
+					<div className='flex h-14 w-14 items-center justify-center rounded-2xl border border-primary-500/20 bg-primary-400/5 text-primary-600 shadow-md shadow-primary-500/5 dark:bg-primary-400/10 dark:text-primary-400'>
 						<GitMerge size={24} className='rotate-90' />
 					</div>
 					<h1 className='mt-5 text-2xl font-black tracking-tight text-slate-900 dark:text-white'>
@@ -610,7 +610,7 @@ const WorkflowsListPage = () => {
 					</p>
 					<button
 						onClick={() => navigate(pages.editor.subPages.addWorkflow.to)}
-						className='mt-6 flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 px-5 text-xs font-black text-white shadow-md shadow-violet-500/15 transition hover:brightness-110 active:scale-[0.98] sm:w-auto'>
+						className='mt-6 flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-primary-400 to-primary-400 px-5 text-xs font-black text-primary-950 shadow-md shadow-primary-500/15 transition hover:brightness-110 active:scale-[0.98] sm:w-auto'>
 						<Plus size={15} strokeWidth={3} />
 						Create Workflow
 					</button>
@@ -628,7 +628,7 @@ const WorkflowsListPage = () => {
 						initial={{ opacity: 0, y: -20, scale: 0.95 }}
 						animate={{ opacity: 1, y: 0, scale: 1 }}
 						exit={{ opacity: 0, y: -20, scale: 0.95 }}
-						className='fixed inset-x-4 top-4 z-[110] flex items-center gap-3 rounded-2xl border border-violet-500/20 bg-white/95 px-4.5 py-3 shadow-2xl backdrop-blur-md sm:inset-x-auto sm:top-6 sm:right-6 sm:max-w-sm dark:border-violet-500/15 dark:bg-zinc-900/95'>
+						className='fixed inset-x-4 top-4 z-[110] flex items-center gap-3 rounded-2xl border border-primary-500/20 bg-white/95 px-4.5 py-3 shadow-2xl backdrop-blur-md sm:inset-x-auto sm:top-6 sm:right-6 sm:max-w-sm dark:border-primary-500/15 dark:bg-zinc-900/95'>
 						{toast.type === 'success' ? (
 							<div className='flex h-6.5 w-6.5 items-center justify-center rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400'>
 								<Check size={14} className='stroke-[3]' />
@@ -649,15 +649,15 @@ const WorkflowsListPage = () => {
 				{/* Header */}
 				<header className='relative mt-4 sm:mt-0 flex flex-col justify-between gap-6 overflow-hidden rounded-3xl border border-slate-200/80 bg-white/70 p-6 shadow-sm backdrop-blur-md transition-all duration-300 hover:border-slate-300/60 hover:shadow-md lg:flex-row lg:items-center dark:border-zinc-800/80 dark:bg-zinc-900/40 dark:hover:border-zinc-700/50'>
 					{/* Banner background glow effect */}
-					<div className='absolute -top-24 -right-24 h-48 w-48 rounded-full bg-violet-500/10 blur-3xl' />
-					<div className='absolute -bottom-24 -left-24 h-48 w-48 rounded-full bg-indigo-500/10 blur-3xl' />
+					<div className='absolute -top-24 -right-24 h-48 w-48 rounded-full bg-primary-400/10 blur-3xl' />
+					<div className='absolute -bottom-24 -left-24 h-48 w-48 rounded-full bg-primary-400/10 blur-3xl' />
 
 					<div className='relative z-10 flex min-w-0 items-center gap-4.5'>
 						<div className='group relative shrink-0'>
 							{/* Pink glowing ring */}
-							<div className='absolute -inset-0.5 rounded-full bg-gradient-to-tr from-pink-500 to-rose-500 opacity-85 blur transition duration-300 group-hover:opacity-100' />
+							<div className='absolute -inset-0.5 rounded-full bg-gradient-to-tr from-primary-400 to-rose-500 opacity-85 blur transition duration-300 group-hover:opacity-100' />
 							{/* Circular initials avatar with pink border */}
-							<div className='relative flex h-14 w-14 items-center justify-center rounded-full border-2 border-pink-500 bg-gradient-to-tr from-violet-600 to-fuchsia-600 text-base font-black text-white shadow-lg'>
+							<div className='relative flex h-14 w-14 items-center justify-center rounded-full border-2 border-primary-500 bg-gradient-to-tr from-primary-400 to-fuchsia-600 text-base font-black text-primary-950 shadow-lg'>
 								{getInitials(workspaceName)}
 							</div>
 							{/* Green status indicator dot at the bottom right */}
@@ -669,7 +669,7 @@ const WorkflowsListPage = () => {
 									Workflows
 								</h1>
 								{workspaceRole && (
-									<span className='rounded-full border border-violet-100 bg-violet-50 px-2.5 py-0.5 text-[10px] font-black tracking-wide text-violet-600 uppercase shadow-2xs dark:border-violet-900/30 dark:bg-violet-950/20 dark:text-violet-400'>
+									<span className='rounded-full border border-primary-100 bg-primary-50 px-2.5 py-0.5 text-[10px] font-black tracking-wide text-primary-600 uppercase shadow-2xs dark:border-primary-900/30 dark:bg-primary-950/20 dark:text-primary-400'>
 										{workspaceRole}
 									</span>
 								)}
@@ -699,7 +699,7 @@ const WorkflowsListPage = () => {
 							whileTap={{ scale: 0.98 }}
 							onClick={handleQuickCreateWorkflow}
 							disabled={!hasWorkspace || createWorkflowMutation.isPending}
-							className='flex h-10 cursor-pointer items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 px-4.5 text-xs font-bold text-white shadow-md shadow-violet-500/20 transition-all hover:from-violet-500 hover:to-indigo-500 disabled:cursor-not-allowed disabled:opacity-60'>
+							className='flex h-10 cursor-pointer items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-primary-400 to-primary-400 px-4.5 text-xs font-bold text-primary-950 shadow-md shadow-primary-500/20 transition-all hover:from-primary-400 hover:to-primary-400 disabled:cursor-not-allowed disabled:opacity-60'>
 							<Plus size={15} strokeWidth={2.5} />
 							New Workflow
 						</motion.button>
@@ -714,12 +714,12 @@ const WorkflowsListPage = () => {
 							value: workflows.length,
 							desc: 'Total integrations',
 							icon: Workflow,
-							color: 'text-violet-600 dark:text-violet-400',
-							bgColor: 'bg-violet-50 dark:bg-violet-950/30',
+							color: 'text-primary-600 dark:text-primary-400',
+							bgColor: 'bg-primary-50 dark:bg-primary-950/30',
 							borderColor:
-								'hover:border-violet-500/30 dark:hover:border-violet-500/20',
-							shadowColor: 'hover:shadow-violet-500/10',
-							accentColor: 'from-violet-500 to-indigo-500',
+								'hover:border-primary-500/30 dark:hover:border-primary-500/20',
+							shadowColor: 'hover:shadow-primary-500/10',
+							accentColor: 'from-primary-400 to-primary-400',
 						},
 						{
 							label: 'Active',
@@ -753,7 +753,7 @@ const WorkflowsListPage = () => {
 							bgColor: 'bg-rose-50 dark:bg-rose-950/30',
 							borderColor: 'hover:border-rose-500/30 dark:hover:border-rose-500/20',
 							shadowColor: 'hover:shadow-rose-500/10',
-							accentColor: 'from-rose-500 to-pink-500',
+							accentColor: 'from-rose-500 to-primary-400',
 						},
 					].map((stat) => {
 						const IconComponent = stat.icon;
@@ -831,13 +831,13 @@ const WorkflowsListPage = () => {
 					<div className='flex flex-col gap-2.5 sm:flex-row sm:flex-wrap sm:items-center'>
 						{/* Search box */}
 						<div className='group relative w-full sm:w-80'>
-							<Search className='absolute top-1/2 left-3.5 h-4 w-4 -translate-y-1/2 text-slate-400 transition-colors group-focus-within:text-violet-500 dark:text-zinc-500' />
+							<Search className='absolute top-1/2 left-3.5 h-4 w-4 -translate-y-1/2 text-slate-400 transition-colors group-focus-within:text-primary-500 dark:text-zinc-500' />
 							<input
 								aria-label='Search workspace workflows'
 								value={searchQuery}
 								onChange={(event) => setSearchQuery(event.target.value)}
 								placeholder='Search workflows by title or description...'
-								className='dark:placeholder-zinc-550 h-10 w-full rounded-xl border border-slate-200 bg-white pr-9 pl-10 text-xs font-semibold text-slate-900 placeholder-slate-400 shadow-2xs transition-all outline-none focus:border-violet-500 focus:ring-2 focus:ring-violet-500/10 dark:border-zinc-800 dark:bg-zinc-900 dark:text-white'
+								className='dark:placeholder-zinc-550 h-10 w-full rounded-xl border border-slate-200 bg-white pr-9 pl-10 text-xs font-semibold text-slate-900 placeholder-slate-400 shadow-2xs transition-all outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-500/10 dark:border-zinc-800 dark:bg-zinc-900 dark:text-white'
 							/>
 							{searchQuery && (
 								<button
@@ -895,9 +895,9 @@ const WorkflowsListPage = () => {
 						return (
 							<div key={folder.id} className='space-y-3.5'>
 								{isRootGroup ? (
-									<div className='shadow-3xs flex items-center justify-between gap-3 rounded-2xl border border-indigo-100 bg-indigo-50/10 px-5 py-4 backdrop-blur-md transition-all duration-300 hover:bg-indigo-50/20 dark:border-indigo-900/20 dark:bg-indigo-950/5 dark:hover:bg-indigo-950/10'>
+									<div className='shadow-3xs flex items-center justify-between gap-3 rounded-2xl border border-primary-100 bg-primary-50/10 px-5 py-4 backdrop-blur-md transition-all duration-300 hover:bg-primary-50/20 dark:border-primary-900/20 dark:bg-primary-950/5 dark:hover:bg-primary-950/10'>
 										<div className='flex min-w-0 items-center gap-3'>
-											<div className='text-indigo-650 flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-indigo-100 shadow-2xs dark:bg-indigo-500/10 dark:text-indigo-400'>
+											<div className='text-primary-600 flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary-100 shadow-2xs dark:bg-primary-400/10 dark:text-primary-400'>
 												<Workflow size={17} />
 											</div>
 											<div className='min-w-0'>
@@ -910,7 +910,7 @@ const WorkflowsListPage = () => {
 												</p>
 											</div>
 										</div>
-										<span className='shrink-0 rounded-full border border-indigo-200/30 bg-indigo-100 px-2.5 py-0.5 text-[10px] font-extrabold text-indigo-700 dark:border-indigo-800/20 dark:bg-indigo-950/40 dark:text-indigo-300'>
+										<span className='shrink-0 rounded-full border border-primary-200/30 bg-primary-100 px-2.5 py-0.5 text-[10px] font-extrabold text-primary-700 dark:border-primary-800/20 dark:bg-primary-950/40 dark:text-primary-300'>
 											{groupedItems.length}
 										</span>
 									</div>
@@ -920,10 +920,10 @@ const WorkflowsListPage = () => {
 										onDragEnter={() => handleDragEnter(folder.id)}
 										onDragLeave={(e) => handleDragLeave(e, folder.id)}
 										onDrop={(e) => handleDropOnFolder(e, folder.id)}
-										className={`group/folder relative flex items-center overflow-hidden rounded-2xl border shadow-2xs backdrop-blur-md transition-all duration-300 dark:border-zinc-800/80 dark:bg-zinc-900/60 dark:hover:border-violet-500/20 dark:hover:bg-zinc-900/80 ${
+										className={`group/folder relative flex items-center overflow-hidden rounded-2xl border shadow-2xs backdrop-blur-md transition-all duration-300 dark:border-zinc-800/80 dark:bg-zinc-900/60 dark:hover:border-primary-500/20 dark:hover:bg-zinc-900/80 ${
 											dragOverFolderId === folder.id
-												? 'border-violet-400/60 bg-violet-50/40 dark:bg-violet-950/20 dark:border-violet-500/40'
-												: 'border-slate-200/80 bg-white/70 hover:border-violet-500/25 hover:bg-white'
+												? 'border-primary-400/60 bg-primary-50/40 dark:bg-primary-950/20 dark:border-primary-500/40'
+												: 'border-slate-200/80 bg-white/70 hover:border-primary-500/25 hover:bg-white'
 										}`}>
 										<div
 											style={{ backgroundColor: folder.color }}
@@ -969,7 +969,7 @@ const WorkflowsListPage = () => {
 										<button
 											aria-label={`Edit ${folder.name}`}
 											onClick={() => openEditFolder(folder)}
-											className='mr-4 flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-slate-400 transition-all duration-200 hover:bg-slate-100 hover:text-violet-600 dark:text-zinc-500 dark:hover:bg-zinc-800 dark:hover:text-violet-400'>
+											className='mr-4 flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-slate-400 transition-all duration-200 hover:bg-slate-100 hover:text-primary-600 dark:text-zinc-500 dark:hover:bg-zinc-800 dark:hover:text-primary-400'>
 											<Edit3 size={14} />
 										</button>
 									</div>
@@ -1010,9 +1010,9 @@ const WorkflowsListPage = () => {
 																	);
 																}
 															}}
-															className='group relative flex min-h-[220px] cursor-pointer flex-col justify-between rounded-2xl border border-slate-200/80 bg-white/70 p-5.5 shadow-2xs backdrop-blur-md transition-all duration-300 hover:-translate-y-1.5 hover:border-violet-500/40 hover:bg-white hover:shadow-md dark:border-zinc-800/80 dark:bg-zinc-900/70 dark:hover:border-violet-500/30 dark:hover:bg-zinc-900/90'>
+															className='group relative flex min-h-[220px] cursor-pointer flex-col justify-between rounded-2xl border border-slate-200/80 bg-white/70 p-5.5 shadow-2xs backdrop-blur-md transition-all duration-300 hover:-translate-y-1.5 hover:border-primary-500/40 hover:bg-white hover:shadow-md dark:border-zinc-800/80 dark:bg-zinc-900/70 dark:hover:border-primary-500/30 dark:hover:bg-zinc-900/90'>
 															{/* Bottom interactive gradient line */}
-															<div className='absolute right-0 bottom-0 left-0 h-1.5 rounded-b-2xl bg-gradient-to-r from-violet-600 to-indigo-600 opacity-0 transition-opacity duration-300 group-hover:opacity-10' />
+															<div className='absolute right-0 bottom-0 left-0 h-1.5 rounded-b-2xl bg-gradient-to-r from-primary-400 to-primary-400 opacity-0 transition-opacity duration-300 group-hover:opacity-10' />
 
 															<div className='flex flex-col gap-3.5'>
 																<div className='flex items-start justify-between gap-3'>
@@ -1021,7 +1021,7 @@ const WorkflowsListPage = () => {
 																			className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border transition-all duration-300 ${
 																				wf.status ===
 																				'active'
-																					? 'text-violet-650 shadow-3xs border-violet-500/20 bg-gradient-to-tr from-violet-500/10 to-indigo-500/10 group-hover:scale-105 dark:border-violet-500/30 dark:bg-violet-500/20 dark:text-violet-400'
+																					? 'text-primary-600 shadow-3xs border-primary-500/20 bg-gradient-to-tr from-primary-400/10 to-primary-400/10 group-hover:scale-105 dark:border-primary-500/30 dark:bg-primary-400/20 dark:text-primary-400'
 																					: 'border-slate-200/60 bg-slate-50/80 text-slate-500 group-hover:scale-105 dark:border-zinc-700/50 dark:bg-zinc-800/80 dark:text-zinc-400'
 																			}`}>
 																			<Workflow size={18} />
@@ -1073,7 +1073,7 @@ const WorkflowsListPage = () => {
 																									wf.id,
 																								)
 																							}
-																							className='h-8 w-full rounded-lg border border-violet-500 bg-white px-2 text-xs font-semibold text-slate-900 transition outline-none dark:bg-zinc-950 dark:text-white'
+																							className='h-8 w-full rounded-lg border border-primary-500 bg-white px-2 text-xs font-semibold text-slate-900 transition outline-none dark:bg-zinc-950 dark:text-white'
 																						/>
 																						<button
 																							onClick={() =>
@@ -1086,7 +1086,7 @@ const WorkflowsListPage = () => {
 																						</button>
 																					</div>
 																				) : (
-																					<h3 className='truncate text-sm font-black tracking-wide text-slate-900 transition-colors duration-200 group-hover:text-violet-600 dark:text-white dark:group-hover:text-violet-400'>
+																					<h3 className='truncate text-sm font-black tracking-wide text-slate-900 transition-colors duration-200 group-hover:text-primary-600 dark:text-white dark:group-hover:text-primary-400'>
 																						{wf.title}
 																					</h3>
 																				)}
@@ -1229,7 +1229,7 @@ const WorkflowsListPage = () => {
 																								size={
 																									12
 																								}
-																								className='text-violet-500'
+																								className='text-primary-500'
 																							/>
 																							Open
 																							editor
@@ -1336,10 +1336,10 @@ const WorkflowsListPage = () => {
 																	onClick={(e) =>
 																		e.stopPropagation()
 																	}>
-																	<span className='text-violet-650 shadow-3xs flex items-center gap-1.5 rounded-full border border-violet-100/50 bg-violet-50/80 px-2.5 py-1 text-[10px] font-black dark:border-violet-900/30 dark:bg-violet-950/20 dark:text-violet-400'>
+																	<span className='text-primary-600 shadow-3xs flex items-center gap-1.5 rounded-full border border-primary-100/50 bg-primary-50/80 px-2.5 py-1 text-[10px] font-black dark:border-primary-900/30 dark:bg-primary-950/20 dark:text-primary-400'>
 																		<GitMerge
 																			size={11}
-																			className='rotate-90 text-violet-500'
+																			className='rotate-90 text-primary-500'
 																		/>
 																		<span>
 																			{wf.nodesCount}{' '}
@@ -1359,7 +1359,7 @@ const WorkflowsListPage = () => {
 																		}
 																		className={`relative h-5 w-9 shrink-0 cursor-pointer rounded-full p-0.5 transition-colors duration-305 ${
 																			wf.status === 'active'
-																				? 'bg-violet-600 shadow-sm shadow-violet-500/20 dark:bg-violet-500'
+																				? 'bg-primary-400 shadow-sm shadow-primary-500/20 dark:bg-primary-400'
 																				: 'bg-slate-200 dark:bg-zinc-800'
 																		}`}>
 																		<div
@@ -1503,7 +1503,7 @@ const WorkflowsListPage = () => {
 								<X size={18} />
 							</button>
 							<h3 className='mb-5 flex items-center gap-2 text-lg font-black text-slate-900 dark:text-white'>
-								<Workflow className='h-5 w-5 text-violet-600' /> Create Workflow
+								<Workflow className='h-5 w-5 text-primary-600' /> Create Workflow
 							</h3>
 							<form onSubmit={handleCreateWorkflow} className='space-y-4'>
 								<div>
@@ -1520,7 +1520,7 @@ const WorkflowsListPage = () => {
 										placeholder='e.g. Lead Sync Manager'
 										value={newWfTitle}
 										onChange={(e) => setNewWfTitle(e.target.value)}
-										className='bg-slate-55/50 h-10 w-full rounded-xl border border-slate-200 px-3.5 text-xs font-semibold text-slate-900 transition outline-none focus:border-violet-500 focus:bg-white focus:ring-2 focus:ring-violet-500/10 dark:border-zinc-800 dark:bg-zinc-900/60 dark:text-white dark:focus:bg-zinc-900'
+										className='bg-slate-55/50 h-10 w-full rounded-xl border border-slate-200 px-3.5 text-xs font-semibold text-slate-900 transition outline-none focus:border-primary-500 focus:bg-white focus:ring-2 focus:ring-primary-500/10 dark:border-zinc-800 dark:bg-zinc-900/60 dark:text-white dark:focus:bg-zinc-900'
 									/>
 								</div>
 								<div>
@@ -1536,7 +1536,7 @@ const WorkflowsListPage = () => {
 										value={newWfDesc}
 										onChange={(e) => setNewWfDesc(e.target.value)}
 										rows={3}
-										className='bg-slate-55/50 w-full resize-none rounded-xl border border-slate-200 p-3.5 text-xs font-semibold text-slate-900 transition outline-none focus:border-violet-500 focus:bg-white focus:ring-2 focus:ring-violet-500/10 dark:border-zinc-800 dark:bg-zinc-900/60 dark:text-white dark:focus:bg-zinc-900'
+										className='bg-slate-55/50 w-full resize-none rounded-xl border border-slate-200 p-3.5 text-xs font-semibold text-slate-900 transition outline-none focus:border-primary-500 focus:bg-white focus:ring-2 focus:ring-primary-500/10 dark:border-zinc-800 dark:bg-zinc-900/60 dark:text-white dark:focus:bg-zinc-900'
 									/>
 								</div>
 								<div>
@@ -1549,7 +1549,7 @@ const WorkflowsListPage = () => {
 										id='new-workflow-folder'
 										value={newWfFolderId}
 										onChange={(e) => setNewWfFolderId(e.target.value)}
-										className='bg-slate-55/50 h-10 w-full rounded-xl border border-slate-200 px-3 text-xs font-semibold text-slate-900 transition outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500/25 dark:border-zinc-700 dark:bg-zinc-900 dark:text-white'>
+										className='bg-slate-55/50 h-10 w-full rounded-xl border border-slate-200 px-3 text-xs font-semibold text-slate-900 transition outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500/25 dark:border-zinc-700 dark:bg-zinc-900 dark:text-white'>
 										<option value=''>No Folder (Root level)</option>
 										{folders.map((f) => (
 											<option key={f.id} value={f.id}>
@@ -1567,7 +1567,7 @@ const WorkflowsListPage = () => {
 									</button>
 									<button
 										type='submit'
-										className='h-9.5 cursor-pointer rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 px-5 text-xs font-bold text-white shadow-sm shadow-[#7c3aed]/10 transition-all hover:brightness-110'>
+										className='h-9.5 cursor-pointer rounded-xl bg-gradient-to-r from-primary-400 to-primary-400 px-5 text-xs font-bold text-primary-950 shadow-sm shadow-[#7c3aed]/10 transition-all hover:brightness-110'>
 										Create Workflow
 									</button>
 								</div>
@@ -1597,7 +1597,7 @@ const WorkflowsListPage = () => {
 								<X size={18} />
 							</button>
 							<h3 className='mb-5 flex items-center gap-2 text-lg font-black text-slate-900 dark:text-white'>
-								<FolderPlus className='h-5 w-5 text-violet-600' /> Create Folder
+								<FolderPlus className='h-5 w-5 text-primary-600' /> Create Folder
 							</h3>
 							<form onSubmit={handleCreateFolder} className='space-y-4'>
 								<div>
@@ -1614,7 +1614,7 @@ const WorkflowsListPage = () => {
 										placeholder='e.g. Lead Processing'
 										value={newFolderName}
 										onChange={(e) => setNewFolderName(e.target.value)}
-										className='border-slate-205 bg-slate-55/50 h-10 w-full rounded-xl border px-3.5 text-xs font-semibold text-slate-900 transition outline-none focus:border-violet-500 focus:bg-white focus:ring-2 focus:ring-violet-500/10 dark:border-zinc-800 dark:bg-zinc-900/60 dark:text-white dark:focus:bg-zinc-900'
+										className='border-slate-205 bg-slate-55/50 h-10 w-full rounded-xl border px-3.5 text-xs font-semibold text-slate-900 transition outline-none focus:border-primary-500 focus:bg-white focus:ring-2 focus:ring-primary-500/10 dark:border-zinc-800 dark:bg-zinc-900/60 dark:text-white dark:focus:bg-zinc-900'
 									/>
 								</div>
 								<div>
@@ -1630,7 +1630,7 @@ const WorkflowsListPage = () => {
 												title={color.label}
 												onClick={() => setNewFolderColor(color.value)}
 												style={{ backgroundColor: color.value }}
-												className={`h-7.5 w-7.5 rounded-full cursor-pointer border transition ${newFolderColor === color.value ? 'scale-110 border-slate-800 ring-2 ring-violet-500 dark:border-white' : 'border-slate-200/50 hover:scale-105'}`}
+												className={`h-7.5 w-7.5 rounded-full cursor-pointer border transition ${newFolderColor === color.value ? 'scale-110 border-slate-800 ring-2 ring-primary-500 dark:border-white' : 'border-slate-200/50 hover:scale-105'}`}
 											/>
 										))}
 									</div>
@@ -1644,7 +1644,7 @@ const WorkflowsListPage = () => {
 									</button>
 									<button
 										type='submit'
-										className='h-9.5 cursor-pointer rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 px-5 text-xs font-bold text-white shadow-sm shadow-violet-500/10 transition-all hover:brightness-110'>
+										className='h-9.5 cursor-pointer rounded-xl bg-gradient-to-r from-primary-400 to-primary-400 px-5 text-xs font-bold text-primary-950 shadow-sm shadow-primary-500/10 transition-all hover:brightness-110'>
 										Create Folder
 									</button>
 								</div>
@@ -1674,7 +1674,7 @@ const WorkflowsListPage = () => {
 								<X size={18} />
 							</button>
 							<h3 className='mb-5 flex items-center gap-2 text-lg font-black text-slate-900 dark:text-white'>
-								<Edit3 className='h-5 w-5 text-violet-600' /> Edit Folder
+								<Edit3 className='h-5 w-5 text-primary-600' /> Edit Folder
 							</h3>
 							<form onSubmit={handleUpdateFolder} className='space-y-4'>
 								<div>
@@ -1690,7 +1690,7 @@ const WorkflowsListPage = () => {
 										required
 										value={editFolderName}
 										onChange={(e) => setEditFolderName(e.target.value)}
-										className='border-slate-205 bg-slate-55/50 h-10 w-full rounded-xl border px-3.5 text-xs font-semibold text-slate-900 transition outline-none focus:border-violet-500 focus:bg-white focus:ring-2 focus:ring-violet-500/10 dark:border-zinc-800 dark:bg-zinc-900/60 dark:text-white dark:focus:bg-zinc-900'
+										className='border-slate-205 bg-slate-55/50 h-10 w-full rounded-xl border px-3.5 text-xs font-semibold text-slate-900 transition outline-none focus:border-primary-500 focus:bg-white focus:ring-2 focus:ring-primary-500/10 dark:border-zinc-800 dark:bg-zinc-900/60 dark:text-white dark:focus:bg-zinc-900'
 									/>
 								</div>
 								<div>
@@ -1706,7 +1706,7 @@ const WorkflowsListPage = () => {
 												title={color.label}
 												onClick={() => setEditFolderColor(color.value)}
 												style={{ backgroundColor: color.value }}
-												className={`h-7.5 w-7.5 rounded-full cursor-pointer border transition ${editFolderColor === color.value ? 'scale-110 border-slate-800 ring-2 ring-violet-500 dark:border-white' : 'border-slate-200/50 hover:scale-105'}`}
+												className={`h-7.5 w-7.5 rounded-full cursor-pointer border transition ${editFolderColor === color.value ? 'scale-110 border-slate-800 ring-2 ring-primary-500 dark:border-white' : 'border-slate-200/50 hover:scale-105'}`}
 											/>
 										))}
 									</div>
@@ -1720,7 +1720,7 @@ const WorkflowsListPage = () => {
 									</button>
 									<button
 										type='submit'
-										className='h-9.5 cursor-pointer rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 px-5 text-xs font-bold text-white shadow-sm shadow-violet-500/10 transition-all hover:brightness-110'>
+										className='h-9.5 cursor-pointer rounded-xl bg-gradient-to-r from-primary-400 to-primary-400 px-5 text-xs font-bold text-primary-950 shadow-sm shadow-primary-500/10 transition-all hover:brightness-110'>
 										Save Changes
 									</button>
 								</div>

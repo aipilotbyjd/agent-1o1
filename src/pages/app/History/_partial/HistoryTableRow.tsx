@@ -17,14 +17,14 @@ const HistoryTableRow = ({ displayItem, isSelected, onSelect }: HistoryTableRowP
 		<div
 			onClick={onSelect}
 			className={`grid cursor-pointer grid-cols-12 items-center gap-4 px-6 py-4.5 transition-all duration-300 hover:bg-slate-50/50 dark:hover:bg-zinc-800/20 ${
-				isSelected ? 'border-l-4 border-violet-500 bg-violet-500/[0.02] dark:bg-violet-500/[0.02]' : ''
+				isSelected ? 'border-l-4 border-primary-500 bg-primary-400/[0.02] dark:bg-primary-400/[0.02]' : ''
 			}`}>
 			{/* Activity col */}
 			<div className='col-span-5 flex min-w-0 items-center gap-4'>
 				<div
 					className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl shadow-xs ${
 						displayItem.type === 'Chat'
-							? 'bg-violet-50 text-violet-600 dark:bg-violet-950/40 dark:text-violet-400'
+							? 'bg-primary-50 text-primary-600 dark:bg-primary-950/40 dark:text-primary-400'
 							: 'bg-blue-50 text-blue-600 dark:bg-blue-950/40 dark:text-blue-400'
 					}`}>
 					<IconComponent className='h-5.5 w-5.5' />
@@ -44,7 +44,7 @@ const HistoryTableRow = ({ displayItem, isSelected, onSelect }: HistoryTableRowP
 				<span
 					className={`inline-flex items-center rounded-lg px-2.5 py-1 text-[9px] font-black tracking-widest ${
 						displayItem.type === 'Chat'
-							? 'border border-purple-100 bg-purple-50 text-purple-600 dark:border-purple-900/30 dark:bg-purple-950/30 dark:text-purple-400'
+							? 'border border-primary-100 bg-primary-50 text-primary-600 dark:border-primary-900/30 dark:bg-primary-950/30 dark:text-primary-400'
 							: 'border border-blue-100 bg-blue-50 text-blue-600 dark:border-blue-900/30 dark:bg-blue-950/30 dark:text-blue-400'
 					}`}>
 					{displayItem.type === 'Chat' ? 'CHAT' : 'WORKFLOW'}

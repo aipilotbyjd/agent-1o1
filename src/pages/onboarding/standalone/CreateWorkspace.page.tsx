@@ -111,12 +111,12 @@ const CreateWorkspacePage = () => {
 	};
 
 	return (
-		<main className='dark:to-zinc-950 dark:text-zinc-500 relative flex min-h-screen flex-col items-center justify-center overflow-x-hidden bg-gradient-to-br from-indigo-50/80 via-slate-50/90 to-rose-50/80 p-6 text-slate-950 transition-colors duration-300 md:p-12 dark:from-zinc-950 dark:via-zinc-900'>
+		<main className='dark:to-zinc-950 dark:text-zinc-500 relative flex min-h-screen flex-col items-center justify-center overflow-x-hidden bg-gradient-to-br from-primary-50/80 via-slate-50/90 to-rose-50/80 p-6 text-slate-950 transition-colors duration-300 md:p-12 dark:from-zinc-950 dark:via-zinc-900'>
 			{/* Stunning animated SVG mesh gradient backgrounds */}
 			<div className='pointer-events-none absolute inset-0 z-0 overflow-hidden'>
 				<div className='absolute top-0 right-0 left-0 h-[500px] bg-[radial-gradient(circle_at_top_left,rgba(139,92,246,0.15),transparent_45%),radial-gradient(circle_at_top_right,rgba(244,63,94,0.15),transparent_45%)]' />
 				<div
-					className='absolute -top-40 -left-40 h-[600px] w-[600px] animate-pulse rounded-full bg-violet-400/30 blur-[120px] dark:bg-violet-900/15'
+					className='absolute -top-40 -left-40 h-[600px] w-[600px] animate-pulse rounded-full bg-primary-400/30 blur-[120px] dark:bg-primary-900/15'
 					style={{ animationDuration: '8s' }}
 				/>
 				<div
@@ -124,7 +124,7 @@ const CreateWorkspacePage = () => {
 					style={{ animationDuration: '12s' }}
 				/>
 				<div
-					className='dark:bg-pink-950/10 absolute top-1/2 left-1/3 h-[500px] w-[500px] animate-pulse rounded-full bg-rose-400/20 blur-[100px]'
+					className='dark:bg-primary-950/10 absolute top-1/2 left-1/3 h-[500px] w-[500px] animate-pulse rounded-full bg-rose-400/20 blur-[100px]'
 					style={{ animationDuration: '10s' }}
 				/>
 			</div>
@@ -133,7 +133,7 @@ const CreateWorkspacePage = () => {
 			<header className='absolute top-0 right-0 left-0 z-25 w-full px-8 py-6'>
 				<div className='mx-auto flex max-w-7xl items-center justify-between'>
 					<div className='flex items-center gap-3'>
-						<div className='flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-tr from-violet-600 to-indigo-600 text-white shadow-lg shadow-violet-500/25'>
+						<div className='flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-tr from-primary-400 to-primary-400 text-primary-950 shadow-lg shadow-primary-500/25'>
 							<span className='text-base font-extrabold tracking-tighter'>A1</span>
 						</div>
 						<span className='dark:to-zinc-100 bg-gradient-to-r from-slate-900 via-slate-800 to-slate-950 bg-clip-text text-xl font-black text-transparent dark:from-white dark:via-zinc-200'>
@@ -164,7 +164,7 @@ const CreateWorkspacePage = () => {
 					repeat: Infinity,
 					ease: 'linear',
 				}}
-				className='pointer-events-none absolute top-[-15%] left-[-15%] -z-10 h-[60%] w-[60%] rounded-full bg-gradient-to-tr from-violet-500/10 to-indigo-500/10 blur-[130px]'
+				className='pointer-events-none absolute top-[-15%] left-[-15%] -z-10 h-[60%] w-[60%] rounded-full bg-gradient-to-tr from-primary-400/10 to-primary-400/10 blur-[130px]'
 			/>
 			<motion.div
 				animate={{
@@ -189,7 +189,7 @@ const CreateWorkspacePage = () => {
 					repeat: Infinity,
 					ease: 'linear',
 				}}
-				className='pointer-events-none absolute top-[30%] right-[5%] -z-10 h-[45%] w-[45%] rounded-full bg-gradient-to-l from-pink-500/8 to-violet-500/8 blur-[110px]'
+				className='pointer-events-none absolute top-[30%] right-[5%] -z-10 h-[45%] w-[45%] rounded-full bg-gradient-to-l from-primary-400/8 to-primary-400/8 blur-[110px]'
 			/>
 
 			{/* Main Grid Section */}
@@ -203,13 +203,13 @@ const CreateWorkspacePage = () => {
 					<motion.div
 						variants={itemVariants}
 						className='inline-flex items-center gap-2 self-start rounded-full border border-white/60 bg-white/70 px-4 py-2 text-xs font-black text-slate-500 shadow-md shadow-slate-200/40 backdrop-blur-md dark:border-zinc-800/80 dark:bg-zinc-900/70 dark:text-zinc-400 dark:shadow-none'>
-						<span className='h-2.5 w-2.5 animate-pulse rounded-full bg-indigo-500' />
+						<span className='h-2.5 w-2.5 animate-pulse rounded-full bg-primary-400' />
 						Workspace setup
 					</motion.div>
 
 					<motion.h1
 						variants={itemVariants}
-						className='via-indigo-950 max-w-3xl bg-gradient-to-r from-slate-900 to-violet-900 bg-clip-text text-5xl leading-[0.95] font-black tracking-tight text-transparent md:text-7xl xl:text-[76px] dark:from-white dark:via-zinc-200 dark:to-zinc-100'>
+						className='via-primary-950 max-w-3xl bg-gradient-to-r from-slate-900 to-primary-900 bg-clip-text text-5xl leading-[0.95] font-black tracking-tight text-transparent md:text-7xl xl:text-[76px] dark:from-white dark:via-zinc-200 dark:to-zinc-100'>
 						Create a workspace for your team and workflows.
 					</motion.h1>
 
@@ -252,7 +252,7 @@ const CreateWorkspacePage = () => {
 					transition={{ type: 'spring' as const, stiffness: 80, damping: 15, delay: 0.1 }}
 					className='relative'>
 					{/* Glowing decorative floating dots */}
-					<div className='absolute -top-12 -right-10 -z-10 hidden h-32 w-32 rounded-[2.5rem] bg-gradient-to-tr from-violet-600 to-indigo-600 opacity-20 blur-2xl lg:block' />
+					<div className='absolute -top-12 -right-10 -z-10 hidden h-32 w-32 rounded-[2.5rem] bg-gradient-to-tr from-primary-400 to-primary-400 opacity-20 blur-2xl lg:block' />
 					<div className='absolute -bottom-10 -left-8 -z-10 hidden h-28 w-28 rounded-full bg-emerald-500 opacity-15 blur-2xl lg:block' />
 
 					<div className='relative rounded-[2.5rem] border border-white/50 bg-white/80 p-8 text-slate-950 shadow-[0_25px_60px_rgba(8,_112,_184,_0.05)] backdrop-blur-xl dark:border-zinc-800/50 dark:bg-zinc-900/80 dark:text-zinc-50 dark:shadow-[0_25px_60px_rgba(0,0,0,0.2)]'>
@@ -266,7 +266,7 @@ const CreateWorkspacePage = () => {
 									Create workspace
 								</h2>
 							</div>
-							<div className='flex h-12 w-12 items-center justify-center rounded-2xl border border-indigo-100/35 bg-indigo-50 text-indigo-600 shadow-sm dark:border-indigo-900/30 dark:bg-indigo-950/40 dark:text-indigo-400'>
+							<div className='flex h-12 w-12 items-center justify-center rounded-2xl border border-primary-100/35 bg-primary-50 text-primary-600 shadow-sm dark:border-primary-900/30 dark:bg-primary-950/40 dark:text-primary-400'>
 								<Building2 className='h-5 w-5' />
 							</div>
 						</div>
@@ -281,7 +281,7 @@ const CreateWorkspacePage = () => {
 									Workspace name
 								</label>
 								<div className='group relative flex items-center'>
-									<Building2 className='absolute left-4 h-4.5 w-4.5 text-slate-400 transition-colors duration-200 group-focus-within:text-violet-600 dark:group-focus-within:text-violet-400' />
+									<Building2 className='absolute left-4 h-4.5 w-4.5 text-slate-400 transition-colors duration-200 group-focus-within:text-primary-600 dark:group-focus-within:text-primary-400' />
 									<input
 										id='name'
 										name='name'
@@ -291,7 +291,7 @@ const CreateWorkspacePage = () => {
 										value={formik.values.name}
 										onChange={handleNameChange}
 										onBlur={formik.handleBlur}
-										className='dark:text-zinc-100 dark:placeholder:text-zinc-600 block h-12 w-full rounded-2xl border border-slate-200 bg-white/55 pr-4 pl-12 text-sm font-semibold text-slate-900 shadow-xs transition-all duration-200 outline-none placeholder:text-slate-400 focus:border-violet-500/80 focus:bg-white focus:ring-4 focus:ring-violet-500/10 dark:border-zinc-800 dark:bg-zinc-950/40 dark:focus:border-violet-500 dark:focus:bg-zinc-950/60 dark:focus:ring-violet-500/15'
+										className='dark:text-zinc-100 dark:placeholder:text-zinc-600 block h-12 w-full rounded-2xl border border-slate-200 bg-white/55 pr-4 pl-12 text-sm font-semibold text-slate-900 shadow-xs transition-all duration-200 outline-none placeholder:text-slate-400 focus:border-primary-500/80 focus:bg-white focus:ring-4 focus:ring-primary-500/10 dark:border-zinc-800 dark:bg-zinc-950/40 dark:focus:border-primary-500 dark:focus:bg-zinc-950/60 dark:focus:ring-primary-500/15'
 									/>
 								</div>
 							</div>
@@ -303,7 +303,7 @@ const CreateWorkspacePage = () => {
 									htmlFor='slug'>
 									Workspace URL
 								</label>
-								<div className='flex h-12 items-center overflow-hidden rounded-2xl border border-slate-200 bg-white/55 shadow-xs transition-all duration-200 focus-within:border-violet-500/80 focus-within:bg-white focus-within:ring-4 focus-within:ring-violet-500/10 dark:border-zinc-800 dark:bg-zinc-950/40 focus-within:dark:border-violet-500/80 focus-within:dark:bg-zinc-950/60 focus-within:dark:ring-violet-500/15'>
+								<div className='flex h-12 items-center overflow-hidden rounded-2xl border border-slate-200 bg-white/55 shadow-xs transition-all duration-200 focus-within:border-primary-500/80 focus-within:bg-white focus-within:ring-4 focus-within:ring-primary-500/10 dark:border-zinc-800 dark:bg-zinc-950/40 focus-within:dark:border-primary-500/80 focus-within:dark:bg-zinc-950/60 focus-within:dark:ring-primary-500/15'>
 									<span className='border-slate-100 flex h-full items-center border-r bg-slate-50/50 px-4 text-xs font-black text-slate-400 dark:border-zinc-800 dark:bg-zinc-900/50 dark:text-zinc-500'>
 										agent1o1.app/
 									</span>
@@ -336,7 +336,7 @@ const CreateWorkspacePage = () => {
 								whileTap={{ scale: 0.99 }}
 								type='submit'
 								disabled={!formik.isValid || createWorkspace.isPending}
-								className='group flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-violet-600 to-indigo-600 text-sm font-black text-white shadow-lg shadow-indigo-500/10 transition-all duration-250 hover:shadow-xl hover:shadow-indigo-500/20 disabled:pointer-events-none disabled:opacity-50'>
+								className='group flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-primary-400 to-primary-400 text-sm font-black text-primary-950 shadow-lg shadow-primary-500/10 transition-all duration-250 hover:shadow-xl hover:shadow-primary-500/20 disabled:pointer-events-none disabled:opacity-50'>
 								{createWorkspace.isPending ? (
 									<div className='flex items-center gap-2'>
 										<svg

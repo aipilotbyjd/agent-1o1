@@ -14,7 +14,7 @@ import { useWorkspaceContext } from '@/context/workspaceContext';
 import { useUpdateWorkspace, useDeleteWorkspace } from '@/api/modules/workspaces';
 
 const inputClass =
-	'h-12 w-full rounded-xl border border-zinc-200 bg-white px-4 text-sm font-semibold text-zinc-800 shadow-xs outline-none placeholder:text-zinc-400 focus:border-violet-300 focus:ring-4 focus:ring-violet-100 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100 dark:placeholder:text-zinc-500 dark:focus:border-violet-500 dark:focus:ring-violet-500/20';
+	'h-12 w-full rounded-xl border border-zinc-200 bg-white px-4 text-sm font-semibold text-zinc-800 shadow-xs outline-none placeholder:text-zinc-400 focus:border-primary-300 focus:ring-4 focus:ring-primary-100 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100 dark:placeholder:text-zinc-500 dark:focus:border-primary-500 dark:focus:ring-primary-500/20';
 
 const readOnlyClass =
 	'h-12 w-full rounded-xl border border-zinc-200 bg-zinc-50 px-4 flex items-center text-sm font-semibold text-zinc-400 dark:border-zinc-700 dark:bg-zinc-800/60 dark:text-zinc-500';
@@ -62,7 +62,7 @@ const SettingsFieldRow = ({
 }) => (
 	<div className='grid gap-4 border-b border-zinc-100/80 py-5 lg:grid-cols-[260px_1fr] lg:items-center dark:border-zinc-800/80'>
 		<div className='flex items-start gap-4'>
-			<div className='flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-violet-50 text-violet-500 dark:bg-violet-950/30 dark:text-violet-400'>
+			<div className='flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-primary-50 text-primary-500 dark:bg-primary-950/30 dark:text-primary-400'>
 				<FieldIcon size={16} />
 			</div>
 			<div>
@@ -163,13 +163,13 @@ const WorkspacePage = () => {
 				{/* Workspace Identity Card */}
 				<div className='dark:border-zinc-800 mb-6 rounded-2xl border border-zinc-100 bg-white p-5 shadow-sm dark:bg-zinc-950'>
 					<div className='flex flex-wrap items-center gap-5'>
-						<div className='flex h-20 w-20 items-center justify-center rounded-[22px] bg-violet-100 text-3xl font-black text-violet-600 dark:bg-violet-500/15 dark:text-violet-300'>
+						<div className='flex h-20 w-20 items-center justify-center rounded-[22px] bg-primary-100 text-3xl font-black text-primary-600 dark:bg-primary-400/15 dark:text-primary-300'>
 							{getInitials(displayName)}
 						</div>
 						<div>
 							<h2 className='flex items-center gap-2 text-lg font-black tracking-tight text-zinc-950 dark:text-zinc-50'>
 								<span>{displayName}</span>
-								<span className='rounded-md bg-purple-50 px-2 py-0.5 text-[10px] font-bold text-purple-600 dark:bg-purple-950 dark:text-purple-400'>
+								<span className='rounded-md bg-primary-50 px-2 py-0.5 text-[10px] font-bold text-primary-600 dark:bg-primary-950 dark:text-primary-400'>
 									{workspaceRole}
 								</span>
 							</h2>
@@ -253,7 +253,7 @@ const WorkspacePage = () => {
 					<button
 						type='submit'
 						disabled={!isDirty || updateWorkspace.isPending}
-						className='h-12 rounded-xl bg-violet-600 px-6 text-sm font-bold text-white shadow-lg shadow-violet-600/20 transition hover:bg-violet-700 active:scale-95 disabled:opacity-60 dark:bg-violet-750 dark:hover:bg-violet-650'>
+						className='h-12 rounded-xl bg-primary-400 px-6 text-sm font-bold text-primary-950 shadow-lg shadow-primary-600/20 transition hover:bg-primary-700 active:scale-95 disabled:opacity-60 dark:bg-primary-700 dark:hover:bg-primary-500'>
 						{updateWorkspace.isPending ? 'Saving...' : 'Save changes'}
 					</button>
 				</div>

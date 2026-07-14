@@ -85,7 +85,7 @@ const AiBuilderPanel = () => {
 						>
 							<History size={14} />
 						</button>
-						<div className='flex h-9 w-9 items-center justify-center rounded-xl bg-violet-600 text-white'>
+						<div className='flex h-9 w-9 items-center justify-center rounded-xl bg-primary-400 text-primary-950'>
 							<Sparkles size={18} className="fill-white" />
 						</div>
 						<div>
@@ -131,7 +131,7 @@ const AiBuilderPanel = () => {
 							<div className={`flex items-center gap-2 text-xs text-zinc-400 dark:text-zinc-500 font-medium ${isUser ? 'justify-end' : ''}`}>
 								{!isUser && (
 									<>
-										<div className='flex h-5 w-5 items-center justify-center rounded-full bg-violet-100 text-violet-600 dark:bg-violet-950 dark:text-violet-400'>
+										<div className='flex h-5 w-5 items-center justify-center rounded-full bg-primary-100 text-primary-600 dark:bg-primary-950 dark:text-primary-400'>
 											<Sparkles size={11} className="fill-current" />
 										</div>
 										<span className='font-bold text-zinc-700 dark:text-zinc-300'>Workflow Builder</span>
@@ -149,13 +149,13 @@ const AiBuilderPanel = () => {
 							<div className={`flex ${isUser ? 'justify-end' : 'justify-start'}`}>
 								<div className={`max-w-[85%] rounded-2xl px-4 py-2.5 text-[13px] leading-relaxed shadow-xs ${
 									isUser
-										? 'bg-violet-50 text-violet-900 rounded-tr-xs border border-violet-100 dark:bg-violet-950/30 dark:text-violet-200 dark:border-violet-900/40'
+										? 'bg-primary-50 text-primary-900 rounded-tr-xs border border-primary-100 dark:bg-primary-950/30 dark:text-primary-200 dark:border-primary-900/40'
 										: 'bg-white text-zinc-800 rounded-tl-xs border border-zinc-150 dark:bg-zinc-900 dark:text-zinc-200 dark:border-zinc-800'
 								}`}>
 									{/* If assistant, display thought block if applicable */}
 									{!isUser && message.isThought && (
 										<div className='mb-2 flex items-center gap-1.5 text-[11px] font-semibold text-zinc-400 dark:text-zinc-500 border-b border-zinc-100 dark:border-zinc-800 pb-1.5'>
-											<Sparkles size={11} className="text-violet-500" />
+											<Sparkles size={11} className="text-primary-500" />
 											<span className='italic'>Thought for a couple of seconds</span>
 										</div>
 									)}
@@ -169,7 +169,7 @@ const AiBuilderPanel = () => {
 				{isThinking && (
 					<div className='space-y-1'>
 						<div className='flex items-center gap-2 text-xs text-zinc-400 dark:text-zinc-500 font-medium'>
-							<div className='flex h-5 w-5 items-center justify-center rounded-full bg-violet-100 text-violet-600 dark:bg-violet-950 dark:text-violet-400 animate-pulse'>
+							<div className='flex h-5 w-5 items-center justify-center rounded-full bg-primary-100 text-primary-600 dark:bg-primary-950 dark:text-primary-400 animate-pulse'>
 								<Sparkles size={11} />
 							</div>
 							<span className='font-bold text-zinc-700 dark:text-zinc-300'>Workflow Builder</span>
@@ -177,7 +177,7 @@ const AiBuilderPanel = () => {
 						<div className='flex justify-start'>
 							<div className='bg-white text-zinc-500 rounded-2xl rounded-tl-xs border border-zinc-150 px-4 py-2.5 text-[13px] shadow-xs dark:bg-zinc-900 dark:text-zinc-400 dark:border-zinc-800'>
 								<span className='inline-flex items-center gap-1.5'>
-									<span className='h-1.5 w-1.5 rounded-full bg-violet-600 animate-ping' />
+									<span className='h-1.5 w-1.5 rounded-full bg-primary-400 animate-ping' />
 									Thinking...
 								</span>
 							</div>
@@ -227,7 +227,7 @@ const AiBuilderPanel = () => {
 											: 'text-zinc-400 hover:text-zinc-700 dark:text-zinc-500'
 									}`}
 								>
-									<Sparkles size={10} className={mode === 'build' ? 'text-violet-500' : ''} />
+									<Sparkles size={10} className={mode === 'build' ? 'text-primary-500' : ''} />
 									<span>Build</span>
 								</button>
 								<button
@@ -248,7 +248,7 @@ const AiBuilderPanel = () => {
 								type='button'
 								onClick={handleSend}
 								disabled={!promptInput.trim() || isThinking}
-								className='flex h-7 w-7 items-center justify-center rounded-full bg-violet-600 text-white transition hover:bg-violet-700 active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed'
+								className='flex h-7 w-7 items-center justify-center rounded-full bg-primary-400 text-primary-950 transition hover:bg-primary-700 active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed'
 							>
 								<ArrowUp size={14} strokeWidth={2.5} />
 							</button>
@@ -294,7 +294,7 @@ const AiBuilderPanel = () => {
 					<button
 						type='button'
 						onClick={handleNewChat}
-						className='flex w-full items-center justify-center gap-1.5 rounded-lg bg-violet-600 px-3 py-2 text-xs font-bold text-white shadow-xs transition hover:bg-violet-700'
+						className='flex w-full items-center justify-center gap-1.5 rounded-lg bg-primary-400 px-3 py-2 text-xs font-bold text-primary-950 shadow-xs transition hover:bg-primary-700'
 					>
 						<Plus size={13} />
 						<span>New Chat</span>
@@ -324,14 +324,14 @@ const AiBuilderPanel = () => {
 								onKeyDown={(e) => e.key === 'Enter' && handleLoadSession(session.id)}
 								className={`group flex cursor-pointer items-center gap-2.5 rounded-lg px-2.5 py-2 transition ${
 									session.id === activeSessionId
-										? 'bg-violet-50 dark:bg-violet-950/30'
+										? 'bg-primary-50 dark:bg-primary-950/30'
 										: 'hover:bg-zinc-50 dark:hover:bg-zinc-900/70'
 								}`}>
 								<MessageSquare
 									size={14}
 									className={
 										session.id === activeSessionId
-											? 'text-violet-600 dark:text-violet-400 shrink-0'
+											? 'text-primary-600 dark:text-primary-400 shrink-0'
 											: 'text-zinc-400 dark:text-zinc-600 shrink-0'
 									}
 								/>

@@ -80,11 +80,11 @@ const stats = [
 		value: '8',
 		sub: '4 currently active',
 		icon: GitMerge,
-		iconBg: 'bg-violet-500/5 border-violet-500/15 text-violet-650 dark:bg-violet-500/10 dark:text-violet-400',
+		iconBg: 'bg-primary-400/5 border-primary-500/15 text-primary-600 dark:bg-primary-400/10 dark:text-primary-400',
 		sparkPath: 'M 0 22 Q 15 8 30 18 T 60 5 T 90 12 T 100 8',
 		sparkColor: '#7c3aed',
 		glowClass:
-			'hover:border-violet-500/40 hover:shadow-[0_8px_30px_rgba(124,58,237,0.08)] dark:hover:border-violet-500/30',
+			'hover:border-primary-500/40 hover:shadow-[0_8px_30px_rgba(124,58,237,0.08)] dark:hover:border-primary-500/30',
 		endX: 100,
 		endY: 8,
 	},
@@ -165,9 +165,9 @@ const quickActions = [
 		label: 'Create Workflow',
 		icon: Plus,
 		description: 'Build a new automation',
-		color: 'border-violet-500/20 bg-white/70 hover:border-violet-500/50 hover:bg-violet-500/5 dark:border-zinc-800 dark:bg-[#11131c]/60 dark:hover:border-violet-500/30',
-		hoverText: 'group-hover:text-violet-600 dark:group-hover:text-violet-400',
-		iconStyle: 'bg-violet-500/10 text-violet-650 dark:bg-violet-500/20 dark:text-violet-400',
+		color: 'border-primary-500/20 bg-white/70 hover:border-primary-500/50 hover:bg-primary-500/5 dark:border-zinc-800 dark:bg-[#11131c]/60 dark:hover:border-primary-500/30',
+		hoverText: 'group-hover:text-primary-600 dark:group-hover:text-primary-400',
+		iconStyle: 'bg-primary-400/10 text-primary-600 dark:bg-primary-400/20 dark:text-primary-400',
 	},
 	{
 		label: 'Add Agent',
@@ -239,7 +239,7 @@ const DashboardPage = () => {
 	const nextOnboardingStep = onboarding.steps.find((item) => !item.done);
 
 	const colorList = [
-		'bg-indigo-600',
+		'bg-primary-400',
 		'bg-emerald-600',
 		'bg-fuchsia-600',
 		'bg-amber-600',
@@ -266,8 +266,8 @@ const DashboardPage = () => {
 			{/* Grid Background Pattern */}
 			<div className='pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(#e2e8f0_1.5px,transparent_1.5px)] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] [background-size:24px_24px] opacity-70 dark:bg-[radial-gradient(#161c2c_1.5px,transparent_1.5px)] dark:opacity-85' />
 
-			<div className='pointer-events-none absolute top-0 right-10 -z-10 h-[500px] w-[500px] rounded-full bg-gradient-to-tr from-violet-500/8 to-blue-500/8 blur-[120px]' />
-			<div className='pointer-events-none absolute bottom-10 left-1/4 -z-10 h-[400px] w-[400px] rounded-full bg-gradient-to-br from-pink-500/4 to-cyan-500/4 blur-[100px]' />
+			<div className='pointer-events-none absolute top-0 right-10 -z-10 h-[500px] w-[500px] rounded-full bg-gradient-to-tr from-primary-400/8 to-blue-500/8 blur-[120px]' />
+			<div className='pointer-events-none absolute bottom-10 left-1/4 -z-10 h-[400px] w-[400px] rounded-full bg-gradient-to-br from-primary-400/4 to-cyan-500/4 blur-[100px]' />
 
 			<div className='mx-auto w-full max-w-7xl space-y-6 p-6 md:p-8'>
 				{/* Welcome Banner */}
@@ -275,7 +275,7 @@ const DashboardPage = () => {
 					initial={{ opacity: 0, y: -15 }}
 					animate={{ opacity: 1, y: 0 }}
 					transition={{ duration: 0.4 }}
-					className='dark:border-zinc-800 relative overflow-hidden rounded-3xl border border-zinc-800/80 bg-gradient-to-r from-[#090b1a] via-[#111438] to-[#250d4f] p-6 shadow-xl shadow-indigo-950/20 md:p-8 dark:from-[#05060f] dark:via-[#0c0d24] dark:to-[#170932]'>
+					className='dark:border-zinc-800 relative overflow-hidden rounded-3xl border border-zinc-800/80 bg-gradient-to-r from-[#090b1a] via-[#111438] to-[#250d4f] p-6 shadow-xl shadow-primary-950/20 md:p-8 dark:from-[#05060f] dark:via-[#0c0d24] dark:to-[#170932]'>
 					{/* Grid Overlay inside Banner */}
 					<div className='pointer-events-none absolute inset-0 bg-[radial-gradient(rgba(255,255,255,0.03)_1px,transparent_1px)] [background-size:16px_16px] opacity-60' />
 
@@ -283,7 +283,7 @@ const DashboardPage = () => {
 						<div className='flex-1 space-y-4'>
 							<h1 className='flex flex-wrap items-center gap-2 text-2xl font-black tracking-tight text-white md:text-3xl'>
 								Welcome back,{' '}
-								<span className='bg-gradient-to-r from-violet-400 via-indigo-300 to-blue-400 bg-clip-text text-transparent'>
+								<span className='bg-gradient-to-r from-primary-400 via-primary-300 to-blue-400 bg-clip-text text-transparent'>
 									{userName}
 								</span>
 								<motion.span
@@ -331,8 +331,8 @@ const DashboardPage = () => {
 								</div>
 
 								{/* Plan Badge */}
-								<div className='flex items-center gap-1 rounded-full border border-violet-500/30 bg-[#261546]/85 px-3 py-1 text-[11px] font-bold text-violet-200'>
-									<Crown size={11} className='text-violet-400' />
+								<div className='flex items-center gap-1 rounded-full border border-primary-500/30 bg-[#261546]/85 px-3 py-1 text-[11px] font-bold text-primary-200'>
+									<Crown size={11} className='text-primary-400' />
 									<span>Pro Account</span>
 								</div>
 
@@ -354,7 +354,7 @@ const DashboardPage = () => {
 								initial={{ y: 5, rotate: 12 }}
 								animate={{ y: [-4, 4, -4] }}
 								transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
-								className='absolute top-0 left-2 z-20 flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-violet-500 to-indigo-600 text-white shadow-lg shadow-violet-500/30'
+								className='absolute top-0 left-2 z-20 flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-primary-400 to-primary-400 text-primary-950 shadow-lg shadow-primary-500/30'
 								style={{
 									transform: 'perspective(800px) rotateY(-20deg) rotateX(15deg)',
 								}}>
@@ -363,14 +363,14 @@ const DashboardPage = () => {
 
 							{/* Main Analytics Card */}
 							<div
-								className='relative z-10 flex h-24 w-44 flex-col justify-between rounded-2xl border border-white/20 bg-white/95 p-3 shadow-2xl shadow-indigo-950/40 dark:bg-zinc-900/90'
+								className='relative z-10 flex h-24 w-44 flex-col justify-between rounded-2xl border border-white/20 bg-white/95 p-3 shadow-2xl shadow-primary-950/40 dark:bg-zinc-900/90'
 								style={{
 									transform:
 										'perspective(800px) rotateY(-20deg) rotateX(15deg) rotateZ(-2deg)',
 								}}>
 								<div className='flex items-center justify-between'>
 									<div className='flex gap-1'>
-										<div className='h-1.5 w-6 rounded-full bg-violet-200 dark:bg-violet-900' />
+										<div className='h-1.5 w-6 rounded-full bg-primary-200 dark:bg-primary-900' />
 										<div className='h-1.5 w-3 rounded-full bg-slate-200 dark:bg-zinc-800' />
 									</div>
 									<div className='dark:bg-zinc-800 flex h-3.5 w-3.5 items-center justify-center rounded-full bg-slate-100'>
@@ -440,7 +440,7 @@ const DashboardPage = () => {
 								}}
 								whileTap={{ scale: 0.98 }}
 								onClick={() => navigate(pages.editor.subPages.addWorkflow.to)}
-								className='flex h-10.5 cursor-pointer items-center gap-2 rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 px-6 text-xs font-bold text-white shadow-md shadow-violet-500/10 transition-all hover:brightness-110 active:scale-95'>
+								className='flex h-10.5 cursor-pointer items-center gap-2 rounded-xl bg-gradient-to-r from-primary-400 to-primary-400 px-6 text-xs font-bold text-primary-950 shadow-md shadow-primary-500/10 transition-all hover:brightness-110 active:scale-95'>
 								<Zap size={14} strokeWidth={3} />
 								<span>Quick Run</span>
 							</motion.button>
@@ -456,10 +456,10 @@ const DashboardPage = () => {
 							animate={{ opacity: 1, y: 0 }}
 							exit={{ opacity: 0, y: -10, height: 0 }}
 							transition={{ duration: 0.3 }}
-							className='overflow-hidden rounded-3xl border border-violet-100 bg-white p-5 shadow-[0_4px_25px_rgba(124,58,237,0.03)] dark:border-zinc-800/80 dark:bg-[#10131e]/30'>
+							className='overflow-hidden rounded-3xl border border-primary-100 bg-white p-5 shadow-[0_4px_25px_rgba(124,58,237,0.03)] dark:border-zinc-800/80 dark:bg-[#10131e]/30'>
 							<div className='flex flex-wrap items-start justify-between gap-4'>
 								<div>
-									<p className='text-[10px] font-black tracking-[0.18em] text-violet-600 uppercase dark:text-violet-400'>
+									<p className='text-[10px] font-black tracking-[0.18em] text-primary-600 uppercase dark:text-primary-400'>
 										ACCOUNT SETUP
 									</p>
 									<h2 className='mt-1 text-sm font-black text-slate-950 dark:text-white'>
@@ -483,9 +483,9 @@ const DashboardPage = () => {
 								</div>
 							</div>
 
-							<div className='mt-3 h-1.5 overflow-hidden rounded-full bg-violet-100/50 dark:bg-violet-900/20'>
+							<div className='mt-3 h-1.5 overflow-hidden rounded-full bg-primary-100/50 dark:bg-primary-900/20'>
 								<div
-									className='h-full rounded-full bg-gradient-to-r from-violet-600 to-indigo-500 transition-all duration-500'
+									className='h-full rounded-full bg-gradient-to-r from-primary-400 to-primary-400 transition-all duration-500'
 									style={{
 										width: `${Math.min(100, (onboarding.progress / Math.max(onboarding.total, 1)) * 100)}%`,
 									}}
@@ -509,11 +509,11 @@ const DashboardPage = () => {
 									if (item.done) {
 										if (isNext) {
 											cardBorder =
-												'border-violet-400 bg-white shadow-md shadow-violet-500/[0.02] dark:border-violet-500/40 dark:bg-[#11131c]';
+												'border-primary-400 bg-white shadow-md shadow-primary-500/[0.02] dark:border-primary-500/40 dark:bg-[#11131c]';
 											iconStyle =
-												'bg-violet-100/60 text-violet-600 dark:bg-violet-950/40 dark:text-violet-400';
+												'bg-primary-100/60 text-primary-600 dark:bg-primary-950/40 dark:text-primary-400';
 											statusIcon = (
-												<div className='flex h-4.5 w-4.5 items-center justify-center rounded-full bg-violet-600 text-white'>
+												<div className='flex h-4.5 w-4.5 items-center justify-center rounded-full bg-primary-400 text-primary-950'>
 													<Check className='h-3 w-3 stroke-[3]' />
 												</div>
 											);
@@ -531,11 +531,11 @@ const DashboardPage = () => {
 									} else {
 										if (isNext) {
 											cardBorder =
-												'border-violet-400 bg-white shadow-md shadow-violet-500/[0.02] dark:border-violet-500/40 dark:bg-[#11131c]';
+												'border-primary-400 bg-white shadow-md shadow-primary-500/[0.02] dark:border-primary-500/40 dark:bg-[#11131c]';
 											iconStyle =
-												'bg-violet-100/60 text-violet-600 dark:bg-violet-950/40 dark:text-violet-400';
+												'bg-primary-100/60 text-primary-600 dark:bg-primary-950/40 dark:text-primary-400';
 											statusIcon = (
-												<Circle className='h-4.5 w-4.5 shrink-0 stroke-[2] text-violet-500' />
+												<Circle className='h-4.5 w-4.5 shrink-0 stroke-[2] text-primary-500' />
 											);
 										}
 									}
@@ -545,7 +545,7 @@ const DashboardPage = () => {
 											key={item.key}
 											type='button'
 											onClick={() => handleOnboardingAction(item.key)}
-											className={`flex items-center justify-between gap-3 rounded-2xl border p-4 text-left transition-all duration-200 hover:border-violet-400 hover:shadow-md hover:shadow-violet-500/[0.01] ${cardBorder}`}>
+											className={`flex items-center justify-between gap-3 rounded-2xl border p-4 text-left transition-all duration-200 hover:border-primary-400 hover:shadow-md hover:shadow-primary-500/[0.01] ${cardBorder}`}>
 											<div className='flex min-w-0 flex-1 items-center gap-3.5'>
 												{/* Left step icon */}
 												<div
@@ -716,11 +716,11 @@ const DashboardPage = () => {
 									}
 									className='group flex cursor-pointer items-center justify-between px-5 py-4 transition-all duration-200 hover:bg-slate-50/50 dark:hover:bg-zinc-800/15'>
 									<div className='flex items-center gap-3.5'>
-										<div className='text-violet-650 flex h-10 w-10 items-center justify-center rounded-2xl border border-violet-100 bg-violet-50/30 transition-all duration-300 group-hover:scale-105 group-hover:rotate-3 dark:border-violet-500/10 dark:bg-violet-500/10 dark:text-violet-400'>
+										<div className='text-primary-600 flex h-10 w-10 items-center justify-center rounded-2xl border border-primary-100 bg-primary-50/30 transition-all duration-300 group-hover:scale-105 group-hover:rotate-3 dark:border-primary-500/10 dark:bg-primary-400/10 dark:text-primary-400'>
 											<GitMerge size={16} />
 										</div>
 										<div>
-											<p className='text-xs font-bold text-slate-800 transition-colors group-hover:text-violet-600 dark:text-zinc-200 dark:group-hover:text-violet-400'>
+											<p className='text-xs font-bold text-slate-800 transition-colors group-hover:text-primary-600 dark:text-zinc-200 dark:group-hover:text-primary-400'>
 												{wf.title}
 											</p>
 											<p className='mt-1 flex items-center gap-1.5 text-[10px] font-semibold text-slate-400 dark:text-zinc-500'>
@@ -742,7 +742,7 @@ const DashboardPage = () => {
 											onClick={(e) => {
 												e.stopPropagation();
 											}}
-											className='flex h-7.5 w-7.5 cursor-pointer items-center justify-center rounded-xl bg-slate-100 shadow-xs transition-all hover:scale-105 hover:bg-violet-600 hover:text-white active:scale-95 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-violet-600 dark:hover:text-white'>
+											className='flex h-7.5 w-7.5 cursor-pointer items-center justify-center rounded-xl bg-slate-100 shadow-xs transition-all hover:scale-105 hover:bg-primary-500 hover:text-primary-950 active:scale-95 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-primary-500 dark:hover:text-primary-950'>
 											<Play size={10} className='fill-current' />
 										</button>
 										<button

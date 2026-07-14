@@ -115,7 +115,7 @@ const initialCollections: ICollectionItem[] = [
 
 const getOwnerBadgeClass = (owner: string) => {
 	if (owner === 'Amaan') {
-		return 'bg-purple-50 text-purple-600 dark:bg-purple-950/20 dark:text-purple-400 border border-purple-100/50 dark:border-purple-900/20';
+		return 'bg-primary-50 text-primary-600 dark:bg-primary-950/20 dark:text-primary-400 border border-primary-100/50 dark:border-primary-900/20';
 	}
 	if (owner === 'Agent Studio') {
 		return 'bg-blue-50 text-blue-600 dark:bg-blue-950/20 dark:text-blue-400 border border-blue-100/50 dark:border-blue-900/20';
@@ -258,7 +258,7 @@ const FilesListPage = () => {
 				exit={{ opacity: 0, scale: 0.96, y: 10 }}
 				whileHover={{ y: -6, scale: 1.01 }}
 				transition={{ type: 'spring', stiffness: 350, damping: 25 }}
-				className='group relative flex flex-col justify-between rounded-[24px] border border-slate-200/60 bg-white p-6 shadow-sm transition-all duration-350 hover:border-violet-500/30 hover:shadow-md dark:border-zinc-800/80 dark:bg-[#11131c] dark:hover:border-violet-500/30'>
+				className='group relative flex flex-col justify-between rounded-[24px] border border-slate-200/60 bg-white p-6 shadow-sm transition-all duration-350 hover:border-primary-500/30 hover:shadow-md dark:border-zinc-800/80 dark:bg-[#11131c] dark:hover:border-primary-500/30'>
 				<div className='flex items-start justify-between gap-4'>
 					<div
 						className='relative flex h-12 w-12 shrink-0 items-center justify-center rounded-xl text-white shadow-inner transition-transform duration-300 group-hover:scale-105'
@@ -343,7 +343,7 @@ const FilesListPage = () => {
 	return (
 		<Container className='relative overflow-x-hidden overflow-y-auto bg-[#f8f9fc] bg-[radial-gradient(#e2e8f0_1px,transparent_1px)] [background-size:20px_20px] !p-0 dark:bg-zinc-950 dark:bg-[radial-gradient(#27272a_1px,transparent_1px)]'>
 			{/* Ambient decorative blur glows */}
-			<div className='pointer-events-none absolute top-[-10%] right-[-10%] -z-10 h-[45%] w-[45%] rounded-full bg-gradient-to-tr from-violet-500/5 to-indigo-500/5 blur-[120px]' />
+			<div className='pointer-events-none absolute top-[-10%] right-[-10%] -z-10 h-[45%] w-[45%] rounded-full bg-gradient-to-tr from-primary-400/5 to-primary-400/5 blur-[120px]' />
 			<div className='pointer-events-none absolute bottom-[-10%] left-[-10%] -z-10 h-[45%] w-[45%] rounded-full bg-gradient-to-br from-emerald-500/5 to-cyan-500/5 blur-[120px]' />
 
 			<div className='mx-auto flex w-full max-w-7xl flex-col space-y-8 p-4 sm:p-6 md:p-8'>
@@ -363,7 +363,7 @@ const FilesListPage = () => {
 							<h1 className='text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white leading-none'>
 								Files
 							</h1>
-							<p className='mt-1 text-[11px] font-extrabold tracking-widest text-[#503ef5] uppercase dark:text-violet-400'>
+							<p className='mt-1 text-[11px] font-extrabold tracking-widest text-[#503ef5] uppercase dark:text-primary-400'>
 								Workspace library
 							</p>
 							<p className='mt-1 text-xs font-medium text-slate-500 dark:text-zinc-400 leading-normal'>
@@ -394,7 +394,7 @@ const FilesListPage = () => {
 					{/* Card 1: Total Files */}
 					<div className='group relative overflow-hidden rounded-[24px] border border-slate-200/60 bg-white p-6 shadow-sm transition-all duration-300 hover:border-slate-300/80 hover:shadow-md dark:border-zinc-800/80 dark:bg-[#11131c]'>
 						<div className='flex items-center gap-3'>
-							<div className='flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-purple-50 text-[#503ef5] dark:bg-purple-950/20 dark:text-purple-400'>
+							<div className='flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary-50 text-[#503ef5] dark:bg-primary-950/20 dark:text-primary-400'>
 								<Folder size={18} className='stroke-[2.2px]' />
 							</div>
 							<span className='text-[11px] font-extrabold tracking-wider text-slate-400 uppercase dark:text-zinc-400'>
@@ -416,11 +416,11 @@ const FilesListPage = () => {
 
 						{/* Stacked document illustration */}
 						<div className='pointer-events-none absolute right-6 bottom-4 hidden h-16 w-20 select-none sm:block'>
-							<div className='absolute right-2 bottom-3 h-14 w-12 translate-x-[-8px] rotate-[-10deg] skew-y-[-4deg] rounded-xl border border-indigo-500/10 bg-indigo-500/10' />
-							<div className='absolute right-0 bottom-1 flex h-14 w-12 rotate-[-2deg] flex-col rounded-xl border border-white/60 bg-gradient-to-br from-violet-500/20 to-indigo-500/20 p-2 shadow-lg shadow-indigo-500/5 backdrop-blur-[2px]'>
-								<div className='mb-1 h-1 w-full rounded-full bg-violet-400/30' />
-								<div className='mb-1 h-1 w-2/3 rounded-full bg-violet-400/30' />
-								<div className='h-1 w-1/2 rounded-full bg-violet-400/30' />
+							<div className='absolute right-2 bottom-3 h-14 w-12 translate-x-[-8px] rotate-[-10deg] skew-y-[-4deg] rounded-xl border border-primary-500/10 bg-primary-400/10' />
+							<div className='absolute right-0 bottom-1 flex h-14 w-12 rotate-[-2deg] flex-col rounded-xl border border-white/60 bg-gradient-to-br from-primary-400/20 to-primary-400/20 p-2 shadow-lg shadow-primary-500/5 backdrop-blur-[2px]'>
+								<div className='mb-1 h-1 w-full rounded-full bg-primary-400/30' />
+								<div className='mb-1 h-1 w-2/3 rounded-full bg-primary-400/30' />
+								<div className='h-1 w-1/2 rounded-full bg-primary-400/30' />
 							</div>
 						</div>
 					</div>
@@ -451,7 +451,7 @@ const FilesListPage = () => {
 						{/* Overlapping soft circles illustration */}
 						<div className='pointer-events-none absolute right-6 bottom-4 hidden h-16 w-20 select-none sm:block'>
 							<div className='absolute right-6 bottom-2 h-10 w-10 rounded-full border border-blue-500/10 bg-blue-500/5' />
-							<div className='absolute right-1 bottom-1 h-10 w-10 rounded-full border border-indigo-500/10 bg-indigo-500/10 backdrop-blur-[1px]' />
+							<div className='absolute right-1 bottom-1 h-10 w-10 rounded-full border border-primary-500/10 bg-primary-400/10 backdrop-blur-[1px]' />
 						</div>
 					</div>
 
@@ -527,7 +527,7 @@ const FilesListPage = () => {
 							onChange={(e) => {
 								setSearchQuery(e.target.value);
 							}}
-							className='dark:placeholder:text-zinc-650 block h-12 w-full rounded-2xl border border-slate-200/60 bg-white pr-14 pl-12 text-xs font-bold text-slate-900 shadow-sm transition-all duration-200 outline-none placeholder:text-slate-400 focus:border-[#503ef5]/80 focus:ring-4 focus:ring-[#503ef5]/10 dark:border-zinc-800 dark:bg-zinc-900/40 dark:text-zinc-100 dark:focus:border-violet-500 dark:focus:ring-violet-500/15'
+							className='dark:placeholder:text-zinc-650 block h-12 w-full rounded-2xl border border-slate-200/60 bg-white pr-14 pl-12 text-xs font-bold text-slate-900 shadow-sm transition-all duration-200 outline-none placeholder:text-slate-400 focus:border-[#503ef5]/80 focus:ring-4 focus:ring-[#503ef5]/10 dark:border-zinc-800 dark:bg-zinc-900/40 dark:text-zinc-100 dark:focus:border-primary-500 dark:focus:ring-primary-500/15'
 						/>
 						<div className='pointer-events-none absolute top-3.5 right-4 hidden items-center justify-center rounded-md border border-slate-200 bg-slate-50 px-1.5 py-0.5 text-[10px] font-extrabold text-slate-400 shadow-2xs sm:flex dark:border-zinc-800 dark:bg-zinc-800 dark:text-zinc-500'>
 							⌘K
@@ -734,7 +734,7 @@ const FilesListPage = () => {
 											type='text'
 											value={newFileName}
 											onChange={(e) => setNewFileName(e.target.value)}
-											className='mt-2 block h-11 w-full rounded-xl border border-slate-200 bg-slate-50 px-4 text-xs font-semibold text-slate-900 transition-all outline-none focus:border-violet-500/80 focus:bg-white focus:ring-4 focus:ring-violet-500/10 dark:border-zinc-800 dark:bg-zinc-950/40 dark:text-zinc-100 dark:focus:border-violet-500 dark:focus:ring-violet-500/15'
+											className='mt-2 block h-11 w-full rounded-xl border border-slate-200 bg-slate-50 px-4 text-xs font-semibold text-slate-900 transition-all outline-none focus:border-primary-500/80 focus:bg-white focus:ring-4 focus:ring-primary-500/10 dark:border-zinc-800 dark:bg-zinc-950/40 dark:text-zinc-100 dark:focus:border-primary-500 dark:focus:ring-primary-500/15'
 										/>
 									</div>
 
@@ -746,7 +746,7 @@ const FilesListPage = () => {
 											<select
 												value={newFileType}
 												onChange={(e) => setNewFileType(e.target.value)}
-												className='mt-2 block h-11 w-full rounded-xl border border-slate-200 bg-slate-50 px-3 text-xs font-semibold text-slate-900 transition-all outline-none focus:border-violet-500/80 focus:bg-white focus:ring-4 focus:ring-violet-500/10 dark:border-zinc-800 dark:bg-zinc-950/40 dark:text-zinc-100 dark:focus:border-violet-500 dark:focus:ring-violet-500/15'>
+												className='mt-2 block h-11 w-full rounded-xl border border-slate-200 bg-slate-50 px-3 text-xs font-semibold text-slate-900 transition-all outline-none focus:border-primary-500/80 focus:bg-white focus:ring-4 focus:ring-primary-500/10 dark:border-zinc-800 dark:bg-zinc-950/40 dark:text-zinc-100 dark:focus:border-primary-500 dark:focus:ring-primary-500/15'>
 												<option value='DOC'>Document (DOC)</option>
 												<option value='CSV'>Spreadsheet (CSV)</option>
 												<option value='JPG'>Image (JPG)</option>
@@ -761,7 +761,7 @@ const FilesListPage = () => {
 												type='text'
 												value={newFileSize}
 												onChange={(e) => setNewFileSize(e.target.value)}
-												className='mt-2 block h-11 w-full rounded-xl border border-slate-200 bg-slate-50 px-4 text-xs font-semibold text-slate-900 transition-all outline-none focus:border-violet-500/80 focus:bg-white focus:ring-4 focus:ring-violet-500/10 dark:border-zinc-800 dark:bg-zinc-950/40 dark:text-zinc-100 dark:focus:border-violet-500 dark:focus:ring-violet-500/15'
+												className='mt-2 block h-11 w-full rounded-xl border border-slate-200 bg-slate-50 px-4 text-xs font-semibold text-slate-900 transition-all outline-none focus:border-primary-500/80 focus:bg-white focus:ring-4 focus:ring-primary-500/10 dark:border-zinc-800 dark:bg-zinc-950/40 dark:text-zinc-100 dark:focus:border-primary-500 dark:focus:ring-primary-500/15'
 											/>
 										</div>
 									</div>
@@ -774,13 +774,13 @@ const FilesListPage = () => {
 											type='text'
 											value={newFileOwner}
 											onChange={(e) => setNewFileOwner(e.target.value)}
-											className='mt-2 block h-11 w-full rounded-xl border border-slate-200 bg-slate-50 px-4 text-xs font-semibold text-slate-900 transition-all outline-none focus:border-violet-500/80 focus:bg-white focus:ring-4 focus:ring-violet-500/10 dark:border-zinc-800 dark:bg-zinc-950/40 dark:text-zinc-100 dark:focus:border-violet-500 dark:focus:ring-violet-500/15'
+											className='mt-2 block h-11 w-full rounded-xl border border-slate-200 bg-slate-50 px-4 text-xs font-semibold text-slate-900 transition-all outline-none focus:border-primary-500/80 focus:bg-white focus:ring-4 focus:ring-primary-500/10 dark:border-zinc-800 dark:bg-zinc-950/40 dark:text-zinc-100 dark:focus:border-primary-500 dark:focus:ring-primary-500/15'
 										/>
 									</div>
 
 									<button
 										onClick={handleStartUpload}
-										className='mt-6 flex h-11 w-full cursor-pointer items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 text-xs font-black text-white shadow-lg shadow-violet-600/20 transition-all hover:from-violet-500 hover:to-indigo-500 hover:shadow-xl hover:shadow-violet-600/30 active:scale-95 dark:shadow-none'>
+										className='mt-6 flex h-11 w-full cursor-pointer items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-primary-400 to-primary-400 text-xs font-black text-primary-950 shadow-lg shadow-primary-600/20 transition-all hover:from-primary-400 hover:to-primary-400 hover:shadow-xl hover:shadow-primary-600/30 active:scale-95 dark:shadow-none'>
 										<Upload size={14} />
 										<span>Start Upload</span>
 									</button>
@@ -796,7 +796,7 @@ const FilesListPage = () => {
 								exit={{ opacity: 0, scale: 0.96 }}
 								className='w-full max-w-md rounded-3xl border border-slate-200/80 bg-white p-8 text-center shadow-2xl dark:border-zinc-800/80 dark:bg-[#11131c]'>
 								<div className='flex flex-col items-center justify-center'>
-									<div className='relative flex h-16 w-16 items-center justify-center rounded-2xl bg-violet-500/10 text-violet-600 dark:bg-violet-500/5 dark:text-violet-400'>
+									<div className='relative flex h-16 w-16 items-center justify-center rounded-2xl bg-primary-400/10 text-primary-600 dark:bg-primary-400/5 dark:text-primary-400'>
 										<Upload size={24} className='animate-bounce' />
 									</div>
 									<h2 className='mt-6 text-lg font-black text-slate-900 dark:text-white'>
@@ -815,7 +815,7 @@ const FilesListPage = () => {
 									</div>
 									<div className='h-2 w-full overflow-hidden rounded-full bg-slate-100 dark:bg-zinc-800'>
 										<motion.div
-											className='h-full rounded-full bg-gradient-to-r from-violet-600 to-indigo-600'
+											className='h-full rounded-full bg-gradient-to-r from-primary-400 to-primary-400'
 											style={{ width: `${uploadProgress}%` }}
 										/>
 									</div>

@@ -60,12 +60,12 @@ const NotificationRow = ({
 	return (
 		<div
 			className={`group/item relative flex gap-3 px-3 py-3 transition ${
-				unread ? 'bg-pink-500/5' : ''
+				unread ? 'bg-primary-400/5' : ''
 			} hover:bg-zinc-500/10`}>
 			<div className='flex items-start gap-2'>
 				<span className='mt-1.5 flex w-2 justify-center'>
 					<span
-						className={`size-2 rounded-full ${unread ? 'bg-pink-500' : 'invisible'}`}
+						className={`size-2 rounded-full ${unread ? 'bg-primary-400' : 'invisible'}`}
 					/>
 				</span>
 				<span className='mt-0.5 shrink-0'>
@@ -121,7 +121,7 @@ const NotificationsDropdown = () => {
 	const tabClass = (active: boolean) =>
 		`rounded-lg px-3 py-1.5 text-sm font-semibold transition ${
 			active
-				? 'bg-pink-500 text-white'
+				? 'bg-primary-400 text-primary-950'
 				: 'text-zinc-500 hover:bg-zinc-500/10 dark:text-zinc-400'
 		}`;
 
@@ -138,7 +138,7 @@ const NotificationsDropdown = () => {
 						/>
 					</Tooltip>
 					{unreadCount > 0 && (
-						<span className='pointer-events-none absolute -top-1 -right-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-pink-500 px-1 text-[10px] font-bold text-white'>
+						<span className='pointer-events-none absolute -top-1 -right-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-primary-400 px-1 text-[10px] font-bold text-primary-950'>
 							{unreadCount > 99 ? '99+' : unreadCount}
 						</span>
 					)}

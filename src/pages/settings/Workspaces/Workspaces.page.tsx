@@ -135,7 +135,7 @@ const mapApiWorkspaceToCard = (w: TWorkspace, currentUserId?: string): IWorkspac
 				{
 					name: w.owner.name,
 					initials: getInitials(w.owner.name),
-					color: 'bg-indigo-600',
+					color: 'bg-primary-400',
 				},
 			]
 		: [];
@@ -366,8 +366,8 @@ const WorkspacesPage = () => {
 
 			{/* ── Background Patterns ── */}
 			<div className='pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(#e2e8f0_1.5px,transparent_1.5px)] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] [background-size:24px_24px] opacity-70 dark:bg-[radial-gradient(#161c2c_1.5px,transparent_1.5px)] dark:opacity-85' />
-			<div className='pointer-events-none absolute top-0 right-10 -z-10 h-[500px] w-[500px] rounded-full bg-gradient-to-tr from-violet-500/8 to-blue-500/8 blur-[120px]' />
-			<div className='pointer-events-none absolute bottom-10 left-1/4 -z-10 h-[400px] w-[400px] rounded-full bg-gradient-to-br from-pink-500/4 to-cyan-500/4 blur-[100px]' />
+			<div className='pointer-events-none absolute top-0 right-10 -z-10 h-[500px] w-[500px] rounded-full bg-gradient-to-tr from-primary-400/8 to-blue-500/8 blur-[120px]' />
+			<div className='pointer-events-none absolute bottom-10 left-1/4 -z-10 h-[400px] w-[400px] rounded-full bg-gradient-to-br from-primary-400/4 to-cyan-500/4 blur-[100px]' />
 
 			{/* ── Toast Notification ── */}
 			<AnimatePresence>
@@ -377,7 +377,7 @@ const WorkspacesPage = () => {
 						animate={{ opacity: 1, y: 0, scale: 1 }}
 						exit={{ opacity: 0, y: -20, scale: 0.95 }}
 						className='fixed top-6 right-6 z-[110] flex items-center gap-3 rounded-2xl border border-slate-200/80 bg-white px-4 py-3 shadow-xl dark:border-zinc-800 dark:bg-zinc-900'>
-						<div className='flex h-6 w-6 items-center justify-center rounded-full bg-violet-100 text-violet-650 dark:bg-violet-950/50 dark:text-violet-400'>
+						<div className='flex h-6 w-6 items-center justify-center rounded-full bg-primary-100 text-primary-600 dark:bg-primary-950/50 dark:text-primary-400'>
 							<Check size={13} strokeWidth={3} />
 						</div>
 						<span className='text-xs font-bold text-slate-800 dark:text-zinc-200'>
@@ -416,7 +416,7 @@ const WorkspacesPage = () => {
 
 					{/* Profile / Account Indicator */}
 					<div className='flex cursor-pointer items-center gap-2.5 rounded-xl border border-slate-200 bg-white px-3 py-1.5 dark:border-zinc-800 dark:bg-zinc-900'>
-						<div className='flex h-7.5 w-7.5 items-center justify-center rounded-lg text-xs font-black text-white bg-gradient-to-tr from-violet-600 to-indigo-600'>
+						<div className='flex h-7.5 w-7.5 items-center justify-center rounded-lg text-xs font-black text-primary-950 bg-gradient-to-tr from-primary-400 to-primary-400'>
 							{userInitials}
 						</div>
 						<div className='hidden sm:block text-left'>
@@ -436,11 +436,11 @@ const WorkspacesPage = () => {
 				{/* Hero Section */}
 				<section className='mt-12 mb-10 flex flex-wrap items-end justify-between gap-8'>
 					<div className='text-left'>
-						<div className='mb-3 inline-flex items-center gap-2 text-xs font-black tracking-widest text-violet-600 uppercase dark:text-violet-400'>
-							<span className='inline-block h-1.5 w-1.5 rounded-full bg-violet-600 dark:bg-violet-400 ring-2 ring-violet-500/30' />
+						<div className='mb-3 inline-flex items-center gap-2 text-xs font-black tracking-widest text-primary-600 uppercase dark:text-primary-400'>
+							<span className='inline-block h-1.5 w-1.5 rounded-full bg-primary-400 dark:bg-primary-400 ring-2 ring-primary-500/30' />
 							Workspace Orchestration
 						</div>
-						<h1 className='text-3.5xl md:text-5xl font-black tracking-tight bg-gradient-to-r from-violet-600 via-indigo-600 to-blue-600 dark:from-white dark:via-indigo-300 dark:to-blue-400 bg-clip-text text-transparent leading-none'>
+						<h1 className='text-3.5xl md:text-5xl font-black tracking-tight bg-gradient-to-r from-primary-400 via-primary-400 to-blue-600 dark:from-white dark:via-primary-300 dark:to-blue-400 bg-clip-text text-transparent leading-none'>
 							Workspaces
 						</h1>
 						<p className='mt-3 max-w-xl text-xs sm:text-sm font-semibold text-slate-500 dark:text-zinc-400 leading-relaxed'>
@@ -450,7 +450,7 @@ const WorkspacesPage = () => {
 
 					<button
 						onClick={() => setIsCreateModalOpen(true)}
-						className='ws-btn-sheen flex h-11 cursor-pointer items-center gap-2 rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 px-6 text-xs font-bold text-white shadow-md shadow-violet-500/20 transition-all hover:brightness-110 active:scale-95'>
+						className='ws-btn-sheen flex h-11 cursor-pointer items-center gap-2 rounded-xl bg-gradient-to-r from-primary-400 to-primary-400 px-6 text-xs font-bold text-primary-950 shadow-md shadow-primary-500/20 transition-all hover:brightness-110 active:scale-95'>
 						<Plus size={16} strokeWidth={2.5} />
 						Create Workspace
 					</button>
@@ -472,7 +472,7 @@ const WorkspacesPage = () => {
 										transition={{ type: 'spring', stiffness: 380, damping: 30 }}
 									/>
 								)}
-								<span className={selectedCategory === tab.id ? 'text-violet-650 dark:text-violet-400' : 'text-slate-500 dark:text-zinc-400 hover:text-slate-800 dark:hover:text-zinc-200'}>
+								<span className={selectedCategory === tab.id ? 'text-primary-600 dark:text-primary-400' : 'text-slate-500 dark:text-zinc-400 hover:text-slate-800 dark:hover:text-zinc-200'}>
 									{tab.label}
 								</span>
 							</button>
@@ -481,7 +481,7 @@ const WorkspacesPage = () => {
 
 					{/* Search Box */}
 					<div className='group relative min-w-[280px] w-full md:w-80'>
-						<Search className='absolute top-3 left-4 h-4 w-4 text-slate-400 transition-colors duration-200 group-focus-within:text-violet-500' />
+						<Search className='absolute top-3 left-4 h-4 w-4 text-slate-400 transition-colors duration-200 group-focus-within:text-primary-500' />
 						<input
 							ref={searchInputRef}
 							type='text'
@@ -489,7 +489,7 @@ const WorkspacesPage = () => {
 							placeholder='Search workspaces…'
 							value={searchQuery}
 							onChange={(e) => setSearchQuery(e.target.value)}
-							className='block h-10.5 w-full rounded-xl border border-slate-200/80 bg-white/70 pr-4 pl-11 text-xs font-semibold text-slate-900 outline-none transition-all placeholder:text-slate-400 focus:border-violet-500 focus:bg-white focus:ring-4 focus:ring-violet-500/10 dark:border-zinc-800 dark:bg-zinc-900/60 dark:text-zinc-100 dark:focus:border-violet-500 dark:focus:bg-zinc-900'
+							className='block h-10.5 w-full rounded-xl border border-slate-200/80 bg-white/70 pr-4 pl-11 text-xs font-semibold text-slate-900 outline-none transition-all placeholder:text-slate-400 focus:border-primary-500 focus:bg-white focus:ring-4 focus:ring-primary-500/10 dark:border-zinc-800 dark:bg-zinc-900/60 dark:text-zinc-100 dark:focus:border-primary-500 dark:focus:bg-zinc-900'
 						/>
 						{searchQuery ? (
 							<button
@@ -546,7 +546,7 @@ const WorkspacesPage = () => {
 											</div>
 											<div className='mt-0.5 text-xs text-slate-400 dark:text-zinc-500 font-semibold'>
 												Invited by{' '}
-												<span className='font-bold text-violet-600 dark:text-violet-400'>
+												<span className='font-bold text-primary-600 dark:text-primary-400'>
 													{invite.inviter}
 												</span>{' '}
 												• {invite.membersCount} members
@@ -560,7 +560,7 @@ const WorkspacesPage = () => {
 											</button>
 											<button
 												onClick={() => handleAcceptInvite(invite)}
-												className='ws-btn-sheen flex h-8.5 cursor-pointer items-center gap-1.5 rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 px-3.5 text-xs font-bold text-white shadow-sm transition-all hover:brightness-110'>
+												className='ws-btn-sheen flex h-8.5 cursor-pointer items-center gap-1.5 rounded-xl bg-gradient-to-r from-primary-400 to-primary-400 px-3.5 text-xs font-bold text-primary-950 shadow-sm transition-all hover:brightness-110'>
 												<Check size={13} strokeWidth={3} /> Accept
 											</button>
 										</div>
@@ -582,7 +582,7 @@ const WorkspacesPage = () => {
 
 					{isLoading ? (
 						<div className='flex flex-col items-center justify-center rounded-3xl border border-slate-200/60 bg-white p-20 dark:border-zinc-800/80 dark:bg-zinc-900/20'>
-							<Spinner color='primary' className='h-8 w-8 text-violet-600 dark:text-violet-400' />
+							<Spinner color='primary' className='h-8 w-8 text-primary-600 dark:text-primary-400' />
 							<span className='mt-3 text-xs font-black text-slate-450 dark:text-zinc-500 uppercase tracking-widest'>
 								Loading workspaces...
 							</span>
@@ -595,7 +595,7 @@ const WorkspacesPage = () => {
 							</p>
 							<button
 								onClick={() => setSearchQuery('')}
-								className='mt-3 text-xs font-bold text-violet-600 dark:text-violet-400 hover:underline'>
+								className='mt-3 text-xs font-bold text-primary-600 dark:text-primary-400 hover:underline'>
 								Clear search
 							</button>
 						</div>
@@ -627,9 +627,9 @@ const WorkspacesPage = () => {
 								key='add-ws'
 								whileHover={{ y: -5 }}
 								onClick={() => setIsCreateModalOpen(true)}
-								className='group cursor-pointer rounded-3xl border-2 border-dashed border-slate-200 bg-slate-50/50 p-5 dark:border-zinc-800 dark:bg-[#10131e]/10 hover:border-violet-500/55 hover:bg-violet-500/[0.02] transition-all duration-300'>
+								className='group cursor-pointer rounded-3xl border-2 border-dashed border-slate-200 bg-slate-50/50 p-5 dark:border-zinc-800 dark:bg-[#10131e]/10 hover:border-primary-500/55 hover:bg-primary-500/[0.02] transition-all duration-300'>
 								<div className='flex min-h-[260px] flex-col items-center justify-center text-center'>
-									<div className='mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-r from-violet-600 to-indigo-600 text-white shadow-md shadow-violet-500/20 group-hover:rotate-90 transition-all duration-300'>
+									<div className='mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-r from-primary-400 to-primary-400 text-primary-950 shadow-md shadow-primary-500/20 group-hover:rotate-90 transition-all duration-300'>
 										<Plus size={20} strokeWidth={2.5} />
 									</div>
 									<b className='text-[15px] font-extrabold text-slate-800 dark:text-zinc-200'>
@@ -681,7 +681,7 @@ const WorkspacesPage = () => {
 										placeholder='e.g. Operations Department'
 										value={newWspName}
 										onChange={(e) => handleNameChange(e.target.value)}
-										className='block h-11 w-full rounded-xl border border-slate-200 bg-slate-50 px-4 text-xs font-semibold text-slate-900 outline-none focus:border-violet-500 focus:bg-white focus:ring-4 focus:ring-violet-500/10 dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-100 dark:focus:border-violet-500 dark:focus:bg-zinc-950 transition-all'
+										className='block h-11 w-full rounded-xl border border-slate-200 bg-slate-50 px-4 text-xs font-semibold text-slate-900 outline-none focus:border-primary-500 focus:bg-white focus:ring-4 focus:ring-primary-500/10 dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-100 dark:focus:border-primary-500 dark:focus:bg-zinc-950 transition-all'
 									/>
 								</div>
 
@@ -741,7 +741,7 @@ const WorkspacesPage = () => {
 															? tier.name === 'Enterprise'
 																? 'border-blue-500/50 bg-blue-500/[0.06] dark:border-blue-500/40 dark:bg-blue-950/20'
 																: tier.name === 'Pro'
-																	? 'border-violet-500/50 bg-violet-500/[0.06] dark:border-violet-500/40 dark:bg-violet-950/20'
+																	? 'border-primary-500/50 bg-primary-400/[0.06] dark:border-primary-500/40 dark:bg-primary-950/20'
 																	: 'border-slate-350 bg-slate-100 dark:border-zinc-700 dark:bg-zinc-900'
 															: 'border-slate-200 bg-slate-50 dark:border-zinc-800 dark:bg-zinc-950'
 													}`}>
@@ -770,7 +770,7 @@ const WorkspacesPage = () => {
 												title={item.label}
 												className={`h-10 w-full cursor-pointer rounded-xl border transition-transform duration-200 ${
 													newWspThemeIdx === i
-														? 'scale-105 border-transparent ring-2 ring-violet-500 ring-offset-2 dark:ring-offset-zinc-950'
+														? 'scale-105 border-transparent ring-2 ring-primary-500 ring-offset-2 dark:ring-offset-zinc-950'
 														: 'border-transparent hover:scale-105'
 												}`}
 												style={{
@@ -792,7 +792,7 @@ const WorkspacesPage = () => {
 									<button
 										type='submit'
 										disabled={createWorkspaceMutation.isPending}
-										className='ws-btn-sheen flex h-9.5 cursor-pointer items-center justify-center rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 px-5 text-xs font-bold text-white shadow-md shadow-violet-500/20 transition-all hover:brightness-110 disabled:opacity-50'>
+										className='ws-btn-sheen flex h-9.5 cursor-pointer items-center justify-center rounded-xl bg-gradient-to-r from-primary-400 to-primary-400 px-5 text-xs font-bold text-primary-950 shadow-md shadow-primary-500/20 transition-all hover:brightness-110 disabled:opacity-50'>
 										{createWorkspaceMutation.isPending ? 'Creating...' : 'Create Workspace'}
 									</button>
 								</div>
@@ -838,7 +838,7 @@ const WorkspacesPage = () => {
 										placeholder='e.g. Sales Department'
 										value={renameWspName}
 										onChange={(e) => setRenameWspName(e.target.value)}
-										className='block h-11 w-full rounded-xl border border-slate-200 bg-slate-50 px-4 text-xs font-semibold text-slate-900 outline-none focus:border-violet-500 focus:bg-white focus:ring-4 focus:ring-violet-500/10 dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-100 dark:focus:border-violet-500 dark:focus:bg-zinc-950 transition-all'
+										className='block h-11 w-full rounded-xl border border-slate-200 bg-slate-50 px-4 text-xs font-semibold text-slate-900 outline-none focus:border-primary-500 focus:bg-white focus:ring-4 focus:ring-primary-500/10 dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-100 dark:focus:border-primary-500 dark:focus:bg-zinc-950 transition-all'
 									/>
 								</div>
 
@@ -875,7 +875,7 @@ const WorkspacesPage = () => {
 									<button
 										type='submit'
 										disabled={updateWorkspaceMutation.isPending}
-										className='ws-btn-sheen flex h-9.5 cursor-pointer items-center justify-center rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 px-5 text-xs font-bold text-white shadow-md shadow-violet-500/20 transition-all hover:brightness-110 disabled:opacity-50'>
+										className='ws-btn-sheen flex h-9.5 cursor-pointer items-center justify-center rounded-xl bg-gradient-to-r from-primary-400 to-primary-400 px-5 text-xs font-bold text-primary-950 shadow-md shadow-primary-500/20 transition-all hover:brightness-110 disabled:opacity-50'>
 										{updateWorkspaceMutation.isPending ? 'Saving...' : 'Save'}
 									</button>
 								</div>
@@ -928,7 +928,7 @@ const WorkspaceCard = ({
 			transition={{ duration: 0.3, delay: index * 0.05 }}
 			whileHover={{ y: -5 }}
 			onClick={() => onSelect(wsp.id)}
-			className='group relative cursor-pointer overflow-hidden rounded-3xl border border-slate-200/60 bg-white p-5 shadow-[0_4px_25px_rgba(0,0,0,0.01)] transition-all duration-300 dark:border-zinc-800/80 dark:bg-[#10131e]/50 hover:border-violet-500/30 hover:shadow-md hover:shadow-violet-500/[0.02]'>
+			className='group relative cursor-pointer overflow-hidden rounded-3xl border border-slate-200/60 bg-white p-5 shadow-[0_4px_25px_rgba(0,0,0,0.01)] transition-all duration-300 dark:border-zinc-800/80 dark:bg-[#10131e]/50 hover:border-primary-500/30 hover:shadow-md hover:shadow-primary-500/[0.02]'>
 			{/* Hover Accent Glow */}
 			<div
 				className='pointer-events-none absolute inset-[-30%] rounded-full opacity-0 transition-opacity duration-500 group-hover:opacity-[0.05] dark:group-hover:opacity-[0.08]'
@@ -968,7 +968,7 @@ const WorkspaceCard = ({
 
 				{/* Tier tag & option kebab menu */}
 				<div className='flex items-center gap-2'>
-					<span className='rounded-full border border-violet-100 bg-violet-55 bg-violet-50 px-2.5 py-0.5 text-[9px] font-black tracking-wide text-violet-600 uppercase dark:border-violet-900/30 dark:bg-violet-950/20 dark:text-violet-400 shadow-2xs'>
+					<span className='rounded-full border border-primary-100 bg-primary-50 px-2.5 py-0.5 text-[9px] font-black tracking-wide text-primary-600 uppercase dark:border-primary-900/30 dark:bg-primary-950/20 dark:text-primary-400 shadow-2xs'>
 						{wsp.tier}
 					</span>
 
@@ -998,7 +998,7 @@ const WorkspaceCard = ({
 											onRename(wsp);
 										}}
 										className='flex w-full cursor-pointer items-center gap-2 rounded-lg px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50 dark:text-zinc-200 dark:hover:bg-zinc-800 transition-colors'>
-										<Edit2 size={12} className='text-violet-500' /> Rename
+										<Edit2 size={12} className='text-primary-500' /> Rename
 									</button>
 									{wsp.role === 'Owner' ? (
 										<button
@@ -1030,7 +1030,7 @@ const WorkspaceCard = ({
 
 			{/* Title & Info */}
 			<div className='text-left'>
-				<h3 className='mt-5 text-lg font-black tracking-tight text-slate-900 dark:text-white group-hover:text-violet-600 dark:group-hover:text-violet-400 transition-colors'>
+				<h3 className='mt-5 text-lg font-black tracking-tight text-slate-900 dark:text-white group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors'>
 					{wsp.name}
 				</h3>
 				<p className='mt-1 text-[11px] font-semibold text-slate-400 dark:text-zinc-500'>
@@ -1041,7 +1041,7 @@ const WorkspaceCard = ({
 			{/* Metrics block */}
 			<div className='my-5 grid grid-cols-2 gap-3.5 rounded-2xl border border-slate-150/60 bg-slate-50/50 p-3.5 dark:border-zinc-850 dark:bg-zinc-950/20'>
 				<div className='flex items-center gap-2.5 text-left'>
-					<div className='flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-violet-50 text-violet-600 dark:bg-violet-950/30 dark:text-violet-400 shadow-2xs'>
+					<div className='flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-primary-50 text-primary-600 dark:bg-primary-950/30 dark:text-primary-400 shadow-2xs'>
 						<Layers size={15} />
 					</div>
 					<div className='min-w-0'>
@@ -1086,13 +1086,13 @@ const WorkspaceCard = ({
 							e.stopPropagation();
 							onInvite(wsp.name);
 						}}
-						className='flex h-7.5 w-7.5 items-center justify-center rounded-full border border-dashed border-slate-300 bg-slate-50 text-slate-555 hover:scale-105 hover:bg-violet-600 hover:text-white dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-400 transition-all'>
+						className='flex h-7.5 w-7.5 items-center justify-center rounded-full border border-dashed border-slate-300 bg-slate-50 text-slate-555 hover:scale-105 hover:bg-primary-500 hover:text-primary-950 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-400 transition-all'>
 						<UserPlus size={10} />
 					</button>
 				</div>
 
 				{/* Arrow enter button */}
-				<button className='flex h-10 w-10 cursor-pointer items-center justify-center rounded-xl border border-slate-200 bg-white text-violet-600 dark:border-zinc-800 dark:bg-zinc-900 dark:text-violet-400 transition-all duration-300 group-hover:border-transparent group-hover:bg-gradient-to-r group-hover:from-violet-600 group-hover:to-indigo-600 group-hover:text-white group-hover:shadow-md group-hover:shadow-violet-600/10 active:scale-95'>
+				<button className='flex h-10 w-10 cursor-pointer items-center justify-center rounded-xl border border-slate-200 bg-white text-primary-600 dark:border-zinc-800 dark:bg-zinc-900 dark:text-primary-400 transition-all duration-300 group-hover:border-transparent group-hover:bg-gradient-to-r group-hover:from-primary-400 group-hover:to-primary-400 group-hover:text-primary-950 group-hover:shadow-md group-hover:shadow-primary-600/10 active:scale-95'>
 					<ArrowRight
 						size={16}
 						strokeWidth={2.5}

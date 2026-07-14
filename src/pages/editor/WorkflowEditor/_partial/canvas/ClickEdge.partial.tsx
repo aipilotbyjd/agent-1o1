@@ -93,7 +93,7 @@ const ClickEdge = ({
 							'h-5 w-5 rounded-full border text-[10px] leading-none shadow transition',
 							'border-zinc-300 bg-white text-zinc-700 hover:bg-zinc-100',
 							'dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-200 dark:hover:bg-zinc-700',
-							selected ? 'ring-2 ring-violet-400/50' : '',
+							selected ? 'ring-2 ring-primary-400/50' : '',
 						].join(' ')}>
 						x
 					</button>

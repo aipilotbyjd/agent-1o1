@@ -148,7 +148,7 @@ const MainAppBar = ({
 					onClick={onPrimaryAction}
 					className={
 						primaryActionColor === 'purple'
-							? 'flex h-9 items-center gap-2 rounded-lg bg-violet-600 px-4 text-xs font-semibold text-white shadow-lg shadow-violet-600/20 transition hover:bg-violet-700 active:scale-95'
+							? 'flex h-9 items-center gap-2 rounded-lg bg-primary-400 px-4 text-xs font-semibold text-primary-950 shadow-lg shadow-primary-600/20 transition hover:bg-primary-700 active:scale-95'
 							: 'flex h-9 items-center gap-2 rounded-lg border border-emerald-200 bg-emerald-50 px-4 text-xs font-semibold text-emerald-700 shadow-lg shadow-emerald-100/50 transition hover:bg-emerald-100 dark:border-emerald-300/25 dark:bg-emerald-400/15 dark:text-emerald-100 dark:shadow-emerald-950/20 dark:hover:bg-emerald-400/20'
 					}>
 					<PrimaryActionIcon size={14} fill={primaryActionColor === 'purple' ? 'none' : 'currentColor'} />

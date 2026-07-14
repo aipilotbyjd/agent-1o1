@@ -33,8 +33,8 @@ const TX_LABELS: Record<TCreditTransactionType, { label: string; color: string; 
 	},
 	ai_execution: {
 		label: 'AI Run',
-		color: 'bg-violet-50/70 text-violet-700 dark:bg-violet-950/30 dark:text-violet-300',
-		border: 'border-violet-200/50 dark:border-violet-800/40',
+		color: 'bg-primary-50/70 text-primary-700 dark:bg-primary-950/30 dark:text-primary-300',
+		border: 'border-primary-200/50 dark:border-primary-800/40',
 	},
 	code_execution: {
 		label: 'Code Run',
@@ -63,8 +63,8 @@ const TX_LABELS: Record<TCreditTransactionType, { label: string; color: string; 
 	},
 	rollover: {
 		label: 'Rollover',
-		color: 'bg-purple-50 text-purple-700 dark:bg-purple-950/30 dark:text-purple-300',
-		border: 'border-purple-200/50 dark:border-purple-800/40',
+		color: 'bg-primary-50 text-primary-700 dark:bg-primary-950/30 dark:text-primary-300',
+		border: 'border-primary-200/50 dark:border-primary-800/40',
 	},
 };
 
@@ -197,7 +197,7 @@ const UsagePage = ({ hideHeader = false }: { hideHeader?: boolean }) => {
 								Usage
 							</h1>
 							{balance?.plan?.name && (
-								<span className="rounded-full bg-indigo-50 px-2.5 py-0.5 text-xs font-bold text-indigo-600 dark:bg-indigo-950/40 dark:text-indigo-400 border border-indigo-100/50 dark:border-indigo-900/30">
+								<span className="rounded-full bg-primary-50 px-2.5 py-0.5 text-xs font-bold text-primary-600 dark:bg-primary-950/40 dark:text-primary-400 border border-primary-100/50 dark:border-primary-900/30">
 									{balance.plan.name} Plan
 								</span>
 							)}
@@ -233,7 +233,7 @@ const UsagePage = ({ hideHeader = false }: { hideHeader?: boolean }) => {
 					>
 						<Link
 							to={pages.settings.subPages.billing.subPages.credits.to}
-							className='flex h-10 items-center gap-2 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 px-5 text-sm font-bold text-white shadow-md shadow-indigo-600/15 hover:shadow-indigo-600/25 transition-all duration-200 border border-indigo-500/20'>
+							className='flex h-10 items-center gap-2 rounded-xl bg-gradient-to-r from-primary-400 to-primary-400 px-5 text-sm font-bold text-primary-950 shadow-md shadow-primary-600/15 hover:shadow-primary-600/25 transition-all duration-200 border border-primary-500/20'>
 							<CreditCard size={15} />
 							<span>Buy credits</span>
 						</Link>
@@ -247,15 +247,15 @@ const UsagePage = ({ hideHeader = false }: { hideHeader?: boolean }) => {
 			) : (
 				<div className='relative overflow-hidden rounded-2xl border border-zinc-100 bg-white p-6 shadow-xs dark:border-zinc-800 dark:bg-zinc-950/60 backdrop-blur-md'>
 					{/* Decorative blur elements */}
-					<div className="absolute -right-10 -top-10 -z-10 h-40 w-40 rounded-full bg-indigo-500/10 blur-3xl dark:bg-indigo-500/5" />
-					<div className="absolute -left-10 -bottom-10 -z-10 h-40 w-40 rounded-full bg-purple-500/10 blur-3xl dark:bg-purple-500/5" />
+					<div className="absolute -right-10 -top-10 -z-10 h-40 w-40 rounded-full bg-primary-400/10 blur-3xl dark:bg-primary-400/5" />
+					<div className="absolute -left-10 -bottom-10 -z-10 h-40 w-40 rounded-full bg-primary-400/10 blur-3xl dark:bg-primary-400/5" />
 
 					<div className='grid gap-6 md:grid-cols-[1fr_auto] md:items-center'>
 						<div>
 							<div className='flex items-center gap-4.5'>
 								{/* Wallet Icon squircle */}
-								<div className='flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-indigo-50 text-indigo-600 shadow-xs dark:bg-indigo-950/40 dark:text-indigo-400 border border-indigo-100/30 dark:border-indigo-900/30'>
-									<Wallet size={20} className='fill-indigo-600/10' />
+								<div className='flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-primary-50 text-primary-600 shadow-xs dark:bg-primary-950/40 dark:text-primary-400 border border-primary-100/30 dark:border-primary-900/30'>
+									<Wallet size={20} className='fill-primary-600/10' />
 								</div>
 
 								<div>
@@ -280,7 +280,7 @@ const UsagePage = ({ hideHeader = false }: { hideHeader?: boolean }) => {
 										initial={{ width: 0 }}
 										animate={{ width: `${100 - usedPct}%` }}
 										transition={{ duration: 1, ease: 'easeOut' }}
-										className='h-full rounded-full bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 relative'
+										className='h-full rounded-full bg-gradient-to-r from-primary-400 via-primary-400 to-primary-400 relative'
 									>
 										<div className="absolute right-0 top-0 bottom-0 w-2 bg-white/30 rounded-full animate-pulse" />
 									</motion.div>
@@ -298,7 +298,7 @@ const UsagePage = ({ hideHeader = false }: { hideHeader?: boolean }) => {
 
 							{/* Limit badges */}
 							<div className='mt-5 flex flex-wrap gap-2'>
-								<span className='rounded-full border border-indigo-100/50 bg-indigo-50/50 px-3 py-1 text-[10px] font-bold text-indigo-600 dark:border-indigo-900/30 dark:bg-indigo-950/10 dark:text-indigo-400'>
+								<span className='rounded-full border border-primary-100/50 bg-primary-50/50 px-3 py-1 text-[10px] font-bold text-primary-600 dark:border-primary-900/30 dark:bg-primary-950/10 dark:text-primary-400'>
 									Plan credits: {limit.toLocaleString()}
 								</span>
 								{fromPacks > 0 && (
@@ -307,7 +307,7 @@ const UsagePage = ({ hideHeader = false }: { hideHeader?: boolean }) => {
 									</span>
 								)}
 								{rolledOver > 0 && (
-									<span className='rounded-full border border-purple-100/40 bg-purple-50 px-3 py-1 text-[10px] font-bold text-purple-700 dark:border-purple-900/30 dark:bg-purple-950/10 dark:text-purple-400'>
+									<span className='rounded-full border border-primary-100/40 bg-primary-50 px-3 py-1 text-[10px] font-bold text-primary-700 dark:border-primary-900/30 dark:bg-primary-950/10 dark:text-primary-400'>
 										Rolled over: +{rolledOver.toLocaleString()}
 									</span>
 								)}
@@ -324,7 +324,7 @@ const UsagePage = ({ hideHeader = false }: { hideHeader?: boolean }) => {
 											? new Date(hoveredPoint.snap.date).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })
 											: `Day ${hoveredPoint.snap.date}`}
 									</div>
-									<div className="text-indigo-600 dark:text-indigo-400 mt-0.5">
+									<div className="text-primary-600 dark:text-primary-400 mt-0.5">
 										{hoveredPoint.snap.credits_used.toLocaleString()} credits used
 									</div>
 								</div>
@@ -333,7 +333,7 @@ const UsagePage = ({ hideHeader = false }: { hideHeader?: boolean }) => {
 							<div className="bg-zinc-50/50 dark:bg-zinc-900/40 rounded-xl p-3.5 border border-zinc-150/45 dark:border-zinc-800/60 relative">
 								{!hasSnapshots && (
 									<div className="absolute top-2 left-2 flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-zinc-100 dark:bg-zinc-800 border border-zinc-200/40 dark:border-zinc-700/40 text-[8px] font-bold text-zinc-400 dark:text-zinc-500 uppercase tracking-wider select-none z-10 pointer-events-none">
-										<Activity size={10} className="text-indigo-500" />
+										<Activity size={10} className="text-primary-500" />
 										<span>Simulated trend</span>
 									</div>
 								)}
@@ -373,7 +373,7 @@ const UsagePage = ({ hideHeader = false }: { hideHeader?: boolean }) => {
 											y2='110'
 											stroke='currentColor'
 											strokeWidth='1'
-											className='text-indigo-400/55 dark:text-indigo-500/30'
+											className='text-primary-400/55 dark:text-primary-500/30'
 											strokeDasharray='2 2'
 										/>
 									)}
@@ -389,14 +389,14 @@ const UsagePage = ({ hideHeader = false }: { hideHeader?: boolean }) => {
 														cy={pt.y}
 														r='7'
 														fill='currentColor'
-														className='text-indigo-500/20 dark:text-indigo-400/20 animate-ping'
+														className='text-primary-500/20 dark:text-primary-400/20 animate-ping'
 													/>
 													<circle
 														cx={pt.x}
 														cy={pt.y}
 														r='3.5'
 														fill='currentColor'
-														className='text-indigo-600 dark:text-indigo-400 stroke-white dark:stroke-zinc-950 stroke-2 shadow-xs'
+														className='text-primary-600 dark:text-primary-400 stroke-white dark:stroke-zinc-950 stroke-2 shadow-xs'
 													/>
 												</>
 											)}
@@ -443,10 +443,10 @@ const UsagePage = ({ hideHeader = false }: { hideHeader?: boolean }) => {
 							type: 'execution' as const,
 							credits: workflowCredits,
 							icon: GitBranch,
-							iconBg: 'bg-purple-50 text-purple-600 dark:bg-purple-950/40 dark:text-purple-400',
-							color: 'border-purple-300 dark:border-purple-700 shadow-purple-500/5 dark:shadow-purple-500/10',
-							glow: 'ring-2 ring-purple-500/15',
-							hoverBg: 'hover:bg-purple-50/5 dark:hover:bg-purple-950/5',
+							iconBg: 'bg-primary-50 text-primary-600 dark:bg-primary-950/40 dark:text-primary-400',
+							color: 'border-primary-300 dark:border-primary-700 shadow-primary-500/5 dark:shadow-primary-500/10',
+							glow: 'ring-2 ring-primary-500/15',
+							hoverBg: 'hover:bg-primary-50/5 dark:hover:bg-primary-950/5',
 							iconVariants: {
 								hovered: { y: [0, -3, 2, 0], rotate: [0, 5, -5, 0], transition: { duration: 0.5 } }
 							}
@@ -495,12 +495,12 @@ const UsagePage = ({ hideHeader = false }: { hideHeader?: boolean }) => {
 									'relative rounded-2xl border bg-white p-5 text-left shadow-xs transition-all duration-350 cursor-pointer dark:bg-zinc-950 overflow-hidden flex flex-col justify-between h-32',
 									item.hoverBg,
 									isSelected
-										? `${item.color} ${item.glow} border-indigo-500/80 dark:border-indigo-400/80 shadow-md`
+										? `${item.color} ${item.glow} border-primary-500/80 dark:border-primary-400/80 shadow-md`
 										: 'border-zinc-100 dark:border-zinc-800 hover:border-zinc-350/80 dark:hover:border-zinc-700/80 hover:shadow-sm',
 								].join(' ')}>
 								{/* Card Selection background highlight */}
 								{isSelected && (
-									<div className="absolute inset-0 bg-gradient-to-tr from-indigo-55/5 to-purple-55/5 -z-10 dark:from-indigo-950/5 dark:to-purple-950/5" />
+									<div className="absolute inset-0 bg-gradient-to-tr from-primary-400/5 to-primary-400/5 -z-10 dark:from-primary-950/5 dark:to-primary-950/5" />
 								)}
 
 								<div className='flex items-start justify-between w-full'>
@@ -537,7 +537,7 @@ const UsagePage = ({ hideHeader = false }: { hideHeader?: boolean }) => {
 											transition={{ duration: 0.8, ease: 'easeOut' }}
 											className={`h-full rounded-full ${
 												item.type === 'execution'
-													? 'bg-purple-500'
+													? 'bg-primary-400'
 													: item.type === 'ai_execution'
 														? 'bg-emerald-500'
 														: 'bg-blue-500'
@@ -546,7 +546,7 @@ const UsagePage = ({ hideHeader = false }: { hideHeader?: boolean }) => {
 									</div>
 									<div className="flex justify-between items-center mt-1 text-[9px] font-bold text-zinc-400 dark:text-zinc-500">
 										<span>credits used</span>
-										{isSelected && <span className="text-indigo-600 dark:text-indigo-400 animate-pulse">Filter active</span>}
+										{isSelected && <span className="text-primary-600 dark:text-primary-400 animate-pulse">Filter active</span>}
 									</div>
 								</div>
 							</motion.button>
@@ -581,7 +581,7 @@ const UsagePage = ({ hideHeader = false }: { hideHeader?: boolean }) => {
 						</div>
 						<Link
 							to={pages.settings.subPages.billing.subPages.history.to}
-							className='flex items-center gap-1 text-xs font-bold text-indigo-600 dark:text-indigo-400 hover:text-indigo-750 transition px-2.5 py-1.5 rounded-xl hover:bg-indigo-50/50 dark:hover:bg-indigo-950/15'>
+							className='flex items-center gap-1 text-xs font-bold text-primary-600 dark:text-primary-400 hover:text-primary-700 transition px-2.5 py-1.5 rounded-xl hover:bg-primary-50/50 dark:hover:bg-primary-950/15'>
 							<span>View all</span>
 							<ArrowRight size={12} />
 						</Link>
@@ -602,8 +602,8 @@ const UsagePage = ({ hideHeader = false }: { hideHeader?: boolean }) => {
 						initial={{ opacity: 0, scale: 0.98 }}
 						animate={{ opacity: 1, scale: 1 }}
 						className='rounded-2xl border border-dashed border-zinc-200 bg-zinc-50/20 px-6 py-12 text-center dark:border-zinc-800 dark:bg-zinc-950/10 backdrop-blur-xs'>
-						<div className='mx-auto mb-3.5 flex h-12 w-12 items-center justify-center rounded-2xl bg-indigo-50 text-indigo-600 dark:bg-indigo-950/40 dark:text-indigo-400 shadow-xs border border-indigo-100/30'>
-							<FileText size={20} className='fill-indigo-600/10' />
+						<div className='mx-auto mb-3.5 flex h-12 w-12 items-center justify-center rounded-2xl bg-primary-50 text-primary-600 dark:bg-primary-950/40 dark:text-primary-400 shadow-xs border border-primary-100/30'>
+							<FileText size={20} className='fill-primary-600/10' />
 						</div>
 						<p className='text-xs font-black text-zinc-900 dark:text-zinc-100'>No activity yet for this period.</p>
 						<p className='text-[10px] font-bold text-zinc-400 dark:text-zinc-500 mt-1 max-w-[240px] mx-auto leading-relaxed'>

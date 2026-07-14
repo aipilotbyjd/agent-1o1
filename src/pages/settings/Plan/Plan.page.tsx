@@ -197,7 +197,7 @@ const PlanPage = () => {
 			title: 'Active Workflows',
 			value: fmt(limits?.active_workflows),
 			icon: GitBranch,
-			iconBg: 'bg-purple-50/70 text-purple-600 dark:bg-purple-950/30 dark:text-purple-400',
+			iconBg: 'bg-primary-50/70 text-primary-600 dark:bg-primary-950/30 dark:text-primary-400',
 			link: pages.app.subPages.workflows.to,
 			linkLabel: 'View workflows',
 		},
@@ -221,13 +221,13 @@ const PlanPage = () => {
 			title: 'Max Execution Time',
 			value: fmt(limits?.max_execution_time_seconds, 'sec'),
 			icon: Timer,
-			iconBg: 'bg-pink-50/70 text-pink-600 dark:bg-pink-950/30 dark:text-pink-400',
+			iconBg: 'bg-primary-50/70 text-primary-600 dark:bg-primary-950/30 dark:text-primary-400',
 		},
 		{
 			title: 'Log Retention',
 			value: fmt(limits?.execution_log_retention_days, 'days'),
 			icon: Database,
-			iconBg: 'bg-violet-50/70 text-violet-600 dark:bg-violet-950/30 dark:text-violet-400',
+			iconBg: 'bg-primary-50/70 text-primary-600 dark:bg-primary-950/30 dark:text-primary-400',
 		},
 	];
 
@@ -321,7 +321,7 @@ const PlanPage = () => {
 				<div>
 					<div className="flex items-center gap-2.5">
 						<h1 className='text-3xl font-black tracking-tight text-zinc-950 dark:text-zinc-50'>Plan</h1>
-						<span className="rounded-full bg-indigo-50 px-2.5 py-0.5 text-xs font-bold text-indigo-600 dark:bg-indigo-950/40 dark:text-indigo-400 border border-indigo-100/50 dark:border-indigo-900/30">
+						<span className="rounded-full bg-primary-50 px-2.5 py-0.5 text-xs font-bold text-primary-600 dark:bg-primary-950/40 dark:text-primary-400 border border-primary-100/50 dark:border-primary-900/30">
 							Settings
 						</span>
 					</div>
@@ -349,7 +349,7 @@ const PlanPage = () => {
 							>
 								<Link
 									to={pages.settings.subPages.plan.subPages.upgrade.to}
-									className='flex h-10 items-center gap-2 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 px-5 text-sm font-bold text-white shadow-md shadow-indigo-600/15 hover:shadow-indigo-600/25 transition-all duration-200 border border-indigo-500/20'
+									className='flex h-10 items-center gap-2 rounded-xl bg-gradient-to-r from-primary-400 to-primary-400 px-5 text-sm font-bold text-primary-950 shadow-md shadow-primary-600/15 hover:shadow-primary-600/25 transition-all duration-200 border border-primary-500/20'
 								>
 									<Zap size={14} className="fill-white/10" />
 									Upgrade plan
@@ -388,7 +388,7 @@ const PlanPage = () => {
 								whileTap={{ scale: 0.98 }}
 								type='button'
 								onClick={() => setActiveTab('billing')}
-								className='flex h-10 items-center gap-2 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 px-5 text-sm font-bold text-white shadow-md shadow-indigo-600/15 hover:shadow-indigo-600/25 transition-all duration-200 border border-indigo-500/20'
+								className='flex h-10 items-center gap-2 rounded-xl bg-gradient-to-r from-primary-400 to-primary-400 px-5 text-sm font-bold text-primary-950 shadow-md shadow-primary-600/15 hover:shadow-primary-600/25 transition-all duration-200 border border-primary-500/20'
 							>
 								<CreditCard size={14} />
 								<span>Buy credits</span>
@@ -472,13 +472,13 @@ const PlanPage = () => {
 							className='relative overflow-hidden rounded-2xl border border-zinc-100 bg-white p-6 shadow-xs dark:border-zinc-800 dark:bg-zinc-950/60 backdrop-blur-md'
 						>
 							{/* Decorative glows */}
-							<div className="absolute -right-10 -top-10 -z-10 h-36 w-36 rounded-full bg-indigo-500/10 blur-3xl dark:bg-indigo-500/5" />
-							<div className="absolute -left-10 -bottom-10 -z-10 h-36 w-36 rounded-full bg-purple-500/10 blur-3xl dark:bg-purple-500/5" />
+							<div className="absolute -right-10 -top-10 -z-10 h-36 w-36 rounded-full bg-primary-400/10 blur-3xl dark:bg-primary-400/5" />
+							<div className="absolute -left-10 -bottom-10 -z-10 h-36 w-36 rounded-full bg-primary-400/10 blur-3xl dark:bg-primary-400/5" />
 
 							<div className='flex flex-wrap items-start justify-between gap-4'>
 								<div className="flex items-start gap-4">
-									<div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-50 to-purple-50 text-indigo-600 shadow-xs dark:from-indigo-950/30 dark:to-purple-950/30 dark:text-indigo-400 border border-indigo-100/30 dark:border-indigo-900/30">
-										<Crown size={26} className="text-indigo-600 dark:text-indigo-400 fill-indigo-600/5" />
+									<div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-primary-50 to-primary-50 text-primary-600 shadow-xs dark:from-primary-950/30 dark:to-primary-950/30 dark:text-primary-400 border border-primary-100/30 dark:border-primary-900/30">
+										<Crown size={26} className="text-primary-600 dark:text-primary-400 fill-primary-600/5" />
 									</div>
 									<div>
 										<p className='text-[10px] font-black tracking-wider text-zinc-400 uppercase dark:text-zinc-500'>
@@ -594,7 +594,7 @@ const PlanPage = () => {
 														initial={{ width: 0 }}
 														animate={{ width: `${creditsUsedPct}%` }}
 														transition={{ duration: 0.8, ease: 'easeOut' }}
-														className={`h-full rounded-full ${creditsUsedPct >= 80 ? 'bg-rose-500' : 'bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500'}`}
+														className={`h-full rounded-full ${creditsUsedPct >= 80 ? 'bg-rose-500' : 'bg-gradient-to-r from-primary-400 via-primary-400 to-primary-400'}`}
 													/>
 												</div>
 												<p className='mt-1.5 text-[10px] font-bold text-zinc-400 dark:text-zinc-500'>
@@ -608,7 +608,7 @@ const PlanPage = () => {
 										<div className="mt-4 pt-3 border-t border-zinc-50 dark:border-zinc-800/50">
 											<Link
 												to={card.link}
-												className='inline-flex items-center gap-1 text-xs font-bold text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 transition-colors'
+												className='inline-flex items-center gap-1 text-xs font-bold text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 transition-colors'
 											>
 												<span>{card.linkLabel}</span>
 												<ArrowRight size={11} className="transition-transform group-hover:translate-x-0.5" />
@@ -674,7 +674,7 @@ const PlanPage = () => {
 							<h3 className='text-xs font-black tracking-wider text-zinc-400 dark:text-zinc-500 uppercase'>Other Plans</h3>
 							<Link
 								to={pages.settings.subPages.plan.subPages.upgrade.to}
-								className='flex items-center gap-1 text-xs font-bold text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 transition-colors'
+								className='flex items-center gap-1 text-xs font-bold text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 transition-colors'
 							>
 								<span>See full comparison</span>
 								<ArrowRight size={12} />
@@ -718,12 +718,12 @@ const ComparePlanCards = ({ currentSlug }: { currentSlug?: string }) => (
 					transition={{ duration: 0.2 }}
 					className={`flex min-w-[200px] flex-1 flex-col justify-between rounded-2xl border p-5 shadow-xs transition-all relative ${
 						isCurrent
-							? 'border-indigo-600 bg-zinc-950 text-white dark:border-indigo-400 dark:bg-zinc-900 ring-2 ring-indigo-500/25'
+							? 'border-primary-600 bg-zinc-950 text-white dark:border-primary-400 dark:bg-zinc-900 ring-2 ring-primary-500/25'
 							: 'border-zinc-100 bg-white dark:border-zinc-800 dark:bg-zinc-950/40 hover:border-zinc-300 dark:hover:border-zinc-700'
 					}`}
 				>
 					{isCurrent && (
-						<div className="absolute -top-2.5 left-1/2 -translate-x-1/2 rounded-full bg-gradient-to-r from-indigo-500 to-purple-500 px-3 py-0.5 text-[9px] font-black text-white shadow-md shadow-indigo-500/15 uppercase tracking-wider border border-indigo-400/20">
+						<div className="absolute -top-2.5 left-1/2 -translate-x-1/2 rounded-full bg-gradient-to-r from-primary-400 to-primary-400 px-3 py-0.5 text-[9px] font-black text-primary-950 shadow-md shadow-primary-500/15 uppercase tracking-wider border border-primary-400/20">
 							Active
 						</div>
 					)}
@@ -734,7 +734,7 @@ const ComparePlanCards = ({ currentSlug }: { currentSlug?: string }) => (
 								{p.name}
 							</span>
 							{isCurrent && (
-								<Crown size={12} className="text-indigo-400 dark:text-indigo-600" />
+								<Crown size={12} className="text-primary-400 dark:text-primary-600" />
 							)}
 						</div>
 
@@ -780,7 +780,7 @@ const ComparePlanCards = ({ currentSlug }: { currentSlug?: string }) => (
 							</a>
 						)}
 						{isCurrent && (
-							<div className="flex items-center justify-center py-2 text-xs font-bold text-indigo-400 dark:text-indigo-600 w-full">
+							<div className="flex items-center justify-center py-2 text-xs font-bold text-primary-400 dark:text-primary-600 w-full">
 								Current Plan
 							</div>
 						)}

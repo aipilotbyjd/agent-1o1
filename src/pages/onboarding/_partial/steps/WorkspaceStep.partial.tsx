@@ -66,7 +66,7 @@ const WorkspaceStep = ({
 								placeholder='Acme Automation'
 								value={workspaceName}
 								onChange={(e) => handleWorkspaceNameChange(e.target.value)}
-								className='h-11 w-full rounded-xl border border-slate-200/90 bg-white/50 pr-4 pl-10 text-sm font-semibold transition-all outline-none focus:border-violet-500 focus:ring-2 focus:ring-violet-500/20 dark:border-zinc-800/80 dark:bg-zinc-950/40'
+								className='h-11 w-full rounded-xl border border-slate-200/90 bg-white/50 pr-4 pl-10 text-sm font-semibold transition-all outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 dark:border-zinc-800/80 dark:bg-zinc-950/40'
 							/>
 						</div>
 					</div>
@@ -77,7 +77,7 @@ const WorkspaceStep = ({
 							className='block text-xs font-bold text-slate-600 dark:text-zinc-400'>
 							Workspace URL
 						</label>
-						<div className='flex h-11 items-center overflow-hidden rounded-xl border border-slate-200/90 bg-white/50 transition-all focus-within:border-violet-500 focus-within:ring-2 focus-within:ring-violet-500/20 dark:border-zinc-800/80 dark:bg-zinc-950/40'>
+						<div className='flex h-11 items-center overflow-hidden rounded-xl border border-slate-200/90 bg-white/50 transition-all focus-within:border-primary-500 focus-within:ring-2 focus-within:ring-primary-500/20 dark:border-zinc-800/80 dark:bg-zinc-950/40'>
 							<span className='flex h-full items-center border-r border-slate-200 bg-slate-50/80 px-3 text-[11px] font-black text-slate-400 dark:border-zinc-800 dark:bg-zinc-900/60 dark:text-zinc-500'>
 								agent1o1.app/
 							</span>

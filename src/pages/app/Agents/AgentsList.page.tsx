@@ -78,7 +78,7 @@ const getModelColor = (model: string) => {
 
 const getAgentHeaderIcon = (id: string) => {
 	if (id === 'agent-2') {
-		return { IconComponent: Cpu, bgClass: 'bg-violet-600 shadow-violet-600/20' };
+		return { IconComponent: Cpu, bgClass: 'bg-primary-400 shadow-primary-600/20' };
 	}
 	if (id === 'agent-3') {
 		return { IconComponent: Briefcase, bgClass: 'bg-amber-600 shadow-amber-600/20' };
@@ -142,7 +142,7 @@ const AgentsListPage = () => {
 	return (
 		<Container className='relative overflow-x-hidden overflow-y-auto bg-[#f8f9fc] !p-0 dark:bg-zinc-950'>
 			{/* Ambient decorative blur glows */}
-			<div className='pointer-events-none absolute top-[-10%] right-[-10%] -z-10 h-[45%] w-[45%] rounded-full bg-gradient-to-tr from-violet-500/5 to-indigo-500/5 blur-[120px]' />
+			<div className='pointer-events-none absolute top-[-10%] right-[-10%] -z-10 h-[45%] w-[45%] rounded-full bg-gradient-to-tr from-primary-400/5 to-primary-400/5 blur-[120px]' />
 			<div className='pointer-events-none absolute bottom-[-10%] left-[-10%] -z-10 h-[45%] w-[45%] rounded-full bg-gradient-to-br from-emerald-500/5 to-cyan-500/5 blur-[120px]' />
 
 			<div className='mx-auto flex w-full max-w-7xl flex-col space-y-8 p-4 sm:p-6 md:p-8'>
@@ -152,7 +152,7 @@ const AgentsListPage = () => {
 						<h1 className='bg-gradient-to-r from-slate-950 via-slate-800 to-slate-950 bg-clip-text text-3xl font-black tracking-tight text-transparent dark:from-white dark:via-zinc-200 dark:to-white'>
 							Agents
 						</h1>
-						<p className='mt-1 text-xs font-black tracking-widest text-violet-600 uppercase dark:text-violet-400'>
+						<p className='mt-1 text-xs font-black tracking-widest text-primary-600 uppercase dark:text-primary-400'>
 							AI ASSISTANT ORCHESTRATION
 						</p>
 						<p className='mt-0.5 text-xs font-semibold text-slate-500 dark:text-zinc-400'>
@@ -164,19 +164,19 @@ const AgentsListPage = () => {
 					<div className='flex items-center gap-5 rounded-3xl border border-slate-200/60 bg-white/60 p-3 pr-6 shadow-sm backdrop-blur-md dark:border-zinc-800/60 dark:bg-zinc-900/60'>
 						<div className='relative flex h-14 w-20 items-center justify-center overflow-hidden'>
 							{/* Concentric dashed orbits */}
-							<div className='absolute h-18 w-18 animate-[spin_40s_linear_infinite] rounded-full border border-dashed border-violet-300/40 dark:border-violet-500/20' />
+							<div className='absolute h-18 w-18 animate-[spin_40s_linear_infinite] rounded-full border border-dashed border-primary-300/40 dark:border-primary-500/20' />
 							<div className='absolute h-12 w-12 animate-[spin_20s_linear_infinite_reverse] rounded-full border border-dashed border-blue-300/40 dark:border-blue-500/20' />
 
 							{/* Floating robot head inside gradient bubble */}
-							<div className='relative flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-violet-500 shadow-md shadow-violet-500/20'>
-								<div className='absolute -inset-0.5 rounded-full bg-gradient-to-br from-blue-400 to-violet-400 opacity-50 blur-xs' />
+							<div className='relative flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-primary-400 shadow-md shadow-primary-500/20'>
+								<div className='absolute -inset-0.5 rounded-full bg-gradient-to-br from-blue-400 to-primary-400 opacity-50 blur-xs' />
 								<Bot className='relative h-5 w-5 text-white' />
 							</div>
 						</div>
 
 						<button
 							onClick={() => navigate(pages.agent.subPages.addAgent.to)}
-							className='flex h-11 cursor-pointer items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 px-5 text-xs font-black text-white shadow-lg shadow-violet-600/20 transition-all hover:from-violet-500 hover:to-indigo-500 hover:shadow-xl hover:shadow-violet-600/30 active:scale-95 dark:shadow-none'>
+							className='flex h-11 cursor-pointer items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-primary-400 to-primary-400 px-5 text-xs font-black text-primary-950 shadow-lg shadow-primary-600/20 transition-all hover:from-primary-400 hover:to-primary-400 hover:shadow-xl hover:shadow-primary-600/30 active:scale-95 dark:shadow-none'>
 							<Sparkles size={14} className='animate-pulse' />
 							<span>Build Agent</span>
 						</button>
@@ -255,7 +255,7 @@ const AgentsListPage = () => {
 					{/* Card 2: Total Chats */}
 					<div className='group relative overflow-hidden rounded-2xl border border-slate-200/80 bg-white/60 p-5 shadow-xs backdrop-blur-md dark:border-zinc-800/60 dark:bg-zinc-900/60'>
 						<div className='flex items-center gap-3'>
-							<div className='flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-violet-500/20 bg-violet-500/10 text-violet-600 dark:bg-violet-500/5 dark:text-violet-400'>
+							<div className='flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-primary-500/20 bg-primary-400/10 text-primary-600 dark:bg-primary-400/5 dark:text-primary-400'>
 								<MessageSquare size={16} />
 							</div>
 							<span className='text-[10px] font-black tracking-wider text-slate-400 uppercase dark:text-zinc-500'>
@@ -274,12 +274,12 @@ const AgentsListPage = () => {
 
 							{/* Custom purple SVG bar chart */}
 							<div className='flex h-8 items-end justify-end gap-1'>
-								<div className='h-[35%] w-1.5 rounded-t-sm bg-violet-300 dark:bg-violet-800/60' />
-								<div className='h-[55%] w-1.5 rounded-t-sm bg-violet-400 dark:bg-violet-700/80' />
-								<div className='h-[40%] w-1.5 rounded-t-sm bg-violet-300 dark:bg-violet-600/70' />
-								<div className='h-[80%] w-1.5 rounded-t-sm bg-violet-500' />
-								<div className='h-[65%] w-1.5 rounded-t-sm bg-violet-600' />
-								<div className='h-[100%] w-1.5 rounded-t-sm bg-violet-700' />
+								<div className='h-[35%] w-1.5 rounded-t-sm bg-primary-300 dark:bg-primary-800/60' />
+								<div className='h-[55%] w-1.5 rounded-t-sm bg-primary-400 dark:bg-primary-700/80' />
+								<div className='h-[40%] w-1.5 rounded-t-sm bg-primary-300 dark:bg-primary-400/70' />
+								<div className='h-[80%] w-1.5 rounded-t-sm bg-primary-400' />
+								<div className='h-[65%] w-1.5 rounded-t-sm bg-primary-400' />
+								<div className='h-[100%] w-1.5 rounded-t-sm bg-primary-700' />
 							</div>
 						</div>
 						<div className='text-slate-450 mt-3.5 text-[10px] font-bold dark:text-zinc-500'>
@@ -365,14 +365,14 @@ const AgentsListPage = () => {
 				{/* Search & Categories Bar */}
 				<div className='flex flex-col gap-5 xl:flex-row xl:items-center'>
 					<div className='group relative flex-1'>
-						<Search className='absolute top-3.5 left-4 h-4.5 w-4.5 text-slate-400 transition-colors duration-200 group-focus-within:text-violet-500 dark:text-zinc-500' />
+						<Search className='absolute top-3.5 left-4 h-4.5 w-4.5 text-slate-400 transition-colors duration-200 group-focus-within:text-primary-500 dark:text-zinc-500' />
 						<input
 							type='search'
 							aria-label='Search agents'
 							placeholder='Search agents by name, description, or model...'
 							value={searchQuery}
 							onChange={(e) => setSearchQuery(e.target.value)}
-							className='dark:placeholder:text-zinc-650 block h-12 w-full rounded-2xl border border-slate-200 bg-white/55 pr-12 pl-12 text-xs font-semibold text-slate-900 shadow-xs transition-all duration-200 outline-none placeholder:text-slate-400 focus:border-violet-500/80 focus:bg-white focus:ring-4 focus:ring-violet-500/10 dark:border-zinc-800 dark:bg-zinc-900/40 dark:text-zinc-100 dark:focus:border-violet-500 dark:focus:bg-zinc-900/60 dark:focus:ring-violet-500/15'
+							className='dark:placeholder:text-zinc-650 block h-12 w-full rounded-2xl border border-slate-200 bg-white/55 pr-12 pl-12 text-xs font-semibold text-slate-900 shadow-xs transition-all duration-200 outline-none placeholder:text-slate-400 focus:border-primary-500/80 focus:bg-white focus:ring-4 focus:ring-primary-500/10 dark:border-zinc-800 dark:bg-zinc-900/40 dark:text-zinc-100 dark:focus:border-primary-500 dark:focus:bg-zinc-900/60 dark:focus:ring-primary-500/15'
 						/>
 						<span className='absolute top-3.5 right-4 rounded-md border border-slate-200 bg-white px-1.5 py-0.5 font-sans text-[10px] font-bold text-slate-400 shadow-2xs dark:border-zinc-800 dark:bg-zinc-800 dark:text-zinc-500'>
 							⌘K
@@ -401,7 +401,7 @@ const AgentsListPage = () => {
 									}}
 									className={`flex h-11 shrink-0 cursor-pointer items-center gap-2 rounded-2xl px-5 text-xs font-bold transition-all duration-200 ${
 										isActive
-											? 'bg-gradient-to-r from-violet-600 to-indigo-600 text-white shadow-md shadow-violet-500/20 dark:from-violet-500 dark:to-indigo-500 dark:shadow-none'
+											? 'bg-gradient-to-r from-primary-400 to-primary-400 text-primary-950 shadow-md shadow-primary-500/20 dark:from-primary-400 dark:to-primary-400 dark:shadow-none'
 											: 'text-slate-650 border border-slate-200/80 bg-white/85 hover:bg-slate-50 hover:text-slate-800 dark:border-zinc-800/60 dark:bg-zinc-900/40 dark:text-zinc-400 dark:hover:bg-zinc-900/80'
 									}`}>
 									<TabIcon
@@ -435,7 +435,7 @@ const AgentsListPage = () => {
 									exit={{ opacity: 0, scale: 0.96, y: 10 }}
 									whileHover={{ y: -6, scale: 1.01 }}
 									transition={{ type: 'spring', stiffness: 350, damping: 25 }}
-									className='group relative flex flex-col justify-between rounded-3xl border border-slate-200/80 bg-white/60 p-6 shadow-xs backdrop-blur-md transition-all duration-300 hover:border-violet-500/35 hover:bg-white/80 hover:shadow-xl hover:shadow-slate-200/50 dark:border-zinc-800/60 dark:bg-zinc-900/40 dark:hover:border-violet-500/35 dark:hover:bg-zinc-900/60 dark:hover:shadow-none'>
+									className='group relative flex flex-col justify-between rounded-3xl border border-slate-200/80 bg-white/60 p-6 shadow-xs backdrop-blur-md transition-all duration-300 hover:border-primary-500/35 hover:bg-white/80 hover:shadow-xl hover:shadow-slate-200/50 dark:border-zinc-800/60 dark:bg-zinc-900/40 dark:hover:border-primary-500/35 dark:hover:bg-zinc-900/60 dark:hover:shadow-none'>
 									{/* Brand background glow behind card */}
 									<div
 										className='pointer-events-none absolute -inset-px -z-10 rounded-3xl opacity-0 blur-md transition-all duration-500 group-hover:opacity-15'
@@ -496,7 +496,7 @@ const AgentsListPage = () => {
 									{/* Brand Info Tags */}
 									<div className='mt-4 flex flex-wrap gap-2'>
 										<span className='inline-flex items-center gap-1 rounded-lg border border-slate-200/50 bg-slate-50/50 px-2 py-1 text-[10px] font-semibold text-slate-600 dark:border-zinc-800 dark:bg-zinc-950/50 dark:text-zinc-400'>
-											<Cpu size={11} className='text-violet-500' />
+											<Cpu size={11} className='text-primary-500' />
 											{agent.model}
 										</span>
 										<span className='inline-flex items-center gap-1 rounded-lg border border-slate-200/50 bg-slate-50/50 px-2 py-1 text-[10px] font-semibold text-slate-600 dark:border-zinc-800 dark:bg-zinc-950/50 dark:text-zinc-400'>
@@ -535,7 +535,7 @@ const AgentsListPage = () => {
 														`Starting interactive run with Agent: ${agent.name}`,
 													)
 												}
-												className='flex h-9 w-9 cursor-pointer items-center justify-center rounded-xl bg-indigo-600 text-white shadow-md shadow-indigo-600/10 transition-transform hover:scale-105 hover:bg-indigo-500 active:scale-95'
+												className='flex h-9 w-9 cursor-pointer items-center justify-center rounded-xl bg-primary-400 text-primary-950 shadow-md shadow-primary-600/10 transition-transform hover:scale-105 hover:bg-primary-500 active:scale-95'
 												title='Run agent'>
 												<Play size={12} className='fill-current' />
 											</button>
@@ -556,7 +556,7 @@ const AgentsListPage = () => {
 				{/* Bottom Banner Section */}
 				<div className='flex flex-col justify-between gap-4 rounded-3xl border border-slate-200/60 bg-white/60 p-6 shadow-sm backdrop-blur-md sm:flex-row sm:items-center dark:border-zinc-800/60 dark:bg-zinc-900/60'>
 					<div className='flex items-center gap-4'>
-						<div className='flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-violet-100 text-violet-600 dark:bg-violet-950/50 dark:text-violet-400'>
+						<div className='flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-primary-100 text-primary-600 dark:bg-primary-950/50 dark:text-primary-400'>
 							<Sparkles size={20} />
 						</div>
 						<div>
@@ -570,7 +570,7 @@ const AgentsListPage = () => {
 					</div>
 					<button
 						onClick={() => navigate(pages.agent.subPages.addAgent.to)}
-						className='hover:text-violet-750 flex h-10 cursor-pointer items-center justify-center gap-2 rounded-xl border border-violet-200 bg-white px-5 text-xs font-bold text-violet-600 shadow-2xs transition-all hover:border-violet-300 hover:bg-violet-50 dark:border-violet-900/50 dark:bg-zinc-900 dark:text-violet-400 dark:hover:bg-zinc-800'>
+						className='hover:text-primary-700 flex h-10 cursor-pointer items-center justify-center gap-2 rounded-xl border border-primary-200 bg-white px-5 text-xs font-bold text-primary-600 shadow-2xs transition-all hover:border-primary-300 hover:bg-primary-50 dark:border-primary-900/50 dark:bg-zinc-900 dark:text-primary-400 dark:hover:bg-zinc-800'>
 						<span>Build Custom Agent</span>
 						<span className='text-sm font-semibold'>→</span>
 					</button>

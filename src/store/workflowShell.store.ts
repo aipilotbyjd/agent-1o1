@@ -68,7 +68,7 @@ export const useWorkflowShellStore = create<TWorkflowShellState>((set) => ({
 			name: 'Amaan Studio',
 			description: 'Production workspace',
 			initials: 'AS',
-			color: 'bg-indigo-600',
+			color: 'bg-primary-400',
 		},
 		{
 			id: 'personal',

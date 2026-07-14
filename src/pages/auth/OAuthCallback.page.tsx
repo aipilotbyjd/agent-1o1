@@ -64,7 +64,7 @@ const OAuthCallbackPage = () => {
 				{[0, 1, 2].map((i) => (
 					<motion.div
 						key={i}
-						className='bg-primary-500 h-2 w-2 rounded-full'
+						className='bg-primary-400 h-2 w-2 rounded-full'
 						animate={{ scale: [1, 1.5, 1], opacity: [0.4, 1, 0.4] }}
 						transition={{ duration: 1, repeat: Infinity, delay: i * 0.2 }}
 					/>

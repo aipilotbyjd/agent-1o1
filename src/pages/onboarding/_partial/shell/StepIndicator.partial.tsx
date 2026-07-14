@@ -5,7 +5,7 @@ interface IStepIndicatorProps {
 }
 
 const StepIndicator = ({ step }: IStepIndicatorProps) => (
-	<div className='mb-6 flex items-center gap-2 text-[10px] font-black tracking-widest text-violet-600 uppercase dark:text-violet-400'>
+	<div className='mb-6 flex items-center gap-2 text-[10px] font-black tracking-widest text-primary-600 uppercase dark:text-primary-400'>
 		<span>
 			Step {step + 1} of {TOTAL_STEPS}
 		</span>

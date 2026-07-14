@@ -30,14 +30,14 @@ const DiscoveryStep = () => {
 							}
 							className={`flex w-full items-center justify-between rounded-xl border p-3.5 text-left font-semibold transition-all ${
 								isSelected
-									? 'border-violet-500 bg-violet-500/5 text-violet-600 ring-1 ring-violet-500/20 dark:text-violet-400'
+									? 'border-primary-500 bg-primary-400/5 text-primary-600 ring-1 ring-primary-500/20 dark:text-primary-400'
 									: 'border-slate-100 bg-white/40 hover:bg-slate-50 dark:border-zinc-800/80 dark:bg-zinc-950/20 dark:hover:bg-zinc-800/30'
 							}`}>
 							<span className='text-xs text-slate-700 dark:text-zinc-200'>
 								{option}
 							</span>
 							<div
-								className={`flex h-4 w-4 items-center justify-center rounded-full border transition-colors ${isSelected ? 'border-violet-500 bg-violet-500' : 'border-slate-300 dark:border-zinc-700'}`}>
+								className={`flex h-4 w-4 items-center justify-center rounded-full border transition-colors ${isSelected ? 'border-primary-500 bg-primary-400' : 'border-slate-300 dark:border-zinc-700'}`}>
 								{isSelected && (
 									<div className='h-1.5 w-1.5 rounded-full bg-white' />
 								)}

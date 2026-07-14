@@ -23,7 +23,7 @@ import type { TCreditPack } from '@/types/credit.type';
 
 const PACK_ICONS = [Sparkles, Star, Star, Star];
 const PACK_ICON_BG = [
-	'bg-purple-100 text-purple-600 dark:bg-purple-950/40 dark:text-purple-400',
+	'bg-primary-100 text-primary-600 dark:bg-primary-950/40 dark:text-primary-400',
 	'bg-amber-100 text-amber-600 dark:bg-amber-950/40 dark:text-amber-400',
 	'bg-sky-100 text-sky-600 dark:bg-sky-950/40 dark:text-sky-450',
 	'bg-rose-100 text-rose-600 dark:bg-rose-950/40 dark:text-rose-400',
@@ -116,8 +116,8 @@ const BillingOverviewPage = () => {
 			<div className='dark:border-zinc-800 flex flex-wrap items-center justify-between gap-6 rounded-2xl border border-zinc-100 bg-white p-5 shadow-sm dark:bg-zinc-950'>
 				<div className='flex items-center gap-4'>
 					{/* Wallet Icon circle */}
-					<div className='flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-indigo-50 text-indigo-600 dark:bg-indigo-950/40 dark:text-indigo-400'>
-						<Wallet size={22} className='fill-indigo-600/10' />
+					<div className='flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-primary-50 text-primary-600 dark:bg-primary-950/40 dark:text-primary-400'>
+						<Wallet size={22} className='fill-primary-600/10' />
 					</div>
 
 					{/* Balance details & progress bar */}
@@ -140,7 +140,7 @@ const BillingOverviewPage = () => {
 								</div>
 								<Link
 									to={pages.settings.subPages.usage.to}
-									className='flex items-center gap-0.5 text-xs font-bold text-indigo-600 transition hover:text-indigo-700 dark:text-indigo-400'>
+									className='flex items-center gap-0.5 text-xs font-bold text-primary-600 transition hover:text-primary-700 dark:text-primary-400'>
 									<span>View usage</span>
 									<ArrowRight size={12} />
 								</Link>
@@ -153,7 +153,7 @@ const BillingOverviewPage = () => {
 					type='button'
 					onClick={() => portal.mutate()}
 					disabled={portal.isPending}
-					className='dark:border-indigo-850 dark:hover:bg-zinc-800 flex h-10 items-center gap-2 rounded-xl border border-indigo-200 bg-white px-4 text-xs font-bold text-indigo-600 shadow-xs transition hover:bg-indigo-50/50 disabled:opacity-60 dark:bg-zinc-900 dark:text-indigo-400'>
+					className='dark:border-primary-800 dark:hover:bg-zinc-800 flex h-10 items-center gap-2 rounded-xl border border-primary-200 bg-white px-4 text-xs font-bold text-primary-600 shadow-xs transition hover:bg-primary-50/50 disabled:opacity-60 dark:bg-zinc-900 dark:text-primary-400'>
 					<Settings size={14} />
 					<span>{portal.isPending ? 'Opening…' : 'Manage billing'}</span>
 				</button>
@@ -178,14 +178,14 @@ const BillingOverviewPage = () => {
 			<section>
 				<div className='mb-4 flex items-center justify-between'>
 					<div className='flex items-center gap-2'>
-						<Sparkles size={16} className='text-indigo-500' />
+						<Sparkles size={16} className='text-primary-500' />
 						<h3 className='text-sm font-black text-zinc-900 dark:text-zinc-100'>
 							Your Credit Packs
 						</h3>
 					</div>
 					<Link
 						to={pages.settings.subPages.billing.subPages.credits.to}
-						className='flex items-center gap-1 text-xs font-bold text-indigo-600 transition hover:text-indigo-700 dark:text-indigo-400'>
+						className='flex items-center gap-1 text-xs font-bold text-primary-600 transition hover:text-primary-700 dark:text-primary-400'>
 						<span>Buy more</span>
 						<ArrowRight size={12} />
 					</Link>
@@ -195,15 +195,15 @@ const BillingOverviewPage = () => {
 					<div className='h-20 animate-pulse rounded-2xl bg-zinc-100 dark:bg-zinc-800' />
 				) : allPacks.length === 0 ? (
 					<div className='rounded-2xl border border-dashed border-zinc-200 bg-zinc-50/35 px-6 py-8 text-center dark:border-zinc-800 dark:bg-zinc-950/20'>
-						<div className='mx-auto mb-3 flex h-11 w-11 items-center justify-center rounded-2xl bg-indigo-50 text-indigo-600 shadow-xs dark:bg-indigo-950/40 dark:text-indigo-400'>
-							<Package size={20} className='fill-indigo-600/10' />
+						<div className='mx-auto mb-3 flex h-11 w-11 items-center justify-center rounded-2xl bg-primary-50 text-primary-600 shadow-xs dark:bg-primary-950/40 dark:text-primary-400'>
+							<Package size={20} className='fill-primary-600/10' />
 						</div>
 						<p className='text-xs font-semibold text-zinc-400 dark:text-zinc-500'>
 							No credit packs purchased yet.
 						</p>
 						<Link
 							to={pages.settings.subPages.billing.subPages.credits.to}
-							className='mt-4 inline-flex items-center gap-1.5 rounded-xl bg-indigo-600 px-5 py-2.5 text-xs font-bold text-white shadow-md shadow-indigo-600/10 transition hover:bg-indigo-700 active:scale-95'>
+							className='mt-4 inline-flex items-center gap-1.5 rounded-xl bg-primary-400 px-5 py-2.5 text-xs font-bold text-primary-950 shadow-md shadow-primary-600/10 transition hover:bg-primary-700 active:scale-95'>
 							<Sparkles size={12} />
 							<span>Buy your first pack</span>
 						</Link>
@@ -282,7 +282,7 @@ const BillingOverviewPage = () => {
 			{/* Buy Credits Options */}
 			<section>
 				<div className='mb-4 flex items-center gap-2'>
-					<CreditCard size={16} className='text-indigo-500' />
+					<CreditCard size={16} className='text-primary-500' />
 					<h3 className='text-sm font-black text-zinc-900 dark:text-zinc-100'>
 						Buy Credits
 					</h3>
@@ -335,7 +335,7 @@ const BillingOverviewPage = () => {
 								type='button'
 								onClick={() => buyCredits.mutate({ pack_key: pack.key })}
 								disabled={buyCredits.isPending || !pack.available}
-								className='mt-4 w-full rounded-xl bg-indigo-600 py-2.5 text-center text-xs font-bold text-white shadow-md shadow-indigo-600/10 transition hover:bg-indigo-700 active:scale-95 disabled:opacity-60'>
+								className='mt-4 w-full rounded-xl bg-primary-400 py-2.5 text-center text-xs font-bold text-primary-950 shadow-md shadow-primary-600/10 transition hover:bg-primary-700 active:scale-95 disabled:opacity-60'>
 								Buy now
 							</button>
 						</div>
@@ -349,14 +349,14 @@ const BillingOverviewPage = () => {
 			<section>
 				<div className='mb-4 flex items-center justify-between'>
 					<div className='flex items-center gap-2'>
-						<FileText size={16} className='text-indigo-500' />
+						<FileText size={16} className='text-primary-500' />
 						<h3 className='text-sm font-black text-zinc-900 dark:text-zinc-100'>
 							Recent Transactions
 						</h3>
 					</div>
 					<Link
 						to={pages.settings.subPages.billing.subPages.history.to}
-						className='flex items-center gap-1 text-xs font-bold text-indigo-600 transition hover:text-indigo-700 dark:text-indigo-400'>
+						className='flex items-center gap-1 text-xs font-bold text-primary-600 transition hover:text-primary-700 dark:text-primary-400'>
 						<span>View all</span>
 						<ArrowRight size={12} />
 					</Link>

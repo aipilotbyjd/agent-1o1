@@ -42,16 +42,16 @@ const RoleSelectionStep = () => {
 							}
 							className={`flex w-full flex-col rounded-xl border p-3 px-4 text-left transition-all ${
 								isSelected
-									? 'border-violet-500 bg-violet-500/5 ring-1 ring-violet-500/20'
+									? 'border-primary-500 bg-primary-400/5 ring-1 ring-primary-500/20'
 									: 'border-slate-150 bg-white/40 hover:bg-slate-50 dark:border-zinc-800/80 dark:bg-zinc-950/20 dark:hover:bg-zinc-800/30'
 							}`}>
 							<div className='flex items-center justify-between'>
 								<span
-									className={`text-sm font-bold ${isSelected ? 'text-violet-600 dark:text-violet-400' : 'text-slate-900 dark:text-zinc-100'}`}>
+									className={`text-sm font-bold ${isSelected ? 'text-primary-600 dark:text-primary-400' : 'text-slate-900 dark:text-zinc-100'}`}>
 									{role.label}
 								</span>
 								{isSelected && (
-									<span className='flex h-5 w-5 items-center justify-center rounded-full bg-violet-500 text-white'>
+									<span className='flex h-5 w-5 items-center justify-center rounded-full bg-primary-400 text-primary-950'>
 										<Check className='h-3 w-3 stroke-[3]' />
 									</span>
 								)}

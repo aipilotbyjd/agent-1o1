@@ -87,7 +87,7 @@ export const AsideQuickNav: FC<IAsideQuickNavProps> = (props) => {
 			className={classNames(
 				'flex cursor-pointer flex-col items-center justify-between gap-2 overflow-hidden rounded-xl',
 				// 'transition-all duration-300 ease-in-out',
-				{ 'bg-primary-500 hover:bg-primary-500/50 text-zinc-900': isActive },
+				{ 'bg-primary-400 hover:bg-primary-500/50 text-zinc-900': isActive },
 				{
 					'bg-white text-zinc-600 hover:bg-zinc-100/25 dark:bg-zinc-950 dark:hover:bg-zinc-950/50':
 						!isActive,

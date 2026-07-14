@@ -44,12 +44,12 @@ const getInitials = (name: string) => {
 
 const getAvatarBg = (id: string) => {
 	const bgs = [
-		'bg-indigo-500 dark:bg-indigo-600',
-		'bg-pink-500 dark:bg-pink-600',
+		'bg-primary-400 dark:bg-primary-400',
+		'bg-primary-400 dark:bg-primary-400',
 		'bg-emerald-500 dark:bg-emerald-600',
 		'bg-sky-500 dark:bg-sky-600',
 		'bg-amber-500 dark:bg-amber-600',
-		'bg-violet-500 dark:bg-violet-600',
+		'bg-primary-400 dark:bg-primary-400',
 	];
 	const index = parseInt(id, 10) || 0;
 	return bgs[index % bgs.length];
@@ -190,7 +190,7 @@ const MembersPage = () => {
 					onClick={() => setActiveTab('members')}
 					className={`flex items-center gap-2 border-b-2 px-4 py-3.5 text-sm font-bold transition-all ${
 						activeTab === 'members'
-							? 'border-pink-500 text-pink-600 dark:text-pink-400'
+							? 'border-primary-500 text-primary-600 dark:text-primary-400'
 							: 'border-transparent text-zinc-500 hover:text-zinc-800 dark:hover:text-zinc-300'
 					}`}>
 					<UserCheck size={16} />
@@ -198,7 +198,7 @@ const MembersPage = () => {
 					<span
 						className={`ml-1 rounded-full px-2 py-0.5 text-xs font-semibold ${
 							activeTab === 'members'
-								? 'bg-pink-100 text-pink-700 dark:bg-pink-900/30 dark:text-pink-400'
+								? 'bg-primary-100 text-primary-700 dark:bg-primary-900/30 dark:text-primary-400'
 								: 'bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400'
 						}`}>
 						{members.length}
@@ -209,7 +209,7 @@ const MembersPage = () => {
 					onClick={() => setActiveTab('invitations')}
 					className={`flex items-center gap-2 border-b-2 px-4 py-3.5 text-sm font-bold transition-all ${
 						activeTab === 'invitations'
-							? 'border-pink-500 text-pink-600 dark:text-pink-400'
+							? 'border-primary-500 text-primary-600 dark:text-primary-400'
 							: 'border-transparent text-zinc-500 hover:text-zinc-800 dark:hover:text-zinc-300'
 					}`}>
 					<Mail size={16} />
@@ -218,7 +218,7 @@ const MembersPage = () => {
 						<span
 							className={`ml-1 rounded-full px-2 py-0.5 text-xs font-semibold ${
 								activeTab === 'invitations'
-									? 'bg-pink-100 text-pink-700 dark:bg-pink-900/30 dark:text-pink-400'
+									? 'bg-primary-100 text-primary-700 dark:bg-primary-900/30 dark:text-primary-400'
 									: 'bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400'
 							}`}>
 							{invitations.length}
@@ -333,7 +333,7 @@ const MembersPage = () => {
 											</Td>
 											<Td className='border-0'>
 												{member.role === 'owner' ? (
-													<div className='flex items-center gap-1.5 px-3 py-1.5 text-sm font-bold text-indigo-600 dark:text-indigo-400'>
+													<div className='flex items-center gap-1.5 px-3 py-1.5 text-sm font-bold text-primary-600 dark:text-primary-400'>
 														<Shield size={15} />
 														Owner
 													</div>
@@ -349,7 +349,7 @@ const MembersPage = () => {
 																		.value as TWorkspaceRole,
 																)
 															}
-															className='h-9 w-full cursor-pointer appearance-none rounded-lg border border-zinc-200 bg-white px-2.5 pr-8 text-xs font-bold text-zinc-800 shadow-xs outline-none focus:border-pink-300 focus:ring-2 focus:ring-pink-100/50 dark:border-zinc-700 dark:bg-zinc-700 dark:text-zinc-200'>
+															className='h-9 w-full cursor-pointer appearance-none rounded-lg border border-zinc-200 bg-white px-2.5 pr-8 text-xs font-bold text-zinc-800 shadow-xs outline-none focus:border-primary-300 focus:ring-2 focus:ring-primary-100/50 dark:border-zinc-700 dark:bg-zinc-700 dark:text-zinc-200'>
 															{roleOptions
 																.filter(
 																	(option) =>
@@ -494,7 +494,7 @@ const MembersPage = () => {
 			<Modal isOpen={isInviteModalOpen} setIsOpen={setIsInviteModalOpen} size='sm'>
 				<ModalHeader setIsOpen={setIsInviteModalOpen}>
 					<div className='flex items-center gap-3'>
-						<div className='flex h-9 w-9 items-center justify-center rounded-xl bg-pink-100 text-pink-600 dark:bg-pink-900/30 dark:text-pink-400'>
+						<div className='flex h-9 w-9 items-center justify-center rounded-xl bg-primary-100 text-primary-600 dark:bg-primary-900/30 dark:text-primary-400'>
 							<UserPlus size={18} />
 						</div>
 						<span className='text-xl font-extrabold tracking-tight text-zinc-950 dark:text-white'>

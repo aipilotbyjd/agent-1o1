@@ -136,8 +136,8 @@ const triggerToneClasses: Record<string, string> = {
 	green: 'border-emerald-200 bg-emerald-50 text-emerald-600 dark:border-emerald-900/30 dark:bg-emerald-950/20 dark:text-emerald-400',
 	sky: 'border-sky-200 bg-sky-50 text-sky-600 dark:border-sky-900/30 dark:bg-sky-950/20 dark:text-sky-400',
 	red: 'border-red-200 bg-red-50 text-red-600 dark:border-red-900/30 dark:bg-red-950/20 dark:text-red-400',
-	pink: 'border-pink-200 bg-pink-50 text-pink-600 dark:border-pink-900/30 dark:bg-pink-950/20 dark:text-pink-400',
-	violet: 'border-violet-200 bg-violet-50 text-violet-600 dark:border-violet-900/30 dark:bg-violet-950/20 dark:text-violet-400',
+	pink: 'border-primary-200 bg-primary-50 text-primary-600 dark:border-primary-900/30 dark:bg-primary-950/20 dark:text-primary-400',
+	violet: 'border-primary-200 bg-primary-50 text-primary-600 dark:border-primary-900/30 dark:bg-primary-950/20 dark:text-primary-400',
 };
 
 // Core nodes configuration list
@@ -258,7 +258,7 @@ const mainCategories = [
 		label: 'Using AI',
 		description: 'Leverage AI for various tasks',
 		icon: Sparkles,
-		accent: 'bg-pink-50 text-pink-500 border border-pink-100/50 dark:bg-pink-950/30 dark:text-pink-400 dark:border-pink-900/20',
+		accent: 'bg-primary-50 text-primary-500 border border-primary-100/50 dark:bg-primary-950/30 dark:text-primary-400 dark:border-primary-900/20',
 		nodes: usingAiList,
 	},
 	{
@@ -282,7 +282,7 @@ const mainCategories = [
 		label: 'Subflows',
 		description: 'Automate your workflows with subflows',
 		icon: Workflow,
-		accent: 'bg-indigo-50 text-indigo-500 border border-indigo-100/50 dark:bg-indigo-950/30 dark:text-indigo-400 dark:border-indigo-900/20',
+		accent: 'bg-primary-50 text-primary-500 border border-primary-100/50 dark:bg-primary-950/30 dark:text-primary-400 dark:border-primary-900/20',
 		nodes: subflowsList,
 	},
 ];
@@ -294,7 +294,7 @@ const frequentlyUsedCards = [
 		description: 'Prompt an AI...',
 		icon: Sparkles,
 		tone: 'rose',
-		accent: 'bg-pink-50 text-pink-500 dark:bg-pink-950/40 dark:text-pink-400 border border-pink-100/50 dark:border-pink-900/30',
+		accent: 'bg-primary-50 text-primary-500 dark:bg-primary-950/40 dark:text-primary-400 border border-primary-100/50 dark:border-primary-900/30',
 	},
 	{
 		label: 'Input',
@@ -308,7 +308,7 @@ const frequentlyUsedCards = [
 		description: 'Extract key piece...',
 		icon: FileText,
 		tone: 'rose',
-		accent: 'bg-pink-50 text-pink-500 dark:bg-pink-950/40 dark:text-pink-400 border border-pink-100/50 dark:border-pink-900/30',
+		accent: 'bg-primary-50 text-primary-500 dark:bg-primary-950/40 dark:text-primary-400 border border-primary-100/50 dark:border-primary-900/30',
 	},
 	{
 		label: 'Output',
@@ -345,7 +345,7 @@ const mockIntegrations = [
 		name: 'Slack',
 		icon: '💬',
 		filter: 'Slack',
-		color: 'bg-purple-50 text-purple-600 dark:bg-purple-950/30 border border-purple-100/30 dark:border-purple-900/10',
+		color: 'bg-primary-50 text-primary-600 dark:bg-primary-950/30 border border-primary-100/30 dark:border-primary-900/10',
 	},
 	{
 		name: 'Sheets',
@@ -877,14 +877,14 @@ const WorkflowLaunchSurface = () => {
 							</div>
 
 							<div className='flex flex-1 flex-col items-center justify-center px-6 pb-9 text-center sm:px-10 sm:pb-12'>
-								<div className='mb-7 flex h-16 w-16 items-center justify-center rounded-full bg-[linear-gradient(135deg,#ec4899,#60a5fa)] text-white shadow-lg shadow-pink-200'>
+								<div className='mb-7 flex h-16 w-16 items-center justify-center rounded-full bg-[linear-gradient(135deg,#ec4899,#60a5fa)] text-white shadow-lg shadow-primary-200'>
 									<Sparkles size={34} strokeWidth={2.2} />
 								</div>
 								<div className='flex flex-wrap items-center justify-center gap-3'>
 									<div className='text-2xl font-bold tracking-tight text-zinc-950'>
 										Pro Feature
 									</div>
-									<span className='rounded-lg bg-pink-500 px-2.5 py-1 text-xs font-bold text-white shadow-sm shadow-pink-200'>
+									<span className='rounded-lg bg-primary-400 px-2.5 py-1 text-xs font-bold text-primary-950 shadow-sm shadow-primary-200'>
 										Upgrade Required
 									</span>
 								</div>
@@ -895,7 +895,7 @@ const WorkflowLaunchSurface = () => {
 								</p>
 								<button
 									type='button'
-									className='mt-8 flex h-12 items-center gap-3 rounded-xl bg-pink-500 px-6 text-base font-bold text-white shadow-lg shadow-pink-200 transition hover:-translate-y-0.5 hover:bg-pink-600'>
+									className='mt-8 flex h-12 items-center gap-3 rounded-xl bg-primary-400 px-6 text-base font-bold text-primary-950 shadow-lg shadow-primary-200 transition hover:-translate-y-0.5 hover:bg-primary-500'>
 									<Sparkles size={18} />
 									Upgrade to Pro
 									<ChevronRight size={19} />
@@ -1237,7 +1237,7 @@ const WorkflowLaunchSurface = () => {
 						<button
 							type='button'
 							title='New Subflow'
-							className='flex h-11 items-center gap-2 rounded-2xl bg-pink-500 px-4 text-sm font-bold text-white shadow-lg shadow-pink-500/25 transition hover:bg-pink-600 sm:h-12 sm:px-5 sm:text-base'>
+							className='flex h-11 items-center gap-2 rounded-2xl bg-primary-400 px-4 text-sm font-bold text-primary-950 shadow-lg shadow-primary-500/25 transition hover:bg-primary-500 sm:h-12 sm:px-5 sm:text-base'>
 							<Plus size={20} />
 							<span>New Subflow</span>
 						</button>

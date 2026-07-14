@@ -36,7 +36,7 @@ const suggestions = [
 	{
 		text: 'Before every meeting, I want an AI summary of company news and salesforce contact information for every external attendee',
 		icon: Mail,
-		iconBg: 'bg-violet-100 text-violet-600 dark:bg-violet-950/40 dark:text-violet-400',
+		iconBg: 'bg-primary-100 text-primary-600 dark:bg-primary-950/40 dark:text-primary-400',
 	},
 	{
 		text: "For an email, enrich the contact with Apollo, get recent news about the company and have AI analyze whether it's a good time to reach out.",
@@ -82,15 +82,15 @@ const CanvasEmptyState = () => {
 	const autocompleteItems = {
 		slash: [
 			{ key: 'webhook', label: 'Webhook Trigger', value: '[Webhook Trigger]', icon: <Webhook size={14} className="text-emerald-500" /> },
-			{ key: 'image', label: 'Image Generation', value: '[Image Generation]', icon: <ImageIcon size={14} className="text-violet-500" /> },
-			{ key: 'slack', label: 'Slack Output', value: '[Slack Output]', icon: <svg className='h-3.5 w-3.5 text-pink-500 animate-pulse' viewBox='0 0 24 24' fill='currentColor'><path fill='#e01e5a' d='M5.042 15.165a2.528 2.528 0 0 1-2.52 2.523 2.528 2.528 0 0 1-2.522-2.523 2.528 2.528 0 0 1 2.522-2.52h2.52v2.52zm1.261 0a2.528 2.528 0 0 1 2.52-2.52h5.043a2.528 2.528 0 0 1 2.522 2.52v5.042a2.528 2.528 0 0 1-2.522 2.52H8.823a2.528 2.528 0 0 1-2.52-2.52v-5.042z'/><path fill='#36c5f0' d='M8.823 5.043a2.528 2.528 0 0 1-2.52-2.52A2.528 2.528 0 0 1 8.823 0a2.528 2.528 0 0 1 2.52 2.522v2.52h-2.52zm0 1.261a2.528 2.528 0 0 1 2.52 2.52v5.043a2.528 2.528 0 0 1-2.52 2.522H3.78a2.528 2.528 0 0 1-2.523-2.522V8.824a2.528 2.528 0 0 1 2.523-2.52h5.043z'/><path fill='#2eb67d' d='M18.958 8.824a2.528 2.528 0 0 1 2.52-2.52 2.528 2.528 0 0 1 2.522 2.52 2.528 2.528 0 0 1-2.522 2.52h-2.52V8.824zm-1.261 0a2.528 2.528 0 0 1-2.52 2.52h-5.043a2.528 2.528 0 0 1-2.522-2.52V3.78a2.528 2.528 0 0 1 2.522-2.52h5.043a2.528 2.528 0 0 1 2.52 2.52v5.043z'/><path fill='#ecb22e' d='M15.177 18.958a2.528 2.528 0 0 1 2.52 2.52 2.528 2.528 0 0 1-2.52 2.522 2.528 2.528 0 0 1-2.522-2.522v-2.52h2.522zm0-1.261a2.528 2.528 0 0 1-2.522-2.52v-5.043a2.528 2.528 0 0 1 2.522-2.52H20.22a2.528 2.528 0 0 1 2.523 2.52v5.043a2.528 2.528 0 0 1-2.523 2.52h-5.043z'/></svg> },
+			{ key: 'image', label: 'Image Generation', value: '[Image Generation]', icon: <ImageIcon size={14} className="text-primary-500" /> },
+			{ key: 'slack', label: 'Slack Output', value: '[Slack Output]', icon: <svg className='h-3.5 w-3.5 text-primary-500 animate-pulse' viewBox='0 0 24 24' fill='currentColor'><path fill='#e01e5a' d='M5.042 15.165a2.528 2.528 0 0 1-2.52 2.523 2.528 2.528 0 0 1-2.522-2.523 2.528 2.528 0 0 1 2.522-2.52h2.52v2.52zm1.261 0a2.528 2.528 0 0 1 2.52-2.52h5.043a2.528 2.528 0 0 1 2.522 2.52v5.042a2.528 2.528 0 0 1-2.522 2.52H8.823a2.528 2.528 0 0 1-2.52-2.52v-5.042z'/><path fill='#36c5f0' d='M8.823 5.043a2.528 2.528 0 0 1-2.52-2.52A2.528 2.528 0 0 1 8.823 0a2.528 2.528 0 0 1 2.52 2.522v2.52h-2.52zm0 1.261a2.528 2.528 0 0 1 2.52 2.52v5.043a2.528 2.528 0 0 1-2.52 2.522H3.78a2.528 2.528 0 0 1-2.523-2.522V8.824a2.528 2.528 0 0 1 2.523-2.52h5.043z'/><path fill='#2eb67d' d='M18.958 8.824a2.528 2.528 0 0 1 2.52-2.52 2.528 2.528 0 0 1 2.522 2.52 2.528 2.528 0 0 1-2.522 2.52h-2.52V8.824zm-1.261 0a2.528 2.528 0 0 1-2.52 2.52h-5.043a2.528 2.528 0 0 1-2.522-2.52V3.78a2.528 2.528 0 0 1 2.522-2.52h5.043a2.528 2.528 0 0 1 2.52 2.52v5.043z'/><path fill='#ecb22e' d='M15.177 18.958a2.528 2.528 0 0 1 2.52 2.52 2.528 2.528 0 0 1-2.52 2.522 2.528 2.528 0 0 1-2.522-2.522v-2.52h2.522zm0-1.261a2.528 2.528 0 0 1-2.522-2.52v-5.043a2.528 2.528 0 0 1 2.522-2.52H20.22a2.528 2.528 0 0 1 2.523 2.52v5.043a2.528 2.528 0 0 1-2.523 2.52h-5.043z'/></svg> },
 			{ key: 'gmail', label: 'Gmail Email', value: '[Gmail Email]', icon: <Mail size={14} className="text-red-500" /> },
-			{ key: 'salesforce', label: 'Salesforce Router', value: '[Salesforce Router]', icon: <Cloud size={14} className="text-violet-500" /> }
+			{ key: 'salesforce', label: 'Salesforce Router', value: '[Salesforce Router]', icon: <Cloud size={14} className="text-primary-500" /> }
 		],
 		at: [
-			{ key: 'salesforce', label: 'Salesforce Account', value: '@Salesforce', icon: <Cloud size={14} className="text-violet-500" /> },
+			{ key: 'salesforce', label: 'Salesforce Account', value: '@Salesforce', icon: <Cloud size={14} className="text-primary-500" /> },
 			{ key: 'gmail', label: 'Gmail Account', value: '@Gmail', icon: <Mail size={14} className="text-red-500" /> },
-			{ key: 'slack', label: 'Slack Account', value: '@Slack', icon: <svg className='h-3.5 w-3.5 text-pink-500' viewBox='0 0 24 24' fill='currentColor'><path fill='#e01e5a' d='M5.042 15.165a2.528 2.528 0 0 1-2.52 2.523 2.528 2.528 0 0 1-2.522-2.523 2.528 2.528 0 0 1 2.522-2.52h2.52v2.52zm1.261 0a2.528 2.528 0 0 1 2.52-2.52h5.043a2.528 2.528 0 0 1 2.522 2.52v5.042a2.528 2.528 0 0 1-2.522 2.52H8.823a2.528 2.528 0 0 1-2.52-2.52v-5.042z'/><path fill='#36c5f0' d='M8.823 5.043a2.528 2.528 0 0 1-2.52-2.52A2.528 2.528 0 0 1 8.823 0a2.528 2.528 0 0 1 2.52 2.522v2.52h-2.52zm0 1.261a2.528 2.528 0 0 1 2.52 2.52v5.043a2.528 2.528 0 0 1-2.52 2.522H3.78a2.528 2.528 0 0 1-2.523-2.522V8.824a2.528 2.528 0 0 1 2.523-2.52h5.043z'/><path fill='#2eb67d' d='M18.958 8.824a2.528 2.528 0 0 1 2.52-2.52 2.528 2.528 0 0 1 2.522 2.52 2.528 2.528 0 0 1-2.522 2.52h-2.52V8.824zm-1.261 0a2.528 2.528 0 0 1-2.52 2.52h-5.043a2.528 2.528 0 0 1-2.522-2.52V3.78a2.528 2.528 0 0 1 2.522-2.52h5.043a2.528 2.528 0 0 1 2.52 2.52v5.043z'/><path fill='#ecb22e' d='M15.177 18.958a2.528 2.528 0 0 1 2.52 2.52 2.528 2.528 0 0 1-2.52 2.522 2.528 2.528 0 0 1-2.522-2.522v-2.52h2.522zm0-1.261a2.528 2.528 0 0 1-2.522-2.52v-5.043a2.528 2.528 0 0 1 2.522-2.52H20.22a2.528 2.528 0 0 1 2.523 2.52v5.043a2.528 2.528 0 0 1-2.523 2.52h-5.043z'/></svg> }
+			{ key: 'slack', label: 'Slack Account', value: '@Slack', icon: <svg className='h-3.5 w-3.5 text-primary-500' viewBox='0 0 24 24' fill='currentColor'><path fill='#e01e5a' d='M5.042 15.165a2.528 2.528 0 0 1-2.52 2.523 2.528 2.528 0 0 1-2.522-2.523 2.528 2.528 0 0 1 2.522-2.52h2.52v2.52zm1.261 0a2.528 2.528 0 0 1 2.52-2.52h5.043a2.528 2.528 0 0 1 2.522 2.52v5.042a2.528 2.528 0 0 1-2.522 2.52H8.823a2.528 2.528 0 0 1-2.52-2.52v-5.042z'/><path fill='#36c5f0' d='M8.823 5.043a2.528 2.528 0 0 1-2.52-2.52A2.528 2.528 0 0 1 8.823 0a2.528 2.528 0 0 1 2.52 2.522v2.52h-2.52zm0 1.261a2.528 2.528 0 0 1 2.52 2.52v5.043a2.528 2.528 0 0 1-2.52 2.522H3.78a2.528 2.528 0 0 1-2.523-2.522V8.824a2.528 2.528 0 0 1 2.523-2.52h5.043z'/><path fill='#2eb67d' d='M18.958 8.824a2.528 2.528 0 0 1 2.52-2.52 2.528 2.528 0 0 1 2.522 2.52 2.528 2.528 0 0 1-2.522 2.52h-2.52V8.824zm-1.261 0a2.528 2.528 0 0 1-2.52 2.52h-5.043a2.528 2.528 0 0 1-2.522-2.52V3.78a2.528 2.528 0 0 1 2.522-2.52h5.043a2.528 2.528 0 0 1 2.52 2.52v5.043z'/><path fill='#ecb22e' d='M15.177 18.958a2.528 2.528 0 0 1 2.52 2.52 2.528 2.528 0 0 1-2.52 2.522 2.528 2.528 0 0 1-2.522-2.522v-2.52h2.522zm0-1.261a2.528 2.528 0 0 1-2.522-2.52v-5.043a2.528 2.528 0 0 1 2.522-2.52H20.22a2.528 2.528 0 0 1 2.523 2.52v5.043a2.528 2.528 0 0 1-2.523 2.52h-5.043z'/></svg> }
 		]
 	};
 
@@ -228,7 +228,7 @@ const CanvasEmptyState = () => {
 										transition={{ duration: 0.25 }}
 										className='space-y-4'>
 										{/* Prompter Container with Gradient Border */}
-										<div className='relative rounded-[18px] bg-gradient-to-tr from-indigo-300 via-purple-300 to-orange-300 p-[1px] shadow-xl shadow-zinc-200/40 dark:from-indigo-900/60 dark:via-purple-900/60 dark:to-orange-900/60 dark:shadow-black/20'>
+										<div className='relative rounded-[18px] bg-gradient-to-tr from-primary-300 via-primary-300 to-orange-300 p-[1px] shadow-xl shadow-zinc-200/40 dark:from-primary-900/60 dark:via-primary-900/60 dark:to-orange-900/60 dark:shadow-black/20'>
 											{/* Backdrop Click Close for Dropdowns */}
 											{activeDropdown !== null && (
 												<div
@@ -388,7 +388,7 @@ const CanvasEmptyState = () => {
 																		<div>
 																			<div className='flex justify-between text-[10px] font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-1'>
 																				<span>Temperature</span>
-																				<span className='text-violet-600 dark:text-violet-400'>{config.temperature}</span>
+																				<span className='text-primary-600 dark:text-primary-400'>{config.temperature}</span>
 																			</div>
 																			<input
 																				type='range'
@@ -397,13 +397,13 @@ const CanvasEmptyState = () => {
 																				step='0.1'
 																				value={config.temperature}
 																				onChange={(e) => setConfig((prev) => ({ ...prev, temperature: parseFloat(e.target.value) }))}
-																				className='w-full accent-violet-600 dark:accent-violet-400'
+																				className='w-full accent-primary-600 dark:accent-primary-400'
 																			/>
 																		</div>
 																		<div>
 																			<div className='flex justify-between text-[10px] font-bold text-zinc-505 dark:text-zinc-400 uppercase tracking-wider mb-1'>
 																				<span>Max Tokens</span>
-																				<span className='text-violet-600 dark:text-violet-400'>{config.maxTokens}</span>
+																				<span className='text-primary-600 dark:text-primary-400'>{config.maxTokens}</span>
 																			</div>
 																			<input
 																				type='range'
@@ -412,7 +412,7 @@ const CanvasEmptyState = () => {
 																				step='256'
 																				value={config.maxTokens}
 																				onChange={(e) => setConfig((prev) => ({ ...prev, maxTokens: parseInt(e.target.value) }))}
-																				className='w-full accent-violet-600 dark:accent-violet-400'
+																				className='w-full accent-primary-600 dark:accent-primary-400'
 																			/>
 																		</div>
 																		<div>
@@ -425,7 +425,7 @@ const CanvasEmptyState = () => {
 																						onClick={() => setConfig((prev) => ({ ...prev, persona: p }))}
 																						className={`rounded-lg px-2.5 py-1 text-[10px] font-bold transition ${
 																							config.persona === p
-																								? 'bg-violet-600 text-white dark:bg-violet-500'
+																								? 'bg-primary-400 text-primary-950 dark:bg-primary-400'
 																								: 'bg-zinc-100 text-zinc-650 hover:bg-zinc-200 dark:bg-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800'
 																						}`}>
 																						{p}
@@ -445,17 +445,17 @@ const CanvasEmptyState = () => {
 															<button
 																type='button'
 																onClick={() => setActiveDropdown(prev => prev === 'cloud' ? null : 'cloud')}
-																className='flex items-center justify-center text-violet-600 dark:text-violet-400 p-1 rounded-md hover:bg-zinc-50 dark:hover:bg-zinc-900 transition'
+																className='flex items-center justify-center text-primary-600 dark:text-primary-400 p-1 rounded-md hover:bg-zinc-50 dark:hover:bg-zinc-900 transition'
 																title='Cloud Services'>
 																<Cloud
 																	size={18}
-																	className='fill-violet-600/10'
+																	className='fill-primary-600/10'
 																/>
 															</button>
 															{activeDropdown === 'cloud' && (
 																<div className='absolute bottom-full left-0 mb-2.5 z-50 w-64 rounded-xl border border-zinc-200 bg-white/95 p-3 shadow-xl backdrop-blur-md dark:border-zinc-800/80 dark:bg-zinc-950/95 text-left'>
 																	<div className='flex items-center gap-2 border-b border-zinc-100 pb-2 mb-2 dark:border-zinc-800/50'>
-																		<Cloud size={14} className='text-violet-600 dark:text-violet-400' />
+																		<Cloud size={14} className='text-primary-600 dark:text-primary-400' />
 																		<span className='text-xs font-bold text-zinc-800 dark:text-zinc-200'>Salesforce Integration</span>
 																	</div>
 																	<div className='space-y-1 flex flex-col'>
@@ -542,7 +542,7 @@ const CanvasEmptyState = () => {
 															<button
 																type='button'
 																onClick={() => setActiveDropdown(prev => prev === 'slack' ? null : 'slack')}
-																className='flex items-center justify-center text-purple-650 p-1 rounded-md hover:bg-zinc-50 dark:hover:bg-zinc-900 transition'
+																className='flex items-center justify-center text-primary-600 p-1 rounded-md hover:bg-zinc-50 dark:hover:bg-zinc-900 transition'
 																title='Slack'>
 																<svg
 																	className='h-4.5 w-4.5'
@@ -569,7 +569,7 @@ const CanvasEmptyState = () => {
 															{activeDropdown === 'slack' && (
 																<div className='absolute bottom-full left-0 mb-2.5 z-50 w-64 rounded-xl border border-zinc-200 bg-white/95 p-3 shadow-xl backdrop-blur-md dark:border-zinc-800/80 dark:bg-zinc-950/95 text-left'>
 																	<div className='flex items-center gap-2 border-b border-zinc-100 pb-2 mb-2 dark:border-zinc-800/50'>
-																		<svg className='h-3.5 w-3.5 text-pink-500 animate-pulse' viewBox='0 0 24 24' fill='currentColor'><path fill='#e01e5a' d='M5.042 15.165a2.528 2.528 0 0 1-2.52 2.523 2.528 2.528 0 0 1-2.522-2.523 2.528 2.528 0 0 1 2.522-2.52h2.52v2.52zm1.261 0a2.528 2.528 0 0 1 2.52-2.52h5.043a2.528 2.528 0 0 1 2.522 2.52v5.042a2.528 2.528 0 0 1-2.522 2.52H8.823a2.528 2.528 0 0 1-2.52-2.52v-5.042z'/><path fill='#36c5f0' d='M8.823 5.043a2.528 2.528 0 0 1-2.52-2.52A2.528 2.528 0 0 1 8.823 0a2.528 2.528 0 0 1 2.52 2.522v2.52h-2.52zm0 1.261a2.528 2.528 0 0 1 2.52 2.52v5.043a2.528 2.528 0 0 1-2.52 2.522H3.78a2.528 2.528 0 0 1-2.523-2.522V8.824a2.528 2.528 0 0 1 2.523-2.52h5.043z'/><path fill='#2eb67d' d='M18.958 8.824a2.528 2.528 0 0 1 2.52-2.52 2.528 2.528 0 0 1 2.522 2.52 2.528 2.528 0 0 1-2.522 2.52h-2.52V8.824zm-1.261 0a2.528 2.528 0 0 1-2.52 2.52h-5.043a2.528 2.528 0 0 1-2.522-2.52V3.78a2.528 2.528 0 0 1 2.522-2.52h5.043a2.528 2.528 0 0 1 2.52 2.52v5.043z'/><path fill='#ecb22e' d='M15.177 18.958a2.528 2.528 0 0 1 2.52 2.52 2.528 2.528 0 0 1-2.52 2.522 2.528 2.528 0 0 1-2.522-2.522v-2.52h2.522zm0-1.261a2.528 2.528 0 0 1-2.522-2.52v-5.043a2.528 2.528 0 0 1 2.522-2.52H20.22a2.528 2.528 0 0 1 2.523 2.52v5.043a2.528 2.528 0 0 1-2.523 2.52h-5.043z'/></svg>
+																		<svg className='h-3.5 w-3.5 text-primary-500 animate-pulse' viewBox='0 0 24 24' fill='currentColor'><path fill='#e01e5a' d='M5.042 15.165a2.528 2.528 0 0 1-2.52 2.523 2.528 2.528 0 0 1-2.522-2.523 2.528 2.528 0 0 1 2.522-2.52h2.52v2.52zm1.261 0a2.528 2.528 0 0 1 2.52-2.52h5.043a2.528 2.528 0 0 1 2.522 2.52v5.042a2.528 2.528 0 0 1-2.522 2.52H8.823a2.528 2.528 0 0 1-2.52-2.52v-5.042z'/><path fill='#36c5f0' d='M8.823 5.043a2.528 2.528 0 0 1-2.52-2.52A2.528 2.528 0 0 1 8.823 0a2.528 2.528 0 0 1 2.52 2.522v2.52h-2.52zm0 1.261a2.528 2.528 0 0 1 2.52 2.52v5.043a2.528 2.528 0 0 1-2.52 2.522H3.78a2.528 2.528 0 0 1-2.523-2.522V8.824a2.528 2.528 0 0 1 2.523-2.52h5.043z'/><path fill='#2eb67d' d='M18.958 8.824a2.528 2.528 0 0 1 2.52-2.52 2.528 2.528 0 0 1 2.522 2.52 2.528 2.528 0 0 1-2.522 2.52h-2.52V8.824zm-1.261 0a2.528 2.528 0 0 1-2.52 2.52h-5.043a2.528 2.528 0 0 1-2.522-2.52V3.78a2.528 2.528 0 0 1 2.522-2.52h5.043a2.528 2.528 0 0 1 2.52 2.52v5.043z'/><path fill='#ecb22e' d='M15.177 18.958a2.528 2.528 0 0 1 2.52 2.52 2.528 2.528 0 0 1-2.52 2.522 2.528 2.528 0 0 1-2.522-2.522v-2.52h2.522zm0-1.261a2.528 2.528 0 0 1-2.522-2.52v-5.043a2.528 2.528 0 0 1 2.522-2.52H20.22a2.528 2.528 0 0 1 2.523 2.52v5.043a2.528 2.528 0 0 1-2.523 2.52h-5.043z'/></svg>
 																		<span className='text-xs font-bold text-zinc-800 dark:text-zinc-200'>Slack Integration</span>
 																	</div>
 																	<div className='space-y-1 flex flex-col'>
@@ -618,7 +618,7 @@ const CanvasEmptyState = () => {
 																	size={12}
 																	className={
 																		mode === 'build'
-																			? 'text-violet-500'
+																			? 'text-primary-500'
 																			: ''
 																	}
 																/>
@@ -638,7 +638,7 @@ const CanvasEmptyState = () => {
 														<button
 															type='button'
 															onClick={handleGenerate}
-															className='flex h-8 w-8 items-center justify-center rounded-full bg-violet-600 text-white shadow-md shadow-violet-600/10 transition hover:bg-violet-700 active:scale-95'
+															className='flex h-8 w-8 items-center justify-center rounded-full bg-primary-400 text-primary-950 shadow-md shadow-primary-600/10 transition hover:bg-primary-700 active:scale-95'
 															title='Generate Workflow'>
 															<ArrowUp size={16} strokeWidth={2.5} />
 														</button>
@@ -651,7 +651,7 @@ const CanvasEmptyState = () => {
 										<div className='flex items-center gap-3 py-2'>
 											<div className='h-[1px] flex-1 border-t border-dashed border-zinc-200 dark:border-zinc-800' />
 											<div className='flex items-center gap-1.5 text-[11px] font-semibold whitespace-nowrap text-zinc-400 dark:text-zinc-500'>
-												<Sparkles size={14} className='text-violet-500' />
+												<Sparkles size={14} className='text-primary-500' />
 												<span>Try these examples to get started</span>
 											</div>
 											<div className='h-[1px] flex-1 border-t border-dashed border-zinc-200 dark:border-zinc-800' />
@@ -720,7 +720,7 @@ const CanvasEmptyState = () => {
 											<button
 												type='button'
 												onClick={() => dispatch({ type: 'SET_TEMPLATE_LIBRARY', open: true })}
-												className='flex items-center gap-1.5 text-xs font-bold text-violet-600 transition hover:text-violet-700 dark:text-violet-400 pointer-events-auto'>
+												className='flex items-center gap-1.5 text-xs font-bold text-primary-600 transition hover:text-primary-700 dark:text-primary-400 pointer-events-auto'>
 												<LayoutGrid size={14} />
 												<span>View more templates</span>
 											</button>
@@ -733,11 +733,11 @@ const CanvasEmptyState = () => {
 										animate={{ opacity: 1, scale: 1 }}
 										exit={{ opacity: 0, scale: 0.96 }}
 										className='mx-auto flex w-full max-w-md flex-col items-center justify-center rounded-2xl border border-zinc-200 bg-white/95 p-8 text-center shadow-2xl backdrop-blur-xl dark:border-zinc-800 dark:bg-zinc-950/95'>
-										<div className='relative mb-5 flex h-16 w-16 items-center justify-center rounded-2xl bg-pink-500/10 text-pink-500 shadow-lg shadow-pink-500/10'>
+										<div className='relative mb-5 flex h-16 w-16 items-center justify-center rounded-2xl bg-primary-400/10 text-primary-500 shadow-lg shadow-primary-500/10'>
 											<Loader2 size={32} className='animate-spin' />
 											<Sparkles
 												size={16}
-												className='absolute top-2 right-2 animate-pulse text-pink-400'
+												className='absolute top-2 right-2 animate-pulse text-primary-400'
 											/>
 										</div>
 										<h3 className='text-base font-extrabold text-zinc-800 dark:text-zinc-100'>
@@ -760,7 +760,7 @@ const CanvasEmptyState = () => {
 															isDone
 																? 'text-emerald-500'
 																: isActive
-																	? 'font-bold text-pink-500'
+																	? 'font-bold text-primary-500'
 																	: 'text-zinc-300 dark:text-zinc-700'
 														}`}>
 														<div
@@ -768,7 +768,7 @@ const CanvasEmptyState = () => {
 																isDone
 																	? 'border-emerald-500 bg-emerald-500 text-white'
 																	: isActive
-																		? 'animate-pulse border-pink-500 bg-pink-500 text-white'
+																		? 'animate-pulse border-primary-500 bg-primary-400 text-primary-950'
 																		: 'border-zinc-200 bg-transparent text-zinc-400 dark:border-zinc-800'
 															}`}>
 															{isDone ? (
@@ -797,7 +797,7 @@ const CanvasEmptyState = () => {
 							<button
 								type='button'
 								aria-label='Add node'
-								className='flex h-6 w-6 items-center justify-center rounded-full bg-indigo-600 text-white shadow-md shadow-indigo-600/25 transition hover:bg-indigo-700 active:scale-95'>
+								className='flex h-6 w-6 items-center justify-center rounded-full bg-primary-400 text-primary-950 shadow-md shadow-primary-600/25 transition hover:bg-primary-700 active:scale-95'>
 								<span className='text-base leading-none font-bold'>+</span>
 							</button>
 							<button
@@ -958,7 +958,7 @@ const CanvasEmptyState = () => {
 										exit={{ opacity: 0, scale: 0.9, y: 15 }}
 										whileHover={{ y: -4, scale: 1.02 }}
 										transition={{ duration: 0.3 }}
-										className='absolute left-[280px] top-[45px] z-10 w-[220px] rounded-xl border-2 p-1 text-left shadow-lg bg-white dark:bg-zinc-950 border-violet-500 dark:border-violet-500 ring-4 shadow-violet-100/50 ring-violet-500/10 dark:shadow-none'>
+										className='absolute left-[280px] top-[45px] z-10 w-[220px] rounded-xl border-2 p-1 text-left shadow-lg bg-white dark:bg-zinc-950 border-primary-500 dark:border-primary-500 ring-4 shadow-primary-100/50 ring-primary-500/10 dark:shadow-none'>
 										
 										{/* Floating Toolbar like Mockup 1 */}
 										<div className='absolute -top-[44px] left-1/2 -translate-x-1/2 flex items-center gap-1 bg-white border border-zinc-200 rounded-lg px-2 py-1 shadow-md z-20 text-[9px] font-bold text-zinc-650 dark:bg-zinc-900 dark:border-zinc-800 dark:text-zinc-350 whitespace-nowrap shadow-zinc-250/50'>
@@ -984,16 +984,16 @@ const CanvasEmptyState = () => {
 											</span>
 										</div>
 
-										<div className='rounded-lg p-2.5 bg-violet-500/5 dark:bg-violet-500/5'>
+										<div className='rounded-lg p-2.5 bg-primary-400/5 dark:bg-primary-400/5'>
 											{/* Header */}
 											<div className='flex items-start gap-2'>
-												<div className='flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-violet-100 text-violet-600 dark:bg-violet-950 dark:text-violet-400'>
+												<div className='flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-primary-100 text-primary-600 dark:bg-primary-950 dark:text-primary-400'>
 													<ImageIcon size={18} strokeWidth={2.5} />
 												</div>
 												<div className='min-w-0 flex-1'>
 													<div className='mb-0.5 flex items-center justify-between gap-1'>
 														<span className='flex min-w-0 items-center gap-0.5'>
-															<span className='shrink-0 text-violet-600 dark:text-violet-400'>
+															<span className='shrink-0 text-primary-600 dark:text-primary-400'>
 																<Bot size={10} />
 															</span>
 															<span className='truncate text-[9px] font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-wide'>
@@ -1036,7 +1036,7 @@ const CanvasEmptyState = () => {
 											<div className='mt-3'>
 												<button
 													type='button'
-													className='flex w-full items-center justify-center gap-1 rounded-lg border border-zinc-200 dark:border-zinc-800 py-1 text-[10px] font-bold text-zinc-500 hover:text-violet-600 dark:hover:text-violet-450 hover:border-violet-300 dark:hover:border-violet-900 transition bg-white dark:bg-zinc-900 shadow-2xs'>
+													className='flex w-full items-center justify-center gap-1 rounded-lg border border-zinc-200 dark:border-zinc-800 py-1 text-[10px] font-bold text-zinc-500 hover:text-primary-600 dark:hover:text-primary-400 hover:border-primary-300 dark:hover:border-primary-900 transition bg-white dark:bg-zinc-900 shadow-2xs'>
 													<Beaker size={11} />
 													<span>Test Node</span>
 												</button>
@@ -1044,13 +1044,13 @@ const CanvasEmptyState = () => {
 										</div>
 
 										{/* Step Number Circle */}
-										<div className='absolute -bottom-2.5 left-1/2 flex h-5 w-5 -translate-x-1/2 items-center justify-center rounded-full border-2 bg-white text-[9px] font-bold shadow-xs border-violet-500 text-violet-600 dark:bg-zinc-900 dark:text-violet-450'>
+										<div className='absolute -bottom-2.5 left-1/2 flex h-5 w-5 -translate-x-1/2 items-center justify-center rounded-full border-2 bg-white text-[9px] font-bold shadow-xs border-primary-500 text-primary-600 dark:bg-zinc-900 dark:text-primary-400'>
 											2
 										</div>
 
 										{/* Handle left & right ports */}
-										<button className='absolute -left-2 top-1/2 -translate-y-1/2 flex h-4 w-4 items-center justify-center rounded-full bg-white border border-violet-400 text-[10px] text-violet-505 hover:text-violet-700 hover:bg-violet-50 dark:bg-zinc-900 dark:border-violet-800 shadow-xs z-20 font-bold'>+</button>
-										<button className='absolute -right-2 top-1/2 -translate-y-1/2 flex h-4 w-4 items-center justify-center rounded-full bg-white border border-violet-400 text-[10px] text-violet-505 hover:text-violet-700 hover:bg-violet-50 dark:bg-zinc-900 dark:border-violet-800 shadow-xs z-20 font-bold'>+</button>
+										<button className='absolute -left-2 top-1/2 -translate-y-1/2 flex h-4 w-4 items-center justify-center rounded-full bg-white border border-primary-400 text-[10px] text-primary-505 hover:text-primary-700 hover:bg-primary-50 dark:bg-zinc-900 dark:border-primary-800 shadow-xs z-20 font-bold'>+</button>
+										<button className='absolute -right-2 top-1/2 -translate-y-1/2 flex h-4 w-4 items-center justify-center rounded-full bg-white border border-primary-400 text-[10px] text-primary-505 hover:text-primary-700 hover:bg-primary-50 dark:bg-zinc-900 dark:border-primary-800 shadow-xs z-20 font-bold'>+</button>
 									</motion.div>
 								)}
 							</AnimatePresence>
@@ -1149,7 +1149,7 @@ const CanvasEmptyState = () => {
 							<button
 								type='button'
 								onClick={() => dispatch({ type: 'TOGGLE_LEFT_PANEL' })}
-								className='flex h-10 items-center gap-1.5 rounded-xl bg-violet-600 px-5 text-sm font-bold text-white shadow-md shadow-violet-600/15 hover:bg-violet-750 transition active:scale-97'
+								className='flex h-10 items-center gap-1.5 rounded-xl bg-primary-400 px-5 text-sm font-bold text-primary-950 shadow-md shadow-primary-600/15 hover:bg-primary-700 transition active:scale-97'
 							>
 								<span className='text-base font-extrabold'>+</span>
 								<span>Add Step</span>

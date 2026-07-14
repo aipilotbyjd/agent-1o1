@@ -53,7 +53,7 @@ const HistoryPagination = ({
 					onClick={() => onPageChange(page as number)}
 					className={`flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg text-xs font-extrabold transition-all duration-200 ${
 						isPageActive
-							? 'bg-violet-600 text-white shadow-sm dark:bg-violet-500'
+							? 'bg-primary-400 text-primary-950 shadow-sm dark:bg-primary-400'
 							: 'border border-slate-200 text-slate-600 hover:bg-slate-50 hover:text-slate-900 dark:border-zinc-800/50 dark:text-zinc-400 dark:hover:bg-zinc-800/50'
 					}`}>
 					{page}
@@ -95,7 +95,7 @@ const HistoryPagination = ({
 						value={rowsPerPage}
 						onChange={(e) => onRowsPerPageChange(Number(e.target.value))}
 						style={{ WebkitAppearance: 'none', MozAppearance: 'none' }}
-						className='h-9 cursor-pointer appearance-none rounded-xl border border-slate-200 bg-white bg-[url("/src/assets/required/chevron-down.svg")] bg-[length:12px] bg-[right_12px_center] bg-no-repeat pr-8 pl-3.5 text-xs font-bold shadow-xs transition-colors outline-none focus:border-violet-500 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-300'>
+						className='h-9 cursor-pointer appearance-none rounded-xl border border-slate-200 bg-white bg-[url("/src/assets/required/chevron-down.svg")] bg-[length:12px] bg-[right_12px_center] bg-no-repeat pr-8 pl-3.5 text-xs font-bold shadow-xs transition-colors outline-none focus:border-primary-500 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-300'>
 						{[10, 20, 50].map((val) => (
 							<option key={val} value={val}>
 								{val} per page

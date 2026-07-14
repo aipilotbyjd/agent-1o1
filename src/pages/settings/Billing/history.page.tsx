@@ -10,7 +10,7 @@ const TX_LABELS: Record<TCreditTransactionType, { label: string; color: string }
 	},
 	ai_execution: {
 		label: 'AI Run',
-		color: 'bg-violet-100 text-violet-700 dark:bg-violet-950 dark:text-violet-400',
+		color: 'bg-primary-100 text-primary-700 dark:bg-primary-950 dark:text-primary-400',
 	},
 	code_execution: {
 		label: 'Code Run',
@@ -31,7 +31,7 @@ const TX_LABELS: Record<TCreditTransactionType, { label: string; color: string }
 	bonus: { label: 'Bonus', color: 'bg-sky-100 text-sky-700 dark:bg-sky-950 dark:text-sky-400' },
 	rollover: {
 		label: 'Rollover',
-		color: 'bg-purple-100 text-purple-700 dark:bg-purple-950 dark:text-purple-400',
+		color: 'bg-primary-100 text-primary-700 dark:bg-primary-950 dark:text-primary-400',
 	},
 };
 

@@ -56,7 +56,7 @@ const NavigationBar = ({
 				{Array.from({ length: TOTAL_STEPS }, (_, i) => (
 					<div
 						key={i}
-						className={`h-1.5 rounded-full transition-all duration-300 ${step === i ? 'w-4 bg-violet-600 dark:bg-violet-500' : 'w-1.5 bg-slate-200 dark:bg-zinc-800'}`}
+						className={`h-1.5 rounded-full transition-all duration-300 ${step === i ? 'w-4 bg-primary-400 dark:bg-primary-400' : 'w-1.5 bg-slate-200 dark:bg-zinc-800'}`}
 					/>
 				))}
 			</div>

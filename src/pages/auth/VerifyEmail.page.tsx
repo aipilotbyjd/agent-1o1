@@ -91,7 +91,7 @@ const VerifyEmailPage = () => {
 						type='button'
 						onClick={handleResend}
 						disabled={resendVerification.isPending}
-						className='group bg-primary-700 hover:bg-primary-800 flex items-center gap-3 rounded-[32px] px-8 py-4 text-sm font-black tracking-[0.1em] text-white uppercase transition-all duration-300 hover:shadow-[0_20px_50px_-20px_rgba(109,40,217,0.45)] active:scale-[0.98] disabled:opacity-60'>
+						className='group bg-primary-400 hover:bg-primary-500 flex items-center gap-3 rounded-[32px] px-8 py-4 text-sm font-black tracking-[0.1em] text-primary-950 uppercase transition-all duration-300 hover:shadow-[0_20px_50px_-20px_rgba(109,40,217,0.45)] active:scale-[0.98] disabled:opacity-60'>
 						<span>{resendVerification.isPending ? 'Sending...' : 'Resend email'}</span>
 						<Icon icon='AiMail' className='h-4 w-4' />
 					</button>

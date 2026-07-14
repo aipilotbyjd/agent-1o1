@@ -192,8 +192,8 @@ const GraphPreview = ({
 						top: `${node.y}px`,
 						transform: 'translate(-50%, -50%)',
 					}}
-					className='flex max-w-[150px] items-center gap-2 overflow-hidden rounded-lg border border-violet-200 bg-white px-3 py-1.5 shadow-xs dark:border-zinc-800 dark:bg-zinc-950'>
-					<div className='h-2 w-2 shrink-0 rounded-full bg-violet-500' />
+					className='flex max-w-[150px] items-center gap-2 overflow-hidden rounded-lg border border-primary-200 bg-white px-3 py-1.5 shadow-xs dark:border-zinc-800 dark:bg-zinc-950'>
+					<div className='h-2 w-2 shrink-0 rounded-full bg-primary-400' />
 					<div className='truncate text-[10px] font-bold text-zinc-800 select-none dark:text-zinc-200'>
 						{node.data?.label || node.type || 'Action'}
 					</div>
@@ -518,7 +518,7 @@ const TemplatesCatalogPage = () => {
 							<h1 className='mb-3 text-3xl font-extrabold tracking-tight text-white sm:text-4xl'>
 								Templates Center
 							</h1>
-							<p className='mb-6 max-w-2xl text-xs leading-relaxed text-indigo-100 opacity-90 sm:text-sm dark:text-indigo-200'>
+							<p className='mb-6 max-w-2xl text-xs leading-relaxed text-primary-100 opacity-90 sm:text-sm dark:text-primary-200'>
 								Deploy pre-configured workflows, conversational AI agents, or
 								bundles of matching stacks to build your automation platform in
 								seconds.
@@ -534,7 +534,7 @@ const TemplatesCatalogPage = () => {
 										<div className='text-sm leading-none font-extrabold text-white'>
 											120+
 										</div>
-										<div className='mt-0.5 text-[10px] font-semibold text-indigo-200'>
+										<div className='mt-0.5 text-[10px] font-semibold text-primary-200'>
 											Templates
 										</div>
 									</div>
@@ -548,7 +548,7 @@ const TemplatesCatalogPage = () => {
 										<div className='text-sm leading-none font-extrabold text-white'>
 											9
 										</div>
-										<div className='mt-0.5 text-[10px] font-semibold text-indigo-200'>
+										<div className='mt-0.5 text-[10px] font-semibold text-primary-200'>
 											Categories
 										</div>
 									</div>
@@ -562,7 +562,7 @@ const TemplatesCatalogPage = () => {
 										<div className='text-sm leading-none font-extrabold text-white'>
 											2.4K+
 										</div>
-										<div className='mt-0.5 text-[10px] font-semibold text-indigo-200'>
+										<div className='mt-0.5 text-[10px] font-semibold text-primary-200'>
 											Deployments
 										</div>
 									</div>
@@ -583,7 +583,7 @@ const TemplatesCatalogPage = () => {
 									<Workflow className='h-5 w-5 text-white' />
 								</div>
 								{/* Coral floating card */}
-								<div className='animate-3d-float-coral absolute top-12 right-6 flex h-10 w-10 rotate-x-[-15deg] rotate-y-[25deg] items-center justify-center rounded-xl border border-white/20 bg-gradient-to-tr from-orange-400 to-pink-500 shadow-lg'>
+								<div className='animate-3d-float-coral absolute top-12 right-6 flex h-10 w-10 rotate-x-[-15deg] rotate-y-[25deg] items-center justify-center rounded-xl border border-white/20 bg-gradient-to-tr from-orange-400 to-primary-400 shadow-lg'>
 									<Cpu className='h-4.5 w-4.5 text-white' />
 								</div>
 							</div>
@@ -602,7 +602,7 @@ const TemplatesCatalogPage = () => {
 							}}
 							className={`flex cursor-pointer shrink-0 items-center gap-2 rounded-full px-4 py-2 text-xs font-bold transition-all duration-200 ${
 								activeTab === 'workflows'
-									? 'border border-[#DED4FA] bg-[#F5F2FF] text-[#6E3FF3] shadow-2xs dark:border-violet-800/40 dark:bg-violet-950/30 dark:text-violet-400'
+									? 'border border-[#DED4FA] bg-[#F5F2FF] text-[#6E3FF3] shadow-2xs dark:border-primary-800/40 dark:bg-primary-950/30 dark:text-primary-400'
 									: 'border border-transparent text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200'
 							}`}>
 							<Workflow className='h-3.5 w-3.5' />
@@ -615,7 +615,7 @@ const TemplatesCatalogPage = () => {
 							}}
 							className={`flex cursor-pointer shrink-0 items-center gap-2 rounded-full px-4 py-2 text-xs font-bold transition-all duration-200 ${
 								activeTab === 'agents'
-									? 'border border-[#DED4FA] bg-[#F5F2FF] text-[#6E3FF3] shadow-2xs dark:border-violet-800/40 dark:bg-violet-950/30 dark:text-violet-400'
+									? 'border border-[#DED4FA] bg-[#F5F2FF] text-[#6E3FF3] shadow-2xs dark:border-primary-800/40 dark:bg-primary-950/30 dark:text-primary-400'
 									: 'border border-transparent text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200'
 							}`}>
 							<Cpu className='h-3.5 w-3.5' />
@@ -628,7 +628,7 @@ const TemplatesCatalogPage = () => {
 							}}
 							className={`flex cursor-pointer shrink-0 items-center gap-2 rounded-full px-4 py-2 text-xs font-bold transition-all duration-200 ${
 								activeTab === 'collections'
-									? 'border border-[#DED4FA] bg-[#F5F2FF] text-[#6E3FF3] shadow-2xs dark:border-violet-800/40 dark:bg-violet-950/30 dark:text-violet-400'
+									? 'border border-[#DED4FA] bg-[#F5F2FF] text-[#6E3FF3] shadow-2xs dark:border-primary-800/40 dark:bg-primary-950/30 dark:text-primary-400'
 									: 'border border-transparent text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200'
 							}`}>
 							<Layers className='h-3.5 w-3.5' />
@@ -646,7 +646,7 @@ const TemplatesCatalogPage = () => {
 								value={searchQuery}
 								onChange={(e) => setSearchQuery(e.target.value)}
 								placeholder={`Search ${activeTab === 'workflows' ? 'workflows' : activeTab === 'agents' ? 'agents' : 'collections'}...`}
-								className='dark:focus:ring-violet-600 shadow-3xs w-full rounded-xl border border-zinc-200/80 bg-white py-2 pr-4 pl-9 text-xs text-zinc-700 focus:ring-1 focus:ring-violet-500 focus:outline-none dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-300'
+								className='dark:focus:ring-primary-600 shadow-3xs w-full rounded-xl border border-zinc-200/80 bg-white py-2 pr-4 pl-9 text-xs text-zinc-700 focus:ring-1 focus:ring-primary-500 focus:outline-none dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-300'
 							/>
 						</div>
 
@@ -658,7 +658,7 @@ const TemplatesCatalogPage = () => {
 									value={selectedCategory}
 									onChange={(e) => setSelectedCategory(e.target.value)}
 									style={{ WebkitAppearance: 'none', MozAppearance: 'none' }}
-									className='shadow-3xs w-full cursor-pointer appearance-none rounded-xl border border-zinc-200/80 bg-white py-2 pr-8 pl-9 text-xs text-zinc-700 focus:ring-1 focus:ring-violet-500 focus:outline-none dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-300'>
+									className='shadow-3xs w-full cursor-pointer appearance-none rounded-xl border border-zinc-200/80 bg-white py-2 pr-8 pl-9 text-xs text-zinc-700 focus:ring-1 focus:ring-primary-500 focus:outline-none dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-300'>
 									<option value=''>All Categories</option>
 									{activeTab === 'workflows'
 										? wfCategories?.map((cat: any) => (
@@ -687,12 +687,12 @@ const TemplatesCatalogPage = () => {
 							<div>
 								<div className='mb-5 flex items-center justify-between'>
 									<div className='flex items-center gap-2'>
-										<Sparkles className='h-4.5 w-4.5 text-[#6E3FF3] dark:text-violet-400' />
+										<Sparkles className='h-4.5 w-4.5 text-[#6E3FF3] dark:text-primary-400' />
 										<h2 className='text-sm font-bold text-zinc-800 dark:text-zinc-200'>
 											Featured Workflows
 										</h2>
 									</div>
-									<button className='flex cursor-pointer items-center gap-1.5 text-xs font-bold text-[#6E3FF3] transition-opacity hover:opacity-80 dark:text-violet-400'>
+									<button className='flex cursor-pointer items-center gap-1.5 text-xs font-bold text-[#6E3FF3] transition-opacity hover:opacity-80 dark:text-primary-400'>
 										View all <span className='text-sm'>→</span>
 									</button>
 								</div>
@@ -702,7 +702,7 @@ const TemplatesCatalogPage = () => {
 										return (
 											<div
 												key={wf.id}
-												className='group relative flex cursor-pointer flex-col rounded-2xl border border-zinc-200/50 bg-white p-5 transition-all duration-300 hover:border-violet-300 hover:shadow-lg dark:border-zinc-800/80 dark:bg-zinc-950 dark:hover:border-violet-800'
+												className='group relative flex cursor-pointer flex-col rounded-2xl border border-zinc-200/50 bg-white p-5 transition-all duration-300 hover:border-primary-300 hover:shadow-lg dark:border-zinc-800/80 dark:bg-zinc-950 dark:hover:border-primary-800'
 												onClick={() => setPreviewId(wf.id)}>
 												<div className='mb-4 flex items-start justify-between'>
 													<div className='flex items-center gap-3'>
@@ -717,7 +717,7 @@ const TemplatesCatalogPage = () => {
 															/>
 														</div>
 														<div className='truncate'>
-															<h3 className='truncate text-xs font-bold text-zinc-800 transition-colors group-hover:text-[#6E3FF3] sm:text-sm dark:text-zinc-200 dark:group-hover:text-violet-400'>
+															<h3 className='truncate text-xs font-bold text-zinc-800 transition-colors group-hover:text-[#6E3FF3] sm:text-sm dark:text-zinc-200 dark:group-hover:text-primary-400'>
 																{wf.name}
 															</h3>
 															<span className='mt-0.5 block text-[10px] font-medium text-zinc-400 capitalize'>
@@ -779,7 +779,7 @@ const TemplatesCatalogPage = () => {
 																);
 															} catch (err) {}
 														}}
-														className='dark:border-violet-600 cursor-pointer rounded-xl border border-[#6E3FF3] px-3.5 py-1.5 text-[10px] font-bold text-[#6E3FF3] transition-all duration-200 hover:bg-[#6E3FF3] hover:text-white dark:text-violet-400 dark:hover:bg-violet-600 dark:hover:text-white'>
+														className='dark:border-primary-600 cursor-pointer rounded-xl border border-[#6E3FF3] px-3.5 py-1.5 text-[10px] font-bold text-[#6E3FF3] transition-all duration-200 hover:bg-[#6E3FF3] hover:text-primary-950 dark:text-primary-400 dark:hover:bg-primary-500 dark:hover:text-primary-950'>
 														Use Template
 													</button>
 												</div>
@@ -978,7 +978,7 @@ const TemplatesCatalogPage = () => {
 
 							{/* Layout Switcher */}
 							<div className='flex items-center rounded-lg border border-zinc-200/20 bg-zinc-200/55 p-0.5 dark:bg-zinc-900'>
-								<button className='text-violet-600 shadow-3xs cursor-pointer rounded-md bg-white p-1.5 dark:bg-zinc-800 dark:text-violet-400'>
+								<button className='text-primary-600 shadow-3xs cursor-pointer rounded-md bg-white p-1.5 dark:bg-zinc-800 dark:text-primary-400'>
 									<Grid className='h-3.5 w-3.5' />
 								</button>
 								<button className='cursor-pointer rounded-md p-1.5 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300'>
@@ -993,7 +993,7 @@ const TemplatesCatalogPage = () => {
 					(activeTab === 'agents' && isAgentsLoading) ||
 					(activeTab === 'collections' && isCollsLoading) ? (
 						<div className='flex flex-col items-center justify-center gap-2 py-24'>
-							<Loader2 className='h-8 w-8 animate-spin text-violet-500' />
+							<Loader2 className='h-8 w-8 animate-spin text-primary-500' />
 							<span className='dark:text-zinc-400 text-xs text-zinc-500'>
 								Loading catalog...
 							</span>
@@ -1043,7 +1043,7 @@ const TemplatesCatalogPage = () => {
 								return (
 									<div
 										key={wf.id}
-										className='group dark:bg-zinc-950 dark:border-zinc-800 flex cursor-pointer flex-col rounded-2xl border border-zinc-200/50 bg-white p-4.5 transition-all duration-200 hover:border-violet-300 hover:shadow-md dark:hover:border-violet-800'
+										className='group dark:bg-zinc-950 dark:border-zinc-800 flex cursor-pointer flex-col rounded-2xl border border-zinc-200/50 bg-white p-4.5 transition-all duration-200 hover:border-primary-300 hover:shadow-md dark:hover:border-primary-800'
 										onClick={() => setPreviewId(wf.id)}>
 										<div className='mb-3.5 flex items-start justify-between'>
 											<div className='flex items-center gap-3 truncate'>
@@ -1056,7 +1056,7 @@ const TemplatesCatalogPage = () => {
 													/>
 												</div>
 												<div className='truncate'>
-													<h4 className='truncate text-xs font-bold text-zinc-800 transition-colors group-hover:text-[#6E3FF3] dark:text-zinc-200 dark:group-hover:text-violet-400'>
+													<h4 className='truncate text-xs font-bold text-zinc-800 transition-colors group-hover:text-[#6E3FF3] dark:text-zinc-200 dark:group-hover:text-primary-400'>
 														{wf.name}
 													</h4>
 													<span className='mt-0.5 block truncate text-[10px] font-medium text-zinc-400 capitalize'>
@@ -1247,7 +1247,7 @@ const TemplatesCatalogPage = () => {
 									<>
 										{!wfDetail ? (
 											<div className='flex h-full flex-col items-center justify-center gap-2'>
-												<Loader2 className='h-6 w-6 animate-spin text-violet-500' />
+												<Loader2 className='h-6 w-6 animate-spin text-primary-500' />
 												<span className='text-xs text-zinc-500'>
 													Fetching template metadata...
 												</span>
@@ -1397,7 +1397,7 @@ const TemplatesCatalogPage = () => {
 									<>
 										{!agentDetail ? (
 											<div className='flex h-full flex-col items-center justify-center gap-2'>
-												<Loader2 className='h-6 w-6 animate-spin text-violet-500' />
+												<Loader2 className='h-6 w-6 animate-spin text-primary-500' />
 												<span className='text-xs text-zinc-500'>
 													Fetching agent metadata...
 												</span>
@@ -1621,7 +1621,7 @@ const TemplatesCatalogPage = () => {
 									<>
 										{!collectionDetail ? (
 											<div className='flex h-full flex-col items-center justify-center gap-2'>
-												<Loader2 className='h-6 w-6 animate-spin text-violet-500' />
+												<Loader2 className='h-6 w-6 animate-spin text-primary-500' />
 												<span className='text-xs text-zinc-500'>
 													Fetching collection stack...
 												</span>
@@ -1710,7 +1710,7 @@ const TemplatesCatalogPage = () => {
 																			'agent' ? (
 																				<Cpu className='h-3.5 w-3.5 text-blue-500' />
 																			) : (
-																				<Workflow className='h-3.5 w-3.5 text-violet-500' />
+																				<Workflow className='h-3.5 w-3.5 text-primary-500' />
 																			)}
 																			<span className='font-semibold text-zinc-800 dark:text-zinc-200'>
 																				{item.name}

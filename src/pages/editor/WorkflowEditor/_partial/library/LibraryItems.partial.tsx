@@ -36,7 +36,7 @@ export const NodeRow = ({ node, onAdd }: TNodeProps) => (
 				{node.description}
 			</span>
 		</span>
-		<span className='flex h-6 w-6 shrink-0 translate-x-1 items-center justify-center rounded-lg bg-primary-100 text-primary-600 opacity-0 transition-all group-hover:translate-x-0 group-hover:opacity-100 dark:bg-primary-500/15 dark:text-primary-300'>
+		<span className='flex h-6 w-6 shrink-0 translate-x-1 items-center justify-center rounded-lg bg-primary-100 text-primary-600 opacity-0 transition-all group-hover:translate-x-0 group-hover:opacity-100 dark:bg-primary-400/15 dark:text-primary-300'>
 			<Plus size={14} strokeWidth={2.5} />
 		</span>
 	</button>
@@ -138,7 +138,7 @@ export const StateMessage = ({
 
 export const PanelLoader = () => (
 	<div className='flex h-full items-center justify-center text-zinc-400'>
-		<span className='h-5 w-5 animate-spin rounded-full border-2 border-zinc-300 border-t-violet-500' />
+		<span className='h-5 w-5 animate-spin rounded-full border-2 border-zinc-300 border-t-primary-500' />
 	</div>
 );
 
@@ -146,7 +146,7 @@ export const RetryButton = ({ onClick }: { onClick: () => void }) => (
 	<button
 		type='button'
 		onClick={onClick}
-		className='rounded-lg border border-zinc-200 bg-white px-3 py-1.5 text-xs font-bold text-violet-600 transition hover:bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900 dark:text-violet-400'>
+		className='rounded-lg border border-zinc-200 bg-white px-3 py-1.5 text-xs font-bold text-primary-600 transition hover:bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900 dark:text-primary-400'>
 		Try again
 	</button>
 );

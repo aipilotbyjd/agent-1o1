@@ -19,7 +19,7 @@ import Table, { TBody, THead, Td, Th, Tr } from '@/components/ui/Table';
 
 // ── shared styles ─────────────────────────────────────────────
 const inputCls =
-	'h-11 w-full rounded-xl border border-zinc-200 bg-white px-4 text-sm font-semibold text-zinc-800 shadow-xs outline-none focus:border-pink-500 focus:ring-2 focus:ring-pink-500/25 dark:border-zinc-700 dark:bg-zinc-700 dark:text-zinc-200 dark:placeholder:text-zinc-500';
+	'h-11 w-full rounded-xl border border-zinc-200 bg-white px-4 text-sm font-semibold text-zinc-800 shadow-xs outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-500/25 dark:border-zinc-700 dark:bg-zinc-700 dark:text-zinc-200 dark:placeholder:text-zinc-500';
 
 // ── SecretModal (add + edit) ──────────────────────────────────
 interface SecretModalProps {
@@ -64,7 +64,7 @@ const SecretModal = ({ open, target, isPending, onClose, onSubmit }: SecretModal
 		<Modal isOpen={open} setIsOpen={onClose} size='sm'>
 			<ModalHeader setIsOpen={onClose}>
 				<div className='flex items-center gap-3'>
-					<div className='flex h-9 w-9 items-center justify-center rounded-xl bg-pink-100 text-pink-600 dark:bg-pink-900/30 dark:text-pink-400'>
+					<div className='flex h-9 w-9 items-center justify-center rounded-xl bg-primary-100 text-primary-600 dark:bg-primary-900/30 dark:text-primary-400'>
 						<Lock size={16} />
 					</div>
 					<div className='flex flex-col'>
@@ -127,7 +127,7 @@ const SecretModal = ({ open, target, isPending, onClose, onSubmit }: SecretModal
 												isSecret && !showValue ? 'disc' : 'none',
 										} as React.CSSProperties
 									}
-									className='w-full resize-none rounded-xl border border-zinc-200 bg-white p-4 pr-10 text-sm font-semibold text-zinc-800 shadow-xs outline-none focus:border-pink-500 focus:ring-2 focus:ring-pink-500/25 dark:border-zinc-700 dark:bg-zinc-700 dark:text-zinc-200'
+									className='w-full resize-none rounded-xl border border-zinc-200 bg-white p-4 pr-10 text-sm font-semibold text-zinc-800 shadow-xs outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-500/25 dark:border-zinc-700 dark:bg-zinc-700 dark:text-zinc-200'
 								/>
 								{isSecret && (
 									<button
@@ -162,7 +162,7 @@ const SecretModal = ({ open, target, isPending, onClose, onSubmit }: SecretModal
 								onClick={() => setIsSecret((v) => !v)}
 								className={[
 									'relative h-6 w-10 shrink-0 rounded-full transition',
-									isSecret ? 'bg-pink-500' : 'bg-zinc-200 dark:bg-zinc-600',
+									isSecret ? 'bg-primary-400' : 'bg-zinc-200 dark:bg-zinc-600',
 								].join(' ')}>
 								<span
 									className={[
@@ -194,7 +194,7 @@ const SecretModal = ({ open, target, isPending, onClose, onSubmit }: SecretModal
 						<button
 							type='submit'
 							disabled={isPending}
-							className='h-11 cursor-pointer rounded-xl bg-pink-600 px-5 text-sm font-bold text-white shadow-sm transition hover:bg-pink-700 active:bg-pink-800 disabled:opacity-60'>
+							className='h-11 cursor-pointer rounded-xl bg-primary-400 px-5 text-sm font-bold text-primary-950 shadow-sm transition hover:bg-primary-700 active:bg-primary-800 disabled:opacity-60'>
 							{isPending
 								? isEdit
 									? 'Saving…'
@@ -334,7 +334,7 @@ const SecretsPage = () => {
 						value={searchQuery}
 						onChange={(e) => setSearchQuery(e.target.value)}
 						placeholder='Search secrets'
-						className='h-10 w-full rounded-xl border border-zinc-200 bg-white pr-8 pl-10 text-sm font-medium text-zinc-800 shadow-xs outline-none focus:border-pink-500 focus:ring-2 focus:ring-pink-500/25 dark:border-zinc-700 dark:bg-zinc-700 dark:text-zinc-200'
+						className='h-10 w-full rounded-xl border border-zinc-200 bg-white pr-8 pl-10 text-sm font-medium text-zinc-800 shadow-xs outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-500/25 dark:border-zinc-700 dark:bg-zinc-700 dark:text-zinc-200'
 					/>
 					{searchQuery && (
 						<button
@@ -373,7 +373,7 @@ const SecretsPage = () => {
 			{isEmpty && (
 				<div className='rounded-2xl border border-dashed border-zinc-200 bg-white px-4 py-20 text-center dark:border-zinc-700 dark:bg-zinc-800/20'>
 					<div className='mx-auto flex max-w-sm flex-col items-center'>
-						<div className='mb-6 flex h-14 w-14 items-center justify-center rounded-2xl bg-pink-100 text-pink-600 dark:bg-pink-900/30 dark:text-pink-400'>
+						<div className='mb-6 flex h-14 w-14 items-center justify-center rounded-2xl bg-primary-100 text-primary-600 dark:bg-primary-900/30 dark:text-primary-400'>
 							<Key size={24} />
 						</div>
 						<h3 className='mb-1.5 text-lg font-bold text-zinc-900 dark:text-zinc-50'>

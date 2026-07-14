@@ -611,7 +611,7 @@ const AppsListPage = () => {
 	return (
 		<Container className='relative overflow-x-hidden overflow-y-auto bg-[#f8f9fc] bg-[radial-gradient(#e2e8f0_1px,transparent_1px)] [background-size:20px_20px] !p-0 dark:bg-zinc-950 dark:bg-[radial-gradient(#27272a_1px,transparent_1px)]'>
 			{/* Ambient decorative blur glows */}
-			<div className='pointer-events-none absolute top-[-10%] right-[-10%] -z-10 h-[45%] w-[45%] rounded-full bg-gradient-to-tr from-violet-500/5 to-indigo-500/5 blur-[120px]' />
+			<div className='pointer-events-none absolute top-[-10%] right-[-10%] -z-10 h-[45%] w-[45%] rounded-full bg-gradient-to-tr from-primary-400/5 to-primary-400/5 blur-[120px]' />
 			<div className='pointer-events-none absolute bottom-[-10%] left-[-10%] -z-10 h-[45%] w-[45%] rounded-full bg-gradient-to-br from-emerald-500/5 to-cyan-500/5 blur-[120px]' />
 
 			<div className='mx-auto flex w-full max-w-7xl flex-col gap-8 p-4 sm:p-6 md:p-10'>
@@ -621,7 +621,7 @@ const AppsListPage = () => {
 						<h1 className='text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white'>
 							Apps
 						</h1>
-						<p className='mt-1 text-[11px] font-extrabold tracking-widest text-[#503ef5] uppercase dark:text-violet-400'>
+						<p className='mt-1 text-[11px] font-extrabold tracking-widest text-[#503ef5] uppercase dark:text-primary-400'>
 							Integrations Hub
 						</p>
 						<p className='mt-1 text-xs font-medium text-slate-500 dark:text-zinc-400'>
@@ -684,7 +684,7 @@ const AppsListPage = () => {
 							<div className='group relative flex min-h-[260px] flex-col justify-between overflow-hidden rounded-[24px] border border-slate-200/60 bg-white p-6 shadow-sm transition-all duration-300 hover:border-slate-300/80 hover:shadow-md dark:border-zinc-800/80 dark:bg-[#11131c]'>
 								<div>
 									<div className='flex items-center gap-3'>
-										<div className='flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-purple-50 text-purple-600 dark:bg-purple-950/20 dark:text-purple-400'>
+										<div className='flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary-50 text-primary-600 dark:bg-primary-950/20 dark:text-primary-400'>
 											<Grid size={18} className='stroke-[2.2px]' />
 										</div>
 										<span className='text-[11px] font-extrabold tracking-wider text-slate-400 uppercase dark:text-zinc-400'>
@@ -790,13 +790,13 @@ const AppsListPage = () => {
 										name: 'Stripe',
 										category: 'Payments',
 										color: '#635bff',
-										logoBg: 'bg-indigo-50 text-indigo-600',
+										logoBg: 'bg-primary-50 text-primary-600',
 									},
 									{
 										name: 'Slack',
 										category: 'Communication',
 										color: '#4a154b',
-										logoBg: 'bg-purple-50 text-purple-600',
+										logoBg: 'bg-primary-50 text-primary-600',
 									},
 									{
 										name: 'Gmail',
@@ -849,7 +849,7 @@ const AppsListPage = () => {
 									placeholder='Search integrations...'
 									value={searchQuery}
 									onChange={(e) => setSearchQuery(e.target.value)}
-									className='dark:placeholder:text-zinc-650 block h-12 w-full rounded-2xl border border-slate-200/60 bg-white pr-14 pl-12 text-xs font-bold text-slate-900 shadow-sm transition-all duration-200 outline-none placeholder:text-slate-400 focus:border-[#503ef5]/80 focus:ring-4 focus:ring-[#503ef5]/10 dark:border-zinc-800 dark:bg-zinc-900/40 dark:text-zinc-100 dark:focus:border-violet-500 dark:focus:ring-violet-500/15'
+									className='dark:placeholder:text-zinc-650 block h-12 w-full rounded-2xl border border-slate-200/60 bg-white pr-14 pl-12 text-xs font-bold text-slate-900 shadow-sm transition-all duration-200 outline-none placeholder:text-slate-400 focus:border-[#503ef5]/80 focus:ring-4 focus:ring-[#503ef5]/10 dark:border-zinc-800 dark:bg-zinc-900/40 dark:text-zinc-100 dark:focus:border-primary-500 dark:focus:ring-primary-500/15'
 								/>
 								<div className='pointer-events-none absolute top-3.5 right-4 hidden items-center justify-center rounded-md border border-slate-200 bg-slate-50 px-1.5 py-0.5 text-[10px] font-extrabold text-slate-400 shadow-2xs sm:flex dark:border-zinc-800 dark:bg-zinc-800 dark:text-zinc-500'>
 									⌘K
@@ -972,7 +972,7 @@ const AppsListPage = () => {
 													stiffness: 350,
 													damping: 25,
 												}}
-												className='group relative flex flex-col justify-between rounded-[24px] border border-slate-200/60 bg-white p-5 shadow-sm transition-all duration-300 hover:border-violet-500/30 hover:shadow-md dark:border-zinc-800/80 dark:bg-[#11131c] dark:hover:border-violet-500/30'>
+												className='group relative flex flex-col justify-between rounded-[24px] border border-slate-200/60 bg-white p-5 shadow-sm transition-all duration-300 hover:border-primary-500/30 hover:shadow-md dark:border-zinc-800/80 dark:bg-[#11131c] dark:hover:border-primary-500/30'>
 												{/* Brand background glow */}
 												<div
 													className='pointer-events-none absolute -inset-px -z-10 rounded-[24px] opacity-0 blur-md transition-all duration-500 group-hover:opacity-10'
@@ -1154,11 +1154,11 @@ const AppsListPage = () => {
 						</div>
 
 						{/* Widget 2: Unlock More Power rocket banner */}
-						<div className='relative overflow-hidden rounded-[24px] border border-violet-100 bg-gradient-to-br from-[#503ef5]/10 via-[#503ef5]/5 to-transparent p-5 shadow-xs dark:border-violet-900/10 dark:from-[#503ef5]/5 dark:to-transparent'>
+						<div className='relative overflow-hidden rounded-[24px] border border-primary-100 bg-gradient-to-br from-[#503ef5]/10 via-[#503ef5]/5 to-transparent p-5 shadow-xs dark:border-primary-900/10 dark:from-[#503ef5]/5 dark:to-transparent'>
 							<div className='pointer-events-none absolute -right-6 -bottom-6 h-16 w-16 opacity-20 select-none'>
 								<Sparkles size={64} className='text-[#503ef5]' />
 							</div>
-							<h3 className='text-xs font-extrabold tracking-wider text-indigo-950 uppercase dark:text-violet-400'>
+							<h3 className='text-xs font-extrabold tracking-wider text-primary-950 uppercase dark:text-primary-400'>
 								Unlock More Power
 							</h3>
 							<p className='mt-2 text-[11px] leading-relaxed font-semibold text-slate-500 dark:text-zinc-400'>
@@ -1189,7 +1189,7 @@ const AppsListPage = () => {
 									},
 									{
 										name: 'Productivity',
-										barColor: 'bg-indigo-400',
+										barColor: 'bg-primary-400',
 										count: 18,
 										percent: 70,
 									},
@@ -1207,7 +1207,7 @@ const AppsListPage = () => {
 									},
 									{
 										name: 'Marketing',
-										barColor: 'bg-pink-400',
+										barColor: 'bg-primary-400',
 										count: 6,
 										percent: 20,
 									},
@@ -1270,7 +1270,7 @@ const AppsListPage = () => {
 										placeholder='Search integrations...'
 										value={modalSearch}
 										onChange={(e) => setModalSearch(e.target.value)}
-										className='dark:placeholder:text-zinc-650 block h-11 w-full rounded-xl border border-slate-200 bg-slate-50 pr-10 pl-10 text-xs font-semibold text-slate-900 transition-all outline-none placeholder:text-slate-400 focus:border-violet-500/80 focus:bg-white focus:ring-4 focus:ring-violet-500/10 dark:border-zinc-800 dark:bg-zinc-950/40 dark:text-zinc-100 dark:focus:border-violet-500 dark:focus:ring-violet-500/15'
+										className='dark:placeholder:text-zinc-650 block h-11 w-full rounded-xl border border-slate-200 bg-slate-50 pr-10 pl-10 text-xs font-semibold text-slate-900 transition-all outline-none placeholder:text-slate-400 focus:border-primary-500/80 focus:bg-white focus:ring-4 focus:ring-primary-500/10 dark:border-zinc-800 dark:bg-zinc-950/40 dark:text-zinc-100 dark:focus:border-primary-500 dark:focus:ring-primary-500/15'
 									/>
 									{modalSearch && (
 										<button
@@ -1308,7 +1308,7 @@ const AppsListPage = () => {
 										filteredAvailableApps.map((availableApp) => (
 											<div
 												key={availableApp.id}
-												className='group/item flex flex-col justify-between rounded-2xl border border-slate-100 bg-slate-50/50 p-4 transition-all hover:border-violet-500/20 hover:bg-slate-50 dark:border-zinc-900/30 dark:bg-zinc-950/15 dark:hover:bg-zinc-950/40'>
+												className='group/item flex flex-col justify-between rounded-2xl border border-slate-100 bg-slate-50/50 p-4 transition-all hover:border-primary-500/20 hover:bg-slate-50 dark:border-zinc-900/30 dark:bg-zinc-950/15 dark:hover:bg-zinc-950/40'>
 												<div className='flex gap-3'>
 													<div
 														className='flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-white shadow-sm transition-transform group-hover/item:scale-105'
@@ -1422,7 +1422,7 @@ const AppsListPage = () => {
 											onChange={(e) => setCredentialName(e.target.value)}
 											placeholder='e.g., My API Key'
 											aria-label='Connection Name'
-											className='block h-11 w-full rounded-xl border border-slate-200 bg-slate-50/50 px-3.5 text-xs font-semibold text-slate-900 transition-all outline-none placeholder:text-slate-400 focus:border-violet-500/80 focus:bg-white focus:ring-4 focus:ring-violet-500/10 dark:border-zinc-800 dark:bg-zinc-950/40 dark:text-zinc-100 dark:placeholder:text-zinc-600 dark:focus:border-violet-500 dark:focus:ring-violet-500/15'
+											className='block h-11 w-full rounded-xl border border-slate-200 bg-slate-50/50 px-3.5 text-xs font-semibold text-slate-900 transition-all outline-none placeholder:text-slate-400 focus:border-primary-500/80 focus:bg-white focus:ring-4 focus:ring-primary-500/10 dark:border-zinc-800 dark:bg-zinc-950/40 dark:text-zinc-100 dark:placeholder:text-zinc-600 dark:focus:border-primary-500 dark:focus:ring-primary-500/15'
 										/>
 									</div>
 
@@ -1464,7 +1464,7 @@ const AppsListPage = () => {
 																			}),
 																		)
 																	}
-																	className='h-4 w-4 rounded border-slate-300 text-violet-600 focus:ring-violet-500'
+																	className='h-4 w-4 rounded border-slate-300 text-primary-600 focus:ring-primary-500'
 																/>
 																<span>
 																	{field.description ??
@@ -1488,7 +1488,7 @@ const AppsListPage = () => {
 																placeholder={field.placeholder}
 																aria-label={field.label}
 																rows={4}
-																className='block w-full resize-none rounded-xl border border-slate-200 bg-slate-50/50 px-3.5 py-3 text-xs font-semibold text-slate-900 transition-all outline-none placeholder:text-slate-400 focus:border-violet-500/80 focus:bg-white focus:ring-4 focus:ring-violet-500/10 dark:border-zinc-800 dark:bg-zinc-950/40 dark:text-zinc-100 dark:placeholder:text-zinc-600 dark:focus:border-violet-500 dark:focus:ring-violet-500/15'
+																className='block w-full resize-none rounded-xl border border-slate-200 bg-slate-50/50 px-3.5 py-3 text-xs font-semibold text-slate-900 transition-all outline-none placeholder:text-slate-400 focus:border-primary-500/80 focus:bg-white focus:ring-4 focus:ring-primary-500/10 dark:border-zinc-800 dark:bg-zinc-950/40 dark:text-zinc-100 dark:placeholder:text-zinc-600 dark:focus:border-primary-500 dark:focus:ring-primary-500/15'
 															/>
 														) : (
 															<input
@@ -1517,7 +1517,7 @@ const AppsListPage = () => {
 																}
 																placeholder={field.placeholder}
 																aria-label={field.label}
-																className='block h-11 w-full rounded-xl border border-slate-200 bg-slate-50/50 px-3.5 text-xs font-semibold text-slate-900 transition-all outline-none placeholder:text-slate-400 focus:border-violet-500/80 focus:bg-white focus:ring-4 focus:ring-violet-500/10 dark:border-zinc-800 dark:bg-zinc-950/40 dark:text-zinc-100 dark:placeholder:text-zinc-600 dark:focus:border-violet-500 dark:focus:ring-violet-500/15'
+																className='block h-11 w-full rounded-xl border border-slate-200 bg-slate-50/50 px-3.5 text-xs font-semibold text-slate-900 transition-all outline-none placeholder:text-slate-400 focus:border-primary-500/80 focus:bg-white focus:ring-4 focus:ring-primary-500/10 dark:border-zinc-800 dark:bg-zinc-950/40 dark:text-zinc-100 dark:placeholder:text-zinc-600 dark:focus:border-primary-500 dark:focus:ring-primary-500/15'
 															/>
 														)}
 														{field.description &&
@@ -1549,7 +1549,7 @@ const AppsListPage = () => {
 									<button
 										disabled={isConnecting || !canSubmitConnection}
 										onClick={handleAuthorize}
-										className='flex h-10 cursor-pointer items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 px-5 text-[11px] font-black text-white shadow-md transition-all hover:from-violet-500 hover:to-indigo-500 active:scale-95 disabled:pointer-events-none disabled:opacity-40'>
+										className='flex h-10 cursor-pointer items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-primary-400 to-primary-400 px-5 text-[11px] font-black text-primary-950 shadow-md transition-all hover:from-primary-400 hover:to-primary-400 active:scale-95 disabled:pointer-events-none disabled:opacity-40'>
 										{isConnecting ? (
 											<>
 												<svg
@@ -1682,7 +1682,7 @@ const DetailModalContent = ({
 				exit={{ opacity: 0, scale: 0.96, y: 15 }}
 				className='relative flex min-h-[200px] w-full max-w-md flex-col items-center justify-center rounded-3xl border border-slate-200/80 bg-white p-6 shadow-2xl dark:border-zinc-800/80 dark:bg-[#11131c]'>
 				<svg
-					className='h-7 w-7 animate-spin text-violet-600'
+					className='h-7 w-7 animate-spin text-primary-600'
 					xmlns='http://www.w3.org/2000/svg'
 					fill='none'
 					viewBox='0 0 24 24'>
@@ -1758,7 +1758,7 @@ const DetailModalContent = ({
 				</button>
 
 				<div className='flex items-center gap-3.5 border-b border-slate-100 pb-4 dark:border-zinc-800/40'>
-					<div className='flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-violet-600 text-white shadow-inner'>
+					<div className='flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-primary-400 text-primary-950 shadow-inner'>
 						<Key className='h-5 w-5' />
 					</div>
 					<div>
@@ -1787,7 +1787,7 @@ const DetailModalContent = ({
 							onChange={(e) => setEditName(e.target.value)}
 							placeholder='e.g., My Updated Connection'
 							aria-label='Connection Name'
-							className='block h-11 w-full rounded-xl border border-slate-200 bg-slate-50/50 px-3.5 text-xs font-semibold text-slate-900 transition-all outline-none placeholder:text-slate-400 focus:border-violet-500/80 focus:bg-white focus:ring-4 focus:ring-violet-500/10 dark:border-zinc-800 dark:bg-zinc-950/40 dark:text-zinc-100 dark:placeholder:text-zinc-600 dark:focus:border-violet-500 dark:focus:ring-violet-500/15'
+							className='block h-11 w-full rounded-xl border border-slate-200 bg-slate-50/50 px-3.5 text-xs font-semibold text-slate-900 transition-all outline-none placeholder:text-slate-400 focus:border-primary-500/80 focus:bg-white focus:ring-4 focus:ring-primary-500/10 dark:border-zinc-800 dark:bg-zinc-950/40 dark:text-zinc-100 dark:placeholder:text-zinc-600 dark:focus:border-primary-500 dark:focus:ring-primary-500/15'
 						/>
 					</div>
 
@@ -1822,7 +1822,7 @@ const DetailModalContent = ({
 														[fieldKey]: e.target.checked,
 													}))
 												}
-												className='h-4 w-4 rounded border-slate-300 text-violet-600 focus:ring-violet-500'
+												className='h-4 w-4 rounded border-slate-300 text-primary-600 focus:ring-primary-500'
 											/>
 											<span>{field.description ?? field.label}</span>
 										</label>
@@ -1843,7 +1843,7 @@ const DetailModalContent = ({
 											}
 											aria-label={field.label}
 											rows={4}
-											className='block w-full resize-none rounded-xl border border-slate-200 bg-slate-50/50 px-3.5 py-3 text-xs font-semibold text-slate-900 transition-all outline-none placeholder:text-slate-400 focus:border-violet-500/80 focus:bg-white focus:ring-4 focus:ring-violet-500/10 dark:border-zinc-800 dark:bg-zinc-950/40 dark:text-zinc-100 dark:placeholder:text-zinc-600 dark:focus:border-violet-500 dark:focus:ring-violet-500/15'
+											className='block w-full resize-none rounded-xl border border-slate-200 bg-slate-50/50 px-3.5 py-3 text-xs font-semibold text-slate-900 transition-all outline-none placeholder:text-slate-400 focus:border-primary-500/80 focus:bg-white focus:ring-4 focus:ring-primary-500/10 dark:border-zinc-800 dark:bg-zinc-950/40 dark:text-zinc-100 dark:placeholder:text-zinc-600 dark:focus:border-primary-500 dark:focus:ring-primary-500/15'
 										/>
 									) : (
 										<input
@@ -1868,7 +1868,7 @@ const DetailModalContent = ({
 													: field.placeholder
 											}
 											aria-label={field.label}
-											className='block h-11 w-full rounded-xl border border-slate-200 bg-slate-50/50 px-3.5 text-xs font-semibold text-slate-900 transition-all outline-none placeholder:text-slate-400 focus:border-violet-500/80 focus:bg-white focus:ring-4 focus:ring-violet-500/10 dark:border-zinc-800 dark:bg-zinc-950/40 dark:text-zinc-100 dark:placeholder:text-zinc-600 dark:focus:border-violet-500 dark:focus:ring-violet-500/15'
+											className='block h-11 w-full rounded-xl border border-slate-200 bg-slate-50/50 px-3.5 text-xs font-semibold text-slate-900 transition-all outline-none placeholder:text-slate-400 focus:border-primary-500/80 focus:bg-white focus:ring-4 focus:ring-primary-500/10 dark:border-zinc-800 dark:bg-zinc-950/40 dark:text-zinc-100 dark:placeholder:text-zinc-600 dark:focus:border-primary-500 dark:focus:ring-primary-500/15'
 										/>
 									)}
 									{field.secret && (
@@ -1906,7 +1906,7 @@ const DetailModalContent = ({
 							});
 							setIsEditing(false);
 						}}
-						className='flex h-10 cursor-pointer items-center justify-center rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 px-5 text-[11px] font-black text-white shadow-md transition-all hover:from-violet-500 hover:to-indigo-500 active:scale-95 disabled:pointer-events-none disabled:opacity-40'>
+						className='flex h-10 cursor-pointer items-center justify-center rounded-xl bg-gradient-to-r from-primary-400 to-primary-400 px-5 text-[11px] font-black text-primary-950 shadow-md transition-all hover:from-primary-400 hover:to-primary-400 active:scale-95 disabled:pointer-events-none disabled:opacity-40'>
 						{isUpdating ? 'Saving...' : 'Save Changes'}
 					</button>
 				</div>
@@ -1929,7 +1929,7 @@ const DetailModalContent = ({
 			</button>
 
 			<div className='flex items-center gap-3.5 border-b border-slate-100 pb-4 dark:border-zinc-800/40'>
-				<div className='flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-violet-600 text-white shadow-inner'>
+				<div className='flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-primary-400 text-primary-950 shadow-inner'>
 					<Key className='h-5 w-5' />
 				</div>
 				<div>

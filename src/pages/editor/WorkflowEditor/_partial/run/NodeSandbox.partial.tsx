@@ -26,7 +26,7 @@ function validateJson(value: string): string | null {
 }
 
 const areaCls =
-	'w-full rounded-xl border border-zinc-200 bg-zinc-50 p-3 font-mono text-xs text-zinc-700 outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-100 resize-none dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-300 dark:focus:border-violet-500 dark:focus:ring-violet-500/20';
+	'w-full rounded-xl border border-zinc-200 bg-zinc-50 p-3 font-mono text-xs text-zinc-700 outline-none focus:border-primary-400 focus:ring-2 focus:ring-primary-100 resize-none dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-300 dark:focus:border-primary-500 dark:focus:ring-primary-500/20';
 
 interface NodeSandboxProps {
 	code: string;
@@ -109,7 +109,7 @@ const NodeSandbox = ({ code }: NodeSandboxProps) => {
 				type='button'
 				disabled={isRunning || !!jsonError || overLimit}
 				onClick={handleRun}
-				className='flex h-9 w-full items-center justify-center gap-2 rounded-xl bg-violet-600 text-[12px] font-bold text-white shadow-sm shadow-violet-500/20 transition hover:bg-violet-700 disabled:cursor-not-allowed disabled:opacity-60'>
+				className='flex h-9 w-full items-center justify-center gap-2 rounded-xl bg-primary-400 text-[12px] font-bold text-primary-950 shadow-sm shadow-primary-500/20 transition hover:bg-primary-700 disabled:cursor-not-allowed disabled:opacity-60'>
 				{isRunning ? (
 					<>
 						<Loader2 size={13} className='animate-spin' />

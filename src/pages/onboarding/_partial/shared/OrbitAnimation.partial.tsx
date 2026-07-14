@@ -22,13 +22,13 @@ const OrbitAnimation = ({
 		<div className='relative hidden lg:flex min-h-[520px] flex-col items-center justify-center border-l border-slate-100 bg-slate-50/50 p-8 dark:border-zinc-800/80 dark:bg-zinc-950/20'>
 			<div className='pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_1px_1px,#000_1px,transparent_0)] bg-[size:16px_16px] opacity-[0.03] dark:bg-[radial-gradient(circle_at_1px_1px,#fff_1px,transparent_0)] dark:opacity-[0.04]' />
 
-			<div className='absolute top-6 right-6 flex items-center gap-1.5 rounded-lg bg-violet-500/10 px-2.5 py-1 text-[10px] font-black tracking-wider text-violet-600 uppercase dark:text-violet-400'>
+			<div className='absolute top-6 right-6 flex items-center gap-1.5 rounded-lg bg-primary-400/10 px-2.5 py-1 text-[10px] font-black tracking-wider text-primary-600 uppercase dark:text-primary-400'>
 				<Sparkles className='h-3 w-3' />
 				Live Preview
 			</div>
 
 			<div className='relative flex h-72 w-72 items-center justify-center'>
-				<div className='absolute h-40 w-40 animate-pulse rounded-full bg-violet-500/10 blur-2xl dark:bg-violet-600/5' />
+				<div className='absolute h-40 w-40 animate-pulse rounded-full bg-primary-400/10 blur-2xl dark:bg-primary-400/5' />
 				<div className='absolute h-52 w-52 animate-[spin_50s_linear_infinite] rounded-full border border-dashed border-slate-200/60 dark:border-zinc-800/40' />
 				<div className='absolute h-[130px] w-[130px] animate-[spin_30s_linear_infinite_reverse] rounded-full border border-dashed border-slate-200/30 dark:border-zinc-800/20' />
 
@@ -45,7 +45,7 @@ const OrbitAnimation = ({
 								],
 							}}
 							transition={{ repeat: Infinity, duration: 4 }}
-							className='relative z-10 flex h-24 w-24 flex-col items-center justify-center rounded-full bg-gradient-to-tr from-violet-600 via-fuchsia-500 to-indigo-600 p-2 text-white'>
+							className='relative z-10 flex h-24 w-24 flex-col items-center justify-center rounded-full bg-gradient-to-tr from-primary-400 via-fuchsia-500 to-primary-400 p-2 text-primary-950'>
 							<UserPlus className='h-9 w-9' />
 							<span className='mt-1 text-[10px] font-black tracking-widest uppercase'>
 								TEAM
@@ -105,7 +105,7 @@ const OrbitAnimation = ({
 								],
 							}}
 							transition={{ repeat: Infinity, duration: 4 }}
-							className='relative z-10 flex h-24 w-24 flex-col items-center justify-center rounded-full bg-gradient-to-tr from-violet-600 via-fuchsia-500 to-indigo-600 p-2 text-white'>
+							className='relative z-10 flex h-24 w-24 flex-col items-center justify-center rounded-full bg-gradient-to-tr from-primary-400 via-fuchsia-500 to-primary-400 p-2 text-primary-950'>
 							<Bot className='h-9 w-9' />
 							<span className='mt-1 text-[10px] font-black tracking-widest uppercase'>
 								CORE

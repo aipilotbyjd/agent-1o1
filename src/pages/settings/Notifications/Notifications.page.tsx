@@ -48,7 +48,7 @@ const ChannelToggle = ({
 			<div
 				className={`relative flex h-5 w-5 items-center justify-center rounded border transition ${
 					checked && !disabled
-						? 'border-pink-500 bg-pink-500'
+						? 'border-primary-500 bg-primary-400'
 						: 'border-zinc-300 bg-white dark:border-zinc-600 dark:bg-zinc-800'
 				}`}>
 				<input
@@ -88,8 +88,8 @@ const EnabledToggle = ({
 		role='switch'
 		aria-checked={enabled}
 		onClick={() => onChange(!enabled)}
-		className={`relative inline-flex h-5 w-9 shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent transition-colors duration-200 focus:ring-2 focus:ring-pink-500 focus:ring-offset-2 focus:outline-none ${
-			enabled ? 'bg-pink-500' : 'bg-zinc-200 dark:bg-zinc-700'
+		className={`relative inline-flex h-5 w-9 shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent transition-colors duration-200 focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 focus:outline-none ${
+			enabled ? 'bg-primary-400' : 'bg-zinc-200 dark:bg-zinc-700'
 		}`}>
 		<span
 			className={`pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow transition duration-200 ${
@@ -298,7 +298,7 @@ const NotificationsPage = () => {
 							type='button'
 							onClick={handleSave}
 							disabled={updatePreferences.isPending}
-							className='flex h-10 items-center gap-2 rounded-xl bg-pink-500 px-5 text-sm font-bold text-white shadow-lg shadow-pink-500/20 transition hover:bg-pink-600 disabled:cursor-not-allowed disabled:opacity-60'>
+							className='flex h-10 items-center gap-2 rounded-xl bg-primary-400 px-5 text-sm font-bold text-primary-950 shadow-lg shadow-primary-500/20 transition hover:bg-primary-500 disabled:cursor-not-allowed disabled:opacity-60'>
 							<Save size={15} />
 							{updatePreferences.isPending ? 'Saving...' : 'Save changes'}
 						</button>

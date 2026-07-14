@@ -103,7 +103,7 @@ const getAppNames = (nodes: { type?: string }[] | undefined) => {
 };
 
 const AppBadge = ({ name }: { name: string }) => (
-	<span className='text-violet-650 shadow-3xs rounded-full border border-violet-100/60 bg-violet-50/30 px-2.5 py-0.5 text-[10px] font-bold capitalize transition-all duration-200 hover:border-violet-200/50 hover:bg-violet-50 dark:border-zinc-800/80 dark:bg-zinc-800/20 dark:text-violet-400 dark:hover:bg-violet-950/20'>
+	<span className='text-primary-600 shadow-3xs rounded-full border border-primary-100/60 bg-primary-50/30 px-2.5 py-0.5 text-[10px] font-bold capitalize transition-all duration-200 hover:border-primary-200/50 hover:bg-primary-50 dark:border-zinc-800/80 dark:bg-zinc-800/20 dark:text-primary-400 dark:hover:bg-primary-950/20'>
 		{name}
 	</span>
 );
@@ -374,7 +374,7 @@ const MyWorkspacePage = () => {
 						type='button'
 						onClick={() => handleMoveWorkflow(workflow, null)}
 						className='flex w-full items-center gap-2 rounded-lg px-3 py-1.5 text-left text-[11px] font-bold text-slate-700 hover:bg-slate-50 dark:text-zinc-200 dark:hover:bg-zinc-800'>
-						<Workflow size={12} className='text-violet-500' />
+						<Workflow size={12} className='text-primary-500' />
 						Root level
 					</button>
 				)}
@@ -410,9 +410,9 @@ const MyWorkspacePage = () => {
 					);
 				}
 			}}
-			className='group relative flex min-h-[220px] cursor-pointer flex-col justify-between rounded-2xl border border-slate-200/80 bg-white/70 p-5.5 shadow-2xs backdrop-blur-md transition-all duration-300 hover:-translate-y-1.5 hover:border-violet-500/40 hover:bg-white hover:shadow-md dark:border-zinc-800/80 dark:bg-zinc-900/70 dark:hover:border-violet-500/30 dark:hover:bg-zinc-900/90'>
+			className='group relative flex min-h-[220px] cursor-pointer flex-col justify-between rounded-2xl border border-slate-200/80 bg-white/70 p-5.5 shadow-2xs backdrop-blur-md transition-all duration-300 hover:-translate-y-1.5 hover:border-primary-500/40 hover:bg-white hover:shadow-md dark:border-zinc-800/80 dark:bg-zinc-900/70 dark:hover:border-primary-500/30 dark:hover:bg-zinc-900/90'>
 			{/* Bottom interactive gradient line */}
-			<div className='absolute right-0 bottom-0 left-0 h-1.5 rounded-b-2xl bg-gradient-to-r from-violet-600 to-indigo-600 opacity-0 transition-opacity duration-300 group-hover:opacity-10' />
+			<div className='absolute right-0 bottom-0 left-0 h-1.5 rounded-b-2xl bg-gradient-to-r from-primary-400 to-primary-400 opacity-0 transition-opacity duration-300 group-hover:opacity-10' />
 
 			<div className='flex flex-col gap-3.5'>
 				<div className='flex items-start justify-between gap-3'>
@@ -420,14 +420,14 @@ const MyWorkspacePage = () => {
 						<div
 							className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border transition-all duration-300 ${
 								workflow.isActive
-									? 'text-violet-650 shadow-3xs border-violet-500/20 bg-gradient-to-tr from-violet-500/10 to-indigo-500/10 group-hover:scale-105 dark:border-violet-500/30 dark:bg-violet-500/20 dark:text-violet-400'
+									? 'text-primary-600 shadow-3xs border-primary-500/20 bg-gradient-to-tr from-primary-400/10 to-primary-400/10 group-hover:scale-105 dark:border-primary-500/30 dark:bg-primary-400/20 dark:text-primary-400'
 									: 'border-slate-200/60 bg-slate-50/80 text-slate-500 group-hover:scale-105 dark:border-zinc-700/50 dark:bg-zinc-800/80 dark:text-zinc-400'
 							}`}>
 							<Workflow size={18} />
 						</div>
 						<div className='min-w-0'>
 							<div className='flex flex-wrap items-center gap-2'>
-								<h3 className='truncate text-sm font-black tracking-wide text-slate-900 transition-colors duration-200 group-hover:text-violet-600 dark:text-white dark:group-hover:text-violet-400'>
+								<h3 className='truncate text-sm font-black tracking-wide text-slate-900 transition-colors duration-200 group-hover:text-primary-600 dark:text-white dark:group-hover:text-primary-400'>
 									{workflow.title}
 								</h3>
 								<span
@@ -511,7 +511,7 @@ const MyWorkspacePage = () => {
 												)
 											}
 											className='flex w-full cursor-pointer items-center gap-2 rounded-lg px-3 py-2 text-[11px] font-bold text-slate-700 hover:bg-slate-50 dark:text-zinc-200 dark:hover:bg-zinc-800'>
-											<Edit3 size={12} className='text-violet-500' />
+											<Edit3 size={12} className='text-primary-500' />
 											Open editor
 										</button>
 										{renderMoveMenu(workflow)}
@@ -565,8 +565,8 @@ const MyWorkspacePage = () => {
 						<span>Run {workflow.lastRun}</span>
 					</div>
 				</div>
-				<span className='text-violet-650 shadow-3xs flex shrink-0 items-center gap-1.5 rounded-full border border-violet-100/50 bg-violet-50/80 px-2.5 py-1 text-[10px] font-black dark:border-violet-900/30 dark:bg-violet-950/20 dark:text-violet-400'>
-					<GitMerge size={11} className='rotate-90 text-violet-500' />
+				<span className='text-primary-600 shadow-3xs flex shrink-0 items-center gap-1.5 rounded-full border border-primary-100/50 bg-primary-50/80 px-2.5 py-1 text-[10px] font-black dark:border-primary-900/30 dark:bg-primary-950/20 dark:text-primary-400'>
+					<GitMerge size={11} className='rotate-90 text-primary-500' />
 					<span>
 						{workflow.nodesCount} {workflow.nodesCount === 1 ? 'node' : 'nodes'}
 					</span>
@@ -578,19 +578,19 @@ const MyWorkspacePage = () => {
 	return (
 		<Container className='relative min-h-screen overflow-x-hidden overflow-y-auto bg-[#f8f9fc] !p-0 dark:bg-zinc-950'>
 			{/* Decorative background glow circles */}
-			<div className='pointer-events-none absolute top-[-10%] left-[-10%] h-[35rem] w-[35rem] rounded-full bg-violet-200/30 blur-[120px] dark:bg-violet-900/5' />
-			<div className='pointer-events-none absolute right-[-10%] bottom-[-10%] h-[35rem] w-[35rem] rounded-full bg-indigo-200/20 blur-[120px] dark:bg-indigo-900/5' />
+			<div className='pointer-events-none absolute top-[-10%] left-[-10%] h-[35rem] w-[35rem] rounded-full bg-primary-200/30 blur-[120px] dark:bg-primary-900/5' />
+			<div className='pointer-events-none absolute right-[-10%] bottom-[-10%] h-[35rem] w-[35rem] rounded-full bg-primary-200/20 blur-[120px] dark:bg-primary-900/5' />
 
 			<div className='relative z-10 mx-auto w-full max-w-7xl space-y-6 p-4 sm:p-6 md:p-8'>
 				<header className='relative mt-4 sm:mt-0 flex flex-col justify-between gap-6 overflow-hidden rounded-3xl border border-slate-200/80 bg-white/70 p-6 shadow-sm backdrop-blur-md lg:flex-row lg:items-center dark:border-zinc-800/80 dark:bg-zinc-900/40'>
 					{/* Banner background glow effect */}
-					<div className='absolute -top-24 -right-24 h-48 w-48 rounded-full bg-violet-500/10 blur-3xl' />
-					<div className='absolute -bottom-24 -left-24 h-48 w-48 rounded-full bg-indigo-500/10 blur-3xl' />
+					<div className='absolute -top-24 -right-24 h-48 w-48 rounded-full bg-primary-400/10 blur-3xl' />
+					<div className='absolute -bottom-24 -left-24 h-48 w-48 rounded-full bg-primary-400/10 blur-3xl' />
 
 					{/* Faint network nodes artwork on the right */}
 					<div className='pointer-events-none absolute top-0 right-0 bottom-0 hidden w-64 overflow-hidden opacity-20 md:block dark:opacity-5'>
 						<svg
-							className='h-full w-full text-violet-500'
+							className='h-full w-full text-primary-500'
 							viewBox='0 0 200 100'
 							fill='none'
 							xmlns='http://www.w3.org/2000/svg'>
@@ -627,7 +627,7 @@ const MyWorkspacePage = () => {
 					<div className='relative z-10 flex min-w-0 items-center gap-4.5'>
 						<div className='group relative shrink-0'>
 							{/* Circular initials avatar with soft glow */}
-							<div className='shadow-violet-650/30 relative flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-tr from-violet-600 to-fuchsia-600 text-lg font-black text-white shadow-lg'>
+							<div className='shadow-primary-600/30 relative flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-tr from-primary-400 to-fuchsia-600 text-lg font-black text-primary-950 shadow-lg'>
 								{getInitials(workspaceName)}
 							</div>
 							{/* Green status indicator dot at the bottom left */}
@@ -639,7 +639,7 @@ const MyWorkspacePage = () => {
 									{workspaceName}
 								</h1>
 								{workspaceRole && (
-									<span className='rounded-full border border-violet-100 bg-violet-50 px-2.5 py-0.5 text-[10px] font-black tracking-wide text-violet-600 uppercase shadow-2xs dark:border-violet-900/30 dark:bg-violet-950/20 dark:text-violet-400'>
+									<span className='rounded-full border border-primary-100 bg-primary-50 px-2.5 py-0.5 text-[10px] font-black tracking-wide text-primary-600 uppercase shadow-2xs dark:border-primary-900/30 dark:bg-primary-950/20 dark:text-primary-400'>
 										{workspaceRole}
 									</span>
 								)}
@@ -669,7 +669,7 @@ const MyWorkspacePage = () => {
 							whileTap={{ scale: 0.98 }}
 							onClick={() => setIsCreateWorkflowOpen(true)}
 							disabled={!hasWorkspace}
-							className='flex h-10 cursor-pointer items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 px-4.5 text-xs font-bold text-white shadow-md shadow-violet-500/20 transition-all hover:from-violet-500 hover:to-indigo-500 disabled:cursor-not-allowed disabled:opacity-60'>
+							className='flex h-10 cursor-pointer items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-primary-400 to-primary-400 px-4.5 text-xs font-bold text-primary-950 shadow-md shadow-primary-500/20 transition-all hover:from-primary-400 hover:to-primary-400 disabled:cursor-not-allowed disabled:opacity-60'>
 							<Plus size={15} strokeWidth={2.5} />
 							New Workflow
 						</motion.button>
@@ -683,12 +683,12 @@ const MyWorkspacePage = () => {
 							value: workflows.length,
 							desc: 'Total integrations',
 							icon: Workflow,
-							color: 'text-violet-600 dark:text-violet-400',
-							bgColor: 'bg-violet-50 dark:bg-violet-950/30',
+							color: 'text-primary-600 dark:text-primary-400',
+							bgColor: 'bg-primary-50 dark:bg-primary-950/30',
 							borderColor:
-								'hover:border-violet-500/30 dark:hover:border-violet-500/20',
-							shadowColor: 'hover:shadow-violet-500/10',
-							accentColor: 'from-violet-500 to-indigo-500',
+								'hover:border-primary-500/30 dark:hover:border-primary-500/20',
+							shadowColor: 'hover:shadow-primary-500/10',
+							accentColor: 'from-primary-400 to-primary-400',
 						},
 						{
 							label: 'Active',
@@ -722,7 +722,7 @@ const MyWorkspacePage = () => {
 							bgColor: 'bg-rose-50 dark:bg-rose-950/30',
 							borderColor: 'hover:border-rose-500/30 dark:hover:border-rose-500/20',
 							shadowColor: 'hover:shadow-rose-500/10',
-							accentColor: 'from-rose-500 to-pink-500',
+							accentColor: 'from-rose-500 to-primary-400',
 						},
 					].map((stat) => {
 						const IconComponent = stat.icon;
@@ -772,7 +772,7 @@ const MyWorkspacePage = () => {
 						<button
 							type='button'
 							onClick={() => setShowFavoritesOnly(false)}
-							className={`relative z-10 cursor-pointer rounded-lg px-4.5 py-1.5 text-xs font-bold transition-colors duration-300 ${!showFavoritesOnly ? 'shadow-3xs text-violet-600 dark:text-violet-400' : 'dark:text-zinc-450 text-slate-500 hover:text-slate-800 dark:hover:text-zinc-200'}`}>
+							className={`relative z-10 cursor-pointer rounded-lg px-4.5 py-1.5 text-xs font-bold transition-colors duration-300 ${!showFavoritesOnly ? 'shadow-3xs text-primary-600 dark:text-primary-400' : 'dark:text-zinc-450 text-slate-500 hover:text-slate-800 dark:hover:text-zinc-200'}`}>
 							{!showFavoritesOnly && (
 								<motion.div
 									layoutId='activeTabBackground'
@@ -785,7 +785,7 @@ const MyWorkspacePage = () => {
 						<button
 							type='button'
 							onClick={() => setShowFavoritesOnly(true)}
-							className={`relative z-10 cursor-pointer rounded-lg px-4.5 py-1.5 text-xs font-bold transition-colors duration-300 ${showFavoritesOnly ? 'shadow-3xs text-violet-600 dark:text-violet-400' : 'dark:text-zinc-455 text-slate-500 hover:text-slate-800 dark:hover:text-zinc-200'}`}>
+							className={`relative z-10 cursor-pointer rounded-lg px-4.5 py-1.5 text-xs font-bold transition-colors duration-300 ${showFavoritesOnly ? 'shadow-3xs text-primary-600 dark:text-primary-400' : 'dark:text-zinc-455 text-slate-500 hover:text-slate-800 dark:hover:text-zinc-200'}`}>
 							{showFavoritesOnly && (
 								<motion.div
 									layoutId='activeTabBackground'
@@ -798,13 +798,13 @@ const MyWorkspacePage = () => {
 					</div>
 
 					<div className='group relative w-full sm:w-80'>
-						<Search className='absolute top-1/2 left-3.5 h-4 w-4 -translate-y-1/2 text-slate-400 transition-colors group-focus-within:text-violet-500 dark:text-zinc-500' />
+						<Search className='absolute top-1/2 left-3.5 h-4 w-4 -translate-y-1/2 text-slate-400 transition-colors group-focus-within:text-primary-500 dark:text-zinc-500' />
 						<input
 							aria-label='Search workspace workflows'
 							value={searchQuery}
 							onChange={(event) => setSearchQuery(event.target.value)}
 							placeholder='Search workflows by title or description...'
-							className='dark:placeholder-zinc-550 h-10 w-full rounded-xl border border-slate-200 bg-white pr-9 pl-10 text-xs font-semibold text-slate-900 placeholder-slate-400 shadow-2xs transition-all outline-none focus:border-violet-500 focus:ring-2 focus:ring-violet-500/10 dark:border-zinc-800 dark:bg-zinc-900 dark:text-white'
+							className='dark:placeholder-zinc-550 h-10 w-full rounded-xl border border-slate-200 bg-white pr-9 pl-10 text-xs font-semibold text-slate-900 placeholder-slate-400 shadow-2xs transition-all outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-500/10 dark:border-zinc-800 dark:bg-zinc-900 dark:text-white'
 						/>
 						{searchQuery && (
 							<button
@@ -828,7 +828,7 @@ const MyWorkspacePage = () => {
 					</div>
 				) : workflows.length === 0 ? (
 					<div className='shadow-3xs rounded-3xl border border-dashed border-slate-200/80 bg-white/40 p-12 text-center dark:border-zinc-700 dark:bg-zinc-900'>
-						<div className='mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-violet-100/80 text-violet-600 shadow-sm dark:bg-violet-500/10 dark:text-violet-400'>
+						<div className='mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-primary-100/80 text-primary-600 shadow-sm dark:bg-primary-400/10 dark:text-primary-400'>
 							<GitMerge size={22} className='rotate-90' />
 						</div>
 						<h2 className='mt-4 text-lg font-black text-slate-900 dark:text-white'>
@@ -843,7 +843,7 @@ const MyWorkspacePage = () => {
 							whileHover={{ scale: 1.02 }}
 							whileTap={{ scale: 0.98 }}
 							onClick={() => setIsCreateWorkflowOpen(true)}
-							className='mt-5 inline-flex h-10 cursor-pointer items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 px-5 text-xs font-bold text-white shadow-md shadow-violet-500/20 hover:from-violet-500 hover:to-indigo-500 hover:shadow-lg'>
+							className='mt-5 inline-flex h-10 cursor-pointer items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-primary-400 to-primary-400 px-5 text-xs font-bold text-primary-950 shadow-md shadow-primary-500/20 hover:from-primary-400 hover:to-primary-400 hover:shadow-lg'>
 							<Plus size={15} strokeWidth={2.5} />
 							Create Workflow
 						</motion.button>
@@ -862,9 +862,9 @@ const MyWorkspacePage = () => {
 							return (
 								<section key={folder.id} className='space-y-3'>
 									{isRootGroup ? (
-										<div className='shadow-3xs flex items-center justify-between gap-3 rounded-2xl border border-indigo-100 bg-indigo-50/10 px-5 py-4 backdrop-blur-md transition-all duration-300 hover:bg-indigo-50/20 dark:border-indigo-900/20 dark:bg-indigo-950/5 dark:hover:bg-indigo-950/10'>
+										<div className='shadow-3xs flex items-center justify-between gap-3 rounded-2xl border border-primary-100 bg-primary-50/10 px-5 py-4 backdrop-blur-md transition-all duration-300 hover:bg-primary-50/20 dark:border-primary-900/20 dark:bg-primary-950/5 dark:hover:bg-primary-950/10'>
 											<div className='flex min-w-0 items-center gap-3'>
-												<div className='text-indigo-650 flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-indigo-100 shadow-2xs dark:bg-indigo-500/10 dark:text-indigo-400'>
+												<div className='text-primary-600 flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary-100 shadow-2xs dark:bg-primary-400/10 dark:text-primary-400'>
 													<Workflow size={17} />
 												</div>
 												<div className='min-w-0'>
@@ -877,12 +877,12 @@ const MyWorkspacePage = () => {
 													</p>
 												</div>
 											</div>
-											<span className='shrink-0 rounded-full border border-indigo-200/30 bg-indigo-100 px-2.5 py-0.5 text-[10px] font-extrabold text-indigo-700 dark:border-indigo-800/20 dark:bg-indigo-950/40 dark:text-indigo-300'>
+											<span className='shrink-0 rounded-full border border-primary-200/30 bg-primary-100 px-2.5 py-0.5 text-[10px] font-extrabold text-primary-700 dark:border-primary-800/20 dark:bg-primary-950/40 dark:text-primary-300'>
 												{workflowsInFolder.length}
 											</span>
 										</div>
 									) : (
-										<div className='group/folder relative flex items-center overflow-hidden rounded-2xl border border-slate-200/80 bg-white/70 shadow-2xs backdrop-blur-md transition-all duration-300 hover:border-violet-500/25 hover:bg-white dark:border-zinc-800/80 dark:bg-zinc-900/60 dark:hover:border-violet-500/20 dark:hover:bg-zinc-900/80'>
+										<div className='group/folder relative flex items-center overflow-hidden rounded-2xl border border-slate-200/80 bg-white/70 shadow-2xs backdrop-blur-md transition-all duration-300 hover:border-primary-500/25 hover:bg-white dark:border-zinc-800/80 dark:bg-zinc-900/60 dark:hover:border-primary-500/20 dark:hover:bg-zinc-900/80'>
 											<div
 												style={{ backgroundColor: folder.color }}
 												className='absolute top-0 bottom-0 left-0 w-1.5 opacity-85'
@@ -928,7 +928,7 @@ const MyWorkspacePage = () => {
 													type='button'
 													aria-label={`Edit ${folder.name}`}
 													onClick={() => openEditFolder(folder)}
-													className='dark:text-zinc-550 flex h-8 w-8 cursor-pointer items-center justify-center rounded-full text-slate-400 transition-all duration-200 hover:bg-slate-100 hover:text-violet-600 dark:hover:bg-zinc-800 dark:hover:text-violet-400'>
+													className='dark:text-zinc-550 flex h-8 w-8 cursor-pointer items-center justify-center rounded-full text-slate-400 transition-all duration-200 hover:bg-slate-100 hover:text-primary-600 dark:hover:bg-zinc-800 dark:hover:text-primary-400'>
 													<Edit3 size={13} />
 												</button>
 												<button
@@ -992,7 +992,7 @@ const MyWorkspacePage = () => {
 								<X size={18} />
 							</button>
 							<h3 className='mb-5 flex items-center gap-2 text-lg font-black text-slate-900 dark:text-white'>
-								<GitMerge className='h-5 w-5 rotate-90 text-violet-600' />
+								<GitMerge className='h-5 w-5 rotate-90 text-primary-600' />
 								Create Workflow
 							</h3>
 							<form onSubmit={handleCreateWorkflow} className='space-y-4'>
@@ -1009,7 +1009,7 @@ const MyWorkspacePage = () => {
 										value={workflowName}
 										onChange={(event) => setWorkflowName(event.target.value)}
 										placeholder='e.g. Lead sync manager'
-										className='dark:border-zinc-750 h-10 w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 text-xs font-semibold text-slate-950 transition outline-none focus:border-violet-500 focus:ring-2 focus:ring-violet-500/10 dark:bg-zinc-900 dark:text-white'
+										className='dark:border-zinc-750 h-10 w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 text-xs font-semibold text-slate-950 transition outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-500/10 dark:bg-zinc-900 dark:text-white'
 									/>
 								</div>
 								<div>
@@ -1027,7 +1027,7 @@ const MyWorkspacePage = () => {
 										}
 										rows={3}
 										placeholder='Optional description'
-										className='dark:border-zinc-750 w-full resize-none rounded-xl border border-slate-200 bg-slate-50 p-3.5 text-xs font-semibold text-slate-950 transition outline-none focus:border-violet-500 focus:ring-2 focus:ring-violet-500/10 dark:bg-zinc-900 dark:text-white'
+										className='dark:border-zinc-750 w-full resize-none rounded-xl border border-slate-200 bg-slate-50 p-3.5 text-xs font-semibold text-slate-950 transition outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-500/10 dark:bg-zinc-900 dark:text-white'
 									/>
 								</div>
 								<div>
@@ -1043,7 +1043,7 @@ const MyWorkspacePage = () => {
 										onChange={(event) =>
 											setWorkflowFolderId(event.target.value)
 										}
-										className='dark:border-zinc-750 h-10 w-full rounded-xl border border-slate-200 bg-slate-50 px-3 text-xs font-semibold text-slate-950 transition outline-none focus:border-violet-500 focus:ring-2 focus:ring-violet-500/10 dark:bg-zinc-900 dark:text-white'>
+										className='dark:border-zinc-750 h-10 w-full rounded-xl border border-slate-200 bg-slate-50 px-3 text-xs font-semibold text-slate-950 transition outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-500/10 dark:bg-zinc-900 dark:text-white'>
 										<option value=''>Root level</option>
 										{folders.map((folder) => (
 											<option key={folder.id} value={folder.id}>
@@ -1062,7 +1062,7 @@ const MyWorkspacePage = () => {
 									<button
 										type='submit'
 										disabled={createWorkflowMutation.isPending}
-										className='h-10 rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 px-5 text-xs font-bold text-white shadow-md shadow-violet-500/10 transition-all hover:from-violet-500 hover:to-indigo-500 hover:shadow-lg disabled:cursor-not-allowed disabled:opacity-60'>
+										className='h-10 rounded-xl bg-gradient-to-r from-primary-400 to-primary-400 px-5 text-xs font-bold text-primary-950 shadow-md shadow-primary-500/10 transition-all hover:from-primary-400 hover:to-primary-400 hover:shadow-lg disabled:cursor-not-allowed disabled:opacity-60'>
 										{createWorkflowMutation.isPending
 											? 'Creating...'
 											: 'Create Workflow'}
@@ -1096,9 +1096,9 @@ const MyWorkspacePage = () => {
 							</button>
 							<h3 className='mb-5 flex items-center gap-2 text-lg font-black text-slate-900 dark:text-white'>
 								{editingFolder ? (
-									<Edit3 className='h-5 w-5 text-violet-600' />
+									<Edit3 className='h-5 w-5 text-primary-600' />
 								) : (
-									<FolderPlus className='h-5 w-5 text-violet-600' />
+									<FolderPlus className='h-5 w-5 text-primary-600' />
 								)}
 								{editingFolder ? 'Edit Folder' : 'Create Folder'}
 							</h3>
@@ -1116,7 +1116,7 @@ const MyWorkspacePage = () => {
 										value={folderName}
 										onChange={(event) => setFolderName(event.target.value)}
 										placeholder='e.g. Sales operations'
-										className='text-slate-955 h-10 w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 text-xs font-semibold transition outline-none focus:border-violet-500 focus:ring-2 focus:ring-violet-500/10 dark:border-zinc-800 dark:bg-zinc-900 dark:text-white'
+										className='text-slate-955 h-10 w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 text-xs font-semibold transition outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-500/10 dark:border-zinc-800 dark:bg-zinc-900 dark:text-white'
 									/>
 								</div>
 								<div>
@@ -1154,7 +1154,7 @@ const MyWorkspacePage = () => {
 											createFolderMutation.isPending ||
 											updateFolderMutation.isPending
 										}
-										className='h-10 rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 px-5 text-xs font-bold text-white shadow-md shadow-violet-500/10 transition-all hover:from-violet-500 hover:to-indigo-500 hover:shadow-lg disabled:cursor-not-allowed disabled:opacity-60'>
+										className='h-10 rounded-xl bg-gradient-to-r from-primary-400 to-primary-400 px-5 text-xs font-bold text-primary-950 shadow-md shadow-primary-500/10 transition-all hover:from-primary-400 hover:to-primary-400 hover:shadow-lg disabled:cursor-not-allowed disabled:opacity-60'>
 										{editingFolder ? 'Save Changes' : 'Create Folder'}
 									</button>
 								</div>

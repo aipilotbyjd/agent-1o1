@@ -47,7 +47,7 @@ const InviteTeamStep = () => {
 							className='block text-xs font-bold text-slate-600 dark:text-zinc-400'>
 							Work emails
 							{hasValidEmails && (
-								<span className='ml-2 rounded-full bg-violet-100 px-2 py-0.5 text-[10px] font-black text-violet-600 dark:bg-violet-950/50 dark:text-violet-400'>
+								<span className='ml-2 rounded-full bg-primary-100 px-2 py-0.5 text-[10px] font-black text-primary-600 dark:bg-primary-950/50 dark:text-primary-400'>
 									{validInviteEmails.length} added
 								</span>
 							)}
@@ -63,7 +63,7 @@ const InviteTeamStep = () => {
 									payload: { inviteEmails: e.target.value },
 								})
 							}
-							className='block w-full resize-none rounded-xl border border-slate-200/90 bg-white/50 px-4 py-3 text-sm font-medium text-slate-900 transition-all outline-none placeholder:text-slate-400 focus:border-violet-500 focus:ring-2 focus:ring-violet-500/20 dark:border-zinc-800/80 dark:bg-zinc-950/40 dark:text-zinc-100'
+							className='block w-full resize-none rounded-xl border border-slate-200/90 bg-white/50 px-4 py-3 text-sm font-medium text-slate-900 transition-all outline-none placeholder:text-slate-400 focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 dark:border-zinc-800/80 dark:bg-zinc-950/40 dark:text-zinc-100'
 						/>
 						<p className='text-[10px] text-slate-400'>
 							Separate addresses with commas or new lines
@@ -88,11 +88,11 @@ const InviteTeamStep = () => {
 									}
 									className={`flex flex-col rounded-xl border p-3 text-left transition-all ${
 										inviteRole === r.value
-											? 'border-violet-500 bg-violet-500/5 ring-1 ring-violet-500/20'
+											? 'border-primary-500 bg-primary-400/5 ring-1 ring-primary-500/20'
 											: 'border-slate-200 bg-white/40 hover:bg-slate-50 dark:border-zinc-800/80 dark:bg-zinc-950/20 dark:hover:bg-zinc-800/30'
 									}`}>
 									<span
-										className={`text-xs font-bold ${inviteRole === r.value ? 'text-violet-600 dark:text-violet-400' : 'text-slate-900 dark:text-zinc-100'}`}>
+										className={`text-xs font-bold ${inviteRole === r.value ? 'text-primary-600 dark:text-primary-400' : 'text-slate-900 dark:text-zinc-100'}`}>
 										{r.label}
 									</span>
 									<span className='mt-0.5 text-[10px] text-slate-400'>
@@ -121,7 +121,7 @@ const InviteTeamStep = () => {
 									payload: { inviteMessage: e.target.value },
 								})
 							}
-							className='block w-full resize-none rounded-xl border border-slate-200/90 bg-white/50 px-4 py-3 text-sm font-medium text-slate-900 transition-all outline-none placeholder:text-slate-400 focus:border-violet-500 focus:ring-2 focus:ring-violet-500/20 dark:border-zinc-800/80 dark:bg-zinc-950/40 dark:text-zinc-100'
+							className='block w-full resize-none rounded-xl border border-slate-200/90 bg-white/50 px-4 py-3 text-sm font-medium text-slate-900 transition-all outline-none placeholder:text-slate-400 focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 dark:border-zinc-800/80 dark:bg-zinc-950/40 dark:text-zinc-100'
 						/>
 					</div>
 				</div>

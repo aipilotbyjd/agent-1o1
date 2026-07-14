@@ -64,7 +64,7 @@ const NodeColorPicker = ({ nodeId, currentColor }: { nodeId: string; currentColo
 								className={[
 									'h-8 w-full rounded-lg border-2 transition hover:scale-105',
 									currentColor === preset.value
-										? 'border-violet-500 ring-2 ring-violet-500/30'
+										? 'border-primary-500 ring-2 ring-primary-500/30'
 										: 'border-transparent',
 									preset.value === null ? 'bg-zinc-100 dark:bg-zinc-700' : '',
 								].join(' ')}

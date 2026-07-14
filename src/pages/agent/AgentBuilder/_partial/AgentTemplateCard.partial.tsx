@@ -9,7 +9,7 @@ const AgentTemplateCard = ({ template, onClick }: { template: TAgentTemplate; on
 		<button
 			type='button'
 			onClick={onClick}
-			className='group relative flex min-h-[190px] flex-col justify-between rounded-3xl border border-zinc-200/80 bg-white p-5 text-left shadow-2xs transition-all duration-300 hover:-translate-y-1 hover:border-violet-500/35 hover:bg-zinc-50/10 hover:shadow-lg hover:shadow-violet-500/5 sm:min-h-[200px] lg:min-h-[210px] dark:border-zinc-800/80 dark:bg-zinc-900/40 dark:hover:border-violet-500/35 dark:hover:bg-zinc-900/60 dark:hover:shadow-none'>
+			className='group relative flex min-h-[190px] flex-col justify-between rounded-3xl border border-zinc-200/80 bg-white p-5 text-left shadow-2xs transition-all duration-300 hover:-translate-y-1 hover:border-primary-500/35 hover:bg-zinc-50/10 hover:shadow-lg hover:shadow-primary-500/5 sm:min-h-[200px] lg:min-h-[210px] dark:border-zinc-800/80 dark:bg-zinc-900/40 dark:hover:border-primary-500/35 dark:hover:bg-zinc-900/60 dark:hover:shadow-none'>
 			<div className='w-full'>
 				{/* Header: Icon, Title, Chevron */}
 				<div className='flex items-center justify-between gap-3'>
@@ -19,12 +19,12 @@ const AgentTemplateCard = ({ template, onClick }: { template: TAgentTemplate; on
 								className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border ${
 									template.headerIconColor === 'green'
 										? 'border-emerald-100 bg-emerald-50 text-emerald-600 dark:border-emerald-500/10 dark:bg-emerald-500/5 dark:text-emerald-400'
-										: 'border-violet-100 bg-violet-50 text-violet-600 dark:border-violet-500/10 dark:bg-violet-500/5 dark:text-violet-400'
+										: 'border-primary-100 bg-primary-50 text-primary-600 dark:border-primary-500/10 dark:bg-primary-400/5 dark:text-primary-400'
 								}`}>
 								<HeaderIcon size={18} />
 							</div>
 						)}
-						<h3 className='truncate text-[15px] font-black tracking-tight text-zinc-900 transition-colors group-hover:text-violet-600 dark:text-zinc-50 dark:group-hover:text-violet-400'>
+						<h3 className='truncate text-[15px] font-black tracking-tight text-zinc-900 transition-colors group-hover:text-primary-600 dark:text-zinc-50 dark:group-hover:text-primary-400'>
 							{template.title}
 						</h3>
 					</div>
@@ -42,13 +42,13 @@ const AgentTemplateCard = ({ template, onClick }: { template: TAgentTemplate; on
 				<div className='flex items-center gap-2'>
 					{/* Badge (Popular/New) */}
 					{template.badge === 'Popular' && (
-						<span className='inline-flex items-center gap-1.5 rounded-full border border-violet-200/50 bg-violet-50 px-3 py-1 text-[11px] font-black text-violet-600 dark:border-violet-500/20 dark:bg-violet-500/10 dark:text-violet-400'>
+						<span className='inline-flex items-center gap-1.5 rounded-full border border-primary-200/50 bg-primary-50 px-3 py-1 text-[11px] font-black text-primary-600 dark:border-primary-500/20 dark:bg-primary-400/10 dark:text-primary-400'>
 							<Zap size={11} fill='currentColor' />
 							Popular
 						</span>
 					)}
 					{template.badge === 'New' && (
-						<span className='inline-flex items-center gap-1.5 rounded-full border border-violet-200/50 bg-violet-50 px-3 py-1 text-[11px] font-black text-violet-600 dark:border-violet-500/20 dark:bg-violet-500/10 dark:text-violet-400'>
+						<span className='inline-flex items-center gap-1.5 rounded-full border border-primary-200/50 bg-primary-50 px-3 py-1 text-[11px] font-black text-primary-600 dark:border-primary-500/20 dark:bg-primary-400/10 dark:text-primary-400'>
 							<Star size={11} fill='currentColor' />
 							New
 						</span>

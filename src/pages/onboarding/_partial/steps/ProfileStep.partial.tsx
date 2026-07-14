@@ -67,7 +67,7 @@ const ProfileStep = () => {
 					onClick={() => fileInputRef.current?.click()}
 					className={`relative flex cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed p-6 transition-all ${
 						isDragging
-							? 'border-violet-500 bg-violet-500/5'
+							? 'border-primary-500 bg-primary-400/5'
 							: 'border-slate-200 bg-white/30 hover:border-slate-300 dark:border-zinc-800 dark:bg-zinc-900/20 dark:hover:border-zinc-700'
 					}`}>
 					<input
@@ -80,10 +80,10 @@ const ProfileStep = () => {
 
 					{uploadProgress !== null ? (
 						<div className='flex w-full max-w-[200px] flex-col items-center space-y-3 py-2'>
-							<Loader2 className='h-8 w-8 animate-spin text-violet-500' />
+							<Loader2 className='h-8 w-8 animate-spin text-primary-500' />
 							<div className='h-1.5 w-full overflow-hidden rounded-full bg-slate-100 dark:bg-zinc-800'>
 								<div
-									className='h-full bg-violet-600'
+									className='h-full bg-primary-400'
 									style={{ width: `${uploadProgress}%` }}
 								/>
 							</div>
@@ -97,7 +97,7 @@ const ProfileStep = () => {
 								<img
 									src={avatarUrl}
 									alt='Profile avatar'
-									className='h-16 w-16 rounded-full border border-violet-500/30 object-cover'
+									className='h-16 w-16 rounded-full border border-primary-500/30 object-cover'
 								/>
 								<div className='absolute -right-1 -bottom-1 rounded-full border-2 border-white bg-emerald-500 p-0.5 text-white dark:border-zinc-900'>
 									<Check className='h-3 w-3 stroke-[3]' />
@@ -122,12 +122,12 @@ const ProfileStep = () => {
 						</div>
 					) : (
 						<>
-							<div className='mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-violet-50 text-violet-600 dark:bg-violet-950/40 dark:text-violet-400'>
+							<div className='mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-primary-50 text-primary-600 dark:bg-primary-950/40 dark:text-primary-400'>
 								<UploadCloud className='h-5 w-5' />
 							</div>
 							<p className='text-xs font-bold text-slate-800 dark:text-zinc-200'>
 								Drop your photo here, or{' '}
-								<span className='text-violet-600 underline dark:text-violet-400'>
+								<span className='text-primary-600 underline dark:text-primary-400'>
 									browse
 								</span>
 							</p>

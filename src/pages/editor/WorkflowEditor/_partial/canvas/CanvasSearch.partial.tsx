@@ -90,7 +90,7 @@ const CanvasSearch = () => {
 											type='button'
 											onClick={() => zoomToNode(node.id)}
 											className='flex w-full items-center gap-3 px-3 py-2 text-left transition hover:bg-zinc-50 dark:hover:bg-white/[0.04]'>
-											<span className='flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-violet-100 text-xs font-black text-violet-700 dark:bg-violet-500/15 dark:text-violet-300'>
+											<span className='flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-primary-100 text-xs font-black text-primary-700 dark:bg-primary-400/15 dark:text-primary-300'>
 												{node.data.label.slice(0, 1).toUpperCase()}
 											</span>
 											<div className='min-w-0 flex-1'>

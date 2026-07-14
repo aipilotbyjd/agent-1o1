@@ -14,14 +14,14 @@ const HistoryMobileCard = ({ displayItem, isSelected, onSelect }: HistoryMobileC
 		<div
 			onClick={onSelect}
 			className={`flex items-start justify-between gap-3 p-5 transition-all duration-300 hover:bg-slate-50/50 dark:hover:bg-zinc-800/10 ${
-				isSelected ? 'border-l-4 border-violet-500 bg-violet-500/[0.02] dark:bg-violet-500/[0.02]' : ''
+				isSelected ? 'border-l-4 border-primary-500 bg-primary-400/[0.02] dark:bg-primary-400/[0.02]' : ''
 			}`}>
 			<div className='flex items-start gap-3.5 min-w-0 flex-1 text-left'>
 				{/* Icon */}
 				<div
 					className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl shadow-xs ${
 						displayItem.type === 'Chat'
-							? 'bg-violet-50 text-violet-600 dark:bg-violet-950/40 dark:text-violet-400'
+							? 'bg-primary-50 text-primary-600 dark:bg-primary-950/40 dark:text-primary-400'
 							: 'bg-[#eff6ff] text-blue-600 dark:bg-blue-950/40 dark:text-blue-400'
 					}`}>
 					<IconComponent className='h-5.5 w-5.5' />
@@ -38,7 +38,7 @@ const HistoryMobileCard = ({ displayItem, isSelected, onSelect }: HistoryMobileC
 						<span
 							className={`inline-flex items-center rounded-lg px-2 py-0.5 text-[8.5px] font-black tracking-widest ${
 								displayItem.type === 'Chat'
-									? 'bg-purple-50 text-purple-650 border border-purple-100 dark:border-purple-900/30 dark:bg-purple-950/30 dark:text-purple-400'
+									? 'bg-primary-50 text-primary-600 border border-primary-100 dark:border-primary-900/30 dark:bg-primary-950/30 dark:text-primary-400'
 									: 'bg-[#eff6ff] text-[#3b82f6] border border-blue-100 dark:border-blue-900/30 dark:bg-blue-950/30 dark:text-blue-400'
 							}`}>
 							{displayItem.type === 'Chat' ? 'CHAT' : 'WORKFLOW'}

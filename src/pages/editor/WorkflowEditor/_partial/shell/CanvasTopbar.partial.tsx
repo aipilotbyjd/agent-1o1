@@ -76,7 +76,7 @@ export const CanvasTopbar = () => {
 					name={state.workflow.name}
 					onSave={handleRenameWorkflow}
 					className="max-w-[200px] truncate rounded-md px-1.5 py-1 text-left text-sm font-bold text-zinc-800 hover:bg-zinc-100 dark:text-zinc-100 dark:hover:bg-white/[0.06]"
-					inputClassName="max-w-[200px] rounded-md border border-violet-300 bg-white px-1.5 py-1 text-sm font-bold text-zinc-800 outline-none focus:ring-1 focus:ring-violet-500 dark:border-violet-700 dark:bg-zinc-900 dark:text-zinc-100"
+					inputClassName="max-w-[200px] rounded-md border border-primary-300 bg-white px-1.5 py-1 text-sm font-bold text-zinc-800 outline-none focus:ring-1 focus:ring-primary-500 dark:border-primary-700 dark:bg-zinc-900 dark:text-zinc-100"
 				/>
 				<div className="h-6 w-px bg-zinc-200 dark:bg-zinc-800" />
 				<button
@@ -85,8 +85,8 @@ export const CanvasTopbar = () => {
 					className={[
 						"flex h-9 items-center gap-2 rounded-xl border px-3.5 text-xs font-bold shadow-xs transition",
 						state.ui.leftPanelOpen && state.ui.leftPanelIntent === 'home'
-							? "border-violet-400 bg-violet-100 text-violet-700 dark:border-violet-600 dark:bg-violet-950/50 dark:text-violet-300"
-							: "border-violet-200 bg-violet-50/50 text-violet-600 hover:bg-violet-100/70 dark:border-violet-850 dark:bg-violet-950/20 dark:text-violet-400"
+							? "border-primary-400 bg-primary-100 text-primary-700 dark:border-primary-600 dark:bg-primary-950/50 dark:text-primary-300"
+							: "border-primary-200 bg-primary-50/50 text-primary-600 hover:bg-primary-100/70 dark:border-primary-800 dark:bg-primary-950/20 dark:text-primary-400"
 					].join(' ')}
 				>
 					<span className="text-sm font-extrabold">+</span>
@@ -98,11 +98,11 @@ export const CanvasTopbar = () => {
 					onClick={() => dispatch({ type: 'TOGGLE_AI_PANEL' })}
 					className={`flex h-9 items-center gap-1.5 rounded-xl border px-3.5 text-xs font-bold shadow-xs transition ${
 						state.ui.aiPanelOpen
-							? 'border-violet-200 bg-violet-600 text-white hover:bg-violet-700 dark:border-violet-850 dark:bg-violet-750 dark:hover:bg-violet-650'
+							? 'border-primary-200 bg-primary-400 text-primary-950 hover:bg-primary-700 dark:border-primary-800 dark:bg-primary-700 dark:hover:bg-primary-500'
 							: 'border-zinc-200 bg-white text-zinc-650 hover:bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-350 dark:hover:bg-zinc-800'
 					}`}
 				>
-					<Sparkles size={13} className={state.ui.aiPanelOpen ? 'fill-white text-white' : 'text-violet-500 fill-violet-500/10'} />
+					<Sparkles size={13} className={state.ui.aiPanelOpen ? 'fill-white text-white' : 'text-primary-500 fill-primary-500/10'} />
 					<span>{state.ui.aiPanelOpen ? 'Hide Chat' : 'Reopen Chat'}</span>
 				</button>
 				<button
@@ -168,7 +168,7 @@ export const CanvasTopbar = () => {
 										setGovModalTab('versions');
 										setGovModalOpen(true);
 									}}
-									className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-xs font-semibold hover:bg-zinc-50 hover:text-violet-600 dark:text-zinc-300 dark:hover:bg-white/[0.04] dark:hover:text-violet-400"
+									className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-xs font-semibold hover:bg-zinc-50 hover:text-primary-600 dark:text-zinc-300 dark:hover:bg-white/[0.04] dark:hover:text-primary-400"
 								>
 									<span>Version History</span>
 								</button>
@@ -179,7 +179,7 @@ export const CanvasTopbar = () => {
 										setGovModalTab('approvals');
 										setGovModalOpen(true);
 									}}
-									className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-xs font-semibold hover:bg-zinc-50 hover:text-violet-600 dark:text-zinc-300 dark:hover:bg-white/[0.04] dark:hover:text-violet-400"
+									className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-xs font-semibold hover:bg-zinc-50 hover:text-primary-600 dark:text-zinc-300 dark:hover:bg-white/[0.04] dark:hover:text-primary-400"
 								>
 									<span>Request Approval</span>
 								</button>
@@ -190,7 +190,7 @@ export const CanvasTopbar = () => {
 										setGovModalTab('releases');
 										setGovModalOpen(true);
 									}}
-									className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-xs font-semibold hover:bg-zinc-50 hover:text-violet-600 dark:text-zinc-300 dark:hover:bg-white/[0.04] dark:hover:text-violet-400"
+									className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-xs font-semibold hover:bg-zinc-50 hover:text-primary-600 dark:text-zinc-300 dark:hover:bg-white/[0.04] dark:hover:text-primary-400"
 								>
 									<span>Deploy Release</span>
 								</button>
@@ -201,7 +201,7 @@ export const CanvasTopbar = () => {
 										setGovModalTab('contracts');
 										setGovModalOpen(true);
 									}}
-									className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-xs font-semibold hover:bg-zinc-50 hover:text-violet-600 dark:text-zinc-300 dark:hover:bg-white/[0.04] dark:hover:text-violet-400"
+									className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-xs font-semibold hover:bg-zinc-50 hover:text-primary-600 dark:text-zinc-300 dark:hover:bg-white/[0.04] dark:hover:text-primary-400"
 								>
 									<span>Contracts Verification</span>
 								</button>
@@ -213,8 +213,8 @@ export const CanvasTopbar = () => {
 				<div className={[
 					"flex items-center shadow-md rounded-xl overflow-hidden transition",
 					isRunDisabled
-						? "bg-violet-600 opacity-40 cursor-not-allowed"
-						: "bg-violet-600 hover:bg-violet-700"
+						? "bg-primary-400 opacity-40 cursor-not-allowed"
+						: "bg-primary-400 hover:bg-primary-700"
 				].join(' ')}>
 					<motion.button
 						whileTap={!isRunDisabled ? { scale: 0.98 } : undefined}
@@ -238,7 +238,7 @@ export const CanvasTopbar = () => {
 						disabled={isRunDisabled}
 						className={[
 							"flex h-9 items-center justify-center border-l border-white/20 px-2.5 text-white",
-							isRunDisabled ? "cursor-not-allowed" : "hover:bg-violet-700"
+							isRunDisabled ? "cursor-not-allowed" : "hover:bg-primary-700"
 						].join(' ')}
 					>
 						<ChevronDown size={13} />

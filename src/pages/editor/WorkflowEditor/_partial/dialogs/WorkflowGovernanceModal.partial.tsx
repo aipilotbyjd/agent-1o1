@@ -204,7 +204,7 @@ const WorkflowGovernanceModal = () => {
 									onClick={() => setGovModalTab(tab.id)}
 									className={`flex w-full items-center gap-2.5 rounded-lg px-3 py-2.5 text-xs font-semibold transition ${
 										isActive
-											? 'bg-violet-600 text-white dark:bg-violet-700'
+											? 'bg-primary-400 text-primary-950 dark:bg-primary-700'
 											: 'text-zinc-650 hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-white/[0.05] dark:hover:text-zinc-200'
 									}`}
 								>
@@ -230,7 +230,7 @@ const WorkflowGovernanceModal = () => {
 
 							{isVersionsLoading ? (
 								<div className="flex justify-center py-12 text-xs font-semibold text-zinc-500">
-									<Loader2 size={16} className="animate-spin mr-2 text-violet-600" />
+									<Loader2 size={16} className="animate-spin mr-2 text-primary-600" />
 									Loading version history...
 								</div>
 							) : !versions || versions.length === 0 ? (
@@ -248,7 +248,7 @@ const WorkflowGovernanceModal = () => {
 												key={version.id}
 												className={`flex items-start justify-between rounded-xl border p-4 transition ${
 													isCurrent
-														? 'border-violet-200 bg-violet-50/15 dark:border-violet-800/40 dark:bg-violet-950/10'
+														? 'border-primary-200 bg-primary-50/15 dark:border-primary-800/40 dark:bg-primary-950/10'
 														: 'border-zinc-200 bg-white dark:border-zinc-800/50 dark:bg-zinc-900/10'
 												}`}
 											>
@@ -263,7 +263,7 @@ const WorkflowGovernanceModal = () => {
 															</span>
 														)}
 														{isCurrent && (
-															<span className="rounded-full bg-violet-100 border border-violet-200 text-violet-700 px-2 py-0.5 text-[9px] font-bold dark:bg-violet-950/30 dark:border-violet-900/50 dark:text-violet-400">
+															<span className="rounded-full bg-primary-100 border border-primary-200 text-primary-700 px-2 py-0.5 text-[9px] font-bold dark:bg-primary-950/30 dark:border-primary-900/50 dark:text-primary-400">
 																Active Workspace State
 															</span>
 														)}
@@ -351,7 +351,7 @@ const WorkflowGovernanceModal = () => {
 											type="checkbox"
 											checked={isPublic}
 											onChange={(e) => setIsPublic(e.target.checked)}
-											className="rounded border-zinc-300 text-violet-600 focus:ring-violet-500 dark:border-zinc-700 dark:bg-zinc-800"
+											className="rounded border-zinc-300 text-primary-600 focus:ring-primary-500 dark:border-zinc-700 dark:bg-zinc-800"
 										/>
 										<div>
 											<span className="block text-xs font-bold text-zinc-850 dark:text-zinc-200">
@@ -368,7 +368,7 @@ const WorkflowGovernanceModal = () => {
 											type="checkbox"
 											checked={allowClone}
 											onChange={(e) => setAllowClone(e.target.checked)}
-											className="rounded border-zinc-300 text-violet-600 focus:ring-violet-500 dark:border-zinc-700 dark:bg-zinc-800"
+											className="rounded border-zinc-300 text-primary-600 focus:ring-primary-500 dark:border-zinc-700 dark:bg-zinc-800"
 										/>
 										<div>
 											<span className="block text-xs font-bold text-zinc-850 dark:text-zinc-200">
@@ -390,7 +390,7 @@ const WorkflowGovernanceModal = () => {
 												placeholder="Create password protection"
 												value={sharePassword}
 												onChange={(e) => setSharePassword(e.target.value)}
-												className="w-full rounded-lg border border-zinc-200 bg-zinc-50/50 py-1.5 pl-3 pr-8 text-xs outline-none focus:border-violet-400 dark:border-zinc-800 dark:bg-zinc-900/60 dark:text-zinc-100"
+												className="w-full rounded-lg border border-zinc-200 bg-zinc-50/50 py-1.5 pl-3 pr-8 text-xs outline-none focus:border-primary-400 dark:border-zinc-800 dark:bg-zinc-900/60 dark:text-zinc-100"
 											/>
 											<div className="absolute right-2.5 top-1/2 -translate-y-1/2 text-zinc-400">
 												{sharePassword ? <Lock size={12} /> : <Unlock size={12} />}
@@ -406,7 +406,7 @@ const WorkflowGovernanceModal = () => {
 											type="date"
 											value={shareExpiresAt}
 											onChange={(e) => setShareExpiresAt(e.target.value)}
-											className="w-full rounded-lg border border-zinc-200 bg-zinc-50/50 px-3 py-1.5 text-xs outline-none focus:border-violet-400 dark:border-zinc-800 dark:bg-zinc-900/60 dark:text-zinc-100"
+											className="w-full rounded-lg border border-zinc-200 bg-zinc-50/50 px-3 py-1.5 text-xs outline-none focus:border-primary-400 dark:border-zinc-800 dark:bg-zinc-900/60 dark:text-zinc-100"
 										/>
 									</div>
 								</div>
@@ -415,7 +415,7 @@ const WorkflowGovernanceModal = () => {
 									<button
 										type="submit"
 										disabled={createShare.isPending}
-										className="flex items-center gap-1.5 rounded-lg bg-violet-600 px-4 py-2 text-xs font-bold text-white hover:bg-violet-700 disabled:opacity-50 transition"
+										className="flex items-center gap-1.5 rounded-lg bg-primary-400 px-4 py-2 text-xs font-bold text-primary-950 hover:bg-primary-700 disabled:opacity-50 transition"
 									>
 										<Plus size={13} />
 										Generate Link
@@ -444,7 +444,7 @@ const WorkflowGovernanceModal = () => {
 											>
 												<div className="flex items-center justify-between">
 													<div className="flex items-center gap-2">
-														<span className="rounded-full bg-violet-50 border border-violet-100 text-violet-700 px-1.5 py-0.2 text-[8px] font-bold uppercase tracking-wider dark:bg-violet-950/20 dark:border-violet-900/30 dark:text-violet-400">
+														<span className="rounded-full bg-primary-50 border border-primary-100 text-primary-700 px-1.5 py-0.2 text-[8px] font-bold uppercase tracking-wider dark:bg-primary-950/20 dark:border-primary-900/30 dark:text-primary-400">
 															{share.is_public ? 'Public' : 'Restricted'}
 														</span>
 														<span className="rounded-full bg-zinc-100 border border-zinc-200 text-zinc-650 px-1.5 py-0.2 text-[8px] font-bold uppercase tracking-wider dark:bg-zinc-800 dark:border-zinc-700 dark:text-zinc-400">
@@ -535,7 +535,7 @@ const WorkflowGovernanceModal = () => {
 										placeholder="Describe changes e.g. 'Optimized prompt token usage and resolved Google Calendar trigger mapping error'"
 										value={approvalNotes}
 										onChange={(e) => setApprovalNotes(e.target.value)}
-										className="w-full rounded-lg border border-zinc-200 bg-zinc-50/50 p-2.5 text-xs outline-none focus:border-violet-400 dark:border-zinc-800 dark:bg-zinc-900/60 dark:text-zinc-100"
+										className="w-full rounded-lg border border-zinc-200 bg-zinc-50/50 p-2.5 text-xs outline-none focus:border-primary-400 dark:border-zinc-800 dark:bg-zinc-900/60 dark:text-zinc-100"
 										required
 									/>
 								</div>
@@ -543,7 +543,7 @@ const WorkflowGovernanceModal = () => {
 									<button
 										type="submit"
 										disabled={requestApproval.isPending}
-										className="flex items-center gap-1.5 rounded-lg bg-violet-600 px-4 py-2 text-xs font-bold text-white hover:bg-violet-700 disabled:opacity-50 transition"
+										className="flex items-center gap-1.5 rounded-lg bg-primary-400 px-4 py-2 text-xs font-bold text-primary-950 hover:bg-primary-700 disabled:opacity-50 transition"
 									>
 										<Send size={12} />
 										Submit Request
@@ -624,7 +624,7 @@ const WorkflowGovernanceModal = () => {
 																		[appr.id]: e.target.value,
 																	}))
 																}
-																className="w-full rounded-lg border border-zinc-200 bg-white px-3 py-1.5 text-xs outline-none focus:border-violet-400 dark:border-zinc-800 dark:bg-zinc-950"
+																className="w-full rounded-lg border border-zinc-200 bg-white px-3 py-1.5 text-xs outline-none focus:border-primary-400 dark:border-zinc-800 dark:bg-zinc-950"
 															/>
 															<div className="flex justify-end gap-2">
 																<button
@@ -707,7 +707,7 @@ const WorkflowGovernanceModal = () => {
 										<select
 											value={releaseVersion}
 											onChange={(e) => setReleaseVersion(e.target.value)}
-											className="w-full rounded-lg border border-zinc-200 bg-zinc-50/50 px-3 py-1.5 text-xs text-zinc-800 outline-none focus:border-violet-400 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-100"
+											className="w-full rounded-lg border border-zinc-200 bg-zinc-50/50 px-3 py-1.5 text-xs text-zinc-800 outline-none focus:border-primary-400 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-100"
 											required
 										>
 											<option value="">Choose version snapshot...</option>
@@ -726,7 +726,7 @@ const WorkflowGovernanceModal = () => {
 										<select
 											value={releaseEnv}
 											onChange={(e) => setReleaseEnv(e.target.value)}
-											className="w-full rounded-lg border border-zinc-200 bg-zinc-50/50 px-3 py-1.5 text-xs text-zinc-800 outline-none focus:border-violet-400 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-100"
+											className="w-full rounded-lg border border-zinc-200 bg-zinc-50/50 px-3 py-1.5 text-xs text-zinc-800 outline-none focus:border-primary-400 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-100"
 										>
 											<option value="production">Production</option>
 											<option value="staging">Staging</option>
@@ -744,7 +744,7 @@ const WorkflowGovernanceModal = () => {
 										placeholder="Optional notes describing this release deployment"
 										value={releaseNotes}
 										onChange={(e) => setReleaseNotes(e.target.value)}
-										className="w-full rounded-lg border border-zinc-200 bg-zinc-50/50 p-2.5 text-xs outline-none focus:border-violet-400 dark:border-zinc-800 dark:bg-zinc-900/60 dark:text-zinc-100"
+										className="w-full rounded-lg border border-zinc-200 bg-zinc-50/50 p-2.5 text-xs outline-none focus:border-primary-400 dark:border-zinc-800 dark:bg-zinc-900/60 dark:text-zinc-100"
 									/>
 								</div>
 
@@ -752,7 +752,7 @@ const WorkflowGovernanceModal = () => {
 									<button
 										type="submit"
 										disabled={deployRelease.isPending}
-										className="flex items-center gap-1.5 rounded-lg bg-violet-600 px-4 py-2 text-xs font-bold text-white hover:bg-violet-700 disabled:opacity-50 transition"
+										className="flex items-center gap-1.5 rounded-lg bg-primary-400 px-4 py-2 text-xs font-bold text-primary-950 hover:bg-primary-700 disabled:opacity-50 transition"
 									>
 										<Disc size={13} className="animate-spin-slow" />
 										Deploy Release

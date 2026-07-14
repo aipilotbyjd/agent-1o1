@@ -47,7 +47,7 @@ const WorkflowEditorPage = () => {
 							createStarted.current = false;
 							setError(null);
 						}}
-						className='flex h-10 items-center justify-center rounded-xl bg-violet-600 px-5 text-xs font-black text-white shadow-md transition hover:brightness-110 active:scale-[0.98]'
+						className='flex h-10 items-center justify-center rounded-xl bg-primary-400 px-5 text-xs font-black text-primary-950 shadow-md transition hover:brightness-110 active:scale-[0.98]'
 					>
 						Retry
 					</button>
@@ -58,7 +58,7 @@ const WorkflowEditorPage = () => {
 		return (
 			<div className='flex h-screen flex-col items-center justify-center bg-zinc-50 dark:bg-zinc-950'>
 				<div className='flex flex-col items-center gap-3'>
-					<Loader2 className='h-8 w-8 animate-spin text-violet-600' />
+					<Loader2 className='h-8 w-8 animate-spin text-primary-600' />
 					<p className='text-sm font-medium text-zinc-500 dark:text-zinc-400'>
 						Creating blank workflow...
 					</p>

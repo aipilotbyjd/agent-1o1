@@ -398,7 +398,7 @@ const LinkCredentialsDialog = () => {
 																href={credType.docs_url}
 																target='_blank'
 																rel='noreferrer'
-																className='mr-auto text-[10px] font-semibold text-violet-500 hover:underline'>
+																className='mr-auto text-[10px] font-semibold text-primary-500 hover:underline'>
 																How to get this?
 															</a>
 														)}

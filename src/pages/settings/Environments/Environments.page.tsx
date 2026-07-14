@@ -41,7 +41,7 @@ function toSlug(name: string): string {
 const slugPattern = /^[a-z0-9]+(-[a-z0-9]+)*$/;
 
 const inputCls =
-	'h-11 w-full rounded-xl border border-zinc-200 bg-white px-4 text-sm font-medium text-zinc-900 outline-none placeholder:text-zinc-400 focus:border-pink-400 focus:ring-4 focus:ring-pink-100 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100 dark:focus:border-pink-500 dark:focus:ring-pink-500/25';
+	'h-11 w-full rounded-xl border border-zinc-200 bg-white px-4 text-sm font-medium text-zinc-900 outline-none placeholder:text-zinc-400 focus:border-primary-400 focus:ring-4 focus:ring-primary-100 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100 dark:focus:border-primary-500 dark:focus:ring-primary-500/25';
 
 // ── VariableEditor ────────────────────────────────────────────
 interface VariableEditorProps {
@@ -123,7 +123,7 @@ const VariableEditor = ({ variables, onChange }: VariableEditorProps) => {
 			<button
 				type='button'
 				onClick={add}
-				className='mt-1 flex h-10 w-fit items-center gap-2 rounded-xl border border-dashed border-zinc-300 px-4 text-sm font-semibold text-zinc-500 hover:border-pink-400 hover:text-pink-500 dark:border-zinc-600 dark:text-zinc-400'>
+				className='mt-1 flex h-10 w-fit items-center gap-2 rounded-xl border border-dashed border-zinc-300 px-4 text-sm font-semibold text-zinc-500 hover:border-primary-400 hover:text-primary-500 dark:border-zinc-600 dark:text-zinc-400'>
 				<Plus size={14} />
 				Add variable
 			</button>
@@ -347,7 +347,7 @@ const EnvModal = ({ open, env, isPending, onClose, onSubmit }: EnvModalProps) =>
 						<button
 							type='submit'
 							disabled={isPending}
-							className='h-11 rounded-xl bg-pink-500 px-6 text-sm font-bold text-white shadow-sm shadow-pink-500/20 transition hover:bg-pink-600 disabled:opacity-60'>
+							className='h-11 rounded-xl bg-primary-400 px-6 text-sm font-bold text-primary-950 shadow-sm shadow-primary-500/20 transition hover:bg-primary-500 disabled:opacity-60'>
 							{isPending ? 'Saving…' : env ? 'Update' : 'Create'}
 						</button>
 					</ModalFooterChild>
@@ -455,7 +455,7 @@ const EnvironmentsPage = () => {
 						<button
 							type='button'
 							onClick={openCreate}
-							className='flex h-10 items-center gap-2 rounded-xl bg-pink-500 px-5 text-sm font-bold text-white shadow-sm shadow-pink-500/20 hover:bg-pink-600'>
+							className='flex h-10 items-center gap-2 rounded-xl bg-primary-400 px-5 text-sm font-bold text-primary-950 shadow-sm shadow-primary-500/20 hover:bg-primary-500'>
 							<Plus size={15} />
 							Create environment
 						</button>

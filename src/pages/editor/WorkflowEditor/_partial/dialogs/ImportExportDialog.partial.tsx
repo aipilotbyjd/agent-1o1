@@ -110,7 +110,7 @@ const ImportExportDialog = () => {
 									className={[
 										'rounded-lg px-3 py-1 text-xs font-bold uppercase transition',
 										format === fmt
-											? 'bg-violet-600 text-white'
+											? 'bg-primary-400 text-primary-950'
 											: 'bg-zinc-100 text-zinc-600 hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-300',
 									].join(' ')}>
 									{fmt}
@@ -143,7 +143,7 @@ const ImportExportDialog = () => {
 										format === 'json' ? 'application/json' : 'text/yaml',
 									)
 								}
-								className='flex-1 rounded-lg bg-violet-600 px-3 py-2 text-xs font-black text-white hover:bg-violet-700'>
+								className='flex-1 rounded-lg bg-primary-400 px-3 py-2 text-xs font-black text-primary-950 hover:bg-primary-700'>
 								Download .{format}
 							</button>
 						</div>

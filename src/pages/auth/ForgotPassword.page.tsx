@@ -125,7 +125,7 @@ const ForgotPasswordPage = () => {
 						<button
 							type='submit'
 							disabled={!formik.isValid || formik.isSubmitting}
-							className='group bg-primary-700 hover:bg-primary-800 relative flex w-full items-center justify-center gap-3 rounded-[32px] px-6 py-4 text-center text-sm font-black tracking-[0.1em] text-white uppercase transition-all duration-300 hover:shadow-[0_20px_50px_-20px_rgba(109,40,217,0.45)] active:scale-[0.98] disabled:pointer-events-none disabled:opacity-60'>
+							className='group bg-primary-400 hover:bg-primary-500 relative flex w-full items-center justify-center gap-3 rounded-[32px] px-6 py-4 text-center text-sm font-black tracking-[0.1em] text-primary-950 uppercase transition-all duration-300 hover:shadow-[0_20px_50px_-20px_rgba(109,40,217,0.45)] active:scale-[0.98] disabled:pointer-events-none disabled:opacity-60'>
 							<span>{formik.isSubmitting ? 'Sending...' : 'Send reset link'}</span>
 							<Icon
 								icon='ArrowRight01'

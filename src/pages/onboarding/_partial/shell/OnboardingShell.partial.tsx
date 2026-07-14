@@ -101,9 +101,9 @@ const OnboardingShellInner = () => {
 
 	if (isLoading) {
 		return (
-			<div className='flex min-h-screen items-center justify-center bg-gradient-to-br from-indigo-50/80 via-slate-50/90 to-rose-50/80 dark:from-zinc-950 dark:via-zinc-900 dark:to-zinc-950'>
+			<div className='flex min-h-screen items-center justify-center bg-gradient-to-br from-primary-50/80 via-slate-50/90 to-rose-50/80 dark:from-zinc-950 dark:via-zinc-900 dark:to-zinc-950'>
 				<div className='flex flex-col items-center gap-4'>
-					<div className='flex h-16 w-16 animate-pulse items-center justify-center rounded-[2rem] bg-gradient-to-tr from-violet-600 to-indigo-600 text-white shadow-lg shadow-violet-500/25'>
+					<div className='flex h-16 w-16 animate-pulse items-center justify-center rounded-[2rem] bg-gradient-to-tr from-primary-400 to-primary-400 text-primary-950 shadow-lg shadow-primary-500/25'>
 						<span className='text-xl font-extrabold tracking-tighter'>A1</span>
 					</div>
 					<div className='text-sm font-semibold text-slate-500 dark:text-zinc-400'>Loading your onboarding...</div>
@@ -113,12 +113,12 @@ const OnboardingShellInner = () => {
 	}
 
 	return (
-		<main className='relative flex min-h-screen w-full flex-col justify-between overflow-x-hidden bg-gradient-to-br from-indigo-50/80 via-slate-50/90 to-rose-50/80 text-slate-950 transition-colors duration-300 dark:from-zinc-950 dark:via-zinc-900 dark:to-zinc-950 dark:text-zinc-50'>
+		<main className='relative flex min-h-screen w-full flex-col justify-between overflow-x-hidden bg-gradient-to-br from-primary-50/80 via-slate-50/90 to-rose-50/80 text-slate-950 transition-colors duration-300 dark:from-zinc-950 dark:via-zinc-900 dark:to-zinc-950 dark:text-zinc-50'>
 			{/* Animated background blobs */}
 			<div className='pointer-events-none absolute inset-0 z-0 overflow-hidden'>
 				<div className='absolute top-0 right-0 left-0 h-[500px] bg-[radial-gradient(circle_at_top_left,rgba(139,92,246,0.15),transparent_45%),radial-gradient(circle_at_top_right,rgba(244,63,94,0.15),transparent_45%)]' />
 				<div
-					className='absolute -top-40 -left-40 h-[600px] w-[600px] animate-pulse rounded-full bg-violet-400/30 blur-[120px] dark:bg-violet-900/15'
+					className='absolute -top-40 -left-40 h-[600px] w-[600px] animate-pulse rounded-full bg-primary-400/30 blur-[120px] dark:bg-primary-900/15'
 					style={{ animationDuration: '8s' }}
 				/>
 				<div
@@ -134,7 +134,7 @@ const OnboardingShellInner = () => {
 			<header className='relative z-10 w-full px-6 py-5 sm:block hidden'>
 				<div className='mx-auto flex max-w-7xl items-center justify-between'>
 					<div className='flex items-center gap-3'>
-						<div className='flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-tr from-violet-600 to-indigo-600 text-white shadow-lg shadow-violet-500/25'>
+						<div className='flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-tr from-primary-400 to-primary-400 text-primary-950 shadow-lg shadow-primary-500/25'>
 							<span className='text-base font-extrabold tracking-tighter'>A1</span>
 						</div>
 						<span className='bg-gradient-to-r from-slate-900 via-slate-800 to-slate-950 bg-clip-text text-xl font-black text-transparent dark:from-white dark:via-zinc-200 dark:to-zinc-100'>
@@ -167,7 +167,7 @@ const OnboardingShellInner = () => {
 								{/* Mobile Header (only visible on mobile) */}
 								<div className='mb-6 flex items-center justify-between sm:hidden'>
 									<div className='flex items-center gap-3'>
-										<div className='flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-tr from-violet-600 to-indigo-600 text-white shadow-lg shadow-violet-500/25'>
+										<div className='flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-tr from-primary-400 to-primary-400 text-primary-950 shadow-lg shadow-primary-500/25'>
 											<span className='text-sm font-extrabold tracking-tighter'>A1</span>
 										</div>
 										<span className='bg-gradient-to-r from-slate-900 via-slate-800 to-slate-950 bg-clip-text text-lg font-black text-transparent dark:from-white dark:via-zinc-200 dark:to-zinc-100'>

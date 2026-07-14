@@ -41,7 +41,7 @@ const HistoryDetailDrawer = ({
 						{/* Drawer header */}
 						<div className='flex items-center justify-between border-b border-slate-100 p-6 dark:border-zinc-800/80'>
 							<div className='flex items-center gap-3'>
-								<div className='flex h-9 w-9 items-center justify-center rounded-xl border border-violet-100 bg-violet-50 text-violet-600 dark:border-violet-900/30 dark:bg-violet-950/20 dark:text-violet-400'>
+								<div className='flex h-9 w-9 items-center justify-center rounded-xl border border-primary-100 bg-primary-50 text-primary-600 dark:border-primary-900/30 dark:bg-primary-950/20 dark:text-primary-400'>
 									<Activity size={17} />
 								</div>
 								<h2 className='text-lg font-black text-slate-900 dark:text-white'>
@@ -68,7 +68,7 @@ const HistoryDetailDrawer = ({
 											Source
 										</span>
 										<span className='flex items-center gap-1.5 text-xs font-extrabold text-slate-800 dark:text-zinc-200'>
-											<MessageSquare size={13} className='text-indigo-500' />
+											<MessageSquare size={13} className='text-primary-500' />
 											{selectedDetails.type}
 										</span>
 									</div>
@@ -113,7 +113,7 @@ const HistoryDetailDrawer = ({
 												<div
 													className={`max-w-[85%] rounded-2xl border p-3 text-xs leading-relaxed font-semibold shadow-xs ${
 														log.sender === 'user'
-															? 'bg-violet-650 border-violet-750 rounded-tr-none text-white'
+															? 'bg-primary-400 border-primary-700 rounded-tr-none text-primary-950'
 															: 'text-slate-850 rounded-tl-none border-slate-200 bg-white dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-200'
 													}`}>
 													{log.text}

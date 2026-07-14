@@ -182,12 +182,12 @@ const BuildPage = () => {
 	];
 
 	const colorsList = [
-		{ value: 'purple', bgClass: 'bg-violet-600' },
+		{ value: 'purple', bgClass: 'bg-primary-400' },
 		{ value: 'blue', bgClass: 'bg-blue-500' },
 		{ value: 'teal', bgClass: 'bg-teal-500' },
 		{ value: 'orange', bgClass: 'bg-amber-500' },
 		{ value: 'red', bgClass: 'bg-rose-500' },
-		{ value: 'rainbow', bgClass: 'bg-gradient-to-tr from-violet-500 via-emerald-500 to-rose-500' },
+		{ value: 'rainbow', bgClass: 'bg-gradient-to-tr from-primary-400 via-emerald-500 to-rose-500' },
 	];
 
 	const availableApps = [
@@ -201,7 +201,7 @@ const BuildPage = () => {
 		{ id: 'google-slides', name: 'Google Slides', desc: 'Generate presentation slides.', icon: FileText, iconBg: 'bg-amber-500', isConnected: true },
 		{ id: 'google-ads', name: 'Google Ads', desc: 'Create search keyword campaigns.', icon: TrendingUp, iconBg: 'bg-blue-500', isConnected: true },
 		{ id: 'google-search-console', name: 'Google Search Console', desc: 'Check search engine optimization details.', icon: Search, iconBg: 'bg-blue-500', isConnected: true },
-		{ id: 'google-bigquery', name: 'Google BigQuery', desc: 'Run SQL analytics on datasets.', icon: Database, iconBg: 'bg-indigo-500', isConnected: true },
+		{ id: 'google-bigquery', name: 'Google BigQuery', desc: 'Run SQL analytics on datasets.', icon: Database, iconBg: 'bg-primary-400', isConnected: true },
 	];
 
 	const getIconColorClass = (color: string) => {
@@ -217,9 +217,9 @@ const BuildPage = () => {
 			case 'red':
 				return 'text-rose-500 dark:text-rose-400';
 			case 'rainbow':
-				return 'text-transparent bg-clip-text bg-gradient-to-tr from-violet-500 via-emerald-500 to-rose-500';
+				return 'text-transparent bg-clip-text bg-gradient-to-tr from-primary-400 via-emerald-500 to-rose-500';
 			default: // purple
-				return 'text-violet-500 dark:text-violet-400';
+				return 'text-primary-500 dark:text-primary-400';
 		}
 	};
 
@@ -431,7 +431,7 @@ const BuildPage = () => {
 	return (
 		<div className='dark:text-zinc-500 relative flex min-w-0 flex-1 flex-col overflow-hidden bg-zinc-50/50 text-zinc-950 transition-colors duration-300 dark:bg-zinc-950'>
 			{/* Ambient Lighting Gradients */}
-			<div className='pointer-events-none absolute top-[-100px] left-1/4 -z-10 h-[380px] w-[380px] rounded-full bg-violet-500/8 blur-[120px] dark:bg-violet-600/12' />
+			<div className='pointer-events-none absolute top-[-100px] left-1/4 -z-10 h-[380px] w-[380px] rounded-full bg-primary-400/8 blur-[120px] dark:bg-primary-400/12' />
 			<div className='pointer-events-none absolute right-1/4 bottom-1/4 -z-10 h-[450px] w-[450px] rounded-full bg-emerald-500/8 blur-[140px] dark:bg-emerald-600/12' />
 
 			{!isPreviewMode ? (
@@ -474,7 +474,7 @@ const BuildPage = () => {
 								}, 1000);
 							}}>
 							{isSaving ? (
-								<Loader2 size={15} className='animate-spin text-violet-600 dark:text-violet-400' />
+								<Loader2 size={15} className='animate-spin text-primary-600 dark:text-primary-400' />
 							) : (
 								<CheckCircle2 size={15} />
 							)}
@@ -483,7 +483,7 @@ const BuildPage = () => {
 						{/* Preview button with live state values */}
 						<MainAppBarPillButton
 							onClick={() => startPreview(agentName, agentIcon, agentIconColor)}
-							className='!text-violet-600 border-violet-200 hover:bg-violet-50 hover:text-violet-700 dark:!text-violet-400 dark:border-violet-500/30 dark:hover:bg-violet-950/20'>
+							className='!text-primary-600 border-primary-200 hover:bg-primary-50 hover:text-primary-700 dark:!text-primary-400 dark:border-primary-500/30 dark:hover:bg-primary-950/20'>
 							<Play size={15} className='fill-current' />
 							Preview
 						</MainAppBarPillButton>
@@ -497,9 +497,9 @@ const BuildPage = () => {
 							className='mx-auto flex min-h-full w-full max-w-[1120px] flex-col px-5 pt-10 pb-5 sm:px-8 sm:pt-12 lg:px-10 lg:pt-14'>
 							
 							{/* Hero Banner Section */}
-							<section className='relative z-10 overflow-hidden rounded-3xl border border-violet-100/50 bg-linear-to-tr from-violet-500/5 via-indigo-500/5 to-purple-500/5 p-6 sm:p-8 lg:p-10 dark:border-zinc-800/80 dark:from-zinc-900/40 dark:via-zinc-900/30 dark:to-zinc-950/20'>
+							<section className='relative z-10 overflow-hidden rounded-3xl border border-primary-100/50 bg-linear-to-tr from-primary-400/5 via-primary-400/5 to-primary-400/5 p-6 sm:p-8 lg:p-10 dark:border-zinc-800/80 dark:from-zinc-900/40 dark:via-zinc-900/30 dark:to-zinc-950/20'>
 								{/* Background glow overlay */}
-								<div className='pointer-events-none absolute -right-20 -top-20 h-52 w-52 rounded-full bg-violet-500/10 blur-3xl dark:bg-violet-600/5' />
+								<div className='pointer-events-none absolute -right-20 -top-20 h-52 w-52 rounded-full bg-primary-400/10 blur-3xl dark:bg-primary-400/5' />
 
 								{/* Robot badge */}
 								<div className='relative mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-zinc-950 text-white shadow-lg dark:bg-zinc-900 dark:border dark:border-white/10'>
@@ -508,7 +508,7 @@ const BuildPage = () => {
 
 								{/* Title */}
 								<h1 className='text-3xl font-black tracking-tight text-zinc-950 sm:text-4xl lg:text-5xl dark:text-white'>
-									Build your <span className='bg-gradient-to-r from-violet-600 to-indigo-500 bg-clip-text text-transparent dark:from-violet-400 dark:to-indigo-300'>agent</span>
+									Build your <span className='bg-gradient-to-r from-primary-400 to-primary-400 bg-clip-text text-transparent dark:from-primary-400 dark:to-primary-300'>agent</span>
 								</h1>
 
 								{/* Description */}
@@ -518,7 +518,7 @@ const BuildPage = () => {
 
 								{/* Describe Agent Input Box */}
 								<div className='mt-8 max-w-2xl'>
-									<div className='relative flex items-center rounded-full border border-zinc-200/80 bg-white p-1.5 shadow-sm transition-all focus-within:border-violet-500/50 focus-within:ring-4 focus-within:ring-violet-500/5 dark:border-zinc-800 dark:bg-zinc-900/60'>
+									<div className='relative flex items-center rounded-full border border-zinc-200/80 bg-white p-1.5 shadow-sm transition-all focus-within:border-primary-500/50 focus-within:ring-4 focus-within:ring-primary-500/5 dark:border-zinc-800 dark:bg-zinc-900/60'>
 										<input
 											type='text'
 											placeholder='Describe what your agent should do...'
@@ -535,7 +535,7 @@ const BuildPage = () => {
 										<button
 											type='button'
 											onClick={handleSendMessage}
-											className='flex items-center gap-1.5 rounded-full bg-violet-600 px-5 py-2 text-xs font-bold text-white shadow-md shadow-violet-600/25 transition hover:bg-violet-700 active:scale-95 dark:shadow-none'>
+											className='flex items-center gap-1.5 rounded-full bg-primary-400 px-5 py-2 text-xs font-bold text-primary-950 shadow-md shadow-primary-600/25 transition hover:bg-primary-700 active:scale-95 dark:shadow-none'>
 											<Sparkles size={13} />
 											Generate agent
 										</button>
@@ -579,7 +579,7 @@ const BuildPage = () => {
 												{isActive && (
 													<motion.div
 														layoutId='activeTabUnderline'
-														className='absolute right-0 bottom-0 left-0 h-0.5 bg-violet-600 dark:bg-violet-400'
+														className='absolute right-0 bottom-0 left-0 h-0.5 bg-primary-400 dark:bg-primary-400'
 														transition={{
 															type: 'spring',
 															stiffness: 380,
@@ -626,7 +626,7 @@ const BuildPage = () => {
 												type='button'
 												onClick={() => handleChipClick(chip.text)}
 												className='text-zinc-600 hover:text-zinc-950 inline-flex items-center gap-1.5 rounded-full border border-zinc-200/80 bg-white/70 px-4 py-1.5 text-[11px] font-black shadow-2xs backdrop-blur-xs transition-all hover:bg-zinc-50/50 dark:border-zinc-800 dark:bg-zinc-900/60 dark:text-zinc-400 dark:hover:border-zinc-700 dark:hover:bg-zinc-900'>
-												<ChipIcon size={12} className='text-violet-500' />
+												<ChipIcon size={12} className='text-primary-500' />
 												{chip.label}
 											</button>
 										);
@@ -634,8 +634,8 @@ const BuildPage = () => {
 								</div>
 
 								{/* Cockpit Shell */}
-								<div className='relative flex items-center rounded-2xl border border-zinc-200 bg-white p-2 shadow-sm focus-within:border-violet-500/50 focus-within:ring-4 focus-within:ring-violet-500/5 dark:border-zinc-800 dark:bg-zinc-900/60'>
-									<div className='flex h-10 w-10 shrink-0 items-center justify-center text-violet-500'>
+								<div className='relative flex items-center rounded-2xl border border-zinc-200 bg-white p-2 shadow-sm focus-within:border-primary-500/50 focus-within:ring-4 focus-within:ring-primary-500/5 dark:border-zinc-800 dark:bg-zinc-900/60'>
+									<div className='flex h-10 w-10 shrink-0 items-center justify-center text-primary-500'>
 										<Sparkles size={18} />
 									</div>
 									<input
@@ -655,7 +655,7 @@ const BuildPage = () => {
 									<button
 										type='button'
 										onClick={handleSendMessage}
-										className='flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-violet-600 text-white shadow-md transition hover:bg-violet-700 active:scale-95'>
+										className='flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary-400 text-primary-950 shadow-md transition hover:bg-primary-700 active:scale-95'>
 										<Send size={15} />
 									</button>
 								</div>
@@ -838,7 +838,7 @@ const BuildPage = () => {
 
 							<button
 								onClick={() => setIsPreviewMode(false)}
-								className='flex h-9 items-center gap-1.5 rounded-lg bg-violet-600 px-4 text-xs font-bold text-white shadow-md shadow-violet-600/20 hover:bg-violet-700 transition active:scale-95 dark:shadow-none'>
+								className='flex h-9 items-center gap-1.5 rounded-lg bg-primary-400 px-4 text-xs font-bold text-primary-950 shadow-md shadow-primary-600/20 hover:bg-primary-700 transition active:scale-95 dark:shadow-none'>
 								<SquarePen size={13} />
 								<span>Edit Draft</span>
 							</button>
@@ -989,7 +989,7 @@ const BuildPage = () => {
 												{/* Chat bubble */}
 												<div className={`rounded-2xl px-4 py-3 text-sm font-semibold leading-relaxed ${
 													isUser
-														? 'bg-violet-600/10 text-zinc-950 dark:bg-violet-500/25 dark:text-zinc-100 rounded-tr-none'
+														? 'bg-primary-400/10 text-zinc-950 dark:bg-primary-400/25 dark:text-zinc-100 rounded-tr-none'
 														: 'bg-white text-zinc-800 border border-zinc-200/80 dark:bg-zinc-900/60 dark:text-zinc-200 dark:border-zinc-800/85 rounded-tl-none shadow-2xs'
 												}`}>
 													<p className='whitespace-pre-line'>{message.text}</p>
@@ -1043,7 +1043,7 @@ const BuildPage = () => {
 																	key={act.label}
 																	onClick={() => handleActionClick(act)}
 																	className='inline-flex items-center gap-1.5 rounded-full border border-zinc-200 bg-white px-4 py-1.5 text-xs font-black text-zinc-700 shadow-2xs hover:bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-400 dark:hover:border-zinc-700 dark:hover:bg-zinc-900/80 transition active:scale-95'>
-																	<IconComp size={12} className='text-violet-500' />
+																	<IconComp size={12} className='text-primary-500' />
 																	<span>{act.label}</span>
 																</button>
 															);
@@ -1070,9 +1070,9 @@ const BuildPage = () => {
 										<AgentIconComponent size={16} className={getIconColorClass(agentIconColor)} />
 									</div>
 									<div className='rounded-2xl px-4 py-3 bg-white border border-zinc-200/80 dark:bg-zinc-900/60 dark:border-zinc-800/85 rounded-tl-none shadow-2xs flex items-center justify-center gap-1.5'>
-										<div className='w-2.5 h-2.5 rounded-full bg-violet-500 animate-bounce [animation-delay:-0.3s]' />
-										<div className='w-2.5 h-2.5 rounded-full bg-violet-500 animate-bounce [animation-delay:-0.15s]' />
-										<div className='w-2.5 h-2.5 rounded-full bg-violet-500 animate-bounce' />
+										<div className='w-2.5 h-2.5 rounded-full bg-primary-400 animate-bounce [animation-delay:-0.3s]' />
+										<div className='w-2.5 h-2.5 rounded-full bg-primary-400 animate-bounce [animation-delay:-0.15s]' />
+										<div className='w-2.5 h-2.5 rounded-full bg-primary-400 animate-bounce' />
 									</div>
 								</div>
 							</div>
@@ -1138,7 +1138,7 @@ const BuildPage = () => {
 														setChatInput('');
 													}
 												}}
-												className='flex h-8 w-8 items-center justify-center rounded-full bg-linear-to-tr from-pink-400 to-purple-500 text-white shadow-2xs transition hover:opacity-90 active:scale-95'
+												className='flex h-8 w-8 items-center justify-center rounded-full bg-linear-to-tr from-primary-400 to-primary-400 text-primary-950 shadow-2xs transition hover:opacity-90 active:scale-95'
 											>
 												<ArrowUp size={16} strokeWidth={2.5} />
 											</button>
@@ -1161,7 +1161,7 @@ const BuildPage = () => {
 					) : (
 						<footer className='border-t border-zinc-200 bg-white px-4 py-4 dark:border-white/10 dark:bg-zinc-950/90'>
 							<div className='mx-auto max-w-4xl w-full flex flex-col gap-3'>
-								<div className='relative flex items-center rounded-2xl border border-zinc-200 bg-white p-2 shadow-2xs focus-within:border-violet-500/50 focus-within:ring-4 focus-within:ring-violet-500/5 dark:border-zinc-800 dark:bg-zinc-900/60'>
+								<div className='relative flex items-center rounded-2xl border border-zinc-200 bg-white p-2 shadow-2xs focus-within:border-primary-500/50 focus-within:ring-4 focus-within:ring-primary-500/5 dark:border-zinc-800 dark:bg-zinc-900/60'>
 									{/* Left attachments & skill checkbox */}
 									<div className='flex items-center gap-1 px-1.5'>
 										<button
@@ -1176,7 +1176,7 @@ const BuildPage = () => {
 											title='Toggle Skills'
 											className='flex h-9 items-center gap-1.5 rounded-lg border border-zinc-100 bg-zinc-50/50 px-2.5 text-xs font-bold text-zinc-500 hover:bg-zinc-100 dark:border-zinc-800 dark:bg-zinc-950/50 dark:text-zinc-400 dark:hover:bg-zinc-800'>
 											{skillEnabled ? (
-												<CheckSquare size={14} className='text-violet-600 dark:text-violet-400' />
+												<CheckSquare size={14} className='text-primary-600 dark:text-primary-400' />
 											) : (
 												<Square size={14} />
 											)}
@@ -1238,7 +1238,7 @@ const BuildPage = () => {
 													setChatInput('');
 												}
 											}}
-											className='flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-violet-600 text-white shadow-md transition hover:bg-violet-700 active:scale-95'>
+											className='flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary-400 text-primary-950 shadow-md transition hover:bg-primary-700 active:scale-95'>
 											<ArrowUp size={16} strokeWidth={2.5} />
 										</button>
 									</div>
@@ -1283,7 +1283,7 @@ const BuildPage = () => {
 										onClick={() => setActiveSidebarTab('agent')}
 										className={`flex items-center gap-1.5 px-3 pb-4 text-xs font-bold transition-all border-b-2 ${
 											activeSidebarTab === 'agent'
-												? 'text-violet-600 border-violet-600 dark:text-violet-400 dark:border-violet-400'
+												? 'text-primary-600 border-primary-600 dark:text-primary-400 dark:border-primary-400'
 												: 'text-zinc-400 border-transparent hover:text-zinc-600 dark:text-zinc-500 dark:hover:text-zinc-300'
 										}`}
 									>
@@ -1295,7 +1295,7 @@ const BuildPage = () => {
 										onClick={() => setActiveSidebarTab('settings')}
 										className={`flex items-center gap-1.5 px-3 pb-4 text-xs font-bold transition-all border-b-2 ${
 											activeSidebarTab === 'settings'
-												? 'text-violet-600 border-violet-600 dark:text-violet-400 dark:border-violet-400'
+												? 'text-primary-600 border-primary-600 dark:text-primary-400 dark:border-primary-400'
 												: 'text-zinc-400 border-transparent hover:text-zinc-600 dark:text-zinc-500 dark:hover:text-zinc-300'
 										}`}
 									>
@@ -1307,7 +1307,7 @@ const BuildPage = () => {
 										onClick={() => setActiveSidebarTab('chatDetails')}
 										className={`flex items-center gap-1.5 px-3 pb-4 text-xs font-bold transition-all border-b-2 ${
 											activeSidebarTab === 'chatDetails'
-												? 'text-violet-600 border-violet-600 dark:text-violet-400 dark:border-violet-400'
+												? 'text-primary-600 border-primary-600 dark:text-primary-400 dark:border-primary-400'
 												: 'text-zinc-400 border-transparent hover:text-zinc-600 dark:text-zinc-500 dark:hover:text-zinc-300'
 										}`}
 									>
@@ -1329,7 +1329,7 @@ const BuildPage = () => {
 											toast.success('Agent configuration saved!');
 											setIsSettingsOpen(false);
 										}}
-										className='flex h-8 items-center gap-1 rounded-lg bg-violet-600 px-3 text-[11px] font-bold text-white shadow-md shadow-violet-600/20 hover:bg-violet-700 transition active:scale-95 dark:shadow-none'>
+										className='flex h-8 items-center gap-1 rounded-lg bg-primary-400 px-3 text-[11px] font-bold text-primary-950 shadow-md shadow-primary-600/20 hover:bg-primary-700 transition active:scale-95 dark:shadow-none'>
 										<CheckCircle2 size={13} />
 										<span>Save</span>
 									</button>
@@ -1375,7 +1375,7 @@ const BuildPage = () => {
 												value={agentInstructions}
 												onChange={(e) => setAgentInstructions(e.target.value.substring(0, 4000))}
 												placeholder='Add instructions for the agent...'
-												className='w-full rounded-xl border border-zinc-200 bg-white p-3 text-xs font-semibold text-zinc-800 placeholder:text-zinc-400 outline-none focus:border-violet-500/50 focus:ring-4 focus:ring-violet-500/5 dark:border-zinc-800 dark:bg-zinc-950/25 dark:text-zinc-200 dark:placeholder:text-zinc-500 focus:outline-none focus:ring-0 focus:ring-offset-50'
+												className='w-full rounded-xl border border-zinc-200 bg-white p-3 text-xs font-semibold text-zinc-800 placeholder:text-zinc-400 outline-none focus:border-primary-500/50 focus:ring-4 focus:ring-primary-500/5 dark:border-zinc-800 dark:bg-zinc-950/25 dark:text-zinc-200 dark:placeholder:text-zinc-500 focus:outline-none focus:ring-0 focus:ring-offset-50'
 											/>
 											<span className='text-[10px] font-bold text-zinc-400 dark:text-zinc-500 text-right mt-1.5'>
 												{agentInstructions.length} / 4000
@@ -1385,7 +1385,7 @@ const BuildPage = () => {
 										{/* Allow Self-Updates Row */}
 										<div className='flex items-center justify-between rounded-xl border border-zinc-100 p-3 bg-zinc-50/20 dark:border-zinc-800 dark:bg-zinc-950/20'>
 											<div className='flex items-center gap-3'>
-												<div className='flex h-9 w-9 items-center justify-center rounded-xl bg-purple-500/10 text-purple-600 dark:bg-purple-500/5 dark:text-purple-400'>
+												<div className='flex h-9 w-9 items-center justify-center rounded-xl bg-primary-400/10 text-primary-600 dark:bg-primary-400/5 dark:text-primary-400'>
 													<SquarePen size={16} />
 												</div>
 												<div className='flex flex-col pr-4'>
@@ -1396,7 +1396,7 @@ const BuildPage = () => {
 											<button
 												onClick={() => setAllowSelfUpdates(!allowSelfUpdates)}
 												className={`relative inline-flex h-5 w-9 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
-													allowSelfUpdates ? 'bg-violet-600 dark:bg-violet-500' : 'bg-zinc-200 dark:bg-zinc-800'
+													allowSelfUpdates ? 'bg-primary-400 dark:bg-primary-400' : 'bg-zinc-200 dark:bg-zinc-800'
 												}`}>
 												<span
 													className={`pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow-sm ring-0 transition duration-200 ease-in-out ${
@@ -1411,7 +1411,7 @@ const BuildPage = () => {
 									<div className='rounded-2xl border border-zinc-200 bg-white p-4 dark:border-zinc-800 dark:bg-zinc-900/40 space-y-2'>
 										<div className='flex items-center justify-between'>
 											<div className='flex items-center gap-2'>
-												<div className='flex h-7 w-7 items-center justify-center rounded-lg bg-violet-500/10 text-violet-600 dark:bg-violet-500/5 dark:text-violet-400'>
+												<div className='flex h-7 w-7 items-center justify-center rounded-lg bg-primary-400/10 text-primary-600 dark:bg-primary-400/5 dark:text-primary-400'>
 													<Zap size={14} fill="currentColor" />
 												</div>
 												<div className='flex items-center gap-2'>
@@ -1422,7 +1422,7 @@ const BuildPage = () => {
 													</span>
 												</div>
 											</div>
-											<button onClick={() => toast.info('Trigger creation opened')} className='flex items-center gap-1 rounded-lg border border-zinc-200 bg-white px-2.5 py-1 text-[10px] font-black text-violet-600 hover:bg-zinc-50 dark:border-violet-500/20 dark:bg-zinc-900 dark:text-violet-400 dark:hover:bg-zinc-800'>
+											<button onClick={() => toast.info('Trigger creation opened')} className='flex items-center gap-1 rounded-lg border border-zinc-200 bg-white px-2.5 py-1 text-[10px] font-black text-primary-600 hover:bg-zinc-50 dark:border-primary-500/20 dark:bg-zinc-900 dark:text-primary-400 dark:hover:bg-zinc-800'>
 												<Plus size={10} />
 												<span>Trigger</span>
 											</button>
@@ -1453,7 +1453,7 @@ const BuildPage = () => {
 													setAppCategory('all');
 													setIsAddAppOpen(true);
 												}} 
-												className='flex items-center gap-1 rounded-lg border border-zinc-200 bg-white px-2.5 py-1 text-[10px] font-black text-violet-600 hover:bg-zinc-50 dark:border-violet-500/20 dark:bg-zinc-900 dark:text-violet-400 dark:hover:bg-zinc-800'>
+												className='flex items-center gap-1 rounded-lg border border-zinc-200 bg-white px-2.5 py-1 text-[10px] font-black text-primary-600 hover:bg-zinc-50 dark:border-primary-500/20 dark:bg-zinc-900 dark:text-primary-400 dark:hover:bg-zinc-800'>
 												<Plus size={10} />
 												<span>App</span>
 											</button>
@@ -1481,7 +1481,7 @@ const BuildPage = () => {
 																		setConnectedApps(prev => prev.map(a => a.id === 'google-docs' ? { ...a, isConnected: true } : a));
 																		toast.success('Google Docs connected successfully!');
 																	}}
-																	className='px-2.5 py-1 border border-violet-200 text-violet-600 bg-violet-50 text-[10px] font-bold rounded-lg hover:bg-violet-100 dark:border-violet-500/20 dark:bg-violet-500/10 dark:text-violet-400 animate-pulse'>
+																	className='px-2.5 py-1 border border-primary-200 text-primary-600 bg-primary-50 text-[10px] font-bold rounded-lg hover:bg-primary-100 dark:border-primary-500/20 dark:bg-primary-400/10 dark:text-primary-400 animate-pulse'>
 																	Connect
 																</button>
 															) : (
@@ -1499,7 +1499,7 @@ const BuildPage = () => {
 									<div className='rounded-2xl border border-zinc-200 bg-white p-4 dark:border-zinc-800 dark:bg-zinc-900/40 space-y-2'>
 										<div className='flex items-center justify-between'>
 											<div className='flex items-center gap-2'>
-												<div className='flex h-7 w-7 items-center justify-center rounded-lg bg-purple-500/10 text-purple-600 dark:bg-purple-500/5 dark:text-purple-400'>
+												<div className='flex h-7 w-7 items-center justify-center rounded-lg bg-primary-400/10 text-primary-600 dark:bg-primary-400/5 dark:text-primary-400'>
 													<Cpu size={14} />
 												</div>
 												<div className='flex items-center gap-2'>
@@ -1510,7 +1510,7 @@ const BuildPage = () => {
 													</span>
 												</div>
 											</div>
-											<button onClick={() => toast.info('Skill configuration opened')} className='flex items-center gap-1 rounded-lg border border-zinc-200 bg-white px-2.5 py-1 text-[10px] font-black text-violet-600 hover:bg-zinc-50 dark:border-violet-500/20 dark:bg-zinc-900 dark:text-violet-400 dark:hover:bg-zinc-800'>
+											<button onClick={() => toast.info('Skill configuration opened')} className='flex items-center gap-1 rounded-lg border border-zinc-200 bg-white px-2.5 py-1 text-[10px] font-black text-primary-600 hover:bg-zinc-50 dark:border-primary-500/20 dark:bg-zinc-900 dark:text-primary-400 dark:hover:bg-zinc-800'>
 												<Plus size={10} />
 												<span>Skill</span>
 											</button>
@@ -1524,12 +1524,12 @@ const BuildPage = () => {
 									<div className='rounded-2xl border border-zinc-200 bg-white p-4 dark:border-zinc-800 dark:bg-zinc-900/40 space-y-3'>
 										<div className='flex items-center justify-between'>
 											<div className='flex items-center gap-2'>
-												<div className='flex h-7 w-7 items-center justify-center rounded-lg bg-violet-500/10 text-violet-600 dark:bg-violet-500/5 dark:text-violet-400'>
+												<div className='flex h-7 w-7 items-center justify-center rounded-lg bg-primary-400/10 text-primary-600 dark:bg-primary-400/5 dark:text-primary-400'>
 													<Users size={14} />
 												</div>
 												<h4 className='text-xs font-black text-zinc-900 dark:text-white'>Subagents</h4>
 											</div>
-											<button onClick={() => toast.info('Subagent creation dialog opened')} className='flex items-center gap-1 rounded-lg border border-zinc-200 bg-white px-2.5 py-1 text-[10px] font-black text-violet-600 hover:bg-zinc-50 dark:border-violet-500/20 dark:bg-zinc-900 dark:text-violet-400 dark:hover:bg-zinc-800'>
+											<button onClick={() => toast.info('Subagent creation dialog opened')} className='flex items-center gap-1 rounded-lg border border-zinc-200 bg-white px-2.5 py-1 text-[10px] font-black text-primary-600 hover:bg-zinc-50 dark:border-primary-500/20 dark:bg-zinc-900 dark:text-primary-400 dark:hover:bg-zinc-800'>
 												<Plus size={10} />
 												<span>Subagent</span>
 											</button>
@@ -1554,10 +1554,10 @@ const BuildPage = () => {
 									</div>
 
 									{/* Bottom Autosave footer banner */}
-									<div className='flex gap-3 rounded-xl bg-violet-500/5 border border-violet-500/10 p-3.5 dark:bg-violet-500/5 dark:border-violet-500/10'>
-										<Sparkles size={16} className='text-violet-500 shrink-0 mt-0.5' />
+									<div className='flex gap-3 rounded-xl bg-primary-400/5 border border-primary-500/10 p-3.5 dark:bg-primary-400/5 dark:border-primary-500/10'>
+										<Sparkles size={16} className='text-primary-500 shrink-0 mt-0.5' />
 										<div className='flex flex-col'>
-											<span className='text-xs font-bold text-violet-700 dark:text-violet-400'>Changes are saved automatically</span>
+											<span className='text-xs font-bold text-primary-700 dark:text-primary-400'>Changes are saved automatically</span>
 											<span className='text-[10px] font-semibold text-zinc-500 dark:text-zinc-400 mt-1 leading-normal'>Your agent will use the latest configuration for all new conversations.</span>
 										</div>
 									</div>
@@ -1574,7 +1574,7 @@ const BuildPage = () => {
 										{/* Section Header */}
 										<div className='flex items-center gap-2.5 pb-2 border-b border-zinc-100 dark:border-zinc-800/80'>
 											<ChevronDown size={18} className='text-zinc-500 cursor-pointer' />
-											<div className='flex h-8 w-8 items-center justify-center rounded-xl bg-violet-100 text-violet-600 dark:bg-violet-500/10 dark:text-violet-400'>
+											<div className='flex h-8 w-8 items-center justify-center rounded-xl bg-primary-100 text-primary-600 dark:bg-primary-400/10 dark:text-primary-400'>
 												<Users size={16} />
 											</div>
 											<h3 className='text-sm font-black text-zinc-950 dark:text-white'>Personalization</h3>
@@ -1598,7 +1598,7 @@ const BuildPage = () => {
 												>
 													<AgentIconComponent size={44} className={getIconColorClass(agentIconColor)} />
 													{/* Pencil edit badge overlay */}
-													<div className='absolute -bottom-1 -right-1 flex h-6.5 w-6.5 items-center justify-center rounded-full bg-violet-600 text-white border border-white dark:border-zinc-900 shadow-md shadow-violet-600/10 cursor-pointer'>
+													<div className='absolute -bottom-1 -right-1 flex h-6.5 w-6.5 items-center justify-center rounded-full bg-primary-400 text-primary-950 border border-white dark:border-zinc-900 shadow-md shadow-primary-600/10 cursor-pointer'>
 														<SquarePen size={11} />
 													</div>
 												</div>
@@ -1628,7 +1628,7 @@ const BuildPage = () => {
 																			onClick={() => setAgentIcon(() => Icon)}
 																			className={`flex h-9 w-9 items-center justify-center rounded-xl border transition active:scale-95 ${
 																				isSelected
-																					? 'border-violet-600 bg-violet-50 text-violet-600 dark:border-violet-400 dark:bg-violet-500/10 dark:text-violet-400'
+																					? 'border-primary-600 bg-primary-50 text-primary-600 dark:border-primary-400 dark:bg-primary-400/10 dark:text-primary-400'
 																					: 'border-zinc-200 bg-white text-zinc-500 hover:bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800'
 																			}`}>
 																			<Icon size={16} />
@@ -1649,11 +1649,11 @@ const BuildPage = () => {
 																				type='button'
 																				onClick={() => setAgentIconColor(col.value)}
 																				className={`h-5 w-5 rounded-full border transition flex items-center justify-center ${col.bgClass} ${
-																					isSelected ? 'ring-2 ring-violet-500 ring-offset-50 dark:ring-offset-zinc-900 bg-clip-content p-[1px]' : 'border-zinc-200 dark:border-zinc-700'
+																					isSelected ? 'ring-2 ring-primary-500 ring-offset-50 dark:ring-offset-zinc-900 bg-clip-content p-[1px]' : 'border-zinc-200 dark:border-zinc-700'
 																				}`}
 																				title={col.value}>
 																				{col.value === 'rainbow' && (
-																					<div className='h-full w-full rounded-full bg-gradient-to-tr from-violet-500 via-emerald-500 to-rose-500' />
+																					<div className='h-full w-full rounded-full bg-gradient-to-tr from-primary-400 via-emerald-500 to-rose-500' />
 																				)}
 																			</button>
 																		);
@@ -1670,7 +1670,7 @@ const BuildPage = () => {
 												{/* Agent Name input field */}
 												<div className='space-y-1.5 w-full'>
 													<label className='text-[11px] font-black text-zinc-500 dark:text-zinc-400'>Agent Name</label>
-													<div className='relative flex items-center rounded-xl border border-zinc-200 bg-white px-3.5 py-3 shadow-2xs focus-within:border-violet-500/50 focus-within:ring-4 focus-within:ring-violet-500/5 dark:border-zinc-800 dark:bg-zinc-950/20'>
+													<div className='relative flex items-center rounded-xl border border-zinc-200 bg-white px-3.5 py-3 shadow-2xs focus-within:border-primary-500/50 focus-within:ring-4 focus-within:ring-primary-500/5 dark:border-zinc-800 dark:bg-zinc-950/20'>
 														<input
 															type='text'
 															value={agentName}
@@ -1689,7 +1689,7 @@ const BuildPage = () => {
 														<span className='text-[10px] font-semibold text-zinc-400 dark:text-zinc-500 mt-0.5'>Describe what your agent does and how it helps you.</span>
 													</div>
 													{/* Border wrapping both textarea and character count at bottom right */}
-													<div className='relative flex flex-col rounded-xl border border-zinc-200 bg-white p-3.5 shadow-2xs focus-within:border-violet-500/50 focus-within:ring-4 focus-within:ring-violet-500/5 dark:border-zinc-800 dark:bg-zinc-950/20'>
+													<div className='relative flex flex-col rounded-xl border border-zinc-200 bg-white p-3.5 shadow-2xs focus-within:border-primary-500/50 focus-within:ring-4 focus-within:ring-primary-500/5 dark:border-zinc-800 dark:bg-zinc-950/20'>
 														<textarea
 															rows={4}
 															value={agentDescription}
@@ -1711,7 +1711,7 @@ const BuildPage = () => {
 										{/* Agent Details */}
 										<div className='flex items-center justify-between rounded-xl border border-zinc-200 bg-white p-3.5 shadow-2xs hover:bg-zinc-50/40 dark:border-zinc-800 dark:bg-zinc-900/40 transition cursor-pointer'>
 											<div className='flex items-center gap-3 min-w-0'>
-												<div className='flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-violet-500/10 text-violet-600 dark:bg-violet-500/5 dark:text-violet-400'>
+												<div className='flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-primary-400/10 text-primary-600 dark:bg-primary-400/5 dark:text-primary-400'>
 													<Zap size={16} />
 												</div>
 												<div className='flex flex-col min-w-0'>
@@ -1792,11 +1792,11 @@ const BuildPage = () => {
 									</div>
 
 									{/* Bottom secure banner */}
-									<div className='flex items-center justify-between rounded-xl bg-violet-500/5 border border-violet-500/10 p-3.5 dark:bg-violet-500/5 dark:border-violet-500/10'>
+									<div className='flex items-center justify-between rounded-xl bg-primary-400/5 border border-primary-500/10 p-3.5 dark:bg-primary-400/5 dark:border-primary-500/10'>
 										<div className='flex gap-3'>
-											<Shield size={16} className='text-violet-500 shrink-0 mt-0.5' />
+											<Shield size={16} className='text-primary-500 shrink-0 mt-0.5' />
 											<div className='flex flex-col'>
-												<span className='text-xs font-bold text-violet-700 dark:text-violet-400'>Your settings are secure</span>
+												<span className='text-xs font-bold text-primary-700 dark:text-primary-400'>Your settings are secure</span>
 												<span className='text-[10px] font-semibold text-zinc-500 dark:text-zinc-400 mt-1 leading-normal'>All changes are saved automatically and encrypted.</span>
 											</div>
 										</div>
@@ -1806,7 +1806,7 @@ const BuildPage = () => {
 												e.preventDefault();
 												toast.info('Secure credentials document opened.');
 											}}
-											className='text-[10px] font-bold text-violet-600 hover:underline flex items-center gap-1 shrink-0 dark:text-violet-400'>
+											className='text-[10px] font-bold text-primary-600 hover:underline flex items-center gap-1 shrink-0 dark:text-primary-400'>
 											<span>Learn more</span>
 											<ExternalLink size={10} />
 										</a>
@@ -1868,7 +1868,7 @@ const BuildPage = () => {
 							<div className='p-4 border-b border-zinc-100 dark:border-white/10 space-y-3 dark:bg-zinc-900'>
 								<div className='flex gap-3 items-center'>
 									{/* Search Input */}
-									<div className='flex-1 relative flex items-center rounded-xl border border-zinc-200 bg-zinc-50/50 p-2 focus-within:border-violet-500/50 focus-within:ring-4 focus-within:ring-violet-500/5 dark:border-zinc-800 dark:bg-zinc-950/20'>
+									<div className='flex-1 relative flex items-center rounded-xl border border-zinc-200 bg-zinc-50/50 p-2 focus-within:border-primary-500/50 focus-within:ring-4 focus-within:ring-primary-500/5 dark:border-zinc-800 dark:bg-zinc-950/20'>
 										<Search size={15} className='text-zinc-400 shrink-0 ml-1.5' />
 										<input
 											type='text'

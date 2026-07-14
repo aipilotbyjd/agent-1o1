@@ -28,7 +28,7 @@ import type {
 import { ApiError } from '@/api/core';
 
 const inputClass =
-	'h-11 w-full rounded-xl border border-zinc-200 bg-white px-4 text-sm font-medium text-zinc-900 shadow-xs outline-none placeholder:text-zinc-400 focus:border-pink-300 focus:ring-4 focus:ring-pink-100 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100 dark:placeholder:text-zinc-500 dark:focus:border-pink-500 dark:focus:ring-pink-500/20';
+	'h-11 w-full rounded-xl border border-zinc-200 bg-white px-4 text-sm font-medium text-zinc-900 shadow-xs outline-none placeholder:text-zinc-400 focus:border-primary-300 focus:ring-4 focus:ring-primary-100 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100 dark:placeholder:text-zinc-500 dark:focus:border-primary-500 dark:focus:ring-primary-500/20';
 
 const errorClass = 'mt-1.5 text-xs font-semibold text-red-500';
 
@@ -41,7 +41,7 @@ const CHANNEL_ICONS: Record<TNotificationChannelType, React.ReactNode> = {
 
 const CHANNEL_COLORS: Record<TNotificationChannelType, string> = {
 	slack: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-400',
-	discord: 'bg-indigo-100 text-indigo-700 dark:bg-indigo-500/15 dark:text-indigo-400',
+	discord: 'bg-primary-100 text-primary-700 dark:bg-primary-400/15 dark:text-primary-400',
 	webhook: 'bg-amber-100 text-amber-700 dark:bg-amber-500/15 dark:text-amber-400',
 	sms: 'bg-blue-100 text-blue-700 dark:bg-blue-500/15 dark:text-blue-400',
 };
@@ -86,8 +86,8 @@ const ActiveToggle = ({
 		aria-checked={checked}
 		disabled={isPending}
 		onClick={onChange}
-		className={`relative inline-flex h-5 w-9 shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent transition-colors duration-200 focus:ring-2 focus:ring-pink-500 focus:ring-offset-2 focus:outline-none disabled:cursor-not-allowed disabled:opacity-60 ${
-			checked ? 'bg-pink-500' : 'bg-zinc-200 dark:bg-zinc-700'
+		className={`relative inline-flex h-5 w-9 shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent transition-colors duration-200 focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 focus:outline-none disabled:cursor-not-allowed disabled:opacity-60 ${
+			checked ? 'bg-primary-400' : 'bg-zinc-200 dark:bg-zinc-700'
 		}`}>
 		<span
 			className={`pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow transition duration-200 ${
@@ -292,7 +292,7 @@ const ChannelRow = ({ channel }: { channel: TNotificationChannel }) => {
 							type='button'
 							onClick={handleSaveEdit}
 							disabled={updateChannel.isPending}
-							className='flex h-9 items-center gap-1.5 rounded-xl bg-pink-500 px-4 text-sm font-bold text-white shadow-sm shadow-pink-500/20 transition hover:bg-pink-600 disabled:cursor-not-allowed disabled:opacity-60'>
+							className='flex h-9 items-center gap-1.5 rounded-xl bg-primary-400 px-4 text-sm font-bold text-primary-950 shadow-sm shadow-primary-500/20 transition hover:bg-primary-500 disabled:cursor-not-allowed disabled:opacity-60'>
 							<Check size={14} />
 							{updateChannel.isPending ? 'Saving...' : 'Save'}
 						</button>
@@ -443,7 +443,7 @@ const CreateChannelForm = ({ onCancel }: { onCancel: () => void }) => {
 	return (
 		<form
 			onSubmit={handleSubmit}
-			className='rounded-2xl border border-pink-200 bg-pink-50/50 p-6 dark:border-pink-900/30 dark:bg-pink-500/5'>
+			className='rounded-2xl border border-primary-200 bg-primary-50/50 p-6 dark:border-primary-900/30 dark:bg-primary-400/5'>
 			<div className='mb-5 flex items-center justify-between'>
 				<h3 className='text-base font-bold text-zinc-900 dark:text-zinc-100'>
 					Add notification channel
@@ -512,7 +512,7 @@ const CreateChannelForm = ({ onCancel }: { onCancel: () => void }) => {
 				<button
 					type='submit'
 					disabled={createChannel.isPending}
-					className='flex h-10 items-center gap-2 rounded-xl bg-pink-500 px-5 text-sm font-bold text-white shadow-lg shadow-pink-500/20 transition hover:bg-pink-600 disabled:cursor-not-allowed disabled:opacity-60'>
+					className='flex h-10 items-center gap-2 rounded-xl bg-primary-400 px-5 text-sm font-bold text-primary-950 shadow-lg shadow-primary-500/20 transition hover:bg-primary-500 disabled:cursor-not-allowed disabled:opacity-60'>
 					<Plus size={15} />
 					{createChannel.isPending ? 'Creating...' : 'Create channel'}
 				</button>
@@ -547,7 +547,7 @@ const NotificationChannelsPage = () => {
 					<button
 						type='button'
 						onClick={() => setShowCreateForm(true)}
-						className='flex h-10 items-center gap-2 rounded-xl bg-pink-500 px-5 text-sm font-bold text-white shadow-lg shadow-pink-500/20 transition hover:bg-pink-600'>
+						className='flex h-10 items-center gap-2 rounded-xl bg-primary-400 px-5 text-sm font-bold text-primary-950 shadow-lg shadow-primary-500/20 transition hover:bg-primary-500'>
 						<Plus size={15} />
 						Add Channel
 					</button>
@@ -588,7 +588,7 @@ const NotificationChannelsPage = () => {
 						<button
 							type='button'
 							onClick={() => setShowCreateForm(true)}
-							className='flex h-9 items-center gap-2 rounded-xl bg-pink-500 px-4 text-sm font-bold text-white shadow-lg shadow-pink-500/20 transition hover:bg-pink-600'>
+							className='flex h-9 items-center gap-2 rounded-xl bg-primary-400 px-4 text-sm font-bold text-primary-950 shadow-lg shadow-primary-500/20 transition hover:bg-primary-500'>
 							<Plus size={14} />
 							Add your first channel
 						</button>

@@ -148,7 +148,7 @@ const WorkspaceAsideTemplate = () => {
 	// Enrich workplaces list with initials and UI gradient backgrounds
 	const workspaces = useMemo(() => {
 		const colorList = [
-			'bg-indigo-600',
+			'bg-primary-400',
 			'bg-emerald-600',
 			'bg-fuchsia-600',
 			'bg-amber-600',
@@ -206,7 +206,7 @@ const WorkspaceAsideTemplate = () => {
 				});
 
 				const colorList = [
-					'bg-indigo-600',
+					'bg-primary-400',
 					'bg-emerald-600',
 					'bg-fuchsia-600',
 					'bg-amber-600',
@@ -284,7 +284,7 @@ const WorkspaceAsideTemplate = () => {
 								sidebarCollapsed ? 'justify-center px-0' : '',
 							].join(' ')}>
 							<div
-								className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-xl text-xs font-black text-white ${activeWorkspace?.color || 'bg-indigo-600'}`}>
+								className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-xl text-xs font-black text-primary-950 ${activeWorkspace?.color || 'bg-primary-400'}`}>
 								{activeWorkspace?.initials || 'AS'}
 							</div>
 							{!sidebarCollapsed && (
@@ -464,7 +464,7 @@ const WorkspaceAsideTemplate = () => {
 								sidebarCollapsed ? 'justify-center px-0' : '',
 							].join(' ')}>
 							<div
-								className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-xl text-xs font-black text-white ${activeWorkspace?.color || 'bg-indigo-600'}`}>
+								className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-xl text-xs font-black text-primary-950 ${activeWorkspace?.color || 'bg-primary-400'}`}>
 								{activeWorkspace?.initials || 'AS'}
 							</div>
 							{!sidebarCollapsed && (
@@ -587,7 +587,7 @@ const WorkspaceAsideTemplate = () => {
 							</button>
 
 							<h3 className='mb-5 flex items-center gap-2 text-lg font-black text-slate-900 dark:text-white'>
-								<Building2 className='h-5 w-5 text-violet-600 dark:text-violet-400' />
+								<Building2 className='h-5 w-5 text-primary-600 dark:text-primary-400' />
 								Create Workspace
 							</h3>
 
@@ -599,7 +599,7 @@ const WorkspaceAsideTemplate = () => {
 										Workspace Name
 									</label>
 									<div className='group relative flex items-center'>
-										<Building2 className='text-slate-400 group-focus-within:text-violet-600 absolute left-3.5 h-4.5 w-4.5 transition-colors duration-200 dark:group-focus-within:text-violet-400' />
+										<Building2 className='text-slate-400 group-focus-within:text-primary-600 absolute left-3.5 h-4.5 w-4.5 transition-colors duration-200 dark:group-focus-within:text-primary-400' />
 										<input
 											type='text'
 											id='modal-ws-name'
@@ -608,7 +608,7 @@ const WorkspaceAsideTemplate = () => {
 											value={formik.values.name}
 											onChange={handleNameChange}
 											onBlur={formik.handleBlur}
-											className='h-11 w-full rounded-xl border border-slate-200 bg-slate-50 pr-4 pl-10 text-xs font-semibold text-slate-900 transition outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500/25 dark:border-zinc-800 dark:bg-zinc-900 dark:text-white'
+											className='h-11 w-full rounded-xl border border-slate-200 bg-slate-50 pr-4 pl-10 text-xs font-semibold text-slate-900 transition outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500/25 dark:border-zinc-800 dark:bg-zinc-900 dark:text-white'
 										/>
 									</div>
 								</div>
@@ -619,7 +619,7 @@ const WorkspaceAsideTemplate = () => {
 										className='block text-[10px] font-black tracking-wider text-slate-400 uppercase dark:text-zinc-500'>
 										Workspace URL
 									</label>
-									<div className='flex h-11 items-center overflow-hidden rounded-xl border border-slate-200 bg-slate-50 transition focus-within:border-violet-500 focus-within:ring-1 focus-within:ring-violet-500/25 dark:border-zinc-800 dark:bg-zinc-900'>
+									<div className='flex h-11 items-center overflow-hidden rounded-xl border border-slate-200 bg-slate-50 transition focus-within:border-primary-500 focus-within:ring-1 focus-within:ring-primary-500/25 dark:border-zinc-800 dark:bg-zinc-900'>
 										<span className='flex h-full items-center border-r border-slate-200 bg-slate-100/50 px-3 text-xs font-black text-slate-400 dark:border-zinc-800 dark:bg-zinc-950/40'>
 											agent1o1.app/
 										</span>
@@ -654,7 +654,7 @@ const WorkspaceAsideTemplate = () => {
 									<button
 										type='submit'
 										disabled={!formik.isValid || createWorkspace.isPending}
-										className='bg-violet-600 flex h-10 items-center justify-center gap-2 rounded-xl px-4 text-xs font-black text-white transition hover:bg-violet-600 disabled:pointer-events-none disabled:opacity-50'>
+										className='bg-primary-400 flex h-10 items-center justify-center gap-2 rounded-xl px-4 text-xs font-black text-primary-950 transition hover:bg-primary-500 disabled:pointer-events-none disabled:opacity-50'>
 										{createWorkspace.isPending
 											? 'Creating...'
 											: 'Create Workspace'}

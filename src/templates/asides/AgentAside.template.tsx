@@ -32,7 +32,7 @@ const AppAsideTemplate = () => {
 			<div className='flex h-14 items-center justify-between border-b border-zinc-100 px-4 dark:border-zinc-800/80'>
 				<div className='flex items-center gap-2'>
 					{/* Logo */}
-					<div className='flex h-8 w-8 items-center justify-center rounded-lg bg-violet-600 text-white'>
+					<div className='flex h-8 w-8 items-center justify-center rounded-lg bg-primary-400 text-primary-950'>
 						<Bot size={16} className='fill-current' />
 					</div>
 					{asideStatus && (
@@ -160,12 +160,12 @@ const AppAsideTemplate = () => {
 						</div>
 						{/* Progress bar */}
 						<div className='h-2 w-full rounded-full bg-zinc-100 dark:bg-zinc-800'>
-							<div className='h-2 rounded-full bg-violet-600' style={{ width: '100%' }} />
+							<div className='h-2 rounded-full bg-primary-400' style={{ width: '100%' }} />
 						</div>
 						{/* Upgrade Plan Button */}
 						<button
 							onClick={() => navigate('/settings/plan')}
-							className='mt-1 flex w-full items-center justify-center rounded-xl bg-violet-600 py-2 text-xs font-black text-white shadow-md shadow-violet-600/20 transition hover:bg-violet-750 active:scale-95 dark:shadow-none'>
+							className='mt-1 flex w-full items-center justify-center rounded-xl bg-primary-400 py-2 text-xs font-black text-primary-950 shadow-md shadow-primary-600/20 transition hover:bg-primary-700 active:scale-95 dark:shadow-none'>
 							Upgrade Plan
 						</button>
 					</div>
@@ -175,7 +175,7 @@ const AppAsideTemplate = () => {
 				<div className='flex items-center justify-between rounded-xl bg-zinc-50/50 p-2.5 dark:bg-zinc-900/40'>
 					<div className='flex items-center gap-3 min-w-0'>
 						{/* User avatar */}
-						<div className='flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-violet-600 text-xs font-black text-white'>
+						<div className='flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-primary-400 text-xs font-black text-primary-950'>
 							{userData?.name ? userData.name.charAt(0).toUpperCase() : 'A'}
 						</div>
 						{asideStatus && (

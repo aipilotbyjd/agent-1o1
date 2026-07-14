@@ -64,81 +64,81 @@ const colorMap: Record<
 	{ bg: string; text: string; iconBg: string; border: string; darkBorder: string }
 > = {
 	'trigger.google_drive': {
-		bg: 'bg-violet-50/30',
-		text: 'text-violet-600',
-		iconBg: 'bg-violet-100',
-		border: 'border-violet-200',
-		darkBorder: 'dark:border-violet-900/40',
+		bg: 'bg-primary-50/30',
+		text: 'text-primary-600',
+		iconBg: 'bg-primary-100',
+		border: 'border-primary-200',
+		darkBorder: 'dark:border-primary-900/40',
 	},
 	'trigger.google_sheets': {
-		bg: 'bg-violet-50/30',
-		text: 'text-violet-600',
-		iconBg: 'bg-violet-100',
-		border: 'border-violet-200',
-		darkBorder: 'dark:border-violet-900/40',
+		bg: 'bg-primary-50/30',
+		text: 'text-primary-600',
+		iconBg: 'bg-primary-100',
+		border: 'border-primary-200',
+		darkBorder: 'dark:border-primary-900/40',
 	},
 	'trigger.google_calendar': {
-		bg: 'bg-violet-50/30',
-		text: 'text-violet-600',
-		iconBg: 'bg-violet-100',
-		border: 'border-violet-200',
-		darkBorder: 'dark:border-violet-900/40',
+		bg: 'bg-primary-50/30',
+		text: 'text-primary-600',
+		iconBg: 'bg-primary-100',
+		border: 'border-primary-200',
+		darkBorder: 'dark:border-primary-900/40',
 	},
 	'trigger.gmail': {
-		bg: 'bg-violet-50/30',
-		text: 'text-violet-600',
-		iconBg: 'bg-violet-100',
-		border: 'border-violet-200',
-		darkBorder: 'dark:border-violet-900/40',
+		bg: 'bg-primary-50/30',
+		text: 'text-primary-600',
+		iconBg: 'bg-primary-100',
+		border: 'border-primary-200',
+		darkBorder: 'dark:border-primary-900/40',
 	},
 	'trigger.slack_message': {
-		bg: 'bg-violet-50/30',
-		text: 'text-violet-600',
-		iconBg: 'bg-violet-100',
-		border: 'border-violet-200',
-		darkBorder: 'dark:border-violet-900/40',
+		bg: 'bg-primary-50/30',
+		text: 'text-primary-600',
+		iconBg: 'bg-primary-100',
+		border: 'border-primary-200',
+		darkBorder: 'dark:border-primary-900/40',
 	},
 	'trigger.teams_message': {
-		bg: 'bg-violet-50/30',
-		text: 'text-violet-600',
-		iconBg: 'bg-violet-100',
-		border: 'border-violet-200',
-		darkBorder: 'dark:border-violet-900/40',
+		bg: 'bg-primary-50/30',
+		text: 'text-primary-600',
+		iconBg: 'bg-primary-100',
+		border: 'border-primary-200',
+		darkBorder: 'dark:border-primary-900/40',
 	},
 	'trigger.time': {
-		bg: 'bg-violet-50/30',
-		text: 'text-violet-600',
-		iconBg: 'bg-violet-100',
-		border: 'border-violet-200',
-		darkBorder: 'dark:border-violet-900/40',
+		bg: 'bg-primary-50/30',
+		text: 'text-primary-600',
+		iconBg: 'bg-primary-100',
+		border: 'border-primary-200',
+		darkBorder: 'dark:border-primary-900/40',
 	},
 	'trigger.webhook': {
-		bg: 'bg-violet-50/30',
-		text: 'text-violet-600',
-		iconBg: 'bg-violet-100',
-		border: 'border-violet-200',
-		darkBorder: 'dark:border-violet-900/40',
+		bg: 'bg-primary-50/30',
+		text: 'text-primary-600',
+		iconBg: 'bg-primary-100',
+		border: 'border-primary-200',
+		darkBorder: 'dark:border-primary-900/40',
 	},
 	'trigger.google_form_responses': {
-		bg: 'bg-violet-50/30',
-		text: 'text-violet-600',
-		iconBg: 'bg-violet-100',
-		border: 'border-violet-200',
-		darkBorder: 'dark:border-violet-900/40',
+		bg: 'bg-primary-50/30',
+		text: 'text-primary-600',
+		iconBg: 'bg-primary-100',
+		border: 'border-primary-200',
+		darkBorder: 'dark:border-primary-900/40',
 	},
 	'trigger.hubspot_list': {
-		bg: 'bg-violet-50/30',
-		text: 'text-violet-600',
-		iconBg: 'bg-violet-100',
-		border: 'border-violet-200',
-		darkBorder: 'dark:border-violet-900/40',
+		bg: 'bg-primary-50/30',
+		text: 'text-primary-600',
+		iconBg: 'bg-primary-100',
+		border: 'border-primary-200',
+		darkBorder: 'dark:border-primary-900/40',
 	},
 	'trigger.airtable_reader': {
-		bg: 'bg-violet-50/30',
-		text: 'text-violet-600',
-		iconBg: 'bg-violet-100',
-		border: 'border-violet-200',
-		darkBorder: 'dark:border-violet-900/40',
+		bg: 'bg-primary-50/30',
+		text: 'text-primary-600',
+		iconBg: 'bg-primary-100',
+		border: 'border-primary-200',
+		darkBorder: 'dark:border-primary-900/40',
 	},
 };
 
@@ -162,11 +162,11 @@ const TriggerNode = ({ id, data, selected }: NodeProps<TCanvasNode>) => {
 	const hasError = Boolean(def?.requiresCredential) && !data.values.credential_id;
 	const brand = brandNameMap[data.defKey] || 'Trigger';
 	const colorInfo = colorMap[data.defKey] || {
-		bg: 'bg-violet-50/30',
-		text: 'text-violet-600',
-		iconBg: 'bg-violet-100',
-		border: 'border-violet-200',
-		darkBorder: 'dark:border-violet-900/40',
+		bg: 'bg-primary-50/30',
+		text: 'text-primary-600',
+		iconBg: 'bg-primary-100',
+		border: 'border-primary-200',
+		darkBorder: 'dark:border-primary-900/40',
 	};
 	const NodeIcon = iconMap[data.defKey] || Webhook;
 
@@ -251,7 +251,7 @@ const TriggerNode = ({ id, data, selected }: NodeProps<TCanvasNode>) => {
 				'relative w-[340px] rounded-xl border-2 p-1 text-left shadow-2xl transition-all duration-200',
 				'bg-white text-zinc-950 dark:bg-zinc-950 dark:text-zinc-100',
 				selected
-					? 'border-violet-500 ring-4 shadow-violet-100/50 ring-violet-500/10 dark:border-violet-500 dark:shadow-none'
+					? 'border-primary-500 ring-4 shadow-primary-100/50 ring-primary-500/10 dark:border-primary-500 dark:shadow-none'
 					: 'border-zinc-200 dark:border-zinc-800',
 			].join(' ')}>
 			{/* Top Bar */}
@@ -303,7 +303,7 @@ const TriggerNode = ({ id, data, selected }: NodeProps<TCanvasNode>) => {
 						className={[
 							'flex h-4 w-7 cursor-pointer items-center rounded-full p-0.5 transition-all duration-200',
 							isTriggerActive
-								? 'justify-end bg-violet-600'
+								? 'justify-end bg-primary-400'
 								: 'justify-start bg-zinc-200 dark:bg-zinc-700',
 						].join(' ')}>
 						<div className='h-3 w-3 animate-none rounded-full bg-white shadow-xs' />
@@ -326,7 +326,7 @@ const TriggerNode = ({ id, data, selected }: NodeProps<TCanvasNode>) => {
 						<button
 							type='button'
 							onClick={() => dispatch({ type: 'SET_LINK_CREDENTIALS_OPEN', open: true })}
-							className='border-zinc-250 mt-1 flex cursor-pointer items-center gap-1.5 self-start rounded-md border bg-white px-2.5 py-1 text-[11px] font-semibold text-violet-600 shadow-xs hover:bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900 dark:text-violet-400'>
+							className='border-zinc-250 mt-1 flex cursor-pointer items-center gap-1.5 self-start rounded-md border bg-white px-2.5 py-1 text-[11px] font-semibold text-primary-600 shadow-xs hover:bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900 dark:text-primary-400'>
 							Authenticate credentials
 						</button>
 					</div>
@@ -339,7 +339,7 @@ const TriggerNode = ({ id, data, selected }: NodeProps<TCanvasNode>) => {
 				<div className='flex items-start gap-3'>
 					{/* Icon Box */}
 					<div
-						className={`h-12 w-12 ${colorInfo.iconBg} flex shrink-0 items-center justify-center rounded-xl dark:bg-violet-950/40 ${colorInfo.text} dark:text-violet-400`}>
+						className={`h-12 w-12 ${colorInfo.iconBg} flex shrink-0 items-center justify-center rounded-xl dark:bg-primary-950/40 ${colorInfo.text} dark:text-primary-400`}>
 						<NodeIcon size={22} strokeWidth={2.5} />
 					</div>
 
@@ -350,10 +350,10 @@ const TriggerNode = ({ id, data, selected }: NodeProps<TCanvasNode>) => {
 								<span className='text-zinc-650 dark:text-zinc-450 text-[10px] font-bold'>
 									{brand}
 								</span>
-								<Info size={10} className='text-violet-500' />
+								<Info size={10} className='text-primary-500' />
 							</div>
 							<div className='flex items-center gap-1.5'>
-								<span className='text-[10px] font-bold text-violet-600 dark:text-violet-400'>
+								<span className='text-[10px] font-bold text-primary-600 dark:text-primary-400'>
 									Loop Mode
 								</span>
 								<div className='flex h-4 w-7 cursor-pointer items-center rounded-full border border-zinc-200 bg-white p-0.5 dark:border-zinc-700 dark:bg-zinc-800'>
@@ -377,10 +377,10 @@ const TriggerNode = ({ id, data, selected }: NodeProps<TCanvasNode>) => {
 					</div>
 				)}
 					{!!triggerDetail && (
-						<div className='mt-3.5 flex flex-col gap-2 border-t border-violet-100 pt-3 dark:border-violet-900/30'>
+						<div className='mt-3.5 flex flex-col gap-2 border-t border-primary-100 pt-3 dark:border-primary-900/30'>
 							{(triggerDetail as any).webhook_url && (
 								<div className='flex flex-col gap-1'>
-									<span className='text-[10px] font-bold text-violet-600 dark:text-violet-400'>
+									<span className='text-[10px] font-bold text-primary-600 dark:text-primary-400'>
 										Webhook URL:
 									</span>
 									<span className='cursor-text rounded-lg border border-zinc-200 bg-white p-1.5 font-mono text-[9px] font-semibold break-all text-zinc-700 select-all select-text dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-300'>
@@ -578,7 +578,7 @@ const TriggerNode = ({ id, data, selected }: NodeProps<TCanvasNode>) => {
 								<button
 									type="button"
 									onClick={handleSaveFields}
-									className="rounded-lg bg-violet-600 hover:bg-violet-750 px-5 py-2 text-xs font-bold text-white shadow-md transition active:scale-97"
+									className="rounded-lg bg-primary-400 hover:bg-primary-700 px-5 py-2 text-xs font-bold text-primary-950 shadow-md transition active:scale-97"
 								>
 									Save Inputs
 								</button>

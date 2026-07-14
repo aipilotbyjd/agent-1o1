@@ -51,7 +51,7 @@ const ExecutionLogsViewer = ({ ws, executionId }: ExecutionLogsViewerProps) => {
 							<div
 								className={`max-w-[85%] rounded-2xl border p-3 text-xs leading-relaxed font-semibold shadow-xs ${
 									sender === 'user'
-										? 'rounded-tr-none border-violet-700 bg-violet-600 text-white'
+										? 'rounded-tr-none border-primary-700 bg-primary-400 text-primary-950'
 										: 'text-slate-850 rounded-tl-none border-slate-200 bg-white dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-200'
 								}`}>
 								{cleanMessage}

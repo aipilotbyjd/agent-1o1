@@ -64,7 +64,7 @@ const NodeInlineTest = ({
 	}[testStatus];
 
 	const btnClass = {
-		idle: 'border-zinc-200 text-zinc-500 hover:border-violet-300 hover:text-violet-600 dark:border-zinc-700 dark:hover:border-violet-700 dark:hover:text-violet-400',
+		idle: 'border-zinc-200 text-zinc-500 hover:border-primary-300 hover:text-primary-600 dark:border-zinc-700 dark:hover:border-primary-700 dark:hover:text-primary-400',
 		running:
 			'border-sky-300 text-sky-600 dark:border-sky-700 dark:text-sky-400 cursor-not-allowed',
 		success:

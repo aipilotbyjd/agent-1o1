@@ -47,7 +47,7 @@ const ConnectAppsStep = () => {
 						onChange={(e) =>
 							dispatch({ type: 'SET_FIELD', payload: { appSearch: e.target.value } })
 						}
-						className='h-10 w-full rounded-xl border border-slate-200/90 bg-white/50 pr-4 pl-9 text-xs font-semibold transition-all outline-none focus:border-violet-500 dark:border-zinc-800 dark:bg-zinc-950/40'
+						className='h-10 w-full rounded-xl border border-slate-200/90 bg-white/50 pr-4 pl-9 text-xs font-semibold transition-all outline-none focus:border-primary-500 dark:border-zinc-800 dark:bg-zinc-950/40'
 					/>
 				</div>
 				<div className='flex items-center rounded-xl border border-slate-200 bg-white/50 px-3 text-xs font-bold text-slate-500 dark:border-zinc-800'>

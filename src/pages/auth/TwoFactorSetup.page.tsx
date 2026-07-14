@@ -75,7 +75,7 @@ const TwoFactorSetupPage = () => {
 						<div
 							className={`flex h-7 w-7 items-center justify-center rounded-full text-[10px] font-black transition-all ${
 								step >= s.id
-									? 'bg-primary-700 text-white'
+									? 'bg-primary-400 text-primary-950'
 									: 'bg-slate-100 text-slate-400'
 							}`}>
 							{step > s.id ? (
@@ -131,7 +131,7 @@ const TwoFactorSetupPage = () => {
 					<button
 						type='button'
 						onClick={() => setStep(2)}
-						className='group bg-primary-700 hover:bg-primary-800 flex w-full items-center justify-center gap-3 rounded-[32px] px-6 py-4 text-sm font-black tracking-[0.1em] text-white uppercase transition-all duration-300 hover:shadow-[0_20px_50px_-20px_rgba(109,40,217,0.45)] active:scale-[0.98]'>
+						className='group bg-primary-400 hover:bg-primary-500 flex w-full items-center justify-center gap-3 rounded-[32px] px-6 py-4 text-sm font-black tracking-[0.1em] text-primary-950 uppercase transition-all duration-300 hover:shadow-[0_20px_50px_-20px_rgba(109,40,217,0.45)] active:scale-[0.98]'>
 						I've scanned it
 						<Icon
 							icon='ArrowRight01'
@@ -172,7 +172,7 @@ const TwoFactorSetupPage = () => {
 					<button
 						type='submit'
 						disabled={loading || otp.join('').length < OTP_LENGTH}
-						className='group bg-primary-700 hover:bg-primary-800 flex w-full items-center justify-center gap-3 rounded-[32px] px-6 py-4 text-sm font-black tracking-[0.1em] text-white uppercase transition-all duration-300 hover:shadow-[0_20px_50px_-20px_rgba(109,40,217,0.45)] active:scale-[0.98] disabled:pointer-events-none disabled:opacity-60'>
+						className='group bg-primary-400 hover:bg-primary-500 flex w-full items-center justify-center gap-3 rounded-[32px] px-6 py-4 text-sm font-black tracking-[0.1em] text-primary-950 uppercase transition-all duration-300 hover:shadow-[0_20px_50px_-20px_rgba(109,40,217,0.45)] active:scale-[0.98] disabled:pointer-events-none disabled:opacity-60'>
 						<span>{loading ? 'Verifying...' : 'Confirm setup'}</span>
 						<Icon
 							icon='ArrowRight01'
@@ -201,7 +201,7 @@ const TwoFactorSetupPage = () => {
 					</div>
 					<Link
 						to={pages.app.subPages.dashboard.to}
-						className='group bg-primary-700 hover:bg-primary-800 inline-flex items-center gap-3 rounded-[32px] px-8 py-4 text-sm font-black tracking-[0.1em] text-white uppercase transition-all duration-300'>
+						className='group bg-primary-400 hover:bg-primary-500 inline-flex items-center gap-3 rounded-[32px] px-8 py-4 text-sm font-black tracking-[0.1em] text-primary-950 uppercase transition-all duration-300'>
 						Go to dashboard
 						<Icon
 							icon='ArrowRight01'

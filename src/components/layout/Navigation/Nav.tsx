@@ -35,7 +35,7 @@ const navItemClasses = {
 		'transition-all duration-300 ease-in-out',
 	),
 	inactive: 'border-transparent',
-	active: 'bg-primary-500/10 border-transparent text-primary-500 dark:text-primary-400 font-semibold',
+	active: 'bg-primary-400/10 border-transparent text-primary-500 dark:text-primary-400 font-semibold',
 	here: 'text-zinc-950 dark:text-zinc-100 border-transparent',
 };
 

@@ -412,9 +412,9 @@ const Canvas = () => {
 								dispatch({ type: 'SET_COMMAND_PALETTE', open: true });
 								setContextMenu(null);
 							}}
-							className='mt-1 flex w-full items-center gap-3 rounded-lg border border-violet-100 bg-violet-50 px-2.5 py-2 text-left text-sm font-semibold text-violet-700 transition hover:bg-violet-100 dark:border-violet-500/20 dark:bg-violet-600/10 dark:text-violet-100 dark:hover:bg-violet-600/15'>
-							<span className='flex h-8 w-8 items-center justify-center rounded-lg bg-violet-200/50 dark:bg-violet-500/15'>
-								<Zap size={15} className='text-violet-600 dark:text-violet-400' />
+							className='mt-1 flex w-full items-center gap-3 rounded-lg border border-primary-100 bg-primary-50 px-2.5 py-2 text-left text-sm font-semibold text-primary-700 transition hover:bg-primary-100 dark:border-primary-500/20 dark:bg-primary-400/10 dark:text-primary-100 dark:hover:bg-primary-500/15'>
+							<span className='flex h-8 w-8 items-center justify-center rounded-lg bg-primary-200/50 dark:bg-primary-400/15'>
+								<Zap size={15} className='text-primary-600 dark:text-primary-400' />
 							</span>
 							Open command palette
 						</button>
@@ -427,7 +427,7 @@ const Canvas = () => {
 				<CanvasStats nodes={state.nodes.length} edges={state.edges.length} />
 			)}
 			{isDraggingNode && (
-				<div className='pointer-events-none absolute inset-4 rounded-2xl border-2 border-dashed border-violet-500/70 bg-violet-500/10' />
+				<div className='pointer-events-none absolute inset-4 rounded-2xl border-2 border-dashed border-primary-500/70 bg-primary-400/10' />
 			)}
 			<CanvasSearch />
 			<NodeDocumentationPanel />
@@ -437,10 +437,10 @@ const Canvas = () => {
 				<div className='pointer-events-auto absolute right-0 bottom-0 left-0 flex h-14 items-center justify-between border-t border-zinc-200 bg-white/95 px-5 select-none dark:border-white/10 dark:bg-[#07080b]/95 z-10'>
 					{/* Left items - Flow Tab */}
 					<div className='flex h-full items-end'>
-						<div className='flex h-[40px] items-center rounded-t-xl border border-zinc-250 border-b-0 bg-white px-4 text-xs font-bold text-violet-600 dark:border-zinc-800 dark:bg-[#07080b] shadow-xs relative' style={{ borderBottomColor: 'transparent' }}>
+						<div className='flex h-[40px] items-center rounded-t-xl border border-zinc-250 border-b-0 bg-white px-4 text-xs font-bold text-primary-600 dark:border-zinc-800 dark:bg-[#07080b] shadow-xs relative' style={{ borderBottomColor: 'transparent' }}>
 							<span className='text-sm font-black'>Flow</span>
 							{/* Purple active indicator line */}
-							<div className='absolute bottom-0 left-0 right-0 h-[3px] bg-violet-600 rounded-t-lg' />
+							<div className='absolute bottom-0 left-0 right-0 h-[3px] bg-primary-400 rounded-t-lg' />
 						</div>
 					</div>
 

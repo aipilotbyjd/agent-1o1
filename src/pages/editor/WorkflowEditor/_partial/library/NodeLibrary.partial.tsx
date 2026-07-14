@@ -151,7 +151,7 @@ const NodeLibrary = () => {
 				<button
 					type='button'
 					onClick={() => dispatch({ type: 'TOGGLE_AI_PANEL' })}
-					className='flex h-9 w-full cursor-pointer items-center justify-center gap-1.5 rounded-lg border border-primary-200 bg-primary-50/60 px-4 py-1.5 text-xs font-bold text-primary-700 shadow-xs transition hover:border-primary-300 hover:bg-primary-50 dark:border-primary-500/20 dark:bg-primary-500/[0.08] dark:text-primary-300 dark:hover:bg-primary-500/[0.14]'>
+					className='flex h-9 w-full cursor-pointer items-center justify-center gap-1.5 rounded-lg border border-primary-200 bg-primary-50/60 px-4 py-1.5 text-xs font-bold text-primary-700 shadow-xs transition hover:border-primary-300 hover:bg-primary-50 dark:border-primary-500/20 dark:bg-primary-400/[0.08] dark:text-primary-300 dark:hover:bg-primary-500/[0.14]'>
 					<Sparkles
 						size={13}
 						className='fill-primary-500/20 text-primary-600 dark:fill-primary-400/20 dark:text-primary-400'

@@ -80,8 +80,8 @@ const AuthShell = ({
 							transition={{ delay: 0.2 }}
 							className='border-primary-400 bg-primary-100 mb-12 inline-flex items-center gap-3 rounded-full border px-4 py-1.5 text-[10px] font-black tracking-[0.2em] uppercase'>
 							<span className='relative flex h-2 w-2'>
-								<span className='bg-primary-500 absolute inline-flex h-full w-full animate-ping rounded-full opacity-75' />
-								<span className='bg-primary-500 relative inline-flex h-2 w-2 rounded-full' />
+								<span className='bg-primary-400 absolute inline-flex h-full w-full animate-ping rounded-full opacity-75' />
+								<span className='bg-primary-400 relative inline-flex h-2 w-2 rounded-full' />
 							</span>
 							<span className='text-primary-700'>{badge}</span>
 						</motion.div>
@@ -162,7 +162,7 @@ const AuthShell = ({
 						{/* Mobile Header */}
 						<div className='mb-10 block md:hidden'>
 							<div className='bg-primary-100 text-primary-800 ring-primary-300 mb-6 inline-flex items-center gap-2 rounded-full px-3 py-1 text-[10px] font-bold uppercase ring-1'>
-								<span className='bg-primary-500 h-1.5 w-1.5 rounded-full' />
+								<span className='bg-primary-400 h-1.5 w-1.5 rounded-full' />
 								{badge}
 							</div>
 							<h3 className='text-3xl font-black tracking-tighter text-zinc-950'>

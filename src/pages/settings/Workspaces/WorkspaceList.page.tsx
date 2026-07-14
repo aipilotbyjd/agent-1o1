@@ -128,8 +128,8 @@ const AppBrandIcon = ({ name, className = 'w-4 h-4' }: { name: string; className
 			);
 		default:
 			return (
-				<div className='border-violet-150 flex h-6 w-6 items-center justify-center rounded-full border bg-violet-50'>
-					<Workflow className={`${className} text-violet-600`} />
+				<div className='border-primary-100 flex h-6 w-6 items-center justify-center rounded-full border bg-primary-50'>
+					<Workflow className={`${className} text-primary-600`} />
 				</div>
 			);
 	}
@@ -301,7 +301,7 @@ const workspaceData: Record<string, { folders: IFolder[]; workflows: IWorkflow[]
 	'ai-lab': {
 		folders: [
 			{ id: 'ai-agents', name: 'AI Assistant Pipelines', color: 'bg-fuchsia-600' },
-			{ id: 'ai-prompts', name: 'Prompt Chains', color: 'bg-violet-500' },
+			{ id: 'ai-prompts', name: 'Prompt Chains', color: 'bg-primary-400' },
 		],
 		workflows: [
 			{
@@ -601,8 +601,8 @@ export default function WorkspaceListPage() {
 			{/* Main Workspace Dashboard Content Panel */}
 			<Wrapper className='relative flex min-w-0 flex-1 flex-col overflow-y-auto border-none! bg-[#f8f9fc] font-sans md:border-s-0! dark:bg-[#0a0b10]'>
 				{/* Top ambient color glows */}
-				<div className='pointer-events-none absolute top-0 right-10 -z-10 h-[500px] w-[500px] rounded-full bg-gradient-to-tr from-violet-500/5 to-blue-500/5 blur-[120px]' />
-				<div className='pointer-events-none absolute bottom-10 left-1/4 -z-10 h-[400px] w-[400px] rounded-full bg-gradient-to-br from-pink-500/5 to-cyan-500/5 blur-[100px]' />
+				<div className='pointer-events-none absolute top-0 right-10 -z-10 h-[500px] w-[500px] rounded-full bg-gradient-to-tr from-primary-400/5 to-blue-500/5 blur-[120px]' />
+				<div className='pointer-events-none absolute bottom-10 left-1/4 -z-10 h-[400px] w-[400px] rounded-full bg-gradient-to-br from-primary-400/5 to-cyan-500/5 blur-[100px]' />
 
 				{/* Toast Notifications */}
 				<AnimatePresence>
@@ -611,7 +611,7 @@ export default function WorkspaceListPage() {
 							initial={{ opacity: 0, y: -20, scale: 0.95 }}
 							animate={{ opacity: 1, y: 0, scale: 1 }}
 							exit={{ opacity: 0, y: -20, scale: 0.95 }}
-							className='fixed top-6 right-6 z-[100] flex items-center gap-3 rounded-2xl border border-violet-500/20 bg-white/90 px-4 py-3 shadow-2xl backdrop-blur-md dark:bg-zinc-900/90'>
+							className='fixed top-6 right-6 z-[100] flex items-center gap-3 rounded-2xl border border-primary-500/20 bg-white/90 px-4 py-3 shadow-2xl backdrop-blur-md dark:bg-zinc-900/90'>
 							{toast.type === 'success' ? (
 								<div className='flex h-6 w-6 items-center justify-center rounded-full bg-emerald-500/10 text-emerald-500'>
 									<Check size={14} className='stroke-[3]' />
@@ -653,7 +653,7 @@ export default function WorkspaceListPage() {
 							{/* Library View Pill */}
 							<button className='flex h-9 items-center gap-2 rounded-full border border-slate-200 bg-white px-4 text-xs font-black text-slate-700 shadow-sm transition hover:bg-slate-50 active:scale-95 dark:border-zinc-800 dark:bg-[#11131c] dark:text-zinc-200 dark:hover:bg-zinc-800/60'>
 								<svg
-									className='h-3.5 w-3.5 text-violet-600'
+									className='h-3.5 w-3.5 text-primary-600'
 									viewBox='0 0 24 24'
 									fill='none'>
 									<path
@@ -719,7 +719,7 @@ export default function WorkspaceListPage() {
 							<span className='mt-1 block text-xs font-semibold text-slate-500 dark:text-zinc-400'>
 								Running auto triggers
 							</span>
-							<div className='absolute top-5 right-5 flex h-8 w-8 items-center justify-center rounded-xl border border-violet-100 bg-violet-50 text-violet-600 dark:border-violet-500/25 dark:bg-violet-500/10 dark:text-violet-400'>
+							<div className='absolute top-5 right-5 flex h-8 w-8 items-center justify-center rounded-xl border border-primary-100 bg-primary-50 text-primary-600 dark:border-primary-500/25 dark:bg-primary-400/10 dark:text-primary-400'>
 								<Workflow size={14} />
 							</div>
 						</div>
@@ -811,7 +811,7 @@ export default function WorkspaceListPage() {
 									placeholder='Search workflows...'
 									value={searchQuery}
 									onChange={(e) => setSearchQuery(e.target.value)}
-									className='h-9 w-full rounded-full border border-slate-200/80 bg-white pr-8 pl-9 text-xs font-semibold text-slate-900 placeholder-slate-400 transition outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500/25 md:w-60 dark:border-zinc-800 dark:bg-[#11131c] dark:text-white dark:placeholder-zinc-500'
+									className='h-9 w-full rounded-full border border-slate-200/80 bg-white pr-8 pl-9 text-xs font-semibold text-slate-900 placeholder-slate-400 transition outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500/25 md:w-60 dark:border-zinc-800 dark:bg-[#11131c] dark:text-white dark:placeholder-zinc-500'
 								/>
 								{searchQuery ? (
 									<button
@@ -905,7 +905,7 @@ export default function WorkspaceListPage() {
 							{/* + Create Workflow button (violet) */}
 							<button
 								onClick={() => setIsCreateWorkflowOpen(true)}
-								className='bg-violet-650 flex h-9 items-center gap-1.5 rounded-full px-4 text-xs font-black text-white shadow-md shadow-violet-500/10 transition hover:bg-violet-600 active:scale-95'>
+								className='bg-primary-400 flex h-9 items-center gap-1.5 rounded-full px-4 text-xs font-black text-primary-950 shadow-md shadow-primary-500/10 transition hover:bg-primary-500 active:scale-95'>
 								<Plus size={14} strokeWidth={3} />
 								Create Workflow
 							</button>
@@ -1099,7 +1099,7 @@ export default function WorkspaceListPage() {
 																									size={
 																										11
 																									}
-																									className='text-violet-550'
+																									className='text-primary-500'
 																								/>
 																								Open
 																								Editor
@@ -1204,7 +1204,7 @@ export default function WorkspaceListPage() {
 																							wf.id,
 																						)
 																					}
-																					className='h-8 w-full rounded-lg border border-violet-500 bg-white px-2 text-xs font-semibold text-slate-900 transition outline-none dark:bg-zinc-950 dark:text-white'
+																					className='h-8 w-full rounded-lg border border-primary-500 bg-white px-2 text-xs font-semibold text-slate-900 transition outline-none dark:bg-zinc-950 dark:text-white'
 																				/>
 																				<button
 																					onClick={() =>
@@ -1217,7 +1217,7 @@ export default function WorkspaceListPage() {
 																				</button>
 																			</div>
 																		) : (
-																			<h3 className='text-slate-850 hover:text-violet-650 cursor-pointer text-sm font-black transition select-none dark:text-white dark:hover:text-violet-400'>
+																			<h3 className='text-slate-850 hover:text-primary-600 cursor-pointer text-sm font-black transition select-none dark:text-white dark:hover:text-primary-400'>
 																				{wf.title}
 																			</h3>
 																		)}
@@ -1416,7 +1416,7 @@ export default function WorkspaceListPage() {
 								</button>
 
 								<h3 className='mb-5 flex items-center gap-2 text-lg font-black text-slate-900 dark:text-white'>
-									<Workflow className='h-5 w-5 text-violet-600' />
+									<Workflow className='h-5 w-5 text-primary-600' />
 									Create Workflow
 								</h3>
 
@@ -1431,7 +1431,7 @@ export default function WorkspaceListPage() {
 											placeholder='e.g. Lead Sync Manager'
 											value={newWfTitle}
 											onChange={(e) => setNewWfTitle(e.target.value)}
-											className='dark:border-zinc-805 h-10 w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 text-xs font-semibold text-slate-900 transition outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500/25 dark:bg-zinc-900 dark:text-white'
+											className='dark:border-zinc-805 h-10 w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 text-xs font-semibold text-slate-900 transition outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500/25 dark:bg-zinc-900 dark:text-white'
 										/>
 									</div>
 
@@ -1444,7 +1444,7 @@ export default function WorkspaceListPage() {
 											value={newWfDesc}
 											onChange={(e) => setNewWfDesc(e.target.value)}
 											rows={3}
-											className='dark:border-zinc-805 w-full resize-none rounded-xl border border-slate-200 bg-slate-50 p-3.5 text-xs font-semibold text-slate-900 transition outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500/25 dark:bg-zinc-900 dark:text-white'
+											className='dark:border-zinc-805 w-full resize-none rounded-xl border border-slate-200 bg-slate-50 p-3.5 text-xs font-semibold text-slate-900 transition outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500/25 dark:bg-zinc-900 dark:text-white'
 										/>
 									</div>
 
@@ -1455,7 +1455,7 @@ export default function WorkspaceListPage() {
 										<select
 											value={newWfFolderId}
 											onChange={(e) => setNewWfFolderId(e.target.value)}
-											className='dark:border-zinc-805 text-slate-905 h-10 w-full rounded-xl border border-slate-200 bg-slate-50 px-3 text-xs font-semibold transition outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500/25 dark:bg-zinc-900 dark:text-white'>
+											className='dark:border-zinc-805 text-slate-905 h-10 w-full rounded-xl border border-slate-200 bg-slate-50 px-3 text-xs font-semibold transition outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500/25 dark:bg-zinc-900 dark:text-white'>
 											<option value=''>No Folder (Root level)</option>
 											{folders.map((f) => (
 												<option key={f.id} value={f.id}>
@@ -1485,7 +1485,7 @@ export default function WorkspaceListPage() {
 														}}
 														className={`rounded-full border px-3 py-1.5 text-[10px] font-black tracking-wider uppercase transition ${
 															isSelected
-																? 'border-violet-250 text-violet-750 bg-violet-50 dark:border-violet-500/25 dark:bg-violet-500/10 dark:text-violet-400'
+																? 'border-primary-200 text-primary-700 bg-primary-50 dark:border-primary-500/25 dark:bg-primary-400/10 dark:text-primary-400'
 																: 'border-slate-200 bg-white text-slate-500 hover:bg-slate-50 dark:border-zinc-800 dark:bg-[#11131c] dark:text-zinc-400 dark:hover:bg-zinc-800/40'
 														}`}>
 														{app}
@@ -1504,7 +1504,7 @@ export default function WorkspaceListPage() {
 										</button>
 										<button
 											type='submit'
-											className='bg-violet-650 hover:bg-violet-650 h-10 rounded-xl px-4 text-xs font-black text-white transition'>
+											className='bg-primary-400 hover:bg-primary-500 h-10 rounded-xl px-4 text-xs font-black text-primary-950 transition'>
 											Create Workflow
 										</button>
 									</div>
@@ -1535,7 +1535,7 @@ export default function WorkspaceListPage() {
 								</button>
 
 								<h3 className='mb-5 flex items-center gap-2 text-lg font-black text-slate-900 dark:text-white'>
-									<FolderPlus className='h-5 w-5 text-violet-600' />
+									<FolderPlus className='h-5 w-5 text-primary-600' />
 									Create Folder
 								</h3>
 
@@ -1550,7 +1550,7 @@ export default function WorkspaceListPage() {
 											placeholder='e.g. Lead Processing'
 											value={newFolderName}
 											onChange={(e) => setNewFolderName(e.target.value)}
-											className='h-10 w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 text-xs font-semibold text-slate-900 transition outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500/25 dark:border-zinc-800 dark:bg-zinc-900 dark:text-white'
+											className='h-10 w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 text-xs font-semibold text-slate-900 transition outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500/25 dark:border-zinc-800 dark:bg-zinc-900 dark:text-white'
 										/>
 									</div>
 
@@ -1601,7 +1601,7 @@ export default function WorkspaceListPage() {
 										</button>
 										<button
 											type='submit'
-											className='bg-violet-650 h-10 rounded-xl px-4 text-xs font-black text-white transition hover:bg-violet-600'>
+											className='bg-primary-400 h-10 rounded-xl px-4 text-xs font-black text-primary-950 transition hover:bg-primary-500'>
 											Create Folder
 										</button>
 									</div>

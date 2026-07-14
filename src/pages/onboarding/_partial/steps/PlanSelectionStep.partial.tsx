@@ -50,20 +50,20 @@ const PlanSelectionStep = () => {
 							}
 							className={`relative flex w-full items-start gap-3.5 rounded-2xl border p-4 text-left transition-all ${
 								isSelected
-									? 'border-violet-500 bg-violet-500/5 ring-1 ring-violet-500/20'
+									? 'border-primary-500 bg-primary-400/5 ring-1 ring-primary-500/20'
 									: highlighted
-										? 'border-violet-200 bg-white/40 hover:bg-slate-50 dark:border-violet-900/50 dark:bg-zinc-950/20 dark:hover:bg-zinc-800/30'
+										? 'border-primary-200 bg-white/40 hover:bg-slate-50 dark:border-primary-900/50 dark:bg-zinc-950/20 dark:hover:bg-zinc-800/30'
 										: 'border-slate-200 bg-white/40 hover:bg-slate-50 dark:border-zinc-800/80 dark:bg-zinc-950/20 dark:hover:bg-zinc-800/30'
 							}`}>
 							{badge && (
-								<span className='absolute -top-2.5 left-4 rounded-full bg-violet-600 px-2.5 py-0.5 text-[10px] font-black text-white'>
+								<span className='absolute -top-2.5 left-4 rounded-full bg-primary-400 px-2.5 py-0.5 text-[10px] font-black text-primary-950'>
 									{badge}
 								</span>
 							)}
 
 							{/* Radio */}
 							<div
-								className={`mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full border-2 transition-colors ${isSelected ? 'border-violet-500 bg-violet-500' : 'border-slate-300 dark:border-zinc-600'}`}>
+								className={`mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full border-2 transition-colors ${isSelected ? 'border-primary-500 bg-primary-400' : 'border-slate-300 dark:border-zinc-600'}`}>
 								{isSelected && (
 									<div className='h-1.5 w-1.5 rounded-full bg-white' />
 								)}
@@ -71,7 +71,7 @@ const PlanSelectionStep = () => {
 
 							{/* Icon */}
 							<div
-								className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-xl border transition-colors ${isSelected ? 'border-violet-300 bg-violet-500/10 text-violet-600 dark:border-violet-800 dark:text-violet-400' : 'border-slate-200 text-slate-400 dark:border-zinc-800'}`}>
+								className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-xl border transition-colors ${isSelected ? 'border-primary-300 bg-primary-400/10 text-primary-600 dark:border-primary-800 dark:text-primary-400' : 'border-slate-200 text-slate-400 dark:border-zinc-800'}`}>
 								<PlanIcon className='h-4 w-4' />
 							</div>
 
@@ -79,7 +79,7 @@ const PlanSelectionStep = () => {
 							<div className='min-w-0 flex-1'>
 								<div className='flex items-baseline gap-1.5'>
 									<span
-										className={`text-sm font-black ${isSelected ? 'text-violet-600 dark:text-violet-400' : 'text-slate-900 dark:text-zinc-100'}`}>
+										className={`text-sm font-black ${isSelected ? 'text-primary-600 dark:text-primary-400' : 'text-slate-900 dark:text-zinc-100'}`}>
 										{plan.name}
 									</span>
 									<span className='text-base font-black text-slate-900 dark:text-zinc-100'>

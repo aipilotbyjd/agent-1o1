@@ -142,7 +142,7 @@ const BaseNode = ({ id, data, selected }: NodeProps<TCanvasNode>) => {
 				'group relative w-[340px] rounded-xl border-2 p-1 text-left shadow-2xl transition-all duration-200',
 				'bg-white text-zinc-950 dark:bg-zinc-950 dark:text-zinc-100',
 				selected
-					? 'border-violet-500 ring-4 shadow-violet-100/50 ring-violet-500/10 dark:border-violet-500 dark:shadow-none'
+					? 'border-primary-500 ring-4 shadow-primary-100/50 ring-primary-500/10 dark:border-primary-500 dark:shadow-none'
 					: 'border-zinc-200 dark:border-zinc-800',
 				hasError ? 'border-rose-400/80 ring-4 ring-rose-500/10' : '',
 				isActiveRunNode ? 'ring-4 shadow-emerald-500/20 ring-emerald-400/20' : '',
@@ -218,7 +218,7 @@ const BaseNode = ({ id, data, selected }: NodeProps<TCanvasNode>) => {
 										e.stopPropagation();
 										dispatch({ type: 'SET_NODE_DOC', open: true, nodeId: id });
 									}}
-									className='shrink-0 text-zinc-400 transition hover:text-violet-500'>
+									className='shrink-0 text-zinc-400 transition hover:text-primary-500'>
 									<Info size={10} />
 								</button>
 							</span>
@@ -257,7 +257,7 @@ const BaseNode = ({ id, data, selected }: NodeProps<TCanvasNode>) => {
 								e.stopPropagation();
 								dispatch({ type: 'SET_NODE_EXPANDED', open: true, nodeId: id });
 							}}
-							className='flex h-7 w-7 items-center justify-center rounded text-zinc-400 transition hover:bg-violet-100 hover:text-violet-600 dark:hover:bg-violet-900/40 dark:hover:text-violet-400'>
+							className='flex h-7 w-7 items-center justify-center rounded text-zinc-400 transition hover:bg-primary-100 hover:text-primary-600 dark:hover:bg-primary-900/40 dark:hover:text-primary-400'>
 							<Maximize2 size={14} />
 						</button>
 						<NodeColorPicker

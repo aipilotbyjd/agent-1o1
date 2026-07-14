@@ -373,7 +373,7 @@ const RegisterPage = () => {
 				<button
 					type='submit'
 					disabled={!formikRegister.isValid || isRegisterLoading}
-					className='group bg-primary-700 hover:bg-primary-800 relative flex w-full items-center justify-center gap-3 rounded-[32px] px-6 py-4 text-center text-sm font-black tracking-[0.1em] text-white uppercase transition-all duration-300 hover:shadow-[0_20px_50px_-20px_rgba(48,119,41,0.45)] active:scale-[0.98] disabled:pointer-events-none disabled:opacity-60'>
+					className='group bg-primary-400 hover:bg-primary-500 relative flex w-full items-center justify-center gap-3 rounded-[32px] px-6 py-4 text-center text-sm font-black tracking-[0.1em] text-primary-950 uppercase transition-all duration-300 hover:shadow-[0_20px_50px_-20px_rgba(48,119,41,0.45)] active:scale-[0.98] disabled:pointer-events-none disabled:opacity-60'>
 					{isRegisterLoading ? (
 						<>
 							<Loader2 className='h-5 w-5 animate-spin text-white' />
@@ -395,7 +395,7 @@ const RegisterPage = () => {
 };
 
 const passwordStrengthClass: Record<TColors, string> = {
-	primary: 'bg-primary-500',
+	primary: 'bg-primary-400',
 	secondary: 'bg-secondary-500',
 	zinc: 'bg-zinc-500',
 	red: 'bg-red-500',
@@ -404,7 +404,7 @@ const passwordStrengthClass: Record<TColors, string> = {
 	emerald: 'bg-emerald-500',
 	sky: 'bg-sky-500',
 	blue: 'bg-blue-500',
-	violet: 'bg-violet-500',
+	violet: 'bg-primary-400',
 };
 
 const passwordRuleItems: { key: keyof ReturnType<typeof passwordChecks>; label: string }[] = [

@@ -87,7 +87,7 @@ export const EditableWorkflowName = ({
 				}}
 				className={
 					inputClassName ??
-					'rounded-md border border-violet-300 bg-white px-1.5 py-0.5 text-sm font-bold text-zinc-800 outline-none focus:ring-1 focus:ring-violet-500 dark:border-violet-700 dark:bg-zinc-900 dark:text-zinc-100'
+					'rounded-md border border-primary-300 bg-white px-1.5 py-0.5 text-sm font-bold text-zinc-800 outline-none focus:ring-1 focus:ring-primary-500 dark:border-primary-700 dark:bg-zinc-900 dark:text-zinc-100'
 				}
 			/>
 		);
@@ -125,8 +125,8 @@ const PurpleOutlineButton = ({
 		className={[
 			'flex h-9 items-center gap-1.5 sm:gap-2 rounded-lg border px-2.5 sm:px-3 text-xs font-semibold shadow-xs transition disabled:cursor-not-allowed disabled:opacity-40',
 			active
-				? 'border-violet-300 bg-violet-50 text-violet-700 dark:border-violet-700/60 dark:bg-violet-950/40 dark:text-violet-300'
-				: 'border-zinc-200 bg-white text-violet-600 hover:bg-zinc-50 dark:border-zinc-800/40 dark:bg-zinc-900 dark:text-violet-400 dark:hover:bg-white/[0.04]',
+				? 'border-primary-300 bg-primary-50 text-primary-700 dark:border-primary-700/60 dark:bg-primary-950/40 dark:text-primary-300'
+				: 'border-zinc-200 bg-white text-primary-600 hover:bg-zinc-50 dark:border-zinc-800/40 dark:bg-zinc-900 dark:text-primary-400 dark:hover:bg-white/[0.04]',
 		].join(' ')}>
 		{children}
 	</button>
@@ -242,7 +242,7 @@ const Topbar = () => {
 							<path d='M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9' />
 							<path d='M10.3 21a1.94 1.94 0 0 0 3.4 0' />
 						</svg>
-						<span className='absolute top-1 right-1 h-2 w-2 rounded-full bg-indigo-600 ring-2 ring-white dark:ring-[#07080b]' />
+						<span className='absolute top-1 right-1 h-2 w-2 rounded-full bg-primary-400 ring-2 ring-white dark:ring-[#07080b]' />
 					</button>
 				</div>
 			</header>
@@ -254,7 +254,7 @@ const Topbar = () => {
 			{/* Left Section: Branding & Navigation */}
 			<div className='flex items-center gap-4'>
 				<div className='flex items-center gap-2'>
-					<Link to='/dashboard' className='flex items-center gap-1.5 text-violet-600 dark:text-violet-400 hover:opacity-80 transition-opacity'>
+					<Link to='/dashboard' className='flex items-center gap-1.5 text-primary-600 dark:text-primary-400 hover:opacity-80 transition-opacity'>
 						<Bot size={24} strokeWidth={2.5} />
 						<span className='text-base font-extrabold tracking-tight hidden sm:inline'>agent101</span>
 					</Link>
@@ -272,7 +272,7 @@ const Topbar = () => {
 					name={state.workflow.name}
 					onSave={handleRenameWorkflow}
 					className='max-w-[220px] truncate rounded-md px-1.5 py-1 text-left text-sm font-bold text-zinc-800 hover:bg-zinc-100 dark:text-zinc-100 dark:hover:bg-white/[0.06] hidden sm:block'
-					inputClassName='max-w-[220px] rounded-md border border-violet-300 bg-white px-1.5 py-1 text-sm font-bold text-zinc-800 outline-none focus:ring-1 focus:ring-violet-500 dark:border-violet-700 dark:bg-zinc-900 dark:text-zinc-100'
+					inputClassName='max-w-[220px] rounded-md border border-primary-300 bg-white px-1.5 py-1 text-sm font-bold text-zinc-800 outline-none focus:ring-1 focus:ring-primary-500 dark:border-primary-700 dark:bg-zinc-900 dark:text-zinc-100'
 				/>
 
 				<div className='h-6 w-px bg-zinc-200 dark:bg-zinc-800 hidden sm:block' />
@@ -280,21 +280,21 @@ const Topbar = () => {
 				{/* Add buttons — visible as icon-only on mobile, full buttons on desktop */}
 				<div className='flex items-center gap-1.5 sm:gap-2'>
 					<PurpleOutlineButton onClick={() => dispatch({ type: 'TOGGLE_AI_PANEL' })}>
-						<Sparkles size={14} className='text-violet-600 dark:text-violet-400' />
+						<Sparkles size={14} className='text-primary-600 dark:text-primary-400' />
 						<span className='hidden sm:inline'>{state.ui.aiPanelOpen ? 'Hide Chat' : 'AI Chat'}</span>
 					</PurpleOutlineButton>
 					{state.ui.leftPanelOpen && state.ui.leftPanelIntent === 'home' ? (
 						<button
 							type='button'
 							onClick={() => dispatch({ type: 'TOGGLE_LEFT_PANEL', intent: 'home' })}
-							className='dark:bg-violet-750 dark:hover:bg-violet-650 flex h-9 cursor-pointer items-center gap-1.5 sm:gap-2 rounded-lg bg-violet-600 px-2.5 sm:px-3 text-xs font-semibold text-white shadow-xs transition hover:bg-violet-700'>
+							className='dark:bg-primary-700 dark:hover:bg-primary-500 flex h-9 cursor-pointer items-center gap-1.5 sm:gap-2 rounded-lg bg-primary-400 px-2.5 sm:px-3 text-xs font-semibold text-primary-950 shadow-xs transition hover:bg-primary-700'>
 							<Boxes size={14} className='text-white' />
 							<span className='hidden sm:inline'>Apps</span>
 						</button>
 					) : (
 						<PurpleOutlineButton
 							onClick={() => dispatch({ type: 'TOGGLE_LEFT_PANEL', intent: 'home' })}>
-							<Boxes size={14} className='text-violet-600 dark:text-violet-400' />
+							<Boxes size={14} className='text-primary-600 dark:text-primary-400' />
 							<span className='hidden sm:inline'>Apps</span>
 						</PurpleOutlineButton>
 					)}
@@ -302,7 +302,7 @@ const Topbar = () => {
 						<button
 							type='button'
 							onClick={() => dispatch({ type: 'TOGGLE_LEFT_PANEL', intent: 'trigger' })}
-							className='dark:bg-violet-750 dark:hover:bg-violet-650 flex h-9 cursor-pointer items-center gap-1.5 sm:gap-2 rounded-lg bg-violet-600 px-2.5 sm:px-3 text-xs font-semibold text-white shadow-xs transition hover:bg-violet-700'>
+							className='dark:bg-primary-700 dark:hover:bg-primary-500 flex h-9 cursor-pointer items-center gap-1.5 sm:gap-2 rounded-lg bg-primary-400 px-2.5 sm:px-3 text-xs font-semibold text-primary-950 shadow-xs transition hover:bg-primary-700'>
 							<Rocket size={14} className='fill-white text-white' />
 							<span className='hidden sm:inline'>Triggers</span>
 						</button>
@@ -311,7 +311,7 @@ const Topbar = () => {
 							onClick={() => dispatch({ type: 'TOGGLE_LEFT_PANEL', intent: 'trigger' })}>
 							<Rocket
 								size={14}
-								className='fill-violet-600 text-violet-600 dark:fill-violet-400 dark:text-violet-400'
+								className='fill-primary-600 text-primary-600 dark:fill-primary-400 dark:text-primary-400'
 							/>
 							<span className='hidden sm:inline'>Triggers</span>
 						</PurpleOutlineButton>
@@ -361,7 +361,7 @@ const Topbar = () => {
 
 					<PurpleOutlineButton
 						onClick={() => dispatch({ type: 'SET_TEMPLATE_LIBRARY', open: true })}>
-						<Library size={14} className='text-violet-600 dark:text-violet-400' />
+						<Library size={14} className='text-primary-600 dark:text-primary-400' />
 						<span>Templates</span>
 					</PurpleOutlineButton>
 					<PurpleOutlineButton
@@ -369,7 +369,7 @@ const Topbar = () => {
 							setGovModalTab('sharing');
 							setGovModalOpen(true);
 						}}>
-						<Share size={14} className='text-violet-600 dark:text-violet-400' />
+						<Share size={14} className='text-primary-600 dark:text-primary-400' />
 						<span>Share</span>
 					</PurpleOutlineButton>
 
@@ -378,14 +378,14 @@ const Topbar = () => {
 							type='button'
 							onClick={handleSave}
 							disabled={saveVersion.isPending}
-							className='flex h-9 items-center gap-1.5 rounded-l-lg border border-r-0 border-zinc-200 bg-white px-3 text-xs font-semibold text-violet-600 shadow-xs transition hover:bg-zinc-50 disabled:cursor-not-allowed disabled:opacity-40 dark:border-zinc-800/40 dark:bg-zinc-900 dark:text-violet-400'>
-							<Save size={14} className='text-violet-600 dark:text-violet-400' />
+							className='flex h-9 items-center gap-1.5 rounded-l-lg border border-r-0 border-zinc-200 bg-white px-3 text-xs font-semibold text-primary-600 shadow-xs transition hover:bg-zinc-50 disabled:cursor-not-allowed disabled:opacity-40 dark:border-zinc-800/40 dark:bg-zinc-900 dark:text-primary-400'>
+							<Save size={14} className='text-primary-600 dark:text-primary-400' />
 							<span>{saveVersion.isPending ? 'Saving' : 'Save'}</span>
 						</button>
 						<button
 							type='button'
 							onClick={() => setIsSaveDropdownOpen(!isSaveDropdownOpen)}
-							className='flex h-9 items-center justify-center rounded-r-lg border border-zinc-200 bg-white px-2 text-violet-600 shadow-xs transition hover:bg-zinc-50 dark:border-zinc-800/40 dark:bg-zinc-900 dark:text-violet-400'>
+							className='flex h-9 items-center justify-center rounded-r-lg border border-zinc-200 bg-white px-2 text-primary-600 shadow-xs transition hover:bg-zinc-50 dark:border-zinc-800/40 dark:bg-zinc-900 dark:text-primary-400'>
 							<ChevronDown size={14} />
 						</button>
 
@@ -403,7 +403,7 @@ const Topbar = () => {
 											setGovModalTab('versions');
 											setGovModalOpen(true);
 										}}
-										className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-xs font-semibold hover:bg-zinc-50 hover:text-violet-600 dark:text-zinc-300 dark:hover:bg-white/[0.04] dark:hover:text-violet-400"
+										className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-xs font-semibold hover:bg-zinc-50 hover:text-primary-600 dark:text-zinc-300 dark:hover:bg-white/[0.04] dark:hover:text-primary-400"
 									>
 										<span>Version History</span>
 									</button>
@@ -414,7 +414,7 @@ const Topbar = () => {
 											setGovModalTab('approvals');
 											setGovModalOpen(true);
 										}}
-										className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-xs font-semibold hover:bg-zinc-50 hover:text-violet-600 dark:text-zinc-300 dark:hover:bg-white/[0.04] dark:hover:text-violet-400"
+										className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-xs font-semibold hover:bg-zinc-50 hover:text-primary-600 dark:text-zinc-300 dark:hover:bg-white/[0.04] dark:hover:text-primary-400"
 									>
 										<span>Request Approval</span>
 									</button>
@@ -425,7 +425,7 @@ const Topbar = () => {
 											setGovModalTab('releases');
 											setGovModalOpen(true);
 										}}
-										className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-xs font-semibold hover:bg-zinc-50 hover:text-violet-600 dark:text-zinc-300 dark:hover:bg-white/[0.04] dark:hover:text-violet-400"
+										className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-xs font-semibold hover:bg-zinc-50 hover:text-primary-600 dark:text-zinc-300 dark:hover:bg-white/[0.04] dark:hover:text-primary-400"
 									>
 										<span>Deploy Release</span>
 									</button>
@@ -436,7 +436,7 @@ const Topbar = () => {
 											setGovModalTab('contracts');
 											setGovModalOpen(true);
 										}}
-										className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-xs font-semibold hover:bg-zinc-50 hover:text-violet-600 dark:text-zinc-300 dark:hover:bg-white/[0.04] dark:hover:text-violet-400"
+										className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-xs font-semibold hover:bg-zinc-50 hover:text-primary-600 dark:text-zinc-300 dark:hover:bg-white/[0.04] dark:hover:text-primary-400"
 									>
 										<span>Contracts Verification</span>
 									</button>
@@ -468,7 +468,7 @@ const Topbar = () => {
 										handleSave();
 									}}
 									disabled={saveVersion.isPending}
-									className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-left text-xs font-semibold text-zinc-700 hover:bg-zinc-50 hover:text-violet-600 disabled:opacity-40 dark:text-zinc-300 dark:hover:bg-white/[0.04] dark:hover:text-violet-400"
+									className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-left text-xs font-semibold text-zinc-700 hover:bg-zinc-50 hover:text-primary-600 disabled:opacity-40 dark:text-zinc-300 dark:hover:bg-white/[0.04] dark:hover:text-primary-400"
 								>
 									<Save size={14} className="text-zinc-450 dark:text-zinc-500" />
 									<span>{saveVersion.isPending ? 'Saving...' : 'Save Workflow'}</span>
@@ -480,7 +480,7 @@ const Topbar = () => {
 										setGovModalTab('sharing');
 										setGovModalOpen(true);
 									}}
-									className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-left text-xs font-semibold text-zinc-700 hover:bg-zinc-50 hover:text-violet-600 dark:text-zinc-300 dark:hover:bg-white/[0.04] dark:hover:text-violet-400"
+									className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-left text-xs font-semibold text-zinc-700 hover:bg-zinc-50 hover:text-primary-600 dark:text-zinc-300 dark:hover:bg-white/[0.04] dark:hover:text-primary-400"
 								>
 									<Share size={14} className="text-zinc-450 dark:text-zinc-500" />
 									<span>Share Workflow</span>
@@ -491,7 +491,7 @@ const Topbar = () => {
 										setIsMobileMenuOpen(false);
 										dispatch({ type: 'SET_TEMPLATE_LIBRARY', open: true });
 									}}
-									className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-left text-xs font-semibold text-zinc-700 hover:bg-zinc-50 hover:text-violet-600 dark:text-zinc-300 dark:hover:bg-white/[0.04] dark:hover:text-violet-400"
+									className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-left text-xs font-semibold text-zinc-700 hover:bg-zinc-50 hover:text-primary-600 dark:text-zinc-300 dark:hover:bg-white/[0.04] dark:hover:text-primary-400"
 								>
 									<Library size={14} className="text-zinc-450 dark:text-zinc-500" />
 									<span>Templates</span>
@@ -506,7 +506,7 @@ const Topbar = () => {
 										setGovModalTab('versions');
 										setGovModalOpen(true);
 									}}
-									className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-left text-xs font-semibold text-zinc-700 hover:bg-zinc-50 hover:text-violet-600 dark:text-zinc-300 dark:hover:bg-white/[0.04] dark:hover:text-violet-400"
+									className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-left text-xs font-semibold text-zinc-700 hover:bg-zinc-50 hover:text-primary-600 dark:text-zinc-300 dark:hover:bg-white/[0.04] dark:hover:text-primary-400"
 								>
 									<GitCompare size={14} className="text-zinc-450 dark:text-zinc-500" />
 									<span>Version History</span>
@@ -518,7 +518,7 @@ const Topbar = () => {
 										setGovModalTab('approvals');
 										setGovModalOpen(true);
 									}}
-									className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-left text-xs font-semibold text-zinc-700 hover:bg-zinc-50 hover:text-violet-600 dark:text-zinc-300 dark:hover:bg-white/[0.04] dark:hover:text-violet-400"
+									className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-left text-xs font-semibold text-zinc-700 hover:bg-zinc-50 hover:text-primary-600 dark:text-zinc-300 dark:hover:bg-white/[0.04] dark:hover:text-primary-400"
 								>
 									<Settings2 size={14} className="text-zinc-450 dark:text-zinc-500" />
 									<span>Request Approval</span>
@@ -530,7 +530,7 @@ const Topbar = () => {
 										setGovModalTab('releases');
 										setGovModalOpen(true);
 									}}
-									className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-left text-xs font-semibold text-zinc-700 hover:bg-zinc-50 hover:text-violet-600 dark:text-zinc-300 dark:hover:bg-white/[0.04] dark:hover:text-violet-400"
+									className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-left text-xs font-semibold text-zinc-700 hover:bg-zinc-50 hover:text-primary-600 dark:text-zinc-300 dark:hover:bg-white/[0.04] dark:hover:text-primary-400"
 								>
 									<Play size={14} className="text-zinc-450 dark:text-zinc-500" />
 									<span>Deploy Release</span>
@@ -544,7 +544,7 @@ const Topbar = () => {
 									onClick={() => {
 										dispatch({ type: 'UNDO' });
 									}}
-									className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-left text-xs font-semibold text-zinc-700 hover:bg-zinc-50 hover:text-violet-600 disabled:opacity-30 dark:text-zinc-300 dark:hover:bg-white/[0.04] dark:hover:text-violet-400"
+									className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-left text-xs font-semibold text-zinc-700 hover:bg-zinc-50 hover:text-primary-600 disabled:opacity-30 dark:text-zinc-300 dark:hover:bg-white/[0.04] dark:hover:text-primary-400"
 								>
 									<RotateCcw size={14} className="text-zinc-450 dark:text-zinc-500" />
 									<span>Undo</span>
@@ -555,7 +555,7 @@ const Topbar = () => {
 									onClick={() => {
 										dispatch({ type: 'REDO' });
 									}}
-									className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-left text-xs font-semibold text-zinc-700 hover:bg-zinc-50 hover:text-violet-600 disabled:opacity-30 dark:text-zinc-300 dark:hover:bg-white/[0.04] dark:hover:text-violet-400"
+									className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-left text-xs font-semibold text-zinc-700 hover:bg-zinc-50 hover:text-primary-600 disabled:opacity-30 dark:text-zinc-300 dark:hover:bg-white/[0.04] dark:hover:text-primary-400"
 								>
 									<RotateCw size={14} className="text-zinc-450 dark:text-zinc-500" />
 									<span>Redo</span>
@@ -568,7 +568,7 @@ const Topbar = () => {
 									onClick={() => {
 										setDarkModeStatus(isDarkTheme ? DARK_MODE.LIGHT : DARK_MODE.DARK);
 									}}
-									className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-left text-xs font-semibold text-zinc-700 hover:bg-zinc-50 hover:text-violet-600 dark:text-zinc-300 dark:hover:bg-white/[0.04] dark:hover:text-violet-400"
+									className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-left text-xs font-semibold text-zinc-700 hover:bg-zinc-50 hover:text-primary-600 dark:text-zinc-300 dark:hover:bg-white/[0.04] dark:hover:text-primary-400"
 								>
 									{isDarkTheme ? <Sun size={14} className="text-zinc-450 dark:text-zinc-500" /> : <Moon size={14} className="text-zinc-450 dark:text-zinc-500" />}
 									<span>{isDarkTheme ? 'Light Mode' : 'Dark Mode'}</span>
@@ -590,7 +590,7 @@ const Topbar = () => {
 							: 'cursor-pointer',
 						isRunning
 							? 'bg-rose-500 shadow-rose-950/20 hover:bg-rose-400'
-							: 'dark:bg-violet-750 dark:hover:bg-violet-650 bg-violet-600 shadow-violet-600/10 hover:bg-violet-500',
+							: 'dark:bg-primary-700 dark:hover:bg-primary-500 bg-primary-400 shadow-primary-600/10 hover:bg-primary-500',
 					].join(' ')}>
 					{isRunning ? (
 						<Square size={12} fill='currentColor' />

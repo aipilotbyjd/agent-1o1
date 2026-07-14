@@ -15,7 +15,7 @@ const HistoryPageHeader = () => {
 				<Menu size={18} />
 			</button>
 
-			<div className='hidden md:flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-[#eedeff]/60 text-[#8b5cf6] shadow-[inset_0_1px_2px_rgba(255,255,255,0.4)] dark:bg-violet-950/40 dark:text-[#a78bfa]'>
+			<div className='hidden md:flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-[#eedeff]/60 text-[#8b5cf6] shadow-[inset_0_1px_2px_rgba(255,255,255,0.4)] dark:bg-primary-950/40 dark:text-[#a78bfa]'>
 				<Clock className='h-6 w-6' strokeWidth={2.2} />
 			</div>
 			<div className='flex flex-col gap-0.5 text-left'>

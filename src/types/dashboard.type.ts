@@ -153,8 +153,8 @@ export const STATUS_BADGE_COLORS: Record<TExecutionStatus, { bg: string; text: s
 	queued: { bg: 'bg-amber-100 dark:bg-amber-900/30', text: 'text-amber-600 dark:text-amber-400' },
 	cancelled: { bg: 'bg-zinc-100 dark:bg-zinc-800', text: 'text-zinc-600 dark:text-zinc-400' },
 	paused: {
-		bg: 'bg-violet-100 dark:bg-violet-900/30',
-		text: 'text-violet-600 dark:text-violet-400',
+		bg: 'bg-primary-100 dark:bg-primary-900/30',
+		text: 'text-primary-600 dark:text-primary-400',
 	},
 };
 

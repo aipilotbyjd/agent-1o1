@@ -24,7 +24,7 @@ const NodeDocumentationPanel = () => {
 				{/* Header */}
 				<div className='flex items-center justify-between border-b border-zinc-100 p-4 dark:border-white/[0.06]'>
 					<div className='flex items-center gap-2 text-sm font-bold text-zinc-800 dark:text-zinc-100'>
-						<BookOpen size={15} className='text-violet-500' />
+						<BookOpen size={15} className='text-primary-500' />
 						Node Docs
 					</div>
 					<button
@@ -177,12 +177,12 @@ const NodeDocumentationPanel = () => {
 						)}
 
 						{/* Usage tip */}
-						<div className='rounded-xl border border-violet-100 bg-violet-50 p-3 dark:border-violet-900/30 dark:bg-violet-950/20'>
-							<div className='mb-1 flex items-center gap-1.5 text-xs font-bold text-violet-700 dark:text-violet-300'>
+						<div className='rounded-xl border border-primary-100 bg-primary-50 p-3 dark:border-primary-900/30 dark:bg-primary-950/20'>
+							<div className='mb-1 flex items-center gap-1.5 text-xs font-bold text-primary-700 dark:text-primary-300'>
 								<Info size={13} />
 								Usage Tip
 							</div>
-							<p className='text-[11px] leading-relaxed text-violet-700/80 dark:text-violet-400'>
+							<p className='text-[11px] leading-relaxed text-primary-700/80 dark:text-primary-400'>
 								Connect this node by dragging from output handles of upstream nodes
 								to the input handles of this node. Use{' '}
 								<code className='font-mono'>{'{{nodeName.outputName}}'}</code>{' '}

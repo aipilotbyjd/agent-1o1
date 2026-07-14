@@ -67,7 +67,7 @@ const User: FC<IUserProps> = (props) => {
 					) : (
 						<div
 							className={classNames(
-								'bg-primary-500/25 text-primary-500 flex aspect-square h-12 w-12 items-center justify-center',
+								'bg-primary-400/25 text-primary-500 flex aspect-square h-12 w-12 items-center justify-center',
 								[`${roundedCustom(-2)}`],
 							)}>
 							{name && getFirstLetterUtil(name)}
