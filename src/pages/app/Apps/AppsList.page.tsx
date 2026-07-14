@@ -621,7 +621,7 @@ const AppsListPage = () => {
 						<h1 className='text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white'>
 							Apps
 						</h1>
-						<p className='mt-1 text-[11px] font-extrabold tracking-widest text-[#503ef5] uppercase dark:text-primary-400'>
+						<p className='mt-1 text-[11px] font-extrabold tracking-widest text-primary-700 uppercase dark:text-primary-400'>
 							Integrations Hub
 						</p>
 						<p className='mt-1 text-xs font-medium text-slate-500 dark:text-zinc-400'>
@@ -631,7 +631,7 @@ const AppsListPage = () => {
 
 					<button
 						onClick={() => setIsConnectModalOpen(true)}
-						className='flex h-10 shrink-0 cursor-pointer items-center justify-center gap-2 rounded-xl bg-[#503ef5] px-5 text-xs font-bold text-white shadow-md shadow-[#503ef5]/10 transition-all hover:bg-[#3f2fe3] hover:shadow-lg hover:shadow-[#503ef5]/20 active:scale-95 dark:shadow-none'>
+						className='flex h-10 shrink-0 cursor-pointer items-center justify-center gap-2 rounded-xl bg-primary-400 px-5 text-xs font-bold text-primary-950 shadow-md shadow-primary-500/10 transition-all hover:bg-primary-500 hover:shadow-lg hover:shadow-primary-500/20 active:scale-95 dark:shadow-none'>
 						<Sparkles size={14} className='animate-pulse' />
 						<span>Connect App</span>
 						<ChevronDown size={14} />
@@ -674,7 +674,7 @@ const AppsListPage = () => {
 									</p>
 									<button
 										onClick={() => setIsConnectModalOpen(true)}
-										className='mt-2.5 h-7 rounded-lg bg-[#503ef5] px-3 text-[9px] font-extrabold text-white transition-all hover:bg-[#3f2fe3] active:scale-95'>
+										className='mt-2.5 h-7 rounded-lg bg-primary-400 px-3 text-[9px] font-extrabold text-primary-950 transition-all hover:bg-primary-500 active:scale-95'>
 										Browse Apps
 									</button>
 								</div>
@@ -708,7 +708,7 @@ const AppsListPage = () => {
 									{/* Overlapping avatars representation */}
 									<div className='flex items-center gap-1.5'>
 										<div className='flex -space-x-2.5 overflow-hidden'>
-											<div className='flex inline-block h-6.5 w-6.5 items-center justify-center rounded-full bg-[#503ef5] text-[9px] font-extrabold text-white ring-2 ring-white'>
+											<div className='flex inline-block h-6.5 w-6.5 items-center justify-center rounded-full bg-primary-400 text-[9px] font-extrabold text-primary-950 ring-2 ring-white'>
 												A
 											</div>
 											<div className='flex inline-block h-6.5 w-6.5 items-center justify-center rounded-full bg-emerald-500 text-[9px] font-extrabold text-white ring-2 ring-white'>
@@ -820,14 +820,14 @@ const AppsListPage = () => {
 									<div
 										key={rec.name}
 										onClick={() => setIsConnectModalOpen(true)}
-										className='group/rec flex cursor-pointer items-center gap-2.5 rounded-2xl border border-slate-200/50 bg-white/70 p-3 shadow-2xs transition-all hover:border-[#503ef5]/35 hover:shadow-xs dark:border-zinc-800/60 dark:bg-zinc-900/40 dark:hover:bg-zinc-900/60'>
+										className='group/rec flex cursor-pointer items-center gap-2.5 rounded-2xl border border-slate-200/50 bg-white/70 p-3 shadow-2xs transition-all hover:border-primary-400/35 hover:shadow-xs dark:border-zinc-800/60 dark:bg-zinc-900/40 dark:hover:bg-zinc-900/60'>
 										<div
 											className='flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-[10px] font-extrabold text-white'
 											style={{ backgroundColor: rec.color }}>
 											{rec.name[0]}
 										</div>
 										<div className='min-w-0 text-left'>
-											<p className='truncate text-[11px] font-extrabold text-slate-900 transition-colors group-hover/rec:text-[#503ef5] dark:text-white'>
+											<p className='truncate text-[11px] font-extrabold text-slate-900 transition-colors group-hover/rec:text-primary-700 dark:text-white'>
 												{rec.name}
 											</p>
 											<p className='truncate text-[9px] font-semibold text-slate-400 dark:text-zinc-500'>
@@ -842,14 +842,14 @@ const AppsListPage = () => {
 						{/* Search & Categories Filter Bar */}
 						<div className='flex w-full flex-col gap-4'>
 							<div className='group relative flex-1'>
-								<Search className='absolute top-3.5 left-4 h-4.5 w-4.5 text-slate-400 transition-colors duration-200 group-focus-within:text-[#503ef5] dark:text-zinc-500' />
+								<Search className='absolute top-3.5 left-4 h-4.5 w-4.5 text-slate-400 transition-colors duration-200 group-focus-within:text-primary-700 dark:text-zinc-500' />
 								<input
 									type='search'
 									aria-label='Search integrations'
 									placeholder='Search integrations...'
 									value={searchQuery}
 									onChange={(e) => setSearchQuery(e.target.value)}
-									className='dark:placeholder:text-zinc-650 block h-12 w-full rounded-2xl border border-slate-200/60 bg-white pr-14 pl-12 text-xs font-bold text-slate-900 shadow-sm transition-all duration-200 outline-none placeholder:text-slate-400 focus:border-[#503ef5]/80 focus:ring-4 focus:ring-[#503ef5]/10 dark:border-zinc-800 dark:bg-zinc-900/40 dark:text-zinc-100 dark:focus:border-primary-500 dark:focus:ring-primary-500/15'
+									className='dark:placeholder:text-zinc-650 block h-12 w-full rounded-2xl border border-slate-200/60 bg-white pr-14 pl-12 text-xs font-bold text-slate-900 shadow-sm transition-all duration-200 outline-none placeholder:text-slate-400 focus:border-primary-400/80 focus:ring-4 focus:ring-primary-400/10 dark:border-zinc-800 dark:bg-zinc-900/40 dark:text-zinc-100 dark:focus:border-primary-500 dark:focus:ring-primary-500/15'
 								/>
 								<div className='pointer-events-none absolute top-3.5 right-4 hidden items-center justify-center rounded-md border border-slate-200 bg-slate-50 px-1.5 py-0.5 text-[10px] font-extrabold text-slate-400 shadow-2xs sm:flex dark:border-zinc-800 dark:bg-zinc-800 dark:text-zinc-500'>
 									⌘K
@@ -899,7 +899,7 @@ const AppsListPage = () => {
 												}}
 												className={`flex h-9 shrink-0 cursor-pointer items-center gap-1.5 rounded-xl px-3.5 text-xs transition-all duration-200 ${
 													isActive
-														? 'border border-[#503ef5] bg-[#503ef5] font-extrabold text-white shadow-sm'
+														? 'border border-primary-400 bg-primary-400 font-extrabold text-primary-950 shadow-sm'
 														: 'border border-slate-200/60 bg-white font-bold text-slate-600 shadow-xs hover:bg-slate-50 dark:border-zinc-800/80 dark:bg-[#11131c] dark:text-zinc-400 dark:hover:bg-zinc-800/20'
 												}`}>
 												<span>{cat.emoji}</span>
@@ -911,7 +911,7 @@ const AppsListPage = () => {
 
 								<button
 									onClick={() => alert('Sorting updated.')}
-									className='flex h-9 shrink-0 items-center gap-1.5 rounded-xl border border-slate-200/60 bg-white px-3.5 text-xs font-extrabold text-[#503ef5] shadow-xs transition-all hover:bg-slate-50 dark:border-zinc-800/80 dark:bg-[#11131c]'>
+									className='flex h-9 shrink-0 items-center gap-1.5 rounded-xl border border-slate-200/60 bg-white px-3.5 text-xs font-extrabold text-primary-700 shadow-xs transition-all hover:bg-slate-50 dark:border-zinc-800/80 dark:bg-[#11131c]'>
 									<span>Sort: Popular</span>
 								</button>
 							</div>
@@ -941,7 +941,7 @@ const AppsListPage = () => {
 								<button
 									type='button'
 									onClick={() => void refetchCredentialTypes()}
-									className='mt-5 h-10 cursor-pointer rounded-xl bg-[#503ef5] px-5 text-xs font-bold text-white shadow-md transition-all active:scale-95'>
+									className='mt-5 h-10 cursor-pointer rounded-xl bg-primary-400 px-5 text-xs font-bold text-primary-950 shadow-md transition-all active:scale-95'>
 									Retry
 								</button>
 							</div>
@@ -1073,7 +1073,7 @@ const AppsListPage = () => {
 														className={`h-7.5 cursor-pointer rounded-lg px-3 text-[10px] font-extrabold transition-all active:scale-95 ${
 															app.isConnected
 																? 'border border-emerald-500/25 bg-emerald-500/10 text-emerald-600 hover:border-red-500/25 hover:bg-red-50/50 hover:text-red-500 dark:bg-emerald-500/5 dark:text-emerald-400 dark:hover:bg-red-950/10 dark:hover:text-red-400'
-																: 'bg-[#503ef5] text-white hover:bg-[#3f2fe3]'
+																: 'bg-primary-400 text-primary-950 hover:bg-primary-500'
 														}`}>
 														{app.isConnected
 															? 'Active'
@@ -1102,7 +1102,7 @@ const AppsListPage = () => {
 								</h3>
 								<button
 									onClick={() => alert('Recent activities opened.')}
-									className='text-[10px] font-bold text-[#503ef5] hover:underline'>
+									className='text-[10px] font-bold text-primary-700 hover:underline'>
 									View all
 								</button>
 							</div>
@@ -1154,9 +1154,9 @@ const AppsListPage = () => {
 						</div>
 
 						{/* Widget 2: Unlock More Power rocket banner */}
-						<div className='relative overflow-hidden rounded-[24px] border border-primary-100 bg-gradient-to-br from-[#503ef5]/10 via-[#503ef5]/5 to-transparent p-5 shadow-xs dark:border-primary-900/10 dark:from-[#503ef5]/5 dark:to-transparent'>
+						<div className='relative overflow-hidden rounded-[24px] border border-primary-100 bg-gradient-to-br from-primary-400/10 via-primary-400/5 to-transparent p-5 shadow-xs dark:border-primary-900/10 dark:from-primary-400/5 dark:to-transparent'>
 							<div className='pointer-events-none absolute -right-6 -bottom-6 h-16 w-16 opacity-20 select-none'>
-								<Sparkles size={64} className='text-[#503ef5]' />
+								<Sparkles size={64} className='text-primary-700' />
 							</div>
 							<h3 className='text-xs font-extrabold tracking-wider text-primary-950 uppercase dark:text-primary-400'>
 								Unlock More Power
@@ -1167,7 +1167,7 @@ const AppsListPage = () => {
 							</p>
 							<button
 								onClick={() => setIsConnectModalOpen(true)}
-								className='mt-4 flex h-8 w-full items-center justify-center gap-1.5 rounded-lg bg-[#503ef5] px-3.5 text-[10px] font-extrabold text-white shadow-xs transition-all hover:bg-[#3f2fe3] active:scale-95'>
+								className='mt-4 flex h-8 w-full items-center justify-center gap-1.5 rounded-lg bg-primary-400 px-3.5 text-[10px] font-extrabold text-primary-950 shadow-xs transition-all hover:bg-primary-500 active:scale-95'>
 								<span>Explore Catalog</span>
 								<span>→</span>
 							</button>
@@ -1183,7 +1183,7 @@ const AppsListPage = () => {
 								{[
 									{
 										name: 'Communication',
-										barColor: 'bg-[#503ef5]',
+										barColor: 'bg-primary-400',
 										count: 24,
 										percent: 95,
 									},
