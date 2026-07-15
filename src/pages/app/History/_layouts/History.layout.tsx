@@ -14,7 +14,7 @@ const HistoryLayout = () => {
 
 	return (
 		<>
-			<Header className='hidden md:flex'>
+			<Header>
 				<HeaderLeft>{headerLeft}</HeaderLeft>
 				<HeaderRight>
 					<NotificationsDropdown />

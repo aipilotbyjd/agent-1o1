@@ -19,13 +19,11 @@ import {
 	Grid,
 	List,
 	Users,
-	Menu,
 } from 'lucide-react';
 import { OutletContextType } from './_layouts/Templates.layout';
 import Breadcrumb from '@/components/layout/Breadcrumb';
 import Container from '@/components/layout/Container';
 import pages from '@/Routes/pages';
-import useAsideStatus from '@/hooks/useAsideStatus';
 import { useWorkspaceContext } from '@/context/workspaceContext';
 import {
 	useTemplates,
@@ -328,7 +326,6 @@ const AgentChatMock = ({
 
 const TemplatesCatalogPage = () => {
 	const { setHeaderLeft } = useOutletContext<OutletContextType>();
-	const { toggleAside } = useAsideStatus();
 	const navigate = useNavigate();
 	const { activeWorkspaceId } = useWorkspaceContext();
 
@@ -499,26 +496,18 @@ const TemplatesCatalogPage = () => {
 
 			<div className='mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8'>
 				{/* Hero header banner */}
-				<div className='relative mb-8 overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-r from-[#501EE3] via-[#7B37FC] to-[#2B1B9A] px-6 py-8 text-white shadow-xl sm:px-10 sm:py-12 dark:from-[#311196] dark:via-[#4c1ba1] dark:to-[#170e54]'>
+				<div className='relative mb-8 overflow-hidden rounded-3xl border border-zinc-800/80 bg-gradient-to-r from-[#090b1a] via-[#111438] to-[#250d4f] px-6 py-8 text-white shadow-xl shadow-primary-500/20 sm:px-10 sm:py-12 dark:border-zinc-800 dark:from-[#05060f] dark:via-[#0c0d24] dark:to-[#170932]'>
 					<div className='grid grid-cols-1 items-center gap-8 lg:grid-cols-12'>
 						<div className='relative z-10 lg:col-span-8'>
-							<div className='flex items-center gap-3 mb-4'>
-								{/* Mobile Toggle Aside Menu Button */}
-								<button
-									onClick={toggleAside}
-									type='button'
-									className='flex h-8 w-8 items-center justify-center rounded-xl border border-white/20 bg-white/10 text-white shadow-sm md:hidden hover:bg-white/20'
-								>
-									<Menu size={16} />
-								</button>
-								<div className='inline-block rounded-md border border-white/10 bg-white/10 px-2.5 py-1 text-[10px] font-bold tracking-wider text-white uppercase backdrop-blur-md'>
+							<div className='mb-4 flex items-center gap-3'>
+								<div className='inline-block rounded-md border border-primary-500/30 bg-primary-500/10 px-2.5 py-1 text-[10px] font-bold tracking-wider text-primary-300 uppercase backdrop-blur-md'>
 									Ready to use
 								</div>
 							</div>
 							<h1 className='mb-3 text-3xl font-extrabold tracking-tight text-white sm:text-4xl'>
 								Templates Center
 							</h1>
-							<p className='mb-6 max-w-2xl text-xs leading-relaxed text-purple-100/90 sm:text-sm'>
+							<p className='mb-6 max-w-2xl text-xs leading-relaxed text-zinc-300 sm:text-sm'>
 								Deploy pre-configured workflows, conversational AI agents, or
 								bundles of matching stacks to build your automation platform in
 								seconds.
@@ -534,7 +523,7 @@ const TemplatesCatalogPage = () => {
 										<div className='text-sm leading-none font-extrabold text-white'>
 											120+
 										</div>
-										<div className='mt-0.5 text-[10px] font-semibold text-purple-200/80'>
+										<div className='mt-0.5 text-[10px] font-semibold text-zinc-400'>
 											Templates
 										</div>
 									</div>
@@ -548,7 +537,7 @@ const TemplatesCatalogPage = () => {
 										<div className='text-sm leading-none font-extrabold text-white'>
 											9
 										</div>
-										<div className='mt-0.5 text-[10px] font-semibold text-purple-200/80'>
+										<div className='mt-0.5 text-[10px] font-semibold text-zinc-400'>
 											Categories
 										</div>
 									</div>
@@ -562,7 +551,7 @@ const TemplatesCatalogPage = () => {
 										<div className='text-sm leading-none font-extrabold text-white'>
 											2.4K+
 										</div>
-										<div className='mt-0.5 text-[10px] font-semibold text-purple-200/80'>
+										<div className='mt-0.5 text-[10px] font-semibold text-zinc-400'>
 											Deployments
 										</div>
 									</div>
@@ -574,9 +563,9 @@ const TemplatesCatalogPage = () => {
 						<div className='pointer-events-none relative hidden h-56 justify-center select-none lg:col-span-4 lg:flex'>
 							<div className='transform-style-3d relative flex h-64 w-64 items-center justify-center perspective-[1000px]'>
 								{/* Main Violet Card */}
-								<div className='animate-3d-float absolute flex h-36 w-36 rotate-x-[15deg] rotate-y-[-20deg] items-center justify-center rounded-3xl border border-white/25 bg-gradient-to-br from-[#8b5cf6] to-[#3b82f6] shadow-[0_25px_50px_-12px_rgba(0,0,0,0.5)]'>
+								<div className='animate-3d-float absolute flex h-36 w-36 rotate-x-[15deg] rotate-y-[-20deg] items-center justify-center rounded-3xl border border-white/25 bg-gradient-to-br from-primary-400 to-primary-500 shadow-[0_25px_50px_-12px_rgba(0,0,0,0.5)]'>
 									<div className='pointer-events-none absolute inset-0 rounded-3xl bg-gradient-to-tr from-white/15 via-transparent to-transparent' />
-									<Sparkles className='h-16 w-16 text-white drop-shadow-[0_0_12px_rgba(255,255,255,0.7)]' />
+									<Sparkles className='h-16 w-16 text-primary-950 drop-shadow-[0_0_12px_rgba(255,255,255,0.6)]' />
 								</div>
 								{/* Teal floating card */}
 								<div className='animate-3d-float-teal absolute top-28 left-4 flex h-12 w-12 rotate-x-[10deg] rotate-y-[-30deg] items-center justify-center rounded-xl border border-white/20 bg-gradient-to-tr from-teal-400 to-emerald-400 shadow-lg'>

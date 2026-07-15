@@ -15,7 +15,6 @@ import {
 	Trash2,
 	Download,
 	Layers,
-	Menu,
 	X as CloseIcon,
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -24,7 +23,6 @@ import { useConfirm } from '@/context/confirmContext';
 import Breadcrumb from '@/components/layout/Breadcrumb';
 import Container from '@/components/layout/Container';
 import pages from '@/Routes/pages';
-import useAsideStatus from '@/hooks/useAsideStatus';
 
 interface IFileItem {
 	id: string;
@@ -130,7 +128,6 @@ const getOwnerBadgeClass = (owner: string) => {
 const FilesListPage = () => {
 	const { setHeaderLeft } = useOutletContext<OutletContextType>();
 	const { confirm } = useConfirm();
-	const { toggleAside } = useAsideStatus();
 
 	useEffect(() => {
 		setHeaderLeft(<Breadcrumb list={[{ ...pages.app.subPages.files }]} />);
@@ -366,15 +363,6 @@ const FilesListPage = () => {
 				{/* Header panel */}
 				<div className='flex flex-col justify-between gap-4 sm:flex-row sm:items-center'>
 					<div className='flex items-start gap-4'>
-						{/* Mobile Toggle Aside Menu Button */}
-						<button
-							onClick={toggleAside}
-							type='button'
-							className='flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-slate-200 bg-white text-slate-600 shadow-sm md:hidden dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-300'
-						>
-							<Menu size={18} />
-						</button>
-
 						<div className='flex flex-col text-left'>
 							<h1 className='text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white leading-none'>
 								Files

@@ -26,61 +26,18 @@ import Breadcrumb from '@/components/layout/Breadcrumb';
 import Container from '@/components/layout/Container';
 import pages from '@/Routes/pages';
 import { useAuth } from '@/context/authContext';
-import type { TOnboardingStepKey, TOnboardingState } from '@/types/auth.type';
+import type { TOnboardingStepKey } from '@/types/auth.type';
 import { useWorkspaceContext } from '@/context/workspaceContext';
+import { useWorkflowShellStore } from '@/store/workflowShell.store';
+import { useDashboard } from '@/api/modules/dashboard';
+import { useAgents } from '@/api/modules/agents';
+import { useWorkflows } from '@/api/modules/workflows';
 
-const DEFAULT_ONBOARDING: TOnboardingState = {
-	is_complete: false,
-	is_dismissed: false,
-	progress: 4,
-	total: 6,
-	steps: [
-		{
-			key: 'verify_email',
-			label: 'Verify your email',
-			description: 'Confirm your email address to secure your account.',
-			done: false,
-		},
-		{
-			key: 'complete_profile',
-			label: 'Complete your profile',
-			description: 'Add a profile photo so your teammates can recognize you.',
-			done: false,
-		},
-		{
-			key: 'create_workspace',
-			label: 'Create a workspace',
-			description: 'Set up a workspace to organize your workflows.',
-			done: true,
-		},
-		{
-			key: 'add_credential',
-			label: 'Add a credential',
-			description: 'Connect an external service to use in your automation.',
-			done: true,
-		},
-		{
-			key: 'create_workflow',
-			label: 'Create your first workflow',
-			description: 'Build your first automation workflow.',
-			done: true,
-		},
-		{
-			key: 'activate_workflow',
-			label: 'Activate a workflow',
-			description: 'Turn on a workflow and let it run automatically.',
-			done: true,
-		},
-	],
-};
-
-const stats = [
+// Static visual config for the stat cards — the numeric values are injected live.
+const STAT_VISUALS = [
 	{
 		label: 'Total Workflows',
-		value: '8',
-		sub: '4 currently active',
 		icon: GitMerge,
-		iconBg: 'bg-primary-50 border border-primary-200 text-primary-500 dark:bg-primary-400/10 dark:border-primary-400/20 dark:text-primary-400',
 		sparkPath: 'M 0 22 Q 15 8 30 18 T 60 5 T 90 12 T 100 8',
 		sparkColor: '#CFF54A',
 		glowClass:
@@ -90,10 +47,7 @@ const stats = [
 	},
 	{
 		label: 'Active Agents',
-		value: '3',
-		sub: 'Running autonomously',
 		icon: Bot,
-		iconBg: 'bg-primary-50 border border-primary-200 text-primary-500 dark:bg-primary-400/10 dark:border-primary-400/20 dark:text-primary-400',
 		sparkPath: 'M 0 10 Q 20 22 40 10 T 70 18 T 90 5 T 100 8',
 		sparkColor: '#CFF54A',
 		glowClass:
@@ -103,10 +57,7 @@ const stats = [
 	},
 	{
 		label: 'Connected Apps',
-		value: '8',
-		sub: 'OAuth credentials active',
 		icon: LayoutGrid,
-		iconBg: 'bg-primary-50 border border-primary-200 text-primary-500 dark:bg-primary-400/10 dark:border-primary-400/20 dark:text-primary-400',
 		sparkPath: 'M 0 20 Q 20 8 40 22 T 70 8 T 95 18 T 100 15',
 		sparkColor: '#CFF54A',
 		glowClass:
@@ -115,11 +66,8 @@ const stats = [
 		endY: 15,
 	},
 	{
-		label: 'Runs (Last 24h)',
-		value: '1,280',
-		sub: '14% spike today',
+		label: 'Runs (Today)',
 		icon: Activity,
-		iconBg: 'bg-primary-50 border border-primary-200 text-primary-500 dark:bg-primary-400/10 dark:border-primary-400/20 dark:text-primary-400',
 		sparkPath: 'M 0 28 Q 15 15 35 25 T 65 10 T 90 4 T 100 2',
 		sparkColor: '#CFF54A',
 		glowClass:
@@ -129,36 +77,24 @@ const stats = [
 	},
 ];
 
-const recentWorkflows = [
-	{
-		id: '1',
-		title: 'Lead enrichment pipeline',
-		status: 'active',
-		lastRun: '12 mins ago',
-		successRate: 98.4,
-	},
-	{
-		id: '2',
-		title: 'Email campaign automation',
-		status: 'active',
-		lastRun: '2 hours ago',
-		successRate: 99.1,
-	},
-	{
-		id: '3',
-		title: 'Support ticket triage',
-		status: 'active',
-		lastRun: '5 hours ago',
-		successRate: 97.6,
-	},
-	{
-		id: '4',
-		title: 'Weekly analytics report',
-		status: 'inactive',
-		lastRun: '1 day ago',
-		successRate: 100.0,
-	},
-];
+const iconBgClass =
+	'bg-primary-50 border border-primary-200 text-primary-500 dark:bg-primary-400/10 dark:border-primary-400/20 dark:text-primary-400';
+
+const formatRelativeTime = (value?: number) => {
+	if (!value) return 'Never run';
+	// Backend timestamps may be seconds or milliseconds.
+	const ms = value < 1_000_000_000_000 ? value * 1000 : value;
+	const diff = Date.now() - ms;
+	if (Number.isNaN(diff)) return 'Never run';
+	if (diff < 0) return 'Just now';
+	const minutes = Math.floor(diff / 60_000);
+	if (minutes < 1) return 'Just now';
+	if (minutes < 60) return `${minutes} min${minutes === 1 ? '' : 's'} ago`;
+	const hours = Math.floor(minutes / 60);
+	if (hours < 24) return `${hours} hour${hours === 1 ? '' : 's'} ago`;
+	const days = Math.floor(hours / 24);
+	return `${days} day${days === 1 ? '' : 's'} ago`;
+};
 
 const quickActions = [
 	{
@@ -209,8 +145,70 @@ const DashboardPage = () => {
 	const navigate = useNavigate();
 	const { userData } = useAuth();
 	const { workspaces: apiWorkspaces, activeWorkspaceId } = useWorkspaceContext();
+	const { activeWorkspaceId: fallbackWorkspaceId } = useWorkflowShellStore();
 
-	const [onboarding, setOnboarding] = useState<TOnboardingState>(DEFAULT_ONBOARDING);
+	const currentWorkspaceId = activeWorkspaceId || fallbackWorkspaceId;
+
+	// Real dashboard + agent data
+	const { data: dashboard, isLoading: isDashboardLoading } = useDashboard(currentWorkspaceId);
+	const { data: agents } = useAgents(currentWorkspaceId);
+	const { data: workflowsResponse, isLoading: isWorkflowsLoading } =
+		useWorkflows(currentWorkspaceId);
+
+	const summary = dashboard?.summary;
+	const activeAgentCount = Array.isArray(agents)
+		? agents.filter((a) => a.is_active).length
+		: 0;
+
+	// Onboarding comes from the authenticated user; locally track dismissal.
+	const onboarding = userData?.onboarding;
+	const [isOnboardingDismissed, setIsOnboardingDismissed] = useState(false);
+	const showOnboarding =
+		!!onboarding && !onboarding.is_complete && !onboarding.is_dismissed && !isOnboardingDismissed;
+
+	const statValues = [
+		{
+			value: (summary?.total_workflows ?? 0).toLocaleString(),
+			sub: `${summary?.active_workflows ?? 0} currently active`,
+		},
+		{
+			value: activeAgentCount.toLocaleString(),
+			sub: activeAgentCount === 1 ? 'Running autonomously' : 'Running autonomously',
+		},
+		{
+			value: (summary?.total_credentials ?? 0).toLocaleString(),
+			sub: 'Credentials connected',
+		},
+		{
+			value: (summary?.total_executions_today ?? 0).toLocaleString(),
+			sub: `${summary?.running_executions ?? 0} running now`,
+		},
+	];
+
+	const stats = STAT_VISUALS.map((visual, i) => ({
+		...visual,
+		iconBg: iconBgClass,
+		value: statValues[i].value,
+		sub: statValues[i].sub,
+	}));
+
+	// Recent workflows sourced from the workspace workflows, most recently run first.
+	const recentWorkflows = [...(workflowsResponse?.data ?? [])]
+		.sort((a, b) => {
+			const aTime = a.last_executed_at ?? a.updated_at ?? 0;
+			const bTime = b.last_executed_at ?? b.updated_at ?? 0;
+			return bTime - aTime;
+		})
+		.slice(0, 5)
+		.map((wf) => ({
+			id: wf.id,
+			title: wf.name,
+			status: wf.is_active ? 'active' : 'inactive',
+			lastRun: wf.last_executed_at ? formatRelativeTime(wf.last_executed_at) : 'Never run',
+			runs: wf.execution_count ?? 0,
+		}));
+
+	const isRecentLoading = isWorkflowsLoading || isDashboardLoading;
 
 	const handleOnboardingAction = (key: TOnboardingStepKey) => {
 		switch (key) {
@@ -235,7 +233,7 @@ const DashboardPage = () => {
 		}
 	};
 
-	const nextOnboardingStep = onboarding.steps.find((item) => !item.done);
+	const nextOnboardingStep = onboarding?.steps.find((item) => !item.done);
 
 	const colorList = [
 		'bg-primary-400',
@@ -250,9 +248,7 @@ const DashboardPage = () => {
 		color: colorList[index % colorList.length],
 	}));
 	const activeWorkspace = workspaces.find((w) => w.id === activeWorkspaceId) || workspaces[0];
-	const userName =
-		(userData?.firstName === 'Dev' ? 'Sahil' : userData?.firstName) ||
-		'Sahil';
+	const userName = userData?.firstName || userData?.name?.split(' ')[0] || 'there';
 
 	useEffect(() => {
 		setHeaderLeft(<Breadcrumb list={[{ ...pages.app.subPages.dashboard }]} />);
@@ -306,9 +302,14 @@ const DashboardPage = () => {
 
 							<p className='max-w-xl text-xs leading-relaxed font-semibold text-zinc-300 md:text-sm'>
 								You have{' '}
-								<span className='font-bold text-white'>3 active agents</span>{' '}
+								<span className='font-bold text-white'>
+									{activeAgentCount} active agent{activeAgentCount === 1 ? '' : 's'}
+								</span>{' '}
 								running autonomously across{' '}
-								<span className='font-bold text-white'>8 workflows.</span>
+								<span className='font-bold text-white'>
+									{summary?.total_workflows ?? 0} workflow
+									{(summary?.total_workflows ?? 0) === 1 ? '' : 's'}.
+								</span>
 							</p>
 
 							{/* Meta Info Badges */}
@@ -449,7 +450,7 @@ const DashboardPage = () => {
 
 				{/* Onboarding Checklist — shown until completed or dismissed */}
 				<AnimatePresence>
-					{onboarding && !onboarding.is_complete && !onboarding.is_dismissed && (
+					{showOnboarding && onboarding && (
 						<motion.div
 							initial={{ opacity: 0, y: -10 }}
 							animate={{ opacity: 1, y: 0 }}
@@ -474,7 +475,7 @@ const DashboardPage = () => {
 									</button>
 									<button
 										type='button'
-										onClick={() => setOnboarding(prev => ({ ...prev, is_dismissed: true }))}
+										onClick={() => setIsOnboardingDismissed(true)}
 										className='hover:text-slate-650 flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-bold text-slate-400 transition hover:bg-slate-50 disabled:opacity-50 dark:hover:bg-zinc-800 dark:hover:text-zinc-200'>
 										<X className='h-3.5 w-3.5' />
 										Dismiss
@@ -700,17 +701,38 @@ const DashboardPage = () => {
 							<span className='text-xs font-black tracking-widest text-text-main uppercase dark:text-text-main'>
 								RECENT WORKFLOWS
 							</span>
-							<button className='flex cursor-pointer items-center gap-1 text-[11px] font-bold text-slate-500 transition-colors hover:text-slate-800 dark:text-zinc-400 dark:hover:text-white'>
+							<button
+								onClick={() => navigate(pages.app.subPages.workflows.to)}
+								className='flex cursor-pointer items-center gap-1 text-[11px] font-bold text-slate-500 transition-colors hover:text-slate-800 dark:text-zinc-400 dark:hover:text-white'>
 								View all <ArrowRight size={11} />
 							</button>
 						</div>
 						<div className='divide-y divide-border-main dark:divide-border-main'>
-							{recentWorkflows.map((wf) => (
+							{isRecentLoading && recentWorkflows.length === 0 ? (
+								<div className='px-5 py-10 text-center text-xs font-semibold text-text-muted dark:text-text-muted'>
+									Loading recent workflows…
+								</div>
+							) : recentWorkflows.length === 0 ? (
+								<div className='flex flex-col items-center gap-3 px-5 py-10 text-center'>
+									<p className='text-xs font-bold text-text-main dark:text-text-main'>
+										No workflow activity yet
+									</p>
+									<p className='text-[11px] font-semibold text-text-muted dark:text-text-muted'>
+										Create and run a workflow to see it here.
+									</p>
+									<button
+										onClick={() => navigate(pages.editor.subPages.addWorkflow.to)}
+										className='mt-1 flex items-center gap-1.5 rounded-xl bg-primary-400 px-3.5 py-2 text-[11px] font-black text-primary-950 transition hover:brightness-110'>
+										<Plus size={12} strokeWidth={3} /> Create Workflow
+									</button>
+								</div>
+							) : (
+								recentWorkflows.map((wf) => (
 								<div
 									key={wf.id}
 									onClick={() =>
 										navigate(
-											`${pages.editor.subPages.editWorkflow.to}/${activeWorkspaceId}/${wf.id}`,
+											`${pages.editor.subPages.editWorkflow.to}/${currentWorkspaceId}/${wf.id}`,
 										)
 									}
 									className='group flex cursor-pointer items-center justify-between px-5 py-4 transition-all duration-200 hover:bg-slate-50/50 dark:hover:bg-zinc-800/15'>
@@ -731,7 +753,7 @@ const DashboardPage = () => {
 										className='flex items-center gap-3.5'
 										onClick={(e) => e.stopPropagation()}>
 										<span className='rounded border border-primary-500/20 bg-primary-400/10 px-2 py-0.5 text-[10px] font-extrabold text-primary-600 dark:text-primary-400'>
-											{wf.successRate}% Success
+											{wf.runs.toLocaleString()} run{wf.runs === 1 ? '' : 's'}
 										</span>
 										<span className='bg-primary-400/10 text-primary-600 flex items-center gap-1 rounded-full border border-primary-500/20 px-2.5 py-0.5 text-[9px] font-black tracking-wider uppercase dark:bg-primary-400/10 dark:text-primary-400'>
 											<span className='h-1.5 w-1.5 animate-pulse rounded-full bg-primary-500' />
@@ -753,7 +775,8 @@ const DashboardPage = () => {
 										</button>
 									</div>
 								</div>
-							))}
+								))
+							)}
 						</div>
 					</div>
 

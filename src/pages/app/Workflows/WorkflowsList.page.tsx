@@ -959,8 +959,11 @@ const WorkflowsListPage = () => {
 								<AnimatePresence initial={false}>
 									{isExpanded && (
 										<motion.div
-											initial={{ height: 0, opacity: 0 }}
-																		className='overflow-visible'>
+											initial={{ opacity: 0 }}
+											animate={{ opacity: 1 }}
+											exit={{ opacity: 0 }}
+											transition={{ duration: 0.2, ease: 'easeInOut' }}
+											className='overflow-visible'>
 											{groupedItems.length === 0 ? (
 												<div className='rounded-2xl border border-dashed border-border-main bg-bg-card p-8 text-center text-sm font-semibold text-text-muted dark:border-border-main dark:bg-bg-card'>
 													No workflows in this folder matching your
