@@ -32,6 +32,7 @@ import useDarkMode from '@/hooks/useDarkMode';
 import DARK_MODE from '@/constants/darkMode.constant';
 import { useWorkflowShellStore } from '@/store/workflowShell.store';
 import Wrapper from '@/components/layout/Wrapper';
+import { useConfirm } from '@/context/confirmContext';
 
 // Interface declarations
 interface IWorkflow {
@@ -354,6 +355,7 @@ const workspaceData: Record<string, { folders: IFolder[]; workflows: IWorkflow[]
 
 export default function WorkspaceListPage() {
 	const { activeWorkspaceId } = useWorkflowShellStore();
+	const { confirm } = useConfirm();
 
 	const [folders, setFolders] = useState<IFolder[]>([]);
 	const [workflows, setWorkflows] = useState<IWorkflow[]>([]);
@@ -573,9 +575,22 @@ export default function WorkspaceListPage() {
 		triggerToast(`Duplicated "${workflow.title}"`);
 	};
 
-	const handleDelete = (id: string, e: React.MouseEvent) => {
+	const handleDelete = async (id: string, e: React.MouseEvent) => {
 		e.stopPropagation();
 		const wf = workflows.find((w) => w.id === id);
+		const confirmed = await confirm({
+			title: 'Delete Workflow',
+			message: (
+				<>
+					Are you sure you want to delete{' '}
+					<strong className='font-semibold text-zinc-800 dark:text-zinc-200'>
+						{wf ? `"${wf.title}"` : 'this workflow'}
+					</strong>
+					? This action cannot be undone.
+				</>
+			),
+		});
+		if (!confirmed) return;
 		setWorkflows((prev) => prev.filter((w) => w.id !== id));
 		if (wf) {
 			triggerToast(`Deleted workflow "${wf.title}"`, 'info');

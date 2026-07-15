@@ -20,6 +20,7 @@ import {
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { OutletContextType } from './_layouts/Files.layout';
+import { useConfirm } from '@/context/confirmContext';
 import Breadcrumb from '@/components/layout/Breadcrumb';
 import Container from '@/components/layout/Container';
 import pages from '@/Routes/pages';
@@ -128,6 +129,7 @@ const getOwnerBadgeClass = (owner: string) => {
 
 const FilesListPage = () => {
 	const { setHeaderLeft } = useOutletContext<OutletContextType>();
+	const { confirm } = useConfirm();
 	const { toggleAside } = useAsideStatus();
 
 	useEffect(() => {
@@ -188,7 +190,21 @@ const FilesListPage = () => {
 	}, [collectionsList, searchQuery]);
 
 	// Delete file action
-	const handleDeleteFile = (id: string) => {
+	const handleDeleteFile = async (id: string) => {
+		const file = filesList.find((f) => f.id === id);
+		const confirmed = await confirm({
+			title: 'Delete File',
+			message: (
+				<>
+					Are you sure you want to delete{' '}
+					<strong className='font-semibold text-zinc-800 dark:text-zinc-200'>
+						{file ? `"${file.name}"` : 'this file'}
+					</strong>
+					? This action cannot be undone.
+				</>
+			),
+		});
+		if (!confirmed) return;
 		setFilesList((prev) => prev.filter((f) => f.id !== id));
 	};
 
