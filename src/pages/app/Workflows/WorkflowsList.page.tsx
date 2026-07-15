@@ -129,7 +129,7 @@ const WorkflowsListPage = () => {
 		[activeWorkspaceId, workspaces],
 	);
 
-	const workspaceName = activeWorkspace?.name ?? workspaceSummary?.name ?? 'My Workspace';
+	const workspaceName = activeWorkspace?.name ?? workspaceSummary?.name ?? 'Workspace';
 	const workspaceSlug = activeWorkspace?.slug ?? workspaceSummary?.slug;
 	const workspaceRole = role ?? workspaceSummary?.role ?? null;
 	const hasWorkspace = Boolean(activeWorkspaceId);

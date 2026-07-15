@@ -255,6 +255,10 @@ const AppAsideTemplate = () => {
 				<Nav>
 					<NavTitle>MENU</NavTitle>
 					<NavItem
+						{...pages.app.subPages.dashboard}
+						isActiveOverwrite={location.pathname.startsWith('/dashboard')}
+					/>
+					<NavItem
 						{...pages.app.subPages.workflows}
 						isActiveOverwrite={
 							location.pathname === '/workflows-list' ||

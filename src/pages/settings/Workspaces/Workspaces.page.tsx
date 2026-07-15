@@ -283,7 +283,7 @@ const WorkspacesPage = () => {
 		const name = workspaces.find((w: IWorkspaceCard) => w.id === id)?.name ?? 'workspace';
 		triggerToast(`Entering workspace "${name}"...`, 'info');
 		setActiveWorkspaceId(id);
-		setTimeout(() => navigate('/my-workspace'), 800);
+		setTimeout(() => navigate('/dashboard'), 800);
 	};
 
 	const handleCreateWorkspace = async (e: React.FormEvent) => {
@@ -410,7 +410,7 @@ const WorkspacesPage = () => {
 					role='button'
 					tabIndex={0}
 					className='flex cursor-pointer items-center gap-3'
-					onClick={() => navigate('/my-workspace')}>
+					onClick={() => navigate('/dashboard')}>
 					<img
 						src={isDarkTheme ? LogoDark : LogoLight}
 						alt='agent1o1'
