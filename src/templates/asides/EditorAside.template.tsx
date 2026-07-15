@@ -205,7 +205,7 @@ const Search = () => {
 								className={classNames(
 									'flex cursor-pointer items-center gap-4 rounded-lg border border-zinc-500/25',
 									{
-										'outline-2 outline-offset-1 outline-blue-500':
+										'outline-2 outline-offset-1 outline-primary-400':
 											index === selectedIndex,
 									},
 								)}
