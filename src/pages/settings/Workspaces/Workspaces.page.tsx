@@ -366,7 +366,7 @@ const WorkspacesPage = () => {
 
 			{/* ── Background Patterns ── */}
 			<div className='pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(#e2e8f0_1.5px,transparent_1.5px)] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] [background-size:24px_24px] opacity-70 dark:bg-[radial-gradient(#161c2c_1.5px,transparent_1.5px)] dark:opacity-85' />
-			<div className='pointer-events-none absolute top-0 right-10 -z-10 h-[500px] w-[500px] rounded-full bg-gradient-to-tr from-primary-400/8 to-blue-500/8 blur-[120px]' />
+			<div className='pointer-events-none absolute top-0 right-10 -z-10 h-[500px] w-[500px] rounded-full bg-gradient-to-tr from-primary-400/8 to-primary-500/0 blur-[120px]' />
 			<div className='pointer-events-none absolute bottom-10 left-1/4 -z-10 h-[400px] w-[400px] rounded-full bg-gradient-to-br from-primary-400/4 to-cyan-500/4 blur-[100px]' />
 
 			{/* ── Toast Notification ── */}
@@ -388,7 +388,7 @@ const WorkspacesPage = () => {
 			</AnimatePresence>
 
 			{/* ── Header Navigation ── */}
-			<div className='sticky top-6 z-30 mx-auto w-[calc(100%-2rem)] max-w-7xl px-4 py-3 sm:px-5 sm:py-3.5 flex items-center justify-between rounded-2xl border border-slate-200/60 bg-white/75 backdrop-blur-md dark:border-zinc-800/80 dark:bg-zinc-900/75 shadow-sm'>
+			<div className='sticky top-6 z-30 mx-auto w-[calc(100%-2rem)] max-w-7xl px-4 py-3 sm:px-5 sm:py-3.5 flex items-center justify-between rounded-2xl border border-slate-200/60 bg-white/75 backdrop-blur-md dark:border-zinc-800/80 dark:bg-zinc-900/60 shadow-sm'>
 				{/* Brand Logo */}
 				<div
 					role='button'
@@ -440,7 +440,7 @@ const WorkspacesPage = () => {
 							<span className='inline-block h-1.5 w-1.5 rounded-full bg-primary-400 dark:bg-primary-400 ring-2 ring-primary-500/30' />
 							Workspace Orchestration
 						</div>
-						<h1 className='text-3.5xl md:text-5xl font-black tracking-tight bg-gradient-to-r from-primary-400 via-primary-400 to-blue-600 dark:from-white dark:via-primary-300 dark:to-blue-400 bg-clip-text text-transparent leading-none'>
+						<h1 className='text-3.5xl md:text-5xl font-black tracking-tight bg-gradient-to-r from-primary-400 via-primary-400 to-primary-600 dark:from-white dark:via-primary-300 dark:to-primary-400 bg-clip-text text-transparent leading-none'>
 							Workspaces
 						</h1>
 						<p className='mt-3 max-w-xl text-xs sm:text-sm font-semibold text-slate-500 dark:text-zinc-400 leading-relaxed'>
@@ -739,7 +739,7 @@ const WorkspacesPage = () => {
 													className={`flex cursor-pointer flex-col items-start rounded-xl p-3 text-left transition-all duration-200 border ${
 														isSelected
 															? tier.name === 'Enterprise'
-																? 'border-blue-500/50 bg-blue-500/[0.06] dark:border-blue-500/40 dark:bg-blue-950/20'
+																? 'border-primary-500/50 bg-primary-400/[0.06] dark:border-primary-500/40 dark:bg-primary-950/20'
 																: tier.name === 'Pro'
 																	? 'border-primary-500/50 bg-primary-400/[0.06] dark:border-primary-500/40 dark:bg-primary-950/20'
 																	: 'border-slate-350 bg-slate-100 dark:border-zinc-700 dark:bg-zinc-900'
@@ -1055,7 +1055,7 @@ const WorkspaceCard = ({
 				</div>
 
 				<div className='flex items-center gap-2.5 text-left'>
-					<div className='flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-blue-50 text-blue-600 dark:bg-blue-950/30 dark:text-blue-400 shadow-2xs'>
+					<div className='flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-primary-50 text-primary-600 dark:bg-primary-950/30 dark:text-primary-400 shadow-2xs'>
 						<Cpu size={15} />
 					</div>
 					<div className='min-w-0'>

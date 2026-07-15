@@ -274,15 +274,15 @@ const DashboardPage = () => {
 					initial={{ opacity: 0, y: -15 }}
 					animate={{ opacity: 1, y: 0 }}
 					transition={{ duration: 0.4 }}
-					className='dark:border-zinc-800 relative overflow-hidden rounded-3xl border border-zinc-800/80 bg-gradient-to-r from-[#090b1a] via-[#111438] to-[#250d4f] p-6 shadow-xl shadow-primary-500/20 md:p-8 dark:from-[#05060f] dark:via-[#0c0d24] dark:to-[#170932]'>
+					className='dark:border-zinc-800 relative overflow-hidden rounded-3xl border border-primary-500/20 bg-gradient-to-r from-primary-400 via-primary-500 to-primary-600 p-6 shadow-xl shadow-primary-500/20 md:p-8 dark:from-[#111315] dark:via-[#141619] dark:to-[#0d0e10] dark:border-zinc-800/80'>
 					{/* Grid Overlay inside Banner */}
 					<div className='pointer-events-none absolute inset-0 bg-[radial-gradient(rgba(255,255,255,0.03)_1px,transparent_1px)] [background-size:16px_16px] opacity-60' />
 
 					<div className='relative flex flex-col justify-between gap-6 md:flex-row md:items-center'>
 						<div className='flex-1 space-y-4'>
-							<h1 className='flex flex-wrap items-center gap-2 text-2xl font-black tracking-tight text-white md:text-3xl'>
+							<h1 className='flex flex-wrap items-center gap-2 text-2xl font-black tracking-tight text-slate-900 md:text-3xl dark:text-white'>
 								Welcome back,{' '}
-								<span className='bg-gradient-to-r from-primary-400 via-primary-300 to-blue-400 bg-clip-text text-transparent'>
+								<span className='text-slate-955 dark:bg-gradient-to-r dark:from-primary-400 dark:to-primary-300 dark:bg-clip-text dark:text-transparent'>
 									{userName}
 								</span>
 								<motion.span
@@ -304,21 +304,21 @@ const DashboardPage = () => {
 								</motion.span>
 							</h1>
 
-							<p className='max-w-xl text-xs leading-relaxed font-semibold text-zinc-300 md:text-sm'>
+							<p className='max-w-xl text-xs leading-relaxed font-semibold text-slate-700 md:text-sm dark:text-zinc-400'>
 								You have{' '}
-								<span className='font-bold text-white'>3 active agents</span>{' '}
+								<span className='font-bold text-slate-950 dark:text-white'>3 active agents</span>{' '}
 								running autonomously across{' '}
-								<span className='font-bold text-white'>8 workflows.</span>
+								<span className='font-bold text-slate-955 dark:text-white'>8 workflows.</span>
 							</p>
 
 							{/* Meta Info Badges */}
 							<div className='flex flex-wrap items-center gap-2.5 pt-1'>
 								{/* Active Workspace */}
-								<div className='flex items-center gap-1.5 rounded-full border border-white/10 bg-slate-900/60 px-3 py-1 text-[11px] font-bold text-white/95 shadow-xs'>
-									<span className='text-[10px] font-extrabold tracking-wider text-zinc-400 uppercase'>
+								<div className='flex items-center gap-1.5 rounded-full border border-slate-950/10 bg-slate-950/5 px-3 py-1 text-[11px] font-bold text-slate-900 shadow-xs dark:border-white/10 dark:bg-slate-900/60 dark:text-white/95'>
+									<span className='text-[10px] font-extrabold tracking-wider text-slate-800/80 uppercase dark:text-zinc-400'>
 										WORKSPACE
 									</span>
-									<span className='text-zinc-600'>|</span>
+									<span className='text-slate-900/40 dark:text-zinc-500'>|</span>
 									{activeWorkspace?.color && (
 										<div
 											className={`h-2 w-2 rounded-full ${activeWorkspace.color} ring-2 ring-white/10`}
@@ -330,16 +330,16 @@ const DashboardPage = () => {
 								</div>
 
 								{/* Plan Badge */}
-								<div className='flex items-center gap-1 rounded-full border border-primary-500/30 bg-[#261546]/85 px-3 py-1 text-[11px] font-bold text-primary-200'>
-									<Crown size={11} className='text-primary-400' />
+								<div className='flex items-center gap-1 rounded-full border border-slate-950/10 bg-slate-950/5 px-3 py-1 text-[11px] font-bold text-slate-900 dark:border-primary-500/30 dark:bg-[#261546]/85 dark:text-primary-200'>
+									<Crown size={11} className='text-slate-900 dark:text-primary-400' />
 									<span>Pro Account</span>
 								</div>
 
 								{/* Status Badge */}
-								<div className='flex items-center gap-1.5 rounded-full border border-emerald-500/30 bg-[#0e2a27]/85 px-3 py-1 text-[11px] font-bold text-emerald-300'>
+								<div className='flex items-center gap-1.5 rounded-full border border-slate-950/10 bg-slate-950/5 px-3 py-1 text-[11px] font-bold text-slate-900 dark:border-emerald-500/30 dark:bg-[#0e2a27]/85 dark:text-emerald-300'>
 									<span className='relative flex h-1.5 w-1.5'>
-										<span className='absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75'></span>
-										<span className='relative inline-flex h-1.5 w-1.5 rounded-full bg-emerald-500'></span>
+										<span className='absolute inline-flex h-full w-full animate-ping rounded-full bg-slate-950 opacity-75 dark:bg-emerald-400'></span>
+										<span className='relative inline-flex h-1.5 w-1.5 rounded-full bg-slate-900 dark:bg-emerald-500'></span>
 									</span>
 									<span>Systems Nominal</span>
 								</div>
@@ -384,19 +384,19 @@ const DashboardPage = () => {
 										preserveAspectRatio='none'>
 										<defs>
 											<linearGradient
-												id='purple-glow-banner'
+												id='primary-glow-banner'
 												x1='0'
 												y1='0'
 												x2='0'
 												y2='1'>
 												<stop
 													offset='0%'
-													stopColor='#8b5cf6'
+													stopColor='#C4EE3D'
 													stopOpacity='0.4'
 												/>
 												<stop
 													offset='100%'
-													stopColor='#8b5cf6'
+													stopColor='#C4EE3D'
 													stopOpacity='0.0'
 												/>
 											</linearGradient>
@@ -404,15 +404,15 @@ const DashboardPage = () => {
 										<path
 											d='M0,25 Q15,5 35,18 T75,8 T100,5'
 											fill='none'
-											stroke='#8b5cf6'
+											stroke='#C4EE3D'
 											strokeWidth='2.5'
 											strokeLinecap='round'
 										/>
 										<path
 											d='M0,25 Q15,5 35,18 T75,8 T100,5 L100,30 L0,30 Z'
-											fill='url(#purple-glow-banner)'
+											fill='url(#primary-glow-banner)'
 										/>
-										<circle cx='100' cy='5' r='2.5' fill='#8b5cf6' />
+										<circle cx='100' cy='5' r='2.5' fill='#C4EE3D' />
 									</svg>
 								</div>
 							</div>
@@ -422,7 +422,7 @@ const DashboardPage = () => {
 								initial={{ y: -5, rotate: -8 }}
 								animate={{ y: [4, -4, 4] }}
 								transition={{ duration: 4.5, repeat: Infinity, ease: 'easeInOut' }}
-								className='absolute right-0 bottom-1 z-20 flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-400 to-teal-500 text-white shadow-lg shadow-emerald-500/30'
+								className='absolute right-0 bottom-1 z-20 flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-primary-400 to-primary-500 text-primary-950 shadow-lg shadow-primary-500/30'
 								style={{
 									transform: 'perspective(800px) rotateY(-20deg) rotateX(15deg)',
 								}}>
@@ -430,16 +430,15 @@ const DashboardPage = () => {
 							</motion.div>
 						</div>
 
-						{/* Action Button */}
 						<div className='z-10 shrink-0 self-start md:self-center'>
 							<motion.button
 								whileHover={{
 									scale: 1.02,
-									boxShadow: '0 0 20px rgba(124, 58, 237, 0.35)',
+									boxShadow: '0 0 20px rgba(15, 23, 42, 0.15)',
 								}}
 								whileTap={{ scale: 0.98 }}
 								onClick={() => navigate(pages.editor.subPages.addWorkflow.to)}
-								className='flex h-10.5 cursor-pointer items-center gap-2 rounded-xl bg-gradient-to-r from-primary-400 to-primary-400 px-6 text-xs font-bold text-primary-950 shadow-md shadow-primary-500/10 transition-all hover:brightness-110 active:scale-95'>
+								className='flex h-10.5 cursor-pointer items-center gap-2 rounded-xl bg-slate-955 px-6 text-xs font-bold text-white shadow-md shadow-slate-950/15 transition-all hover:bg-slate-900 active:scale-95 dark:bg-gradient-to-r dark:from-primary-400 dark:to-primary-400 dark:text-primary-950 dark:shadow-primary-500/10 dark:hover:brightness-110'>
 								<Zap size={14} strokeWidth={3} />
 								<span>Quick Run</span>
 							</motion.button>

@@ -612,7 +612,7 @@ const AppsListPage = () => {
 		<Container className='relative overflow-x-hidden overflow-y-auto bg-[#f8f9fc] bg-[radial-gradient(#e2e8f0_1px,transparent_1px)] [background-size:20px_20px] !p-0 dark:bg-zinc-950 dark:bg-[radial-gradient(#27272a_1px,transparent_1px)]'>
 			{/* Ambient decorative blur glows */}
 			<div className='pointer-events-none absolute top-[-10%] right-[-10%] -z-10 h-[45%] w-[45%] rounded-full bg-gradient-to-tr from-primary-400/5 to-primary-400/5 blur-[120px]' />
-			<div className='pointer-events-none absolute bottom-[-10%] left-[-10%] -z-10 h-[45%] w-[45%] rounded-full bg-gradient-to-br from-emerald-500/5 to-cyan-500/5 blur-[120px]' />
+			<div className='pointer-events-none absolute bottom-[-10%] left-[-10%] -z-10 h-[45%] w-[45%] rounded-full bg-gradient-to-br from-primary-500/5 to-primary-500/0 blur-[120px]' />
 
 			<div className='mx-auto flex w-full max-w-7xl flex-col gap-8 p-4 sm:p-6 md:p-10'>
 				{/* Header panel */}
@@ -648,7 +648,7 @@ const AppsListPage = () => {
 							<div className='group relative flex min-h-[260px] flex-col justify-between overflow-hidden rounded-[24px] border border-slate-200/60 bg-white p-6 shadow-sm transition-all duration-300 hover:border-slate-300/80 hover:shadow-md dark:border-zinc-800/80 dark:bg-[#11131c]'>
 								<div>
 									<div className='flex items-center gap-3'>
-										<div className='flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600 dark:bg-emerald-950/20 dark:text-emerald-400'>
+										<div className='flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary-50 text-primary-600 dark:bg-primary-950/20 dark:text-primary-400'>
 											<Cable size={18} className='stroke-[2.2px]' />
 										</div>
 										<span className='text-[11px] font-extrabold tracking-wider text-slate-400 uppercase dark:text-zinc-400'>
@@ -707,15 +707,15 @@ const AppsListPage = () => {
 								<div className='mt-4 flex flex-col gap-2'>
 									{/* Overlapping avatars representation */}
 									<div className='flex items-center gap-1.5'>
-										<div className='flex -space-x-2.5 overflow-hidden'>
-											<div className='flex inline-block h-6.5 w-6.5 items-center justify-center rounded-full bg-primary-400 text-[9px] font-extrabold text-primary-950 ring-2 ring-white'>
-												A
+										<div className='flex -space-x-2 overflow-hidden'>
+											<div className='flex h-6.5 w-6.5 shrink-0 items-center justify-center rounded-full bg-[#181717] text-white ring-2 ring-white dark:ring-[#11131c]'>
+												<GithubIcon className='h-3.5 w-3.5' />
 											</div>
-											<div className='flex inline-block h-6.5 w-6.5 items-center justify-center rounded-full bg-emerald-500 text-[9px] font-extrabold text-white ring-2 ring-white'>
-												S
+											<div className='flex h-6.5 w-6.5 shrink-0 items-center justify-center rounded-full bg-[#4A154B] text-white ring-2 ring-white dark:ring-[#11131c]'>
+												<Users className='h-3.5 w-3.5' />
 											</div>
-											<div className='flex inline-block h-6.5 w-6.5 items-center justify-center rounded-full bg-blue-500 text-[9px] font-extrabold text-white ring-2 ring-white'>
-												JD
+											<div className='flex h-6.5 w-6.5 shrink-0 items-center justify-center rounded-full bg-[#4285F4] text-white ring-2 ring-white dark:ring-[#11131c]'>
+												<Cloud className='h-3.5 w-3.5' />
 											</div>
 										</div>
 										<span className='text-[9.5px] font-bold text-slate-400 dark:text-zinc-500'>
@@ -734,7 +734,7 @@ const AppsListPage = () => {
 							<div className='group relative flex min-h-[260px] flex-col justify-between overflow-hidden rounded-[24px] border border-slate-200/60 bg-white p-6 shadow-sm transition-all duration-300 hover:border-slate-300/80 hover:shadow-md dark:border-zinc-800/80 dark:bg-[#11131c]'>
 								<div>
 									<div className='flex items-center gap-3'>
-										<div className='flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-blue-50 text-blue-600 dark:bg-blue-950/20 dark:text-blue-400'>
+										<div className='flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary-50 text-primary-600 dark:bg-primary-950/20 dark:text-primary-400'>
 											<ShieldCheck size={18} className='stroke-[2.2px]' />
 										</div>
 										<span className='text-[11px] font-extrabold tracking-wider text-slate-400 uppercase dark:text-zinc-400'>
@@ -772,10 +772,10 @@ const AppsListPage = () => {
 						{/* Recommended For You Section */}
 						<div className='w-full text-left'>
 							<div className='mb-4 flex items-center gap-2'>
-								<Sparkles size={14} className='text-blue-500' />
-								<h2 className='text-slate-450 text-xs font-extrabold tracking-wider uppercase dark:text-zinc-500'>
-									Recommended For You
-								</h2>
+										<Sparkles size={14} className='text-primary-500' />
+										<h2 className='text-slate-450 text-xs font-extrabold tracking-wider uppercase dark:text-zinc-500'>
+											Recommended For You
+										</h2>
 							</div>
 
 							<div className='grid grid-cols-2 gap-3.5 sm:grid-cols-3 md:grid-cols-6'>
@@ -996,7 +996,7 @@ const AppsListPage = () => {
 																{app.subBadge}
 															</span>
 															{app.isOAuth && (
-																<span className='rounded border border-blue-100 bg-blue-50 px-1.5 py-0.5 text-[9px] font-bold text-blue-600 dark:border-blue-900/30 dark:bg-blue-950/20 dark:text-blue-400'>
+																<span className='rounded border border-primary-200 bg-primary-50 px-1.5 py-0.5 text-[9px] font-bold text-primary-600 dark:border-primary-900/30 dark:bg-primary-950/20 dark:text-primary-400'>
 																	OAuth
 																</span>
 															)}
@@ -1145,7 +1145,7 @@ const AppsListPage = () => {
 												</p>
 											</div>
 										</div>
-										<div className='flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-emerald-50 text-emerald-500 dark:bg-emerald-950/20 dark:text-emerald-400'>
+										<div className='flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-primary-50 text-primary-500 dark:bg-primary-950/20 dark:text-primary-400'>
 											<Check size={11} className='stroke-[3px]' />
 										</div>
 									</div>
@@ -1195,13 +1195,13 @@ const AppsListPage = () => {
 									},
 									{
 										name: 'Developer',
-										barColor: 'bg-emerald-500',
+										barColor: 'bg-primary-400',
 										count: 12,
 										percent: 50,
 									},
 									{
 										name: 'Storage',
-										barColor: 'bg-sky-400',
+										barColor: 'bg-primary-400',
 										count: 8,
 										percent: 30,
 									},
@@ -1332,7 +1332,7 @@ const AppsListPage = () => {
 															{isOAuthCredentialType(
 																availableApp.credentialType,
 															) && (
-																<span className='rounded border border-blue-200 bg-blue-50 px-1.5 py-0.5 text-[8px] font-black text-blue-700 dark:border-blue-500/20 dark:bg-blue-500/10 dark:text-blue-400'>
+																<span className='rounded border border-primary-200 bg-primary-50 px-1.5 py-0.5 text-[8px] font-black text-primary-600 dark:border-primary-500/20 dark:bg-primary-500/10 dark:text-primary-400'>
 																	OAuth 2.0
 																</span>
 															)}
@@ -1427,7 +1427,7 @@ const AppsListPage = () => {
 									</div>
 
 									{selectedAppUsesOAuth ? (
-										<div className='rounded-2xl border border-blue-100 bg-blue-50/60 p-4 text-xs font-semibold text-blue-700 dark:border-blue-500/15 dark:bg-blue-500/10 dark:text-blue-300'>
+										<div className='rounded-2xl border border-primary-500/20 bg-primary-50/60 p-4 text-xs font-semibold text-primary-700 dark:border-primary-500/15 dark:bg-primary-500/10 dark:text-primary-300'>
 											OAuth will open in a secure popup. Tokens are created by
 											the backend after authorization.
 										</div>
@@ -1792,7 +1792,7 @@ const DetailModalContent = ({
 					</div>
 
 					{usesOAuth ? (
-						<div className='rounded-2xl border border-blue-100 bg-blue-50/60 p-4 text-xs font-semibold text-blue-700 dark:border-blue-500/15 dark:bg-blue-500/10 dark:text-blue-300'>
+						<div className='rounded-2xl border border-primary-500/20 bg-primary-50/60 p-4 text-xs font-semibold text-primary-700 dark:border-primary-500/15 dark:bg-primary-500/10 dark:text-primary-300'>
 							OAuth token fields are managed by the backend. Use reconnect to
 							re-authorize this account.
 						</div>
@@ -1958,7 +1958,7 @@ const DetailModalContent = ({
 							Auth Method
 						</span>
 						<span
-							className={`mt-1 inline-block rounded-lg px-2 py-0.5 text-xs font-bold ${usesOAuth ? 'border border-blue-200 bg-blue-50 text-blue-700 dark:border-blue-500/20 dark:bg-blue-500/10 dark:text-blue-400' : 'border border-slate-200 bg-white text-slate-700 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-300'}`}>
+							className={`mt-1 inline-block rounded-lg px-2 py-0.5 text-xs font-bold ${usesOAuth ? 'border border-primary-500/20 bg-primary-50 text-primary-700 dark:border-primary-500/20 dark:bg-primary-500/10 dark:text-primary-400' : 'border border-slate-200 bg-white text-slate-700 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-300'}`}>
 							{usesOAuth ? 'OAuth 2.0' : 'API Key'}
 						</span>
 					</div>

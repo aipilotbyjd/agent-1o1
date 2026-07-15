@@ -499,7 +499,7 @@ const TemplatesCatalogPage = () => {
 
 			<div className='mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8'>
 				{/* Hero header banner */}
-				<div className='relative mb-8 overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-r from-[#501EE3] via-[#7B37FC] to-[#2B1B9A] px-6 py-8 text-white shadow-xl sm:px-10 sm:py-12 dark:from-[#311196] dark:via-[#4c1ba1] dark:to-[#170e54]'>
+				<div className='relative mb-8 overflow-hidden rounded-3xl border border-primary-500/20 bg-gradient-to-r from-primary-400 via-primary-500 to-primary-600 px-6 py-8 text-zinc-955 shadow-xl sm:px-10 sm:py-12 dark:border-zinc-800 dark:bg-gradient-to-r dark:from-[#111315] dark:via-[#141619] dark:to-[#0d0e10] dark:text-white'>
 					<div className='grid grid-cols-1 items-center gap-8 lg:grid-cols-12'>
 						<div className='relative z-10 lg:col-span-8'>
 							<div className='flex items-center gap-3 mb-4'>
@@ -507,18 +507,18 @@ const TemplatesCatalogPage = () => {
 								<button
 									onClick={toggleAside}
 									type='button'
-									className='flex h-8 w-8 items-center justify-center rounded-xl border border-white/20 bg-white/10 text-white shadow-sm md:hidden hover:bg-white/20'
+									className='flex h-8 w-8 items-center justify-center rounded-xl border border-zinc-955/20 bg-zinc-955/10 text-zinc-955 shadow-sm md:hidden hover:bg-zinc-955/20 dark:border-white/20 dark:bg-white/10 dark:text-white dark:hover:bg-white/20'
 								>
 									<Menu size={16} />
 								</button>
-								<div className='inline-block rounded-md border border-white/10 bg-white/10 px-2.5 py-1 text-[10px] font-bold tracking-wider text-white uppercase backdrop-blur-md'>
+								<div className='inline-block rounded-md border border-zinc-955/20 bg-zinc-955/10 px-2.5 py-1 text-[10px] font-bold tracking-wider text-zinc-955 uppercase backdrop-blur-md dark:border-primary-500/20 dark:bg-primary-950/30 dark:text-primary-400'>
 									Ready to use
 								</div>
 							</div>
-							<h1 className='mb-3 text-3xl font-extrabold tracking-tight text-white sm:text-4xl'>
+							<h1 className='mb-3 text-3xl font-extrabold tracking-tight text-zinc-955 sm:text-4xl dark:text-white'>
 								Templates Center
 							</h1>
-							<p className='mb-6 max-w-2xl text-xs leading-relaxed text-purple-100/90 sm:text-sm'>
+							<p className='mb-6 max-w-2xl text-xs leading-relaxed text-zinc-800 sm:text-sm dark:text-zinc-400'>
 								Deploy pre-configured workflows, conversational AI agents, or
 								bundles of matching stacks to build your automation platform in
 								seconds.
@@ -526,43 +526,43 @@ const TemplatesCatalogPage = () => {
 
 							{/* Stats Cards Row inside Hero */}
 							<div className='mt-6 flex flex-wrap items-center gap-4'>
-								<div className='flex items-center gap-3 rounded-2xl border border-white/10 bg-white/10 px-4 py-2.5 shadow-sm backdrop-blur-md'>
-									<div className='flex h-8 w-8 items-center justify-center rounded-lg bg-white/10'>
-										<Workflow className='h-4.5 w-4.5 text-white' />
+								<div className='flex items-center gap-3 rounded-2xl border border-zinc-955/10 bg-zinc-955/10 px-4 py-2.5 shadow-sm backdrop-blur-md dark:border-zinc-800 dark:bg-zinc-900/60'>
+									<div className='flex h-8 w-8 items-center justify-center rounded-lg bg-zinc-955/10 dark:bg-zinc-850'>
+										<Workflow className='h-4.5 w-4.5 text-zinc-955 dark:text-primary-400' />
 									</div>
 									<div>
-										<div className='text-sm leading-none font-extrabold text-white'>
+										<div className='text-sm leading-none font-extrabold text-zinc-955 dark:text-white'>
 											120+
 										</div>
-										<div className='mt-0.5 text-[10px] font-semibold text-purple-200/80'>
+										<div className='mt-0.5 text-[10px] font-semibold text-zinc-800 dark:text-zinc-500'>
 											Templates
 										</div>
 									</div>
 								</div>
 
-								<div className='flex items-center gap-3 rounded-2xl border border-white/10 bg-white/10 px-4 py-2.5 shadow-sm backdrop-blur-md'>
-									<div className='flex h-8 w-8 items-center justify-center rounded-lg bg-white/10'>
-										<Layers className='h-4.5 w-4.5 text-white' />
+								<div className='flex items-center gap-3 rounded-2xl border border-zinc-955/10 bg-zinc-955/10 px-4 py-2.5 shadow-sm backdrop-blur-md dark:border-zinc-800 dark:bg-zinc-900/60'>
+									<div className='flex h-8 w-8 items-center justify-center rounded-lg bg-zinc-955/10 dark:bg-zinc-850'>
+										<Layers className='h-4.5 w-4.5 text-zinc-955 dark:text-primary-400' />
 									</div>
 									<div>
-										<div className='text-sm leading-none font-extrabold text-white'>
+										<div className='text-sm leading-none font-extrabold text-zinc-955 dark:text-white'>
 											9
 										</div>
-										<div className='mt-0.5 text-[10px] font-semibold text-purple-200/80'>
+										<div className='mt-0.5 text-[10px] font-semibold text-zinc-800 dark:text-zinc-500'>
 											Categories
 										</div>
 									</div>
 								</div>
 
-								<div className='flex items-center gap-3 rounded-2xl border border-white/10 bg-white/10 px-4 py-2.5 shadow-sm backdrop-blur-md'>
-									<div className='flex h-8 w-8 items-center justify-center rounded-lg bg-white/10'>
-										<Sparkles className='h-4.5 w-4.5 text-white' />
+								<div className='flex items-center gap-3 rounded-2xl border border-zinc-955/10 bg-zinc-955/10 px-4 py-2.5 shadow-sm backdrop-blur-md dark:border-zinc-800 dark:bg-zinc-900/60'>
+									<div className='flex h-8 w-8 items-center justify-center rounded-lg bg-zinc-955/10 dark:bg-zinc-850'>
+										<Sparkles className='h-4.5 w-4.5 text-zinc-955 dark:text-primary-400' />
 									</div>
 									<div>
-										<div className='text-sm leading-none font-extrabold text-white'>
+										<div className='text-sm leading-none font-extrabold text-zinc-955 dark:text-white'>
 											2.4K+
 										</div>
-										<div className='mt-0.5 text-[10px] font-semibold text-purple-200/80'>
+										<div className='mt-0.5 text-[10px] font-semibold text-zinc-800 dark:text-zinc-500'>
 											Deployments
 										</div>
 									</div>
@@ -574,12 +574,12 @@ const TemplatesCatalogPage = () => {
 						<div className='pointer-events-none relative hidden h-56 justify-center select-none lg:col-span-4 lg:flex'>
 							<div className='transform-style-3d relative flex h-64 w-64 items-center justify-center perspective-[1000px]'>
 								{/* Main Violet Card */}
-								<div className='animate-3d-float absolute flex h-36 w-36 rotate-x-[15deg] rotate-y-[-20deg] items-center justify-center rounded-3xl border border-white/25 bg-gradient-to-br from-[#8b5cf6] to-[#3b82f6] shadow-[0_25px_50px_-12px_rgba(0,0,0,0.5)]'>
+								<div className='animate-3d-float absolute flex h-36 w-36 rotate-x-[15deg] rotate-y-[-20deg] items-center justify-center rounded-3xl border border-white/25 bg-gradient-to-br from-primary-400 to-primary-500 shadow-[0_25px_50px_-12px_rgba(196,238,61,0.25)]'>
 									<div className='pointer-events-none absolute inset-0 rounded-3xl bg-gradient-to-tr from-white/15 via-transparent to-transparent' />
-									<Sparkles className='h-16 w-16 text-white drop-shadow-[0_0_12px_rgba(255,255,255,0.7)]' />
+									<Sparkles className='h-16 w-16 text-zinc-900 drop-shadow-[0_0_12px_rgba(255,255,255,0.7)]' />
 								</div>
 								{/* Teal floating card */}
-								<div className='animate-3d-float-teal absolute top-28 left-4 flex h-12 w-12 rotate-x-[10deg] rotate-y-[-30deg] items-center justify-center rounded-xl border border-white/20 bg-gradient-to-tr from-teal-400 to-emerald-400 shadow-lg'>
+								<div className='animate-3d-float-teal absolute top-28 left-4 flex h-12 w-12 rotate-x-[10deg] rotate-y-[-30deg] items-center justify-center rounded-xl border border-white/20 bg-gradient-to-tr from-[#7B37FC] to-[#501EE3] shadow-lg'>
 									<Workflow className='h-5 w-5 text-white' />
 								</div>
 								{/* Coral floating card */}
@@ -602,7 +602,7 @@ const TemplatesCatalogPage = () => {
 							}}
 							className={`flex cursor-pointer shrink-0 items-center gap-2 rounded-full px-4 py-2 text-xs font-bold transition-all duration-200 ${
 								activeTab === 'workflows'
-									? 'border border-[#DED4FA] bg-[#F5F2FF] text-[#6E3FF3] shadow-2xs dark:border-primary-800/40 dark:bg-primary-950/30 dark:text-primary-400'
+									? 'border border-primary-500/20 bg-primary-50 text-primary-600 shadow-2xs dark:border-primary-800/40 dark:bg-primary-950/30 dark:text-primary-400'
 									: 'border border-transparent text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200'
 							}`}>
 							<Workflow className='h-3.5 w-3.5' />
@@ -615,7 +615,7 @@ const TemplatesCatalogPage = () => {
 							}}
 							className={`flex cursor-pointer shrink-0 items-center gap-2 rounded-full px-4 py-2 text-xs font-bold transition-all duration-200 ${
 								activeTab === 'agents'
-									? 'border border-[#DED4FA] bg-[#F5F2FF] text-[#6E3FF3] shadow-2xs dark:border-primary-800/40 dark:bg-primary-950/30 dark:text-primary-400'
+									? 'border border-primary-500/20 bg-primary-50 text-primary-600 shadow-2xs dark:border-primary-800/40 dark:bg-primary-950/30 dark:text-primary-400'
 									: 'border border-transparent text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200'
 							}`}>
 							<Cpu className='h-3.5 w-3.5' />
@@ -628,7 +628,7 @@ const TemplatesCatalogPage = () => {
 							}}
 							className={`flex cursor-pointer shrink-0 items-center gap-2 rounded-full px-4 py-2 text-xs font-bold transition-all duration-200 ${
 								activeTab === 'collections'
-									? 'border border-[#DED4FA] bg-[#F5F2FF] text-[#6E3FF3] shadow-2xs dark:border-primary-800/40 dark:bg-primary-950/30 dark:text-primary-400'
+									? 'border border-primary-500/20 bg-primary-50 text-primary-600 shadow-2xs dark:border-primary-800/40 dark:bg-primary-950/30 dark:text-primary-400'
 									: 'border border-transparent text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200'
 							}`}>
 							<Layers className='h-3.5 w-3.5' />
@@ -687,18 +687,18 @@ const TemplatesCatalogPage = () => {
 							<div>
 								<div className='mb-5 flex items-center justify-between'>
 									<div className='flex items-center gap-2'>
-										<Sparkles className='h-4.5 w-4.5 text-[#6E3FF3] dark:text-primary-400' />
+										<Sparkles className='h-4.5 w-4.5 text-primary-500' />
 										<h2 className='text-sm font-bold text-zinc-800 dark:text-zinc-200'>
 											Featured Workflows
 										</h2>
 									</div>
-									<button className='flex cursor-pointer items-center gap-1.5 text-xs font-bold text-[#6E3FF3] transition-opacity hover:opacity-80 dark:text-primary-400'>
+									<button className='flex cursor-pointer items-center gap-1.5 text-xs font-bold text-primary-600 transition-opacity hover:opacity-80 dark:text-primary-400'>
 										View all <span className='text-sm'>→</span>
 									</button>
 								</div>
 								<div className='grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3'>
 									{featuredWorkflows.slice(0, 3).map((wf) => {
-										const displayColor = wf.color || '#6E3FF3';
+										const displayColor = wf.color || '#C4EE3D';
 										return (
 											<div
 												key={wf.id}
@@ -717,7 +717,7 @@ const TemplatesCatalogPage = () => {
 															/>
 														</div>
 														<div className='truncate'>
-															<h3 className='truncate text-xs font-bold text-zinc-800 transition-colors group-hover:text-[#6E3FF3] sm:text-sm dark:text-zinc-200 dark:group-hover:text-primary-400'>
+															<h3 className='truncate text-xs font-bold text-zinc-800 transition-colors group-hover:text-primary-600 sm:text-sm dark:text-zinc-200 dark:group-hover:text-primary-400'>
 																{wf.name}
 															</h3>
 															<span className='mt-0.5 block text-[10px] font-medium text-zinc-400 capitalize'>
@@ -779,7 +779,7 @@ const TemplatesCatalogPage = () => {
 																);
 															} catch (err) {}
 														}}
-														className='dark:border-primary-600 cursor-pointer rounded-xl border border-[#6E3FF3] px-3.5 py-1.5 text-[10px] font-bold text-[#6E3FF3] transition-all duration-200 hover:bg-[#6E3FF3] hover:text-primary-950 dark:text-primary-400 dark:hover:bg-primary-500 dark:hover:text-primary-950'>
+														className='cursor-pointer rounded-xl border border-primary-500/40 px-3.5 py-1.5 text-[10px] font-bold text-primary-600 transition-all duration-200 hover:bg-primary-500 hover:text-zinc-950 dark:border-primary-500/40 dark:text-primary-400 dark:hover:bg-primary-500 dark:hover:text-zinc-950'>
 														Use Template
 													</button>
 												</div>
@@ -794,22 +794,22 @@ const TemplatesCatalogPage = () => {
 							<div>
 								<div className='mb-5 flex items-center justify-between'>
 									<div className='flex items-center gap-2'>
-										<Sparkles className='h-4.5 w-4.5 text-blue-500' />
+										<Sparkles className='h-4.5 w-4.5 text-primary-500' />
 										<h2 className='text-sm font-bold text-zinc-800 dark:text-zinc-200'>
 											Featured AI Agents
 										</h2>
 									</div>
-									<button className='flex cursor-pointer items-center gap-1.5 text-xs font-bold text-blue-600 transition-opacity hover:opacity-80 dark:text-blue-400'>
+									<button className='flex cursor-pointer items-center gap-1.5 text-xs font-bold text-primary-600 transition-opacity hover:opacity-80 dark:text-primary-400'>
 										View all <span className='text-sm'>→</span>
 									</button>
 								</div>
 								<div className='grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3'>
 									{featuredAgents.slice(0, 3).map((agent) => {
-										const displayColor = agent.color || '#3b82f6';
+										const displayColor = agent.color || '#C4EE3D';
 										return (
 											<div
 												key={agent.id}
-												className='group relative flex cursor-pointer flex-col rounded-2xl border border-zinc-200/50 bg-white p-5 transition-all duration-300 hover:border-blue-300 hover:shadow-lg dark:border-zinc-800/80 dark:bg-zinc-950 dark:hover:border-blue-800'
+												className='group relative flex cursor-pointer flex-col rounded-2xl border border-zinc-200/50 bg-white p-5 transition-all duration-300 hover:border-primary-300 hover:shadow-lg dark:border-zinc-800/80 dark:bg-zinc-950 dark:hover:border-primary-800'
 												onClick={() => setPreviewId(agent.id)}>
 												<div className='mb-4 flex items-start justify-between'>
 													<div className='flex items-center gap-3'>
@@ -824,7 +824,7 @@ const TemplatesCatalogPage = () => {
 															/>
 														</div>
 														<div className='truncate'>
-															<h3 className='truncate text-xs font-bold text-zinc-800 transition-colors group-hover:text-blue-600 sm:text-sm dark:text-zinc-200 dark:group-hover:text-blue-400'>
+															<h3 className='truncate text-xs font-bold text-zinc-800 transition-colors group-hover:text-primary-600 sm:text-sm dark:text-zinc-200 dark:group-hover:text-primary-400'>
 																{agent.name}
 															</h3>
 															<span className='mt-0.5 block text-[10px] font-medium text-zinc-400 capitalize'>
@@ -842,7 +842,7 @@ const TemplatesCatalogPage = () => {
 													{agent.description}
 												</p>
 												<div className='mt-auto flex items-center justify-between border-t border-zinc-100 pt-3 dark:border-zinc-900'>
-													<span className='truncate rounded-md border border-blue-200/30 bg-blue-50 px-2 py-0.5 text-[9px] font-bold text-blue-600 dark:bg-blue-950/20 dark:text-blue-400'>
+													<span className='truncate rounded-md border border-primary-200/30 bg-primary-50 px-2 py-0.5 text-[9px] font-bold text-primary-600 dark:bg-primary-950/20 dark:text-primary-400'>
 														{agent.llm_model}
 													</span>
 													<button
@@ -859,7 +859,7 @@ const TemplatesCatalogPage = () => {
 																);
 															} catch (err) {}
 														}}
-														className='dark:hover:bg-blue-500 cursor-pointer rounded-xl border border-blue-600 px-3.5 py-1.5 text-[10px] font-bold text-blue-600 transition-all duration-200 hover:bg-blue-600 hover:text-white dark:border-blue-500 dark:text-blue-400 dark:hover:text-white'>
+														className='dark:hover:bg-primary-500 cursor-pointer rounded-xl border border-primary-600 px-3.5 py-1.5 text-[10px] font-bold text-primary-600 transition-all duration-200 hover:bg-primary-600 hover:text-zinc-900 dark:border-primary-500 dark:text-primary-400 dark:hover:text-zinc-900'>
 														Deploy Agent
 													</button>
 												</div>
@@ -1039,7 +1039,7 @@ const TemplatesCatalogPage = () => {
 					<div className='grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'>
 						{activeTab === 'workflows' &&
 							workflows?.map((wf) => {
-								const displayColor = wf.color || '#6E3FF3';
+								const displayColor = wf.color || '#C4EE3D';
 								return (
 									<div
 										key={wf.id}
@@ -1056,7 +1056,7 @@ const TemplatesCatalogPage = () => {
 													/>
 												</div>
 												<div className='truncate'>
-													<h4 className='truncate text-xs font-bold text-zinc-800 transition-colors group-hover:text-[#6E3FF3] dark:text-zinc-200 dark:group-hover:text-primary-400'>
+													<h4 className='truncate text-xs font-bold text-zinc-800 transition-colors group-hover:text-primary-600 dark:text-zinc-200 dark:group-hover:text-primary-400'>
 														{wf.name}
 													</h4>
 													<span className='mt-0.5 block truncate text-[10px] font-medium text-zinc-400 capitalize'>
@@ -1111,11 +1111,11 @@ const TemplatesCatalogPage = () => {
 
 						{activeTab === 'agents' &&
 							agents?.map((agent) => {
-								const displayColor = agent.color || '#3b82f6';
+								const displayColor = agent.color || '#C4EE3D';
 								return (
 									<div
 										key={agent.id}
-										className='group dark:bg-zinc-950 dark:border-zinc-800 flex cursor-pointer flex-col rounded-2xl border border-zinc-200/50 bg-white p-4.5 transition-all duration-200 hover:border-blue-300 hover:shadow-md dark:hover:border-blue-800'
+										className='group dark:bg-zinc-950 dark:border-zinc-800 flex cursor-pointer flex-col rounded-2xl border border-zinc-200/50 bg-white p-4.5 transition-all duration-200 hover:border-primary-300 hover:shadow-md dark:hover:border-primary-800'
 										onClick={() => setPreviewId(agent.id)}>
 										<div className='mb-3.5 flex items-start justify-between'>
 											<div className='flex items-center gap-3 truncate'>
@@ -1128,7 +1128,7 @@ const TemplatesCatalogPage = () => {
 													/>
 												</div>
 												<div className='truncate'>
-													<h4 className='truncate text-xs font-bold text-zinc-800 transition-colors group-hover:text-blue-600 dark:text-zinc-200 dark:group-hover:text-blue-400'>
+													<h4 className='truncate text-xs font-bold text-zinc-800 transition-colors group-hover:text-primary-600 dark:text-zinc-200 dark:group-hover:text-primary-400'>
 														{agent.name}
 													</h4>
 													<span className='mt-0.5 block truncate text-[10px] font-medium text-zinc-400 capitalize'>
@@ -1146,7 +1146,7 @@ const TemplatesCatalogPage = () => {
 											{agent.description}
 										</p>
 										<div className='mt-auto flex items-center justify-between border-t border-zinc-100 pt-3 dark:border-zinc-900'>
-											<span className='max-w-[80px] truncate rounded border border-blue-200/30 bg-blue-50 px-1.5 py-0.5 text-[8px] font-bold text-blue-600 dark:bg-blue-950/20 dark:text-blue-400'>
+											<span className='max-w-[80px] truncate rounded border border-primary-200/30 bg-primary-50 px-1.5 py-0.5 text-[8px] font-bold text-primary-600 dark:bg-primary-950/20 dark:text-primary-400'>
 												{agent.llm_model}
 											</span>
 											<div className='flex items-center gap-1 text-[10px] font-medium text-zinc-400'>
@@ -1537,7 +1537,7 @@ const TemplatesCatalogPage = () => {
 																		<div
 																			key={idx}
 																			className='flex gap-2.5 rounded-lg border border-zinc-200 bg-white p-3 dark:border-zinc-800 dark:bg-zinc-900'>
-																			<div className='flex h-7 w-7 shrink-0 items-center justify-center rounded border border-blue-100 bg-blue-50 text-blue-500 dark:border-blue-900 dark:bg-blue-950/20'>
+																			<div className='flex h-7 w-7 shrink-0 items-center justify-center rounded border border-primary-100 bg-primary-50 text-primary-500 dark:border-primary-900 dark:bg-primary-950/20'>
 																				<Settings className='animate-spin-slow h-4 w-4' />
 																			</div>
 																			<div>
@@ -1587,7 +1587,7 @@ const TemplatesCatalogPage = () => {
 												{/* Deploy Agent action */}
 												<div className='mt-4 border-t border-zinc-200 pt-6 dark:border-zinc-800'>
 													<Button
-														color='blue'
+														color='primary'
 														variant='solid'
 														dimension='lg'
 														className='flex w-full cursor-pointer items-center justify-center gap-2 py-3 text-sm font-bold shadow-lg transition-all hover:shadow-xl'
@@ -1708,7 +1708,7 @@ const TemplatesCatalogPage = () => {
 																		<div className='flex items-center gap-2'>
 																			{item.type ===
 																			'agent' ? (
-																				<Cpu className='h-3.5 w-3.5 text-blue-500' />
+																				<Cpu className='h-3.5 w-3.5 text-primary-500' />
 																			) : (
 																				<Workflow className='h-3.5 w-3.5 text-primary-500' />
 																			)}

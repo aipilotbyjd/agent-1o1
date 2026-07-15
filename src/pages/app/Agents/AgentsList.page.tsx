@@ -78,12 +78,12 @@ const getModelColor = (model: string) => {
 
 const getAgentHeaderIcon = (id: string) => {
 	if (id === 'agent-2') {
-		return { IconComponent: Cpu, bgClass: 'bg-primary-400 shadow-primary-500/20' };
+		return { IconComponent: Cpu, bgClass: 'bg-primary-400 text-primary-950 shadow-primary-500/20' };
 	}
 	if (id === 'agent-3') {
-		return { IconComponent: Briefcase, bgClass: 'bg-amber-600 shadow-amber-600/20' };
+		return { IconComponent: Briefcase, bgClass: 'bg-amber-600 text-white shadow-amber-600/20' };
 	}
-	return { IconComponent: Briefcase, bgClass: 'bg-emerald-600 shadow-emerald-600/20' };
+	return { IconComponent: Briefcase, bgClass: 'bg-primary-400 text-primary-950 shadow-primary-500/20' };
 };
 
 const getCategoryIcon = (category: string) => {
@@ -143,7 +143,7 @@ const AgentsListPage = () => {
 		<Container className='relative overflow-x-hidden overflow-y-auto bg-[#f8f9fc] !p-0 dark:bg-zinc-950'>
 			{/* Ambient decorative blur glows */}
 			<div className='pointer-events-none absolute top-[-10%] right-[-10%] -z-10 h-[45%] w-[45%] rounded-full bg-gradient-to-tr from-primary-400/5 to-primary-400/5 blur-[120px]' />
-			<div className='pointer-events-none absolute bottom-[-10%] left-[-10%] -z-10 h-[45%] w-[45%] rounded-full bg-gradient-to-br from-emerald-500/5 to-cyan-500/5 blur-[120px]' />
+			<div className='pointer-events-none absolute bottom-[-10%] left-[-10%] -z-10 h-[45%] w-[45%] rounded-full bg-gradient-to-br from-primary-500/5 to-primary-500/0 blur-[120px]' />
 
 			<div className='mx-auto flex w-full max-w-7xl flex-col space-y-8 p-4 sm:p-6 md:p-8'>
 				{/* Header Section */}
@@ -168,8 +168,8 @@ const AgentsListPage = () => {
 							<div className='absolute h-12 w-12 animate-[spin_20s_linear_infinite_reverse] rounded-full border border-dashed border-blue-300/40 dark:border-blue-500/20' />
 
 							{/* Floating robot head inside gradient bubble */}
-							<div className='relative flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-primary-400 shadow-md shadow-primary-500/20'>
-								<div className='absolute -inset-0.5 rounded-full bg-gradient-to-br from-blue-400 to-primary-400 opacity-50 blur-xs' />
+							<div className='relative flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-primary-500 to-primary-300 shadow-md shadow-primary-500/20'>
+								<div className='absolute -inset-0.5 rounded-full bg-gradient-to-br from-primary-400 to-primary-300 opacity-50 blur-xs' />
 								<Bot className='relative h-5 w-5 text-white' />
 							</div>
 						</div>
@@ -188,7 +188,7 @@ const AgentsListPage = () => {
 					{/* Card 1: Active Agents */}
 					<div className='group relative overflow-hidden rounded-2xl border border-border-main bg-bg-card p-5 shadow-xs backdrop-blur-md dark:border-border-main dark:bg-bg-card'>
 						<div className='flex items-center gap-3'>
-							<div className='flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-emerald-500/20 bg-emerald-500/10 text-emerald-600 dark:bg-emerald-500/5 dark:text-emerald-400'>
+							<div className='flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-primary-500/20 bg-primary-400/10 text-primary-600 dark:bg-primary-400/5 dark:text-primary-400'>
 								<Briefcase size={16} />
 							</div>
 							<span className='text-[10px] font-black tracking-wider text-slate-400 uppercase dark:text-zinc-500'>
@@ -208,7 +208,7 @@ const AgentsListPage = () => {
 							{/* Custom green SVG sparkline */}
 							<div className='h-8 w-24'>
 								<svg
-									className='h-full w-full text-emerald-500'
+									className='h-full w-full text-primary-500'
 									viewBox='0 0 100 30'
 									fill='none'
 									xmlns='http://www.w3.org/2000/svg'>
@@ -216,12 +216,12 @@ const AgentsListPage = () => {
 										<linearGradient id='green-grad' x1='0' y1='0' x2='0' y2='1'>
 											<stop
 												offset='0%'
-												stopColor='rgb(16, 185, 129)'
+												stopColor='#C4EE3D'
 												stopOpacity='0.2'
 											/>
 											<stop
 												offset='100%'
-												stopColor='rgb(16, 185, 129)'
+												stopColor='#C4EE3D'
 												stopOpacity='0'
 											/>
 										</linearGradient>
@@ -243,10 +243,10 @@ const AgentsListPage = () => {
 						</div>
 						<div className='mt-3 flex items-center gap-1.5'>
 							<span className='relative flex h-1.5 w-1.5'>
-								<span className='absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75'></span>
-								<span className='relative inline-flex h-1.5 w-1.5 rounded-full bg-emerald-500'></span>
+								<span className='absolute inline-flex h-full w-full animate-ping rounded-full bg-primary-400 opacity-75'></span>
+								<span className='relative inline-flex h-1.5 w-1.5 rounded-full bg-primary-500'></span>
 							</span>
-							<span className='text-[10px] font-black text-emerald-600 dark:text-emerald-400'>
+							<span className='text-[10px] font-black text-primary-600 dark:text-primary-400'>
 								All agents responding
 							</span>
 						</div>
@@ -290,7 +290,7 @@ const AgentsListPage = () => {
 					{/* Card 3: Active Models */}
 					<div className='group relative overflow-hidden rounded-2xl border border-border-main bg-bg-card p-5 shadow-xs backdrop-blur-md dark:border-border-main dark:bg-bg-card'>
 						<div className='flex items-center gap-3'>
-							<div className='flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-blue-500/20 bg-blue-500/10 text-blue-600 dark:bg-blue-500/5 dark:text-blue-400'>
+							<div className='flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-primary-500/20 bg-primary-400/10 text-primary-600 dark:bg-primary-400/5 dark:text-primary-400'>
 								<Cpu size={16} />
 							</div>
 							<span className='text-[10px] font-black tracking-wider text-slate-400 uppercase dark:text-zinc-500'>
@@ -310,7 +310,7 @@ const AgentsListPage = () => {
 							{/* Custom blue radar waves SVG */}
 							<div className='relative flex h-8 w-20 items-center justify-end overflow-hidden'>
 								<svg
-									className='h-12 w-16 text-blue-500/30'
+									className='h-12 w-16 text-primary-500/30'
 									viewBox='0 0 100 100'
 									fill='none'
 									xmlns='http://www.w3.org/2000/svg'>
@@ -355,8 +355,8 @@ const AgentsListPage = () => {
 								</svg>
 							</div>
 						</div>
-						<div className='mt-3 flex items-center gap-1.5 text-[10px] font-black text-blue-600 dark:text-blue-400'>
-							<span className='h-1.5 w-1.5 rounded-full bg-blue-500' />
+						<div className='mt-3 flex items-center gap-1.5 text-[10px] font-black text-primary-600 dark:text-primary-400'>
+							<span className='h-1.5 w-1.5 rounded-full bg-primary-500' />
 							<span>Multi-model cognitive pipelines</span>
 						</div>
 					</div>
@@ -408,7 +408,7 @@ const AgentsListPage = () => {
 										size={14}
 										className={
 											isActive
-												? 'text-white'
+												? 'text-primary-950'
 												: 'text-slate-500 dark:text-zinc-400'
 										}
 									/>
@@ -447,7 +447,7 @@ const AgentsListPage = () => {
 									{/* Brand Top Row */}
 									<div className='flex items-start justify-between gap-4'>
 										<div
-											className={`relative flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl text-white shadow-md transition-transform duration-300 group-hover:scale-105 group-hover:rotate-2 ${bgClass}`}>
+											className={`relative flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl shadow-md transition-transform duration-300 group-hover:scale-105 group-hover:rotate-2 ${bgClass}`}>
 											<IconComponent className='h-5 w-5' />
 										</div>
 
@@ -458,14 +458,14 @@ const AgentsListPage = () => {
 												aria-label={agent.isActive ? 'Active' : 'Inactive'}
 												className={`flex h-8 cursor-pointer items-center justify-center rounded-xl px-3.5 text-xs font-semibold transition-all ${
 													agent.isActive
-														? 'border border-emerald-500/20 bg-emerald-500/10 text-emerald-600 dark:bg-emerald-500/5 dark:text-emerald-400'
+														? 'border border-primary-500/20 bg-primary-400/10 text-primary-600 dark:bg-primary-400/5 dark:text-primary-400'
 														: 'border border-border-main bg-bg-card text-slate-450 dark:border-border-main dark:bg-zinc-950/40 dark:text-zinc-500'
 												} active:scale-95`}>
 												<span className='flex items-center gap-1.5'>
 													<span
-														className={`relative flex h-1.5 w-1.5 rounded-full ${agent.isActive ? 'bg-emerald-500' : 'bg-slate-400 dark:bg-zinc-500'}`}>
+														className={`relative flex h-1.5 w-1.5 rounded-full ${agent.isActive ? 'bg-primary-500' : 'bg-slate-400 dark:bg-zinc-500'}`}>
 														{agent.isActive && (
-															<span className='absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75'></span>
+															<span className='absolute inline-flex h-full w-full animate-ping rounded-full bg-primary-400 opacity-75'></span>
 														)}
 													</span>
 													<span>
@@ -500,11 +500,11 @@ const AgentsListPage = () => {
 											{agent.model}
 										</span>
 										<span className='inline-flex items-center gap-1 rounded-lg border border-slate-200/50 bg-slate-50/50 px-2 py-1 text-[10px] font-semibold text-slate-600 dark:border-zinc-800 dark:bg-zinc-950/50 dark:text-zinc-400'>
-											<MessageSquare size={11} className='text-blue-500' />
+											<MessageSquare size={11} className='text-primary-500' />
 											{agent.conversationsCount} chats
 										</span>
 										<span className='inline-flex items-center gap-1 rounded-lg border border-slate-200/50 bg-slate-50/50 px-2 py-1 text-[10px] font-semibold text-slate-600 dark:border-zinc-800 dark:bg-zinc-950/50 dark:text-zinc-400'>
-											<CategoryIcon size={11} className='text-emerald-500' />
+											<CategoryIcon size={11} className='text-primary-500' />
 											{agent.category}
 										</span>
 									</div>
