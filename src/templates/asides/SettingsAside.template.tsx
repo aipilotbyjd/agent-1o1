@@ -56,9 +56,9 @@ const SettingsAsideTemplate = () => {
 	const navigate = useNavigate();
 
 	return (
-		<Aside className='!bg-white dark:!bg-zinc-900'>
+		<Aside className='bg-white dark:!bg-bg-sidebar'>
 			<AsideHeaderPart />
-			<AsideBody className='[&>div:first-child]:from-white dark:[&>div:first-child]:from-zinc-900 [&>div:last-child]:from-white dark:[&>div:last-child]:from-zinc-900'>
+			<AsideBody className='[&>div:first-child]:from-white dark:[&>div:first-child]:from-bg-sidebar [&>div:last-child]:from-white dark:[&>div:last-child]:from-bg-sidebar'>
 				<button
 					type='button'
 					onClick={() => navigate(pages.app.subPages.workflows.to)}
