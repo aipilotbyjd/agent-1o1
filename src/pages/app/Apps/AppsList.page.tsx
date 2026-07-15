@@ -1185,7 +1185,7 @@ const AppsListPage = () => {
 								initial={{ opacity: 0, scale: 0.96, y: 15 }}
 								animate={{ opacity: 1, scale: 1, y: 0 }}
 								exit={{ opacity: 0, scale: 0.96, y: 15 }}
-								className='relative w-full max-w-2xl overflow-hidden rounded-3xl border border-slate-200/80 bg-white p-6 shadow-2xl dark:border-zinc-800/80 dark:bg-[#11131c]'>
+								className='relative w-full max-w-3xl overflow-hidden rounded-3xl border border-slate-200/80 bg-white p-6 shadow-2xl dark:border-zinc-800/80 dark:bg-[#11131c]'>
 								{/* Close button */}
 								<button
 									aria-label='Close app connection dialog'
@@ -1194,13 +1194,23 @@ const AppsListPage = () => {
 									<CloseIcon className='h-4.5 w-4.5' />
 								</button>
 
-								<div>
-									<h2 className='text-lg font-black text-slate-900 dark:text-white'>
-										Apps Available
-									</h2>
-									<p className='mt-1 text-xs font-bold text-slate-400 dark:text-zinc-500'>
-										Select the app you would like to authenticate with.
-									</p>
+								<div className='flex items-center gap-3.5 pr-10'>
+									<div className='flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-primary-100/60 text-primary-600 dark:bg-primary-950/40 dark:text-primary-400'>
+										<Grid className='h-5 w-5' />
+									</div>
+									<div className='min-w-0'>
+										<div className='flex items-center gap-2'>
+											<h2 className='text-lg font-black text-slate-900 dark:text-white'>
+												Apps Available
+											</h2>
+											<span className='rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-black text-slate-500 dark:bg-zinc-800 dark:text-zinc-400'>
+												{isCredentialTypesLoading ? '…' : `${totalIntegrationsCount}+`}
+											</span>
+										</div>
+										<p className='mt-0.5 text-xs font-bold text-slate-400 dark:text-zinc-500'>
+											Select the app you would like to authenticate with.
+										</p>
+									</div>
 								</div>
 
 								{/* Search available apps */}
@@ -1250,7 +1260,7 @@ const AppsListPage = () => {
 										filteredAvailableApps.map((availableApp) => (
 											<div
 												key={availableApp.id}
-												className='group/item flex flex-col justify-between rounded-2xl border border-slate-100 bg-slate-50/50 p-4 transition-all hover:border-primary-500/20 hover:bg-slate-50 dark:border-zinc-900/30 dark:bg-zinc-950/15 dark:hover:bg-zinc-950/40'>
+												className='group/item flex flex-col justify-between rounded-2xl border border-slate-100 bg-slate-50/50 p-4 transition-all hover:border-primary-500/30 hover:bg-white hover:shadow-sm dark:border-zinc-900/30 dark:bg-zinc-950/15 dark:hover:border-primary-500/30 dark:hover:bg-zinc-950/40'>
 												<div className='flex gap-3'>
 													<div
 														className='flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-white shadow-sm transition-transform group-hover/item:scale-105'
@@ -1286,7 +1296,7 @@ const AppsListPage = () => {
 												</div>
 												<button
 													onClick={() => handleConnectClick(availableApp)}
-													className='mt-3.5 h-8 w-full cursor-pointer rounded-lg border border-slate-200 bg-white text-[11px] font-black transition-all hover:bg-slate-950 hover:text-white dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-200 dark:hover:bg-zinc-50 dark:hover:text-slate-950'>
+													className='mt-3.5 h-9 w-full cursor-pointer rounded-lg border border-slate-200 bg-white text-[11px] font-black text-slate-700 transition-all hover:border-primary-400 hover:bg-primary-400 hover:text-primary-950 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-200 dark:hover:border-primary-400 dark:hover:bg-primary-400 dark:hover:text-primary-950'>
 													{isOAuthCredentialType(
 														availableApp.credentialType,
 													)
