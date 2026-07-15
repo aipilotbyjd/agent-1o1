@@ -30,7 +30,7 @@ const navItemClasses = {
 		'hover:opacity-100',
 		'border',
 		'text-zinc-500',
-		'hover:text-zinc-950 dark:hover:text-zinc-100',
+		'hover:text-zinc-950 dark:hover:text-white',
 		'grow',
 		'transition-all duration-300 ease-in-out',
 	),
@@ -151,7 +151,7 @@ export const NavButton: FC<INavButtonProps> = (props) => {
 				size='text-2xl'
 				className={classNames(
 					{
-						'text-zinc-500 hover:text-zinc-950 dark:hover:text-zinc-100': !iconColor,
+						'text-zinc-500 hover:text-zinc-950 dark:hover:text-white': !iconColor,
 					},
 					'transition-all duration-300 ease-in-out',
 					iconClassName,

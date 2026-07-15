@@ -51,7 +51,7 @@ const User: FC<IUserProps> = (props) => {
 				<div
 					className={classNames(
 						'flex cursor-pointer gap-4 p-3',
-						'text-zinc-500 hover:text-zinc-950 dark:hover:text-zinc-100',
+						'text-zinc-500 hover:text-zinc-950 dark:hover:text-white',
 						'transition-all duration-300 ease-in-out',
 					)}
 					onClick={() => setIsOpen((prevState) => !prevState)}
