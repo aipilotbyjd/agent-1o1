@@ -202,7 +202,7 @@ export const Content: FC<IContentProps> = (props) => {
 	} = props;
 
 	const classes = classNames(
-		'pointer-events-auto relative flex w-full flex-col bg-white dark:bg-zinc-950 border dark:border-zinc-500/25 border-zinc-500/10',
+		'pointer-events-auto relative flex w-full flex-col bg-bg-card dark:bg-bg-card border border-border-main',
 		'shadow-2xl',
 		[`${rounded}`],
 		{

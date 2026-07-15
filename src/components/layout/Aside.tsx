@@ -37,9 +37,9 @@ export const AsideBody: FC<IAsideBodyProps> = (props) => {
 			data-component-name='Aside/AsideBody'
 			className={classNames('h-full overflow-x-scroll px-4', 'no-scrollbar', className)}
 			{...rest}>
-			<div className='sticky top-0 h-4 bg-linear-to-b from-white to-zinc-900/0 dark:from-zinc-900'></div>
+			<div className='sticky top-0 h-4 bg-linear-to-b from-bg-sidebar to-transparent'></div>
 			{children}
-			<div className='sticky bottom-0 h-4 bg-linear-to-t from-white to-zinc-900/0 dark:from-zinc-900'></div>
+			<div className='sticky bottom-0 h-4 bg-linear-to-t from-bg-sidebar to-transparent'></div>
 		</div>
 	);
 };
@@ -87,9 +87,9 @@ export const AsideQuickNav: FC<IAsideQuickNavProps> = (props) => {
 			className={classNames(
 				'flex cursor-pointer flex-col items-center justify-between gap-2 overflow-hidden rounded-xl',
 				// 'transition-all duration-300 ease-in-out',
-				{ 'bg-primary-400 hover:bg-primary-500/50 text-zinc-900': isActive },
+				{ 'bg-primary-400 hover:bg-primary-500 text-zinc-900 shadow-[0_4px_12px_var(--color-primary-50)]': isActive },
 				{
-					'bg-white text-zinc-600 hover:bg-zinc-100/25 dark:bg-zinc-950 dark:hover:bg-zinc-950/50':
+					'bg-bg-card text-zinc-500 hover:bg-zinc-100/50 dark:bg-bg-card dark:hover:bg-zinc-800/50 border border-border-main':
 						!isActive,
 				},
 				{ 'p-4': asideStatus, 'p-2.5': !asideStatus },
@@ -148,11 +148,11 @@ const Aside: FC<IAsideProps> = (props) => {
 					'peer',
 					'fixed top-0 bottom-0 z-40 md:z-20',
 					'flex flex-col',
-					'bg-white',
+					'bg-bg-sidebar',
 					'py-2',
 					'z-[100]',
-					'border-e border-zinc-500/10 dark:border-zinc-800/50',
-					'dark:bg-zinc-900 dark:text-white',
+					'border-e border-border-main',
+					'dark:bg-bg-sidebar dark:text-white',
 					'transition-all duration-300 ease-in-out',
 					className,
 					// Mobile Design

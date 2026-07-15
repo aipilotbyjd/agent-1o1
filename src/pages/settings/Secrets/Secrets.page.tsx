@@ -335,7 +335,7 @@ const SecretsPage = () => {
 						value={searchQuery}
 						onChange={(e) => setSearchQuery(e.target.value)}
 						placeholder='Search secrets'
-						className='h-10 w-full rounded-xl border border-zinc-200 bg-white pr-8 pl-10 text-sm font-medium text-zinc-800 shadow-xs outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-500/25 dark:border-zinc-700 dark:bg-zinc-700 dark:text-zinc-200'
+						className='h-10 w-full rounded-xl border border-border-main bg-bg-card pr-8 pl-10 text-sm font-medium text-zinc-800 shadow-xs outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-500/25 dark:border-border-main dark:bg-bg-card dark:text-zinc-100'
 					/>
 					{searchQuery && (
 						<button
@@ -357,14 +357,14 @@ const SecretsPage = () => {
 
 			{/* Loading */}
 			{isLoading && (
-				<div className='overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-sm dark:border-zinc-700 dark:bg-zinc-800'>
+				<div className='overflow-hidden rounded-2xl border border-border-main bg-bg-card shadow-sm dark:border-border-main dark:bg-bg-card'>
 					{Array.from({ length: 4 }).map((_, i) => (
 						<div
 							key={i}
-							className='flex items-center gap-4 border-b border-zinc-100 p-4 last:border-0 dark:border-zinc-700'>
-							<div className='h-8 w-8 animate-pulse rounded-lg bg-zinc-100 dark:bg-zinc-700' />
-							<div className='h-4 w-36 animate-pulse rounded-md bg-zinc-100 dark:bg-zinc-700' />
-							<div className='ml-auto h-4 w-32 animate-pulse rounded-md bg-zinc-100 dark:bg-zinc-700' />
+							className='flex items-center gap-4 border-b border-border-main p-4 last:border-0 dark:border-border-main'>
+							<div className='h-8 w-8 animate-pulse rounded-lg bg-zinc-150 dark:bg-zinc-950/40' />
+							<div className='h-4 w-36 animate-pulse rounded-md bg-zinc-150 dark:bg-zinc-950/40' />
+							<div className='ml-auto h-4 w-32 animate-pulse rounded-md bg-zinc-150 dark:bg-zinc-950/40' />
 						</div>
 					))}
 				</div>
@@ -372,7 +372,7 @@ const SecretsPage = () => {
 
 			{/* Empty — no secrets yet */}
 			{isEmpty && (
-				<div className='rounded-2xl border border-dashed border-zinc-200 bg-white px-4 py-20 text-center dark:border-zinc-700 dark:bg-zinc-800/20'>
+				<div className='rounded-2xl border border-dashed border-border-main bg-bg-card px-4 py-20 text-center dark:border-border-main dark:bg-bg-card/20'>
 					<div className='mx-auto flex max-w-sm flex-col items-center'>
 						<div className='mb-6 flex h-14 w-14 items-center justify-center rounded-2xl bg-primary-100 text-primary-600 dark:bg-primary-900/30 dark:text-primary-400'>
 							<Key size={24} />
@@ -396,7 +396,7 @@ const SecretsPage = () => {
 
 			{/* Empty — no search results */}
 			{noResults && (
-				<div className='rounded-2xl border border-dashed border-zinc-200 bg-white px-4 py-16 text-center dark:border-zinc-700 dark:bg-zinc-800/20'>
+				<div className='rounded-2xl border border-dashed border-border-main bg-bg-card px-4 py-16 text-center dark:border-border-main dark:bg-bg-card/20'>
 					<div className='mx-auto flex max-w-sm flex-col items-center'>
 						<div className='mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-zinc-100 text-zinc-400 dark:bg-zinc-800'>
 							<Search size={20} />
@@ -413,23 +413,23 @@ const SecretsPage = () => {
 
 			{/* Table */}
 			{!isLoading && secrets.length > 0 && (
-				<div className='overflow-x-auto rounded-2xl border border-zinc-200 bg-white shadow-sm dark:border-zinc-700 dark:bg-zinc-800'>
+				<div className='overflow-x-auto rounded-2xl border border-border-main bg-bg-card shadow-sm dark:border-border-main dark:bg-bg-card'>
 					<Table>
 						<THead>
 							<Tr>
-								<Th className='border-b border-zinc-100 bg-zinc-50/50 p-4 text-left text-xs font-bold tracking-wider text-zinc-500 uppercase dark:border-zinc-700 dark:bg-zinc-700/40 dark:text-zinc-400'>
+								<Th className='border-b border-border-main bg-bg-card/50 p-4 text-left text-xs font-bold tracking-wider text-zinc-500 uppercase dark:border-border-main dark:bg-bg-sidebar/40 dark:text-zinc-400'>
 									Name
 								</Th>
-								<Th className='border-b border-zinc-100 bg-zinc-50/50 p-4 text-left text-xs font-bold tracking-wider text-zinc-500 uppercase dark:border-zinc-700 dark:bg-zinc-700/40 dark:text-zinc-400'>
+								<Th className='border-b border-border-main bg-bg-card/50 p-4 text-left text-xs font-bold tracking-wider text-zinc-500 uppercase dark:border-border-main dark:bg-bg-sidebar/40 dark:text-zinc-400'>
 									Value
 								</Th>
-								<Th className='border-b border-zinc-100 bg-zinc-50/50 p-4 text-left text-xs font-bold tracking-wider text-zinc-500 uppercase dark:border-zinc-700 dark:bg-zinc-700/40 dark:text-zinc-400'>
+								<Th className='border-b border-border-main bg-bg-card/50 p-4 text-left text-xs font-bold tracking-wider text-zinc-500 uppercase dark:border-border-main dark:bg-bg-sidebar/40 dark:text-zinc-400'>
 									Description
 								</Th>
-								<Th className='border-b border-zinc-100 bg-zinc-50/50 p-4 text-left text-xs font-bold tracking-wider text-zinc-500 uppercase dark:border-zinc-700 dark:bg-zinc-700/40 dark:text-zinc-400'>
+								<Th className='border-b border-border-main bg-bg-card/50 p-4 text-left text-xs font-bold tracking-wider text-zinc-500 uppercase dark:border-border-main dark:bg-bg-sidebar/40 dark:text-zinc-400'>
 									Created
 								</Th>
-								<Th className='w-[180px] border-b border-zinc-100 bg-zinc-50/50 p-4 text-right text-xs font-bold tracking-wider text-zinc-500 uppercase dark:border-zinc-700 dark:bg-zinc-700/40 dark:text-zinc-400'>
+								<Th className='w-[180px] border-b border-border-main bg-bg-card/50 p-4 text-right text-xs font-bold tracking-wider text-zinc-500 uppercase dark:border-border-main dark:bg-bg-sidebar/40 dark:text-zinc-400'>
 									Actions
 								</Th>
 							</Tr>
@@ -441,11 +441,11 @@ const SecretsPage = () => {
 								return (
 									<Tr
 										key={secret.id}
-										className='group border-b border-zinc-100 last:border-0 dark:border-zinc-700'>
+										className='group border-b border-border-main last:border-0 dark:border-border-main'>
 										{/* Name */}
 										<Td className='p-4'>
 											<div className='flex items-center gap-2.5'>
-												<span className='flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-zinc-100 text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400'>
+												<span className='flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-zinc-100 text-zinc-500 dark:bg-bg-sidebar dark:text-zinc-400'>
 													<Key size={14} />
 												</span>
 												<span className='truncate font-mono text-sm font-bold text-zinc-900 dark:text-zinc-100'>

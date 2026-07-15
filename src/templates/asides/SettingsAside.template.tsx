@@ -24,8 +24,8 @@ const SettingsNavItem = ({ to, icon, text }: { to: string; icon: TIcons; text: s
 				classNames(
 					'flex h-11 w-full items-center gap-3 rounded-lg px-3 text-left text-sm font-semibold transition',
 					{
-						'bg-zinc-100 text-zinc-950 dark:bg-white/10 dark:text-zinc-100': isActive,
-						'text-zinc-500 hover:bg-zinc-100 hover:text-zinc-900 dark:hover:bg-white/5 dark:hover:text-zinc-100':
+						'bg-zinc-100 text-zinc-950 dark:bg-white/10 dark:text-white': isActive,
+						'text-zinc-500 hover:bg-zinc-100 hover:text-zinc-900 dark:hover:bg-white/5 dark:hover:text-white':
 							!isActive,
 						'justify-center': !asideStatus,
 					},
@@ -56,14 +56,14 @@ const SettingsAsideTemplate = () => {
 	const navigate = useNavigate();
 
 	return (
-		<Aside className='!bg-white dark:!bg-zinc-900'>
+		<Aside className='bg-white dark:!bg-bg-sidebar'>
 			<AsideHeaderPart />
-			<AsideBody className='[&>div:first-child]:from-white dark:[&>div:first-child]:from-zinc-900 [&>div:last-child]:from-white dark:[&>div:last-child]:from-zinc-900'>
+			<AsideBody className='[&>div:first-child]:from-white dark:[&>div:first-child]:from-bg-sidebar [&>div:last-child]:from-white dark:[&>div:last-child]:from-bg-sidebar'>
 				<button
 					type='button'
 					onClick={() => navigate(pages.app.subPages.workflows.to)}
 					className={classNames(
-						'mb-5 flex h-10 items-center gap-3 rounded-lg px-2 text-sm font-bold text-zinc-900 transition hover:bg-zinc-100 dark:text-zinc-100 dark:hover:bg-white/5',
+						'mb-5 flex h-10 items-center gap-3 rounded-lg px-2 text-sm font-bold text-zinc-900 transition hover:bg-zinc-100 dark:text-white dark:hover:bg-white/5',
 						{ 'justify-center': !asideStatus },
 					)}>
 					<ArrowLeft size={18} />

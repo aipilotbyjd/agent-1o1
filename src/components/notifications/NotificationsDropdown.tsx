@@ -134,7 +134,7 @@ const NotificationsDropdown = () => {
 							aria-label='Notifications'
 							icon='Notification03'
 							variant='link'
-							className='!p-0'
+							className='!p-0 text-zinc-500 hover:text-zinc-800 dark:!text-white dark:hover:!text-primary-400'
 						/>
 					</Tooltip>
 					{unreadCount > 0 && (

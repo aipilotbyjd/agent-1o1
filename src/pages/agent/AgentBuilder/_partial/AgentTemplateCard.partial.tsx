@@ -9,7 +9,7 @@ const AgentTemplateCard = ({ template, onClick }: { template: TAgentTemplate; on
 		<button
 			type='button'
 			onClick={onClick}
-			className='group relative flex min-h-[190px] flex-col justify-between rounded-3xl border border-zinc-200/80 bg-white p-5 text-left shadow-2xs transition-all duration-300 hover:-translate-y-1 hover:border-primary-500/35 hover:bg-zinc-50/10 hover:shadow-lg hover:shadow-primary-500/5 sm:min-h-[200px] lg:min-h-[210px] dark:border-zinc-800/80 dark:bg-zinc-900/40 dark:hover:border-primary-500/35 dark:hover:bg-zinc-900/60 dark:hover:shadow-none'>
+			className='group relative flex min-h-[190px] flex-col justify-between rounded-3xl border border-zinc-200/80 bg-white p-5 text-left shadow-2xs transition-all duration-300 hover:-translate-y-1 hover:border-primary-500/35 hover:bg-zinc-50/10 hover:shadow-lg hover:shadow-primary-500/5 sm:min-h-[200px] lg:min-h-[210px] dark:border-border-main dark:bg-bg-card dark:hover:border-primary-500/35 dark:hover:bg-bg-card/85 dark:hover:shadow-none'>
 			<div className='w-full'>
 				{/* Header: Icon, Title, Chevron */}
 				<div className='flex items-center justify-between gap-3'>

@@ -131,7 +131,7 @@ const Search = () => {
 					variant='outline'
 					color='zinc'
 					rounded='rounded-xl'
-					className='mb-4 !h-[48px] w-full border-zinc-200/50 !text-zinc-400 shadow-[0_4px_14px_rgba(0,0,0,0.06)] transition-all duration-300 hover:border-zinc-300/80 hover:shadow-[0_6px_20px_rgba(0,0,0,0.09)] dark:border-zinc-800/80 dark:shadow-none'
+					className='mb-4 !h-[48px] w-full border-zinc-200/50 !text-zinc-400 shadow-[0_4px_14px_rgba(0,0,0,0.06)] transition-all duration-300 hover:border-zinc-300/80 hover:shadow-[0_6px_20px_rgba(0,0,0,0.09)] dark:border-border-main dark:!text-white dark:shadow-none'
 					onClick={() => setIsModalOpen(true)}
 					aria-label=''
 				/>
@@ -141,11 +141,11 @@ const Search = () => {
 				firstSuffix={
 					<Icon
 						icon='Search01'
-						className='ms-1 text-lg text-zinc-400 dark:text-zinc-500'
+						className='ms-1 text-lg text-zinc-400 dark:!text-white'
 					/>
 				}
 				lastSuffix={
-					<span className='me-1 rounded-md border border-zinc-200/60 bg-white px-2 py-0.5 font-sans text-[10px] font-bold text-zinc-400 shadow-2xs dark:border-zinc-800 dark:bg-zinc-800/80 dark:text-zinc-500'>
+					<span className='me-1 rounded-md border border-zinc-200/60 bg-white px-2 py-0.5 font-sans text-[10px] font-bold text-zinc-400 shadow-2xs dark:border-border-main dark:bg-zinc-950/40 dark:!text-white'>
 						⌘K
 					</span>
 				}>
@@ -155,7 +155,7 @@ const Search = () => {
 					type='search'
 					dimension='default'
 					rounded='rounded-xl'
-					className='mb-4 border border-zinc-200/50 !bg-white shadow-[0_4px_14px_rgba(0,0,0,0.06)] transition-all duration-300 hover:border-zinc-300/80 hover:shadow-[0_6px_20px_rgba(0,0,0,0.09)] dark:border-zinc-800/80 dark:!bg-zinc-900/50 dark:shadow-none'
+					className='mb-4 border border-zinc-200/50 !bg-white shadow-[0_4px_14px_rgba(0,0,0,0.06)] transition-all duration-300 hover:border-zinc-300/80 hover:shadow-[0_6px_20px_rgba(0,0,0,0.09)] dark:border-border-main dark:!bg-bg-card dark:shadow-none dark:placeholder:!text-white dark:!text-white'
 					value={inputValue}
 					onClick={() => setIsModalOpen(true)}
 					onChange={() => {}}
@@ -198,7 +198,7 @@ const Search = () => {
 								className={classNames(
 									'flex cursor-pointer items-center gap-4 rounded-lg border border-zinc-500/25',
 									{
-										'outline-2 outline-offset-1 outline-blue-500':
+										'outline-2 outline-offset-1 outline-primary-400':
 											index === selectedIndex,
 									},
 								)}

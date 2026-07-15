@@ -94,7 +94,7 @@ const DropdownWorkspaceSwitcherExample = () => {
 			<DropdownToggle>
 				<button
 					type='button'
-					className='group flex h-9 cursor-pointer items-center gap-2 rounded-full border border-slate-200 bg-white pr-3.5 pl-2 text-xs font-extrabold text-slate-700 shadow-xs transition-all duration-300 select-none hover:border-primary-500/40 hover:bg-white hover:text-primary-600 dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-300 dark:hover:border-primary-500/30 dark:hover:bg-zinc-900 dark:hover:text-primary-400'>
+					className='group flex h-9 cursor-pointer items-center gap-2 rounded-full border border-slate-200 bg-white pr-3.5 pl-2 text-xs font-extrabold text-slate-700 shadow-xs transition-all duration-300 select-none hover:border-primary-500/40 hover:bg-white hover:text-primary-600 dark:border-zinc-800 dark:bg-zinc-950 dark:text-white dark:hover:border-primary-500/30 dark:hover:bg-zinc-900 dark:hover:text-primary-400'>
 					{/* Circular initials avatar with a premium dynamic gradient background */}
 					<div
 						className={`relative flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-gradient-to-tr ${activeColorGradient} text-[10px] font-black text-white shadow-2xs transition-transform duration-300 group-hover:scale-105`}>
@@ -105,7 +105,7 @@ const DropdownWorkspaceSwitcherExample = () => {
 					</span>
 					<ChevronDown
 						size={12}
-						className='ml-0.5 shrink-0 text-slate-400 transition-transform duration-300 group-hover:text-primary-500 group-aria-expanded:rotate-180 group-[.show]:rotate-180 dark:text-zinc-500 dark:group-hover:text-primary-400'
+						className='ml-0.5 shrink-0 text-slate-400 transition-transform duration-300 group-hover:text-primary-500 group-aria-expanded:rotate-180 group-[.show]:rotate-180 dark:text-white dark:group-hover:text-primary-400'
 					/>
 				</button>
 			</DropdownToggle>
