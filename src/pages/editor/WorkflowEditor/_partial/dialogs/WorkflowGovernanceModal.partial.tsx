@@ -22,6 +22,7 @@ import {
 import { useWorkflowEditor } from '../../_context/WorkflowEditorProvider.context';
 import { useWorkflowShellStore } from '@/store/workflowShell.store';
 import { useWorkflowRouteParams } from '../../_hooks/useWorkflowRouteParams.hook';
+import { useConfirm } from '@/context/confirmContext';
 import Modal from './Modal.partial';
 import {
 	useWorkflowVersions,
@@ -49,6 +50,7 @@ const WorkflowGovernanceModal = () => {
 	const setGovModalTab = useWorkflowShellStore((store) => store.setGovModalTab);
 
 	const { workspaceId, workflowId } = useWorkflowRouteParams();
+	const { confirm } = useConfirm();
 
 	// Tab selection
 	const activeTab = govModalTab || 'versions';
@@ -459,7 +461,15 @@ const WorkflowGovernanceModal = () => {
 
 													<button
 														type="button"
-														onClick={() => deleteShare.mutate(share.id)}
+														onClick={async () => {
+															const confirmed = await confirm({
+																title: 'Delete Share Link',
+																message:
+																	'Are you sure you want to delete this share link? Anyone using it will lose access. This action cannot be undone.',
+															});
+															if (!confirmed) return;
+															deleteShare.mutate(share.id);
+														}}
 														disabled={deleteShare.isPending}
 														className="text-zinc-400 hover:text-rose-500 dark:hover:text-rose-400 transition"
 														title="Delete Share Link"

@@ -24,6 +24,7 @@ import {
 	Clock,
 } from 'lucide-react';
 import { OutletContextType } from './_layouts/Workflows.layout';
+import { useConfirm } from '@/context/confirmContext';
 import Breadcrumb from '@/components/layout/Breadcrumb';
 import Container from '@/components/layout/Container';
 import pages from '@/Routes/pages';
@@ -116,6 +117,7 @@ const AppBadge = ({ name }: { name: string }) => (
 const WorkflowsListPage = () => {
 	const { setHeaderLeft } = useOutletContext<OutletContextType>();
 	const navigate = useNavigate();
+	const { confirm } = useConfirm();
 	const [searchParams, setSearchParams] = useSearchParams();
 	const { activeWorkspaceId: fallbackWorkspaceId } = useWorkflowShellStore();
 	const { workspaces, activeWorkspace, activeWorkspaceId, role } = useWorkspaceContext();
@@ -424,6 +426,19 @@ const WorkflowsListPage = () => {
 	const handleDelete = async (id: string, e: React.MouseEvent) => {
 		e.stopPropagation();
 		const wf = workflows.find((w) => w.id === id);
+		const confirmed = await confirm({
+			title: 'Delete Workflow',
+			message: (
+				<>
+					Are you sure you want to delete{' '}
+					<strong className='font-semibold text-zinc-800 dark:text-zinc-200'>
+						{wf ? `"${wf.title}"` : 'this workflow'}
+					</strong>
+					? This action cannot be undone.
+				</>
+			),
+		});
+		if (!confirmed) return;
 		try {
 			await deleteWorkflowMutation.mutateAsync(id);
 			if (wf) triggerToast(`Deleted workflow "${wf.title}"`, 'info');

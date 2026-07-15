@@ -27,6 +27,7 @@ import Container from '@/components/layout/Container';
 import pages from '@/Routes/pages';
 import { notify } from '@/api/core';
 import { useWorkspaceContext } from '@/context/workspaceContext';
+import { useConfirm } from '@/context/confirmContext';
 import {
 	MASKED_CREDENTIAL_VALUE,
 	type ICredential,
@@ -304,6 +305,7 @@ const AppsListPage = () => {
 	}, []);
 
 	const { activeWorkspaceId } = useWorkspaceContext();
+	const { confirm } = useConfirm();
 	const { data: credentialsData, refetch: refetchCredentials } = useCredentials(
 		activeWorkspaceId,
 		{ per_page: 100 },
@@ -1597,6 +1599,13 @@ const AppsListPage = () => {
 								setSelectedCredentialIdForDetail(null);
 							}}
 							onDelete={async (id) => {
+								const confirmed = await confirm({
+									title: 'Disconnect Credential',
+									confirmText: 'Disconnect',
+									message:
+										'Are you sure you want to disconnect this credential? Any node using it will stop working. This action cannot be undone.',
+								});
+								if (!confirmed) return;
 								await deleteCredentialMutation.mutateAsync(id);
 								setIsDetailModalOpen(false);
 								setSelectedCredentialIdForDetail(null);

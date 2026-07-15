@@ -24,6 +24,7 @@ import pages from '@/Routes/pages';
 import Breadcrumb from '@/components/layout/Breadcrumb';
 import Container from '@/components/layout/Container';
 import { useWorkspaceContext } from '@/context/workspaceContext';
+import { useConfirm } from '@/context/confirmContext';
 import {
 	useFolders,
 	useCreateFolder,
@@ -111,6 +112,7 @@ const AppBadge = ({ name }: { name: string }) => (
 const MyWorkspacePage = () => {
 	const { setHeaderLeft } = useOutletContext<OutletContextType>();
 	const navigate = useNavigate();
+	const { confirm } = useConfirm();
 	const {
 		workspaces,
 		isWorkspacesLoading,
@@ -293,9 +295,18 @@ const MyWorkspacePage = () => {
 	};
 
 	const handleDeleteFolder = async (folder: TFolderView) => {
-		const confirmed = window.confirm(
-			`Delete folder "${folder.name}"? Workflows inside it will move back to root level.`,
-		);
+		const confirmed = await confirm({
+			title: 'Delete Folder',
+			message: (
+				<>
+					Are you sure you want to delete{' '}
+					<strong className='font-semibold text-zinc-800 dark:text-zinc-200'>
+						"{folder.name}"
+					</strong>
+					? Workflows inside it will move back to root level.
+				</>
+			),
+		});
 		if (!confirmed) return;
 		await deleteFolderMutation.mutateAsync(folder.id);
 	};
@@ -342,7 +353,18 @@ const MyWorkspacePage = () => {
 
 	const handleDeleteWorkflow = async (workflow: TWorkflowView) => {
 		setActiveMenuId(null);
-		const confirmed = window.confirm(`Delete workflow "${workflow.title}"?`);
+		const confirmed = await confirm({
+			title: 'Delete Workflow',
+			message: (
+				<>
+					Are you sure you want to delete{' '}
+					<strong className='font-semibold text-zinc-800 dark:text-zinc-200'>
+						"{workflow.title}"
+					</strong>
+					? This action cannot be undone.
+				</>
+			),
+		});
 		if (!confirmed) return;
 		await deleteWorkflowMutation.mutateAsync(workflow.id);
 	};

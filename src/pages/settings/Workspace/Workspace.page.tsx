@@ -11,6 +11,7 @@ import {
 	Trash2,
 } from 'lucide-react';
 import { useWorkspaceContext } from '@/context/workspaceContext';
+import { useConfirm } from '@/context/confirmContext';
 import { useUpdateWorkspace, useDeleteWorkspace } from '@/api/modules/workspaces';
 import { primaryBtn, secondaryBtn, dangerBtn } from '@/pages/settings/_shared/buttons';
 
@@ -76,6 +77,7 @@ const SettingsFieldRow = ({
 
 const WorkspacePage = () => {
 	const navigate = useNavigate();
+	const { confirm } = useConfirm();
 	const { activeWorkspaceId, activeWorkspace, role } = useWorkspaceContext();
 
 	const updateWorkspace = useUpdateWorkspace();
@@ -131,9 +133,19 @@ const WorkspacePage = () => {
 
 	const handleDeleteWorkspace = async () => {
 		if (!activeWorkspaceId || !activeWorkspace) return;
-		const confirmed = window.confirm(
-			`Are you sure you want to permanently delete workspace "${activeWorkspace.name}"? This action cannot be undone.`,
-		);
+		const confirmed = await confirm({
+			title: 'Delete Workspace',
+			confirmText: 'Delete Workspace',
+			message: (
+				<>
+					Are you sure you want to permanently delete workspace{' '}
+					<strong className='font-semibold text-zinc-800 dark:text-zinc-200'>
+						"{activeWorkspace.name}"
+					</strong>
+					? This action cannot be undone.
+				</>
+			),
+		});
 		if (!confirmed) return;
 
 		try {
