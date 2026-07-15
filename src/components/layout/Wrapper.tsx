@@ -20,8 +20,8 @@ const Wrapper: FC<IWrapperProps> = (props) => {
 			data-component-name='Wrapper'
 			className={classNames(
 				'flex flex-auto flex-col',
-				'bg-white dark:bg-zinc-950',
-				!borderDisabled && 'border-s-[1rem] border-e-[1rem] border-zinc-100 md:border-s-0 dark:border-zinc-900',
+				'bg-bg-main dark:bg-bg-main',
+				!borderDisabled && 'border-s-[1rem] border-e-[1rem] border-border-main md:border-s-0 dark:border-border-main',
 				'transition-all duration-300 ease-in-out',
 				className,
 				{
@@ -33,14 +33,14 @@ const Wrapper: FC<IWrapperProps> = (props) => {
 			)}
 			{...rest}>
 			{!borderDisabled && (
-				<div className='sticky top-0 z-99 h-full max-h-4 min-h-4 bg-zinc-100 dark:bg-zinc-900'>
+				<div className='sticky top-0 z-99 h-full max-h-4 min-h-4 bg-bg-main dark:bg-bg-main'>
 					<div className='absolute start-0 top-[calc(1rem+1px)] h-4 w-4 corner-top-left rtl:top-4 rtl:corner-top-right' />
 					<div className='absolute end-px top-4 h-4 w-4 corner-top-right rtl:-left-px rtl:corner-top-left' />
 				</div>
 			)}
 			{children}
 			{!borderDisabled && (
-				<div className='sticky bottom-0 z-99 h-full max-h-4 min-h-4 bg-zinc-100 dark:bg-zinc-900'>
+				<div className='sticky bottom-0 z-99 h-full max-h-4 min-h-4 bg-bg-main dark:bg-bg-main'>
 					<div className='absolute start-px -top-4 h-4 w-4 corner-bottom-left rtl:start-0 rtl:corner-bottom-right' />
 					<div className='absolute end-0 -top-[calc(1rem+1px)] h-4 w-4 corner-bottom-right rtl:-top-4 rtl:corner-bottom-left' />
 				</div>

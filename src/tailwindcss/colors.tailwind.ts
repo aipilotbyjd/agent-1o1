@@ -43,19 +43,7 @@ interface DefaultColors {
 }
 
 interface AllColor extends DefaultColors {
-	primary: {
-		50: '#FAF5FF';
-		100: '#F3E8FF';
-		200: '#E9D5FF';
-		300: '#D8B4FE';
-		400: '#C084FC';
-		500: '#A855F7';
-		600: '#9333EA';
-		700: '#7E22CE';
-		800: '#6B21A8';
-		900: '#581C87';
-		950: '#3B0764';
-	};
+	primary: TColorItem;
 	secondary: {
 		50: '#ECFDF5';
 		100: '#D1FAE5';
@@ -364,17 +352,17 @@ const colors: AllColor = {
 		950: getComputedStyle(document.documentElement).getPropertyValue('--color-rose-950'),
 	},
 	primary: {
-		50: '#FAF5FF',
-		100: '#F3E8FF',
-		200: '#E9D5FF',
-		300: '#D8B4FE',
-		400: '#C084FC',
-		500: '#A855F7',
-		600: '#9333EA',
-		700: '#7E22CE',
-		800: '#6B21A8',
-		900: '#581C87',
-		950: '#3B0764',
+		50: getComputedStyle(document.documentElement).getPropertyValue('--color-primary-50'),
+		100: getComputedStyle(document.documentElement).getPropertyValue('--color-primary-100'),
+		200: getComputedStyle(document.documentElement).getPropertyValue('--color-primary-200'),
+		300: getComputedStyle(document.documentElement).getPropertyValue('--color-primary-300'),
+		400: getComputedStyle(document.documentElement).getPropertyValue('--color-primary-400'),
+		500: getComputedStyle(document.documentElement).getPropertyValue('--color-primary-500'),
+		600: getComputedStyle(document.documentElement).getPropertyValue('--color-primary-600'),
+		700: getComputedStyle(document.documentElement).getPropertyValue('--color-primary-700'),
+		800: getComputedStyle(document.documentElement).getPropertyValue('--color-primary-800'),
+		900: getComputedStyle(document.documentElement).getPropertyValue('--color-primary-900'),
+		950: getComputedStyle(document.documentElement).getPropertyValue('--color-primary-950'),
 	},
 	secondary: {
 		50: '#ECFDF5',

@@ -80,11 +80,11 @@ const stats = [
 		value: '8',
 		sub: '4 currently active',
 		icon: GitMerge,
-		iconBg: 'bg-primary-400/5 border-primary-500/15 text-primary-600 dark:bg-primary-400/10 dark:text-primary-400',
+		iconBg: 'bg-primary-50 border border-primary-200 text-primary-500 dark:bg-primary-400/10 dark:border-primary-400/20 dark:text-primary-400',
 		sparkPath: 'M 0 22 Q 15 8 30 18 T 60 5 T 90 12 T 100 8',
-		sparkColor: '#7c3aed',
+		sparkColor: '#CFF54A',
 		glowClass:
-			'hover:border-primary-500/40 hover:shadow-[0_8px_30px_rgba(124,58,237,0.08)] dark:hover:border-primary-500/30',
+			'hover:border-primary-400/50 hover:shadow-[0_8px_20px_var(--color-primary-50)] dark:hover:border-primary-400/30',
 		endX: 100,
 		endY: 8,
 	},
@@ -93,11 +93,11 @@ const stats = [
 		value: '3',
 		sub: 'Running autonomously',
 		icon: Bot,
-		iconBg: 'bg-blue-500/5 border-blue-500/15 text-blue-600 dark:bg-blue-500/10 dark:text-blue-400',
+		iconBg: 'bg-primary-50 border border-primary-200 text-primary-500 dark:bg-primary-400/10 dark:border-primary-400/20 dark:text-primary-400',
 		sparkPath: 'M 0 10 Q 20 22 40 10 T 70 18 T 90 5 T 100 8',
-		sparkColor: '#2563eb',
+		sparkColor: '#CFF54A',
 		glowClass:
-			'hover:border-blue-500/40 hover:shadow-[0_8px_30px_rgba(37,99,235,0.08)] dark:hover:border-blue-500/30',
+			'hover:border-primary-400/50 hover:shadow-[0_8px_20px_var(--color-primary-50)] dark:hover:border-primary-400/30',
 		endX: 100,
 		endY: 8,
 	},
@@ -106,11 +106,11 @@ const stats = [
 		value: '8',
 		sub: 'OAuth credentials active',
 		icon: LayoutGrid,
-		iconBg: 'bg-amber-500/5 border-amber-500/15 text-amber-600 dark:bg-amber-500/10 dark:text-amber-505',
+		iconBg: 'bg-primary-50 border border-primary-200 text-primary-500 dark:bg-primary-400/10 dark:border-primary-400/20 dark:text-primary-400',
 		sparkPath: 'M 0 20 Q 20 8 40 22 T 70 8 T 95 18 T 100 15',
-		sparkColor: '#d97706',
+		sparkColor: '#CFF54A',
 		glowClass:
-			'hover:border-amber-500/40 hover:shadow-[0_8px_30px_rgba(217,119,6,0.08)] dark:hover:border-amber-500/30',
+			'hover:border-primary-400/50 hover:shadow-[0_8px_20px_var(--color-primary-50)] dark:hover:border-primary-400/30',
 		endX: 100,
 		endY: 15,
 	},
@@ -119,11 +119,11 @@ const stats = [
 		value: '1,280',
 		sub: '14% spike today',
 		icon: Activity,
-		iconBg: 'bg-teal-500/5 border-teal-500/15 text-teal-600 dark:bg-teal-500/10 dark:text-teal-450',
+		iconBg: 'bg-primary-50 border border-primary-200 text-primary-500 dark:bg-primary-400/10 dark:border-primary-400/20 dark:text-primary-400',
 		sparkPath: 'M 0 28 Q 15 15 35 25 T 65 10 T 90 4 T 100 2',
-		sparkColor: '#0d9488',
+		sparkColor: '#CFF54A',
 		glowClass:
-			'hover:border-teal-500/40 hover:shadow-[0_8px_30px_rgba(13,148,136,0.08)] dark:hover:border-teal-500/30',
+			'hover:border-primary-400/50 hover:shadow-[0_8px_20px_var(--color-primary-50)] dark:hover:border-primary-400/30',
 		endX: 100,
 		endY: 2,
 	},
@@ -165,34 +165,33 @@ const quickActions = [
 		label: 'Create Workflow',
 		icon: Plus,
 		description: 'Build a new automation',
-		color: 'border-primary-500/20 bg-white/70 hover:border-primary-500/50 hover:bg-primary-500/5 dark:border-zinc-800 dark:bg-[#11131c]/60 dark:hover:border-primary-500/30',
-		hoverText: 'group-hover:text-primary-600 dark:group-hover:text-primary-400',
-		iconStyle: 'bg-primary-400/10 text-primary-600 dark:bg-primary-400/20 dark:text-primary-400',
+		color: 'border-border-main bg-bg-card hover:border-primary-400 hover:bg-primary-50 dark:border-border-main dark:bg-bg-card dark:hover:border-primary-400/30',
+		hoverText: 'group-hover:text-primary-500 dark:group-hover:text-primary-400',
+		iconStyle: 'bg-primary-50 text-primary-500 border border-primary-100 dark:bg-primary-400/10 dark:text-primary-400 dark:border-primary-400/20',
 	},
 	{
 		label: 'Add Agent',
 		icon: Bot,
 		description: 'Deploy a new AI agent',
-		color: 'border-blue-500/20 bg-white/70 hover:border-blue-500/50 hover:bg-blue-500/5 dark:border-zinc-800 dark:bg-[#11131c]/60 dark:hover:border-blue-500/30',
-		hoverText: 'group-hover:text-blue-600 dark:group-hover:text-blue-400',
-		iconStyle: 'bg-blue-500/10 text-blue-600 dark:bg-blue-500/20 dark:text-blue-400',
+		color: 'border-border-main bg-bg-card hover:border-primary-400 hover:bg-primary-50 dark:border-border-main dark:bg-bg-card dark:hover:border-primary-400/30',
+		hoverText: 'group-hover:text-primary-500 dark:group-hover:text-primary-400',
+		iconStyle: 'bg-primary-50 text-primary-500 border border-primary-100 dark:bg-primary-400/10 dark:text-primary-400 dark:border-primary-400/20',
 	},
 	{
 		label: 'Connect App',
 		icon: LayoutGrid,
 		description: 'Integrate a new application',
-		color: 'border-amber-500/20 bg-white/70 hover:border-amber-500/50 hover:bg-amber-500/5 dark:border-zinc-800 dark:bg-[#11131c]/60 dark:hover:border-amber-500/30',
-		hoverText: 'group-hover:text-amber-600 dark:group-hover:text-amber-400',
-		iconStyle: 'bg-amber-500/10 text-amber-600 dark:bg-amber-500/20 dark:text-amber-500',
+		color: 'border-border-main bg-bg-card hover:border-primary-400 hover:bg-primary-50 dark:border-border-main dark:bg-bg-card dark:hover:border-primary-400/30',
+		hoverText: 'group-hover:text-primary-500 dark:group-hover:text-primary-400',
+		iconStyle: 'bg-primary-50 text-primary-500 border border-primary-100 dark:bg-primary-400/10 dark:text-primary-400 dark:border-primary-400/20',
 	},
 	{
 		label: 'Browse Templates',
 		icon: FileText,
 		description: 'Explore pre-built workflows',
-		color: 'border-emerald-500/20 bg-white/70 hover:border-emerald-500/50 hover:bg-emerald-500/5 dark:border-zinc-800 dark:bg-[#11131c]/60 dark:hover:border-emerald-500/30',
-		hoverText: 'group-hover:text-emerald-600 dark:group-hover:text-emerald-400',
-		iconStyle:
-			'bg-emerald-500/10 text-emerald-600 dark:bg-emerald-500/20 dark:text-emerald-400',
+		color: 'border-border-main bg-bg-card hover:border-primary-400 hover:bg-primary-50 dark:border-border-main dark:bg-bg-card dark:hover:border-primary-400/30',
+		hoverText: 'group-hover:text-primary-500 dark:group-hover:text-primary-400',
+		iconStyle: 'bg-primary-50 text-primary-500 border border-primary-100 dark:bg-primary-400/10 dark:text-primary-400 dark:border-primary-400/20',
 	},
 ];
 
@@ -262,12 +261,12 @@ const DashboardPage = () => {
 	}, []);
 
 	return (
-		<Container className='relative overflow-x-hidden overflow-y-auto !bg-[#fafbfe] !px-0 !pt-0 font-sans dark:!bg-[#070911]'>
+		<Container className='relative overflow-x-hidden overflow-y-auto !bg-bg-main !px-0 !pt-0 font-sans dark:!bg-bg-main'>
 			{/* Grid Background Pattern */}
-			<div className='pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(#e2e8f0_1.5px,transparent_1.5px)] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] [background-size:24px_24px] opacity-70 dark:bg-[radial-gradient(#161c2c_1.5px,transparent_1.5px)] dark:opacity-85' />
+			<div className='pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(var(--color-border-main)_1.5px,transparent_1.5px)] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] [background-size:24px_24px] opacity-70 dark:bg-[radial-gradient(var(--color-border-main)_1.5px,transparent_1.5px)]' />
 
-			<div className='pointer-events-none absolute top-0 right-10 -z-10 h-[500px] w-[500px] rounded-full bg-gradient-to-tr from-primary-400/8 to-blue-500/8 blur-[120px]' />
-			<div className='pointer-events-none absolute bottom-10 left-1/4 -z-10 h-[400px] w-[400px] rounded-full bg-gradient-to-br from-primary-400/4 to-cyan-500/4 blur-[100px]' />
+			<div className='pointer-events-none absolute top-0 right-10 -z-10 h-[500px] w-[500px] rounded-full bg-gradient-to-tr from-primary-400/4 to-transparent blur-[120px]' />
+			<div className='pointer-events-none absolute bottom-10 left-1/4 -z-10 h-[400px] w-[400px] rounded-full bg-gradient-to-br from-primary-400/4 to-transparent blur-[100px]' />
 
 			<div className='mx-auto w-full max-w-7xl space-y-6 p-6 md:p-8'>
 				{/* Welcome Banner */}
@@ -456,7 +455,7 @@ const DashboardPage = () => {
 							animate={{ opacity: 1, y: 0 }}
 							exit={{ opacity: 0, y: -10, height: 0 }}
 							transition={{ duration: 0.3 }}
-							className='overflow-hidden rounded-3xl border border-primary-100 bg-white p-5 shadow-[0_4px_25px_rgba(124,58,237,0.03)] dark:border-zinc-800/80 dark:bg-[#10131e]/30'>
+							className='overflow-hidden rounded-3xl border border-border-main bg-bg-card p-5 shadow-sm dark:border-border-main dark:bg-bg-card'>
 							<div className='flex flex-wrap items-start justify-between gap-4'>
 								<div>
 									<p className='text-[10px] font-black tracking-[0.18em] text-primary-600 uppercase dark:text-primary-400'>
@@ -489,7 +488,7 @@ const DashboardPage = () => {
 									style={{
 										width: `${Math.min(100, (onboarding.progress / Math.max(onboarding.total, 1)) * 100)}%`,
 									}}
-								/>
+									/>
 							</div>
 
 							<div className='mt-4 grid gap-3 md:grid-cols-2 lg:grid-cols-3'>
@@ -499,7 +498,7 @@ const DashboardPage = () => {
 
 									// Dynamic card classes
 									let cardBorder =
-										'border-slate-200/80 bg-white dark:border-zinc-800/40 dark:bg-[#10131e]/20';
+										'border-border-main bg-bg-card dark:border-border-main dark:bg-bg-card';
 									let iconStyle =
 										'bg-slate-50 text-slate-400 dark:bg-zinc-900 dark:text-zinc-600';
 									let statusIcon = (
@@ -509,7 +508,7 @@ const DashboardPage = () => {
 									if (item.done) {
 										if (isNext) {
 											cardBorder =
-												'border-primary-400 bg-white shadow-md shadow-primary-500/20/[0.02] dark:border-primary-500/40 dark:bg-[#11131c]';
+												'border-primary-400 bg-bg-card shadow-sm dark:border-primary-400 dark:bg-bg-card';
 											iconStyle =
 												'bg-primary-100/60 text-primary-600 dark:bg-primary-950/40 dark:text-primary-400';
 											statusIcon = (
@@ -519,11 +518,11 @@ const DashboardPage = () => {
 											);
 										} else {
 											cardBorder =
-												'border-slate-200/80 bg-white dark:border-zinc-800/40 dark:bg-[#10131e]/20';
+												'border-border-main bg-bg-card dark:border-border-main dark:bg-bg-card';
 											iconStyle =
-												'bg-emerald-100/50 text-emerald-600 dark:bg-emerald-950/20 dark:text-emerald-400';
+												'bg-primary-100/50 text-primary-600 dark:bg-primary-950/20 dark:text-primary-400';
 											statusIcon = (
-												<div className='flex h-4.5 w-4.5 items-center justify-center rounded-full bg-emerald-500 text-white'>
+												<div className='flex h-4.5 w-4.5 items-center justify-center rounded-full bg-primary-400 text-primary-950'>
 													<Check className='h-3 w-3 stroke-[3]' />
 												</div>
 											);
@@ -531,7 +530,7 @@ const DashboardPage = () => {
 									} else {
 										if (isNext) {
 											cardBorder =
-												'border-primary-400 bg-white shadow-md shadow-primary-500/20/[0.02] dark:border-primary-500/40 dark:bg-[#11131c]';
+												'border-primary-400 bg-bg-card shadow-sm dark:border-primary-400 dark:bg-bg-card';
 											iconStyle =
 												'bg-primary-100/60 text-primary-600 dark:bg-primary-950/40 dark:text-primary-400';
 											statusIcon = (
@@ -586,7 +585,7 @@ const DashboardPage = () => {
 								animate={{ opacity: 1, y: 0 }}
 								transition={{ delay: i * 0.07, duration: 0.3 }}
 								whileHover={{ y: -3 }}
-								className={`group relative flex min-h-[105px] flex-col justify-between overflow-hidden rounded-3xl border border-slate-200/50 bg-white p-5 shadow-[0_4px_25px_rgba(0,0,0,0.01)] backdrop-blur-xl transition-all duration-300 dark:border-zinc-800/80 dark:bg-[#10131e]/50 ${stat.glowClass}`}>
+								className={`group relative flex min-h-[105px] flex-col justify-between overflow-hidden rounded-3xl border border-border-main bg-bg-card p-5 shadow-sm transition-all duration-300 dark:border-border-main dark:bg-bg-card ${stat.glowClass}`}>
 								{/* Sparkline element */}
 								<div className='pointer-events-none absolute right-0 bottom-0 left-0 h-9 w-full overflow-hidden opacity-90'>
 									<svg
@@ -696,16 +695,16 @@ const DashboardPage = () => {
 
 				<div className='grid grid-cols-1 gap-6 lg:grid-cols-3'>
 					{/* Recent Workflows */}
-					<div className='overflow-hidden rounded-3xl border border-slate-200/50 bg-white shadow-[0_8px_30px_rgb(0,0,0,0.015)] lg:col-span-2 dark:border-zinc-800/40 dark:bg-[#10131e]/30'>
-						<div className='flex items-center justify-between border-b border-slate-100/50 px-5 py-4.5 dark:border-zinc-800/50'>
-							<span className='text-xs font-black tracking-widest text-slate-700 uppercase dark:text-zinc-200'>
+					<div className='overflow-hidden rounded-3xl border border-border-main bg-bg-card shadow-sm lg:col-span-2 dark:border-border-main dark:bg-bg-card'>
+						<div className='flex items-center justify-between border-b border-border-main px-5 py-4.5 dark:border-border-main'>
+							<span className='text-xs font-black tracking-widest text-text-main uppercase dark:text-text-main'>
 								RECENT WORKFLOWS
 							</span>
 							<button className='flex cursor-pointer items-center gap-1 text-[11px] font-bold text-slate-500 transition-colors hover:text-slate-800 dark:text-zinc-400 dark:hover:text-white'>
 								View all <ArrowRight size={11} />
 							</button>
 						</div>
-						<div className='divide-y divide-slate-100/40 dark:divide-zinc-800/30'>
+						<div className='divide-y divide-border-main dark:divide-border-main'>
 							{recentWorkflows.map((wf) => (
 								<div
 									key={wf.id}
@@ -716,14 +715,14 @@ const DashboardPage = () => {
 									}
 									className='group flex cursor-pointer items-center justify-between px-5 py-4 transition-all duration-200 hover:bg-slate-50/50 dark:hover:bg-zinc-800/15'>
 									<div className='flex items-center gap-3.5'>
-										<div className='text-primary-600 flex h-10 w-10 items-center justify-center rounded-2xl border border-primary-100 bg-primary-50/30 transition-all duration-300 group-hover:scale-105 group-hover:rotate-3 dark:border-primary-500/10 dark:bg-primary-400/10 dark:text-primary-400'>
+										<div className='text-primary-500 flex h-10 w-10 items-center justify-center rounded-2xl border border-primary-500/20 bg-primary-400/10 transition-all duration-300 group-hover:scale-105 group-hover:rotate-3 dark:border-primary-500/10 dark:bg-primary-400/10 dark:text-primary-400'>
 											<GitMerge size={16} />
 										</div>
 										<div>
-											<p className='text-xs font-bold text-slate-800 transition-colors group-hover:text-primary-600 dark:text-zinc-200 dark:group-hover:text-primary-400'>
+											<p className='text-xs font-bold text-text-main transition-colors group-hover:text-primary-500 dark:text-text-main dark:group-hover:text-primary-400'>
 												{wf.title}
 											</p>
-											<p className='mt-1 flex items-center gap-1.5 text-[10px] font-semibold text-slate-400 dark:text-zinc-500'>
+											<p className='mt-1 flex items-center gap-1.5 text-[10px] font-semibold text-text-muted dark:text-text-muted'>
 												<Clock size={10} /> {wf.lastRun}
 											</p>
 										</div>
@@ -731,11 +730,11 @@ const DashboardPage = () => {
 									<div
 										className='flex items-center gap-3.5'
 										onClick={(e) => e.stopPropagation()}>
-										<span className='rounded border border-emerald-500/10 bg-emerald-500/5 px-2 py-0.5 text-[10px] font-extrabold text-emerald-600 dark:text-emerald-400'>
+										<span className='rounded border border-primary-500/20 bg-primary-400/10 px-2 py-0.5 text-[10px] font-extrabold text-primary-600 dark:text-primary-400'>
 											{wf.successRate}% Success
 										</span>
-										<span className='bg-emerald-550/5 text-emerald-650 flex items-center gap-1 rounded-full border border-emerald-500/20 px-2.5 py-0.5 text-[9px] font-black tracking-wider uppercase dark:bg-emerald-500/10 dark:text-emerald-400'>
-											<span className='h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-500' />
+										<span className='bg-primary-400/10 text-primary-600 flex items-center gap-1 rounded-full border border-primary-500/20 px-2.5 py-0.5 text-[9px] font-black tracking-wider uppercase dark:bg-primary-400/10 dark:text-primary-400'>
+											<span className='h-1.5 w-1.5 animate-pulse rounded-full bg-primary-500' />
 											{wf.status}
 										</span>
 										<button
@@ -759,9 +758,9 @@ const DashboardPage = () => {
 					</div>
 
 					{/* Quick Actions */}
-					<div className='overflow-hidden rounded-3xl border border-slate-200/50 bg-white shadow-[0_8px_30px_rgb(0,0,0,0.015)] dark:border-zinc-800/40 dark:bg-[#10131e]/30'>
-						<div className='flex items-center gap-2 border-b border-slate-100/50 px-5 py-4.5 dark:border-zinc-800/50'>
-							<span className='text-xs font-black tracking-widest text-slate-700 uppercase dark:text-zinc-200'>
+					<div className='overflow-hidden rounded-3xl border border-border-main bg-bg-card shadow-sm dark:border-border-main dark:bg-bg-card'>
+						<div className='flex items-center gap-2 border-b border-border-main px-5 py-4.5 dark:border-border-main'>
+							<span className='text-xs font-black tracking-widest text-text-main uppercase dark:text-text-main'>
 								QUICK ACTIONS
 							</span>
 						</div>

@@ -53,7 +53,7 @@ const Button = forwardRef<HTMLButtonElement, IButtonProps>((props, ref) => {
 	const btnVariants: Record<TButtonVariants, Record<TColors, string>> = {
 		solid: {
 			primary:
-				'text-zinc-800 border-primary-500 bg-primary-400 hover:border-primary-600 hover:bg-primary-500 active:border-primary-600 active:bg-primary-500 data-active:border-primary-600 data-active:bg-primary-500',
+				'text-[#111111] border-none bg-primary-400 hover:bg-primary-500 active:bg-primary-600 shadow-[0_10px_30px_rgba(207,245,74,0.22)]',
 			secondary:
 				'border-secondary-500 bg-secondary-500 hover:border-secondary-600 hover:bg-secondary-600 active:border-secondary-600 active:bg-secondary-600 data-active:border-secondary-600 data-active:bg-secondary-600 text-zinc-200',
 			blue: 'border-blue-500 bg-blue-500 hover:border-blue-600 hover:bg-blue-600 active:border-blue-600 active:bg-blue-600 data-active:border-blue-600 data-active:bg-blue-600 text-zinc-200',
@@ -64,7 +64,8 @@ const Button = forwardRef<HTMLButtonElement, IButtonProps>((props, ref) => {
 			emerald:
 				'border-emerald-500 bg-emerald-500 hover:border-emerald-600 hover:bg-emerald-600 active:border-emerald-600 active:bg-emerald-600 data-active:border-emerald-600 data-active:bg-emerald-600 dark:text-zinc-800',
 			sky: 'border-sky-500 bg-sky-500 hover:border-sky-600 hover:bg-sky-600 active:border-sky-600 active:bg-sky-600 data-active:border-sky-600 data-active:bg-sky-600 text-zinc-200',
-			violet: 'border-primary-500 bg-primary-400 hover:border-primary-600 hover:bg-primary-500 active:border-primary-600 active:bg-primary-500 data-active:border-primary-600 data-active:bg-primary-500 text-zinc-200',
+			violet:
+				'text-[#111111] border-none bg-primary-400 hover:bg-primary-500 active:bg-primary-600 shadow-[0_10px_30px_rgba(207,245,74,0.22)]',
 		},
 		outline: {
 			primary:

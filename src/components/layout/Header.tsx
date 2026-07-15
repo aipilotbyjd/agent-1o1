@@ -80,9 +80,9 @@ const Header: FC<IHeaderProps> = (props) => {
 				ref={divRef}
 				data-component-name='Header'
 				className={classNames(
-					'sticky top-6 z-30 mx-2 mt-2 px-3 py-3 sm:px-5 sm:py-4',
-					'flex flex-wrap items-center justify-center gap-y-2 rounded-xl shadow-md/5',
-					'bg-zinc-100/50 backdrop-blur-md dark:bg-zinc-900/75',
+					'sticky top-0 z-30 px-3 py-3 sm:px-5 sm:py-4',
+					'flex flex-wrap items-center justify-center gap-y-2 border-b border-border-main',
+					'bg-bg-sidebar/90 backdrop-blur-md dark:bg-bg-sidebar/90',
 					className,
 				)}
 				{...rest}>

@@ -410,7 +410,7 @@ const MyWorkspacePage = () => {
 					);
 				}
 			}}
-			className='group relative flex min-h-[220px] cursor-pointer flex-col justify-between rounded-2xl border border-slate-200/80 bg-white/70 p-5.5 shadow-2xs backdrop-blur-md transition-all duration-300 hover:-translate-y-1.5 hover:border-primary-500/40 hover:bg-white hover:shadow-md dark:border-zinc-800/80 dark:bg-zinc-900/70 dark:hover:border-primary-500/30 dark:hover:bg-zinc-900/90'>
+			className='group relative flex min-h-[220px] cursor-pointer flex-col justify-between rounded-2xl border border-slate-200/80 bg-white/70 p-5.5 shadow-2xs backdrop-blur-md transition-all duration-300 hover:-translate-y-1.5 hover:border-primary-500/40 hover:bg-white hover:shadow-md dark:border-border-main dark:bg-bg-card dark:hover:border-primary-500/30 dark:hover:bg-zinc-950/20'>
 			{/* Bottom interactive gradient line */}
 			<div className='absolute right-0 bottom-0 left-0 h-1.5 rounded-b-2xl bg-gradient-to-r from-primary-400 to-primary-400 opacity-0 transition-opacity duration-300 group-hover:opacity-10' />
 
@@ -492,7 +492,7 @@ const MyWorkspacePage = () => {
 										animate={{ opacity: 1, scale: 1, y: 0 }}
 										exit={{ opacity: 0, scale: 0.95, y: 5 }}
 										onClick={(event) => event.stopPropagation()}
-										className='absolute right-0 z-50 mt-2 w-48 rounded-xl border border-slate-200/80 bg-white/95 p-1.5 text-left shadow-2xl backdrop-blur-md dark:border-zinc-800/80 dark:bg-zinc-900/95'>
+										className='absolute right-0 z-50 mt-2 w-48 rounded-xl border border-slate-200/80 bg-white/95 p-1.5 text-left shadow-2xl backdrop-blur-md dark:border-border-main dark:bg-bg-card'>
 										<button
 											type='button'
 											onClick={() => handleRunWorkflow(workflow)}
@@ -582,7 +582,7 @@ const MyWorkspacePage = () => {
 			<div className='pointer-events-none absolute right-[-10%] bottom-[-10%] h-[35rem] w-[35rem] rounded-full bg-primary-200/20 blur-[120px] dark:bg-primary-900/5' />
 
 			<div className='relative z-10 mx-auto w-full max-w-7xl space-y-6 p-4 sm:p-6 md:p-8'>
-				<header className='relative mt-4 sm:mt-0 flex flex-col justify-between gap-6 overflow-hidden rounded-3xl border border-slate-200/80 bg-white/70 p-6 shadow-sm backdrop-blur-md lg:flex-row lg:items-center dark:border-zinc-800/80 dark:bg-zinc-900/40'>
+				<header className='relative mt-4 sm:mt-0 flex flex-col justify-between gap-6 overflow-hidden rounded-3xl border border-border-main bg-bg-card p-6 shadow-sm transition-all duration-300 lg:flex-row lg:items-center dark:border-border-main dark:bg-bg-card'>
 					{/* Banner background glow effect */}
 					<div className='absolute -top-24 -right-24 h-48 w-48 rounded-full bg-primary-400/10 blur-3xl' />
 					<div className='absolute -bottom-24 -left-24 h-48 w-48 rounded-full bg-primary-400/10 blur-3xl' />
@@ -659,8 +659,8 @@ const MyWorkspacePage = () => {
 							whileTap={{ scale: 0.98 }}
 							onClick={openCreateFolder}
 							disabled={!hasWorkspace}
-							className='flex h-10 cursor-pointer items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 text-xs font-bold text-slate-700 shadow-sm transition-all hover:border-slate-300 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-60 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-200 dark:hover:border-zinc-700/80 dark:hover:bg-zinc-800/80'>
-							<FolderPlus size={14} className='text-amber-500' />
+							className='flex h-10 cursor-pointer items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 text-xs font-bold text-slate-700 shadow-sm transition-all hover:border-slate-300 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-60 dark:border-border-main dark:bg-bg-card dark:text-white dark:hover:bg-zinc-950/20'>
+							<FolderPlus size={14} className='text-amber-500 dark:text-[#CFF54A]' />
 							New Folder
 						</motion.button>
 						<motion.button
@@ -731,7 +731,7 @@ const MyWorkspacePage = () => {
 								key={stat.label}
 								whileHover={{ y: -6, scale: 1.02 }}
 								transition={{ type: 'spring', stiffness: 400, damping: 25 }}
-								className={`relative flex items-center gap-4 overflow-hidden rounded-2xl border border-slate-200/80 bg-white/70 p-5 shadow-xs backdrop-blur-md transition-all duration-300 dark:border-zinc-800/80 dark:bg-zinc-900/60 ${stat.borderColor} ${stat.shadowColor} group hover:shadow-md`}>
+								className={`relative flex items-center gap-4 overflow-hidden rounded-2xl border border-border-main bg-bg-card p-5 shadow-xs transition-all duration-300 dark:border-border-main dark:bg-bg-card ${stat.borderColor} ${stat.shadowColor} group hover:shadow-md`}>
 								{/* Hover Card Glow Overlay */}
 								<div
 									className={`absolute inset-0 -z-10 bg-gradient-to-br ${stat.accentColor} opacity-0 transition-opacity duration-300 group-hover:opacity-[0.02] dark:group-hover:opacity-[0.04]`}
@@ -752,7 +752,7 @@ const MyWorkspacePage = () => {
 								</div>
 
 								<div>
-									<div className='text-slate-455 text-[10px] font-black tracking-wider uppercase dark:text-zinc-500'>
+									<div className='text-slate-455 text-[10px] font-black tracking-wider uppercase dark:text-white'>
 										{stat.label}
 									</div>
 									<div className='mt-0.5 text-3xl font-black tracking-tight text-slate-900 dark:text-white'>
@@ -768,7 +768,7 @@ const MyWorkspacePage = () => {
 				</section>
 
 				<section className='flex flex-col gap-3 border-t border-slate-200/60 pt-5 lg:flex-row lg:items-center lg:justify-between dark:border-zinc-800/80'>
-					<div className='relative flex items-center rounded-xl border border-slate-200/60 bg-slate-100/60 p-1.5 shadow-2xs backdrop-blur-xs dark:border-zinc-800/60 dark:bg-zinc-900/60'>
+					<div className='relative flex items-center rounded-xl border border-slate-200/60 bg-slate-100/60 p-1.5 shadow-2xs backdrop-blur-xs dark:border-border-main dark:bg-bg-card'>
 						<button
 							type='button'
 							onClick={() => setShowFavoritesOnly(false)}
@@ -776,7 +776,7 @@ const MyWorkspacePage = () => {
 							{!showFavoritesOnly && (
 								<motion.div
 									layoutId='activeTabBackground'
-									className='absolute inset-0 z-[-1] rounded-lg border border-slate-200/40 bg-white dark:border-zinc-700/30 dark:bg-zinc-800'
+									className='absolute inset-0 z-[-1] rounded-lg border border-slate-200/40 bg-white dark:border-border-main dark:bg-zinc-950/40'
 									transition={{ type: 'spring', stiffness: 380, damping: 30 }}
 								/>
 							)}
@@ -789,7 +789,7 @@ const MyWorkspacePage = () => {
 							{showFavoritesOnly && (
 								<motion.div
 									layoutId='activeTabBackground'
-									className='absolute inset-0 z-[-1] rounded-lg border border-slate-200/40 bg-white dark:border-zinc-700/30 dark:bg-zinc-800'
+									className='absolute inset-0 z-[-1] rounded-lg border border-slate-200/40 bg-white dark:border-border-main dark:bg-zinc-950/40'
 									transition={{ type: 'spring', stiffness: 380, damping: 30 }}
 								/>
 							)}
@@ -804,7 +804,7 @@ const MyWorkspacePage = () => {
 							value={searchQuery}
 							onChange={(event) => setSearchQuery(event.target.value)}
 							placeholder='Search workflows by title or description...'
-							className='dark:placeholder-zinc-550 h-10 w-full rounded-xl border border-slate-200 bg-white pr-9 pl-10 text-xs font-semibold text-slate-900 placeholder-slate-400 shadow-2xs transition-all outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-500/10 dark:border-zinc-800 dark:bg-zinc-900 dark:text-white'
+							className='dark:placeholder:text-zinc-400 h-10 w-full rounded-xl border border-slate-200 bg-white pr-9 pl-10 text-xs font-semibold text-slate-950 placeholder-slate-400 shadow-2xs transition-all outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-500/10 dark:border-border-main dark:bg-bg-card dark:text-white'
 						/>
 						{searchQuery && (
 							<button
@@ -882,7 +882,7 @@ const MyWorkspacePage = () => {
 											</span>
 										</div>
 									) : (
-										<div className='group/folder relative flex items-center overflow-hidden rounded-2xl border border-slate-200/80 bg-white/70 shadow-2xs backdrop-blur-md transition-all duration-300 hover:border-primary-500/25 hover:bg-white dark:border-zinc-800/80 dark:bg-zinc-900/60 dark:hover:border-primary-500/20 dark:hover:bg-zinc-900/80'>
+										<div className='group/folder relative flex items-center overflow-hidden rounded-2xl border border-border-main bg-bg-card shadow-2xs transition-all duration-300 hover:border-primary-500/25 hover:bg-white dark:border-border-main dark:bg-bg-card dark:hover:border-primary-500/20 dark:hover:bg-zinc-950/20'>
 											<div
 												style={{ backgroundColor: folder.color }}
 												className='absolute top-0 bottom-0 left-0 w-1.5 opacity-85'

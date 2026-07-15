@@ -14,31 +14,121 @@ layer(base);
 		'Urbanist', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
 		'Segoe UI Symbol', 'Noto Color Emoji';
 
-	--color-primary-50: #fbffe6;
-	--color-primary-100: #f5ffc6;
-	--color-primary-200: #efff9e;
-	--color-primary-300: #e9ff6e;
-	--color-primary-400: #e3ff3b;
-	--color-primary-500: #c8e600;
-	--color-primary-600: #a3bb00;
-	--color-primary-700: #7e9000;
-	--color-primary-800: #64720a;
-	--color-primary-900: #545f12;
-	--color-primary-950: #2e3500;
+	--color-primary-50: var(--primary-50);
+	--color-primary-100: var(--primary-100);
+	--color-primary-200: var(--primary-200);
+	--color-primary-300: var(--primary-300);
+	--color-primary-400: var(--primary-400);
+	--color-primary-500: var(--primary-500);
+	--color-primary-600: var(--primary-600);
+	--color-primary-700: var(--primary-700);
+	--color-primary-800: var(--primary-800);
+	--color-primary-900: var(--primary-900);
+	--color-primary-950: var(--primary-950);
 	
-	--color-primary-foreground: #2e3500;
+	--color-primary-foreground: var(--primary-foreground);
 
-	--color-secondary-50: #ecfdf5;
-	--color-secondary-100: #d1fae5;
-	--color-secondary-200: #a7f3d0;
-	--color-secondary-300: #6ee7b7;
-	--color-secondary-400: #34d399;
-	--color-secondary-500: #10b981;
-	--color-secondary-600: #059669;
-	--color-secondary-700: #047857;
-	--color-secondary-800: #065f46;
-	--color-secondary-900: #064e3b;
-	--color-secondary-950: #022c22;
+	--color-zinc-100: var(--bg-base);
+	--color-zinc-200: var(--border-base);
+	--color-zinc-800: var(--text-primary);
+	--color-zinc-900: var(--text-primary);
+	--color-zinc-500: var(--text-secondary);
+	--color-zinc-600: var(--text-secondary);
+
+	--color-slate-100: var(--bg-base);
+	--color-slate-200: var(--border-base);
+	--color-slate-800: var(--text-primary);
+	--color-slate-900: var(--text-primary);
+	--color-slate-500: var(--text-secondary);
+	--color-slate-600: var(--text-secondary);
+
+	--color-bg-main: var(--bg-main);
+	--color-bg-sidebar: var(--bg-sidebar);
+	--color-bg-card: var(--bg-card);
+	--color-border-main: var(--border-main);
+	--color-text-main: var(--text-main);
+	--color-text-muted: var(--text-muted);
+	--color-soft-accent-bg: var(--soft-accent-bg);
+	--color-soft-accent-border: var(--soft-accent-border);
+
+	--shadow-2xs: var(--shadow-val);
+	--shadow-xs: var(--shadow-val);
+	--shadow-sm: var(--shadow-val);
+	--shadow-md: var(--shadow-val);
+
+	--color-secondary-50: var(--color-zinc-50);
+	--color-secondary-100: var(--color-zinc-100);
+	--color-secondary-200: var(--color-zinc-200);
+	--color-secondary-300: var(--color-zinc-300);
+	--color-secondary-400: var(--color-zinc-400);
+	--color-secondary-500: var(--color-zinc-500);
+	--color-secondary-600: var(--color-zinc-600);
+	--color-secondary-700: var(--color-zinc-700);
+	--color-secondary-800: var(--color-zinc-800);
+	--color-secondary-900: var(--color-zinc-900);
+	--color-secondary-950: var(--color-zinc-950);
+}
+
+:root {
+	--primary-50: #FFFDF0;
+	--primary-100: #FEFAD4;
+	--primary-200: #FBF4AA;
+	--primary-300: #F6EA7D;
+	--primary-400: #CFF54A;
+	--primary-500: #C4EE3D;
+	--primary-600: #B7E52F;
+	--primary-700: #9B941C;
+	--primary-800: #857E15;
+	--primary-900: #6F6A0F;
+	--primary-950: #4B4708;
+	--primary-foreground: #111111;
+
+	--bg-base: #FCFCFD;
+	--border-base: #ECEEF2;
+	--text-primary: #101828;
+	--text-secondary: #667085;
+	
+	--bg-main: #FCFCFD;
+	--bg-sidebar: #FFFFFF;
+	--bg-card: #FFFFFF;
+	--border-main: #ECEEF2;
+	--text-main: #101828;
+	--text-muted: #667085;
+	--soft-accent-bg: #F8FDE9;
+	--soft-accent-border: #EAF4BC;
+
+	--shadow-val: 0 4px 24px rgba(16, 24, 40, 0.04);
+}
+
+.dark {
+	--primary-50: rgba(207, 245, 74, 0.10);
+	--primary-100: rgba(207, 245, 74, 0.15);
+	--primary-200: #2A2D31;
+	--primary-300: #DFEE98;
+	--primary-400: #CFF54A;
+	--primary-500: #C4EE3D;
+	--primary-600: #B7E52F;
+	--primary-700: #9B941C;
+	--primary-800: #857E15;
+	--primary-900: #6F6A0F;
+	--primary-950: #4B4708;
+	--primary-foreground: #111111;
+
+	--bg-base: #0D0F10;
+	--border-base: #2A2D31;
+	--text-primary: #FFFFFF;
+	--text-secondary: #A1A5AB;
+
+	--bg-main: #0D0F10;
+	--bg-sidebar: #111315;
+	--bg-card: #181A1D;
+	--border-main: #2A2D31;
+	--text-main: #FFFFFF;
+	--text-muted: #A1A5AB;
+	--soft-accent-bg: rgba(207, 245, 74, 0.10);
+	--soft-accent-border: #2A2D31;
+
+	--shadow-val: 0 4px 24px rgba(0, 0, 0, 0.3);
 }
 
 @layer base {

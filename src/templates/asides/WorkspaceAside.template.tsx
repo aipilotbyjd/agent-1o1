@@ -406,14 +406,14 @@ const WorkspaceAsideTemplate = () => {
 												className={[
 													'group relative flex h-11 w-full items-center gap-3 rounded-2xl px-3 text-sm font-bold transition',
 													isActive
-														? 'border border-emerald-200 bg-emerald-50 text-emerald-800 shadow-sm dark:border-white/10 dark:bg-white/[0.08] dark:text-white dark:shadow-lg dark:shadow-black/20'
+														? 'bg-[#FAFDEB] text-[#111111] shadow-2xs dark:bg-zinc-800/40 dark:text-white'
 														: 'hover:text-zinc-950 text-zinc-500 hover:bg-zinc-100 dark:text-zinc-400 dark:hover:bg-white/[0.055] dark:hover:text-zinc-100',
 													sidebarCollapsed ? 'justify-center px-0' : '',
 												].join(' ')}>
 												{isActive && (
 													<motion.span
 														layoutId='sidebar-active-pill'
-														className='absolute inset-y-1 left-1 w-1 rounded-full bg-gradient-to-b from-emerald-300 to-cyan-300'
+														className='absolute inset-y-1.5 left-1 w-1 rounded-full bg-[#CFF54A]'
 													/>
 												)}
 												<motion.span
@@ -424,7 +424,7 @@ const WorkspaceAsideTemplate = () => {
 													className={[
 														'flex h-8 w-8 items-center justify-center rounded-xl transition',
 														isActive
-															? 'text-emerald-700 bg-emerald-100 dark:bg-emerald-300/10 dark:text-emerald-200'
+															? 'text-[#111111] bg-transparent dark:text-white'
 															: '',
 													].join(' ')}>
 													<Icon size={18} />
@@ -435,7 +435,7 @@ const WorkspaceAsideTemplate = () => {
 															{item.label}
 														</span>
 														{item.badge && (
-															<span className='rounded-lg border border-emerald-200 bg-emerald-50 px-2 py-0.5 text-[10px] text-emerald-700 dark:border-emerald-300/20 dark:bg-emerald-300/10 dark:text-emerald-200'>
+															<span className='rounded-lg border border-primary-200 bg-primary-50 px-2 py-0.5 text-[10px] text-primary-800 dark:border-primary-800/30 dark:bg-primary-950/20 dark:text-primary-400'>
 																{item.badge}
 															</span>
 														)}
