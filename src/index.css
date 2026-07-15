@@ -453,6 +453,14 @@ layer(base);
 		background-color: color-mix(in srgb, var(--bg-card) 20%, transparent) !important;
 	}
 
+	/* Hover text overrides */
+	.hover\:text-zinc-100:hover, .dark\:hover\:text-zinc-100:hover {
+		color: var(--text-primary) !important;
+	}
+	.hover\:text-zinc-200:hover, .dark\:hover\:text-zinc-200:hover {
+		color: var(--text-secondary) !important;
+	}
+
 	/* Border overrides */
 	.border-zinc-800, .dark\:border-zinc-800 {
 		border-color: var(--border-main) !important;
