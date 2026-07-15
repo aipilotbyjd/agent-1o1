@@ -401,3 +401,84 @@ layer(base);
 	animation: workflow-edge-flow 0.7s linear infinite;
 }
 
+/* Fix Tailwind color override side-effects for backgrounds and borders in dark mode */
+.dark {
+	/* Background overrides */
+	.bg-zinc-900 {
+		background-color: var(--bg-card) !important;
+	}
+	.bg-zinc-900\/90 {
+		background-color: color-mix(in srgb, var(--bg-card) 90%, transparent) !important;
+	}
+	.bg-zinc-900\/60 {
+		background-color: color-mix(in srgb, var(--bg-card) 60%, transparent) !important;
+	}
+	.bg-zinc-900\/50 {
+		background-color: color-mix(in srgb, var(--bg-card) 50%, transparent) !important;
+	}
+	.bg-zinc-900\/40 {
+		background-color: color-mix(in srgb, var(--bg-card) 40%, transparent) !important;
+	}
+	.bg-zinc-900\/20 {
+		background-color: color-mix(in srgb, var(--bg-card) 20%, transparent) !important;
+	}
+
+	.bg-zinc-800 {
+		background-color: var(--bg-card) !important;
+	}
+	.bg-zinc-800\/80 {
+		background-color: color-mix(in srgb, var(--bg-card) 80%, transparent) !important;
+	}
+	.bg-zinc-800\/60 {
+		background-color: color-mix(in srgb, var(--bg-card) 60%, transparent) !important;
+	}
+	.bg-zinc-800\/40 {
+		background-color: color-mix(in srgb, var(--bg-card) 40%, transparent) !important;
+	}
+
+	/* Hover background overrides */
+	.hover\:bg-zinc-900:hover {
+		background-color: var(--bg-card) !important;
+	}
+	.hover\:bg-zinc-900\/90:hover {
+		background-color: color-mix(in srgb, var(--bg-card) 90%, transparent) !important;
+	}
+	.hover\:bg-zinc-900\/60:hover {
+		background-color: color-mix(in srgb, var(--bg-card) 60%, transparent) !important;
+	}
+	.hover\:bg-zinc-900\/40:hover {
+		background-color: color-mix(in srgb, var(--bg-card) 40%, transparent) !important;
+	}
+	.hover\:bg-zinc-900\/20:hover {
+		background-color: color-mix(in srgb, var(--bg-card) 20%, transparent) !important;
+	}
+
+	/* Border overrides */
+	.border-zinc-800 {
+		border-color: var(--border-main) !important;
+	}
+	.border-zinc-800\/85 {
+		border-color: color-mix(in srgb, var(--border-main) 85%, transparent) !important;
+	}
+	.border-zinc-800\/80 {
+		border-color: color-mix(in srgb, var(--border-main) 80%, transparent) !important;
+	}
+	.border-zinc-800\/60 {
+		border-color: color-mix(in srgb, var(--border-main) 60%, transparent) !important;
+	}
+
+	/* Slate variants safety overrides */
+	.bg-slate-900 {
+		background-color: var(--bg-card) !important;
+	}
+	.bg-slate-900\/60 {
+		background-color: color-mix(in srgb, var(--bg-card) 60%, transparent) !important;
+	}
+	.bg-slate-900\/40 {
+		background-color: color-mix(in srgb, var(--bg-card) 40%, transparent) !important;
+	}
+	.border-slate-800 {
+		border-color: var(--border-main) !important;
+	}
+}
+

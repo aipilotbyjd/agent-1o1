@@ -497,12 +497,12 @@ const BuildPage = () => {
 							className='mx-auto flex min-h-full w-full max-w-[1120px] flex-col px-5 pt-10 pb-5 sm:px-8 sm:pt-12 lg:px-10 lg:pt-14'>
 							
 							{/* Hero Banner Section */}
-							<section className='relative z-10 overflow-hidden rounded-3xl border border-primary-100/50 bg-linear-to-tr from-primary-400/5 via-primary-400/5 to-primary-400/5 p-6 sm:p-8 lg:p-10 dark:border-zinc-800/80 dark:from-zinc-900/40 dark:via-zinc-900/30 dark:to-zinc-950/20'>
+							<section className='relative z-10 overflow-hidden rounded-3xl border border-primary-100/50 bg-linear-to-tr from-primary-400/5 via-primary-400/5 to-primary-400/5 p-6 sm:p-8 lg:p-10 dark:border-border-main dark:from-bg-card dark:to-bg-card'>
 								{/* Background glow overlay */}
 								<div className='pointer-events-none absolute -right-20 -top-20 h-52 w-52 rounded-full bg-primary-400/10 blur-3xl dark:bg-primary-400/5' />
 
 								{/* Robot badge */}
-								<div className='relative mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-zinc-950 text-white shadow-lg dark:bg-zinc-900 dark:border dark:border-white/10'>
+								<div className='relative mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-zinc-950 text-white shadow-lg dark:bg-bg-sidebar dark:border dark:border-white/10'>
 									<Bot size={28} strokeWidth={2} />
 								</div>
 
@@ -518,7 +518,7 @@ const BuildPage = () => {
 
 								{/* Describe Agent Input Box */}
 								<div className='mt-8 max-w-2xl'>
-									<div className='relative flex items-center rounded-full border border-zinc-200/80 bg-white p-1.5 shadow-sm transition-all focus-within:border-primary-500/50 focus-within:ring-4 focus-within:ring-primary-500/5 dark:border-zinc-800 dark:bg-zinc-900/60'>
+									<div className='relative flex items-center rounded-full border border-zinc-200/80 bg-white p-1.5 shadow-sm transition-all focus-within:border-primary-500/50 focus-within:ring-4 focus-within:ring-primary-500/5 dark:border-border-main dark:bg-zinc-950/40'>
 										<input
 											type='text'
 											placeholder='Describe what your agent should do...'
@@ -550,7 +550,7 @@ const BuildPage = () => {
 										<h2 className='text-lg font-black tracking-tight sm:text-xl dark:text-zinc-50'>
 											Templates
 										</h2>
-										<span className='text-zinc-600 inline-flex items-center rounded-md bg-zinc-100 px-2 py-0.5 text-[11px] font-black dark:bg-zinc-900 dark:text-zinc-400'>
+										<span className='text-zinc-600 inline-flex items-center rounded-md bg-zinc-100 px-2 py-0.5 text-[11px] font-black dark:bg-zinc-950/60 dark:text-zinc-400'>
 											{filteredTemplates.length} Available
 										</span>
 									</div>
@@ -562,7 +562,7 @@ const BuildPage = () => {
 								</div>
 
 								{/* Categories Tab Bar */}
-								<div className='text-zinc-400 flex gap-5 overflow-x-auto border-b border-zinc-200/80 text-[13px] font-black whitespace-nowrap sm:gap-6 sm:text-sm dark:border-zinc-800/80 dark:text-zinc-500'>
+								<div className='text-zinc-400 flex gap-5 overflow-x-auto border-b border-zinc-200/80 text-[13px] font-black whitespace-nowrap sm:gap-6 sm:text-sm dark:border-border-main dark:text-zinc-500'>
 									{agentTemplateTabs.map((tab) => {
 										const isActive = tab === activeTab;
 										return (
@@ -625,7 +625,7 @@ const BuildPage = () => {
 												key={chip.label}
 												type='button'
 												onClick={() => handleChipClick(chip.text)}
-												className='text-zinc-600 hover:text-zinc-950 inline-flex items-center gap-1.5 rounded-full border border-zinc-200/80 bg-white/70 px-4 py-1.5 text-[11px] font-black shadow-2xs backdrop-blur-xs transition-all hover:bg-zinc-50/50 dark:border-zinc-800 dark:bg-zinc-900/60 dark:text-zinc-400 dark:hover:border-zinc-700 dark:hover:bg-zinc-900'>
+												className='text-zinc-600 hover:text-zinc-950 inline-flex items-center gap-1.5 rounded-full border border-zinc-200/80 bg-white/70 px-4 py-1.5 text-[11px] font-black shadow-2xs backdrop-blur-xs transition-all hover:bg-zinc-50/50 dark:border-border-main dark:bg-zinc-950/40 dark:text-zinc-400 dark:hover:border-border-main dark:hover:bg-bg-card'>
 												<ChipIcon size={12} className='text-primary-500' />
 												{chip.label}
 											</button>
@@ -634,7 +634,7 @@ const BuildPage = () => {
 								</div>
 
 								{/* Cockpit Shell */}
-								<div className='relative flex items-center rounded-2xl border border-zinc-200 bg-white p-2 shadow-sm focus-within:border-primary-500/50 focus-within:ring-4 focus-within:ring-primary-500/5 dark:border-zinc-800 dark:bg-zinc-900/60'>
+								<div className='relative flex items-center rounded-2xl border border-zinc-200 bg-white p-2 shadow-sm focus-within:border-primary-500/50 focus-within:ring-4 focus-within:ring-primary-500/5 dark:border-border-main dark:bg-zinc-950/40'>
 									<div className='flex h-10 w-10 shrink-0 items-center justify-center text-primary-500'>
 										<Sparkles size={18} />
 									</div>
