@@ -335,7 +335,7 @@ const SecretsPage = () => {
 						value={searchQuery}
 						onChange={(e) => setSearchQuery(e.target.value)}
 						placeholder='Search secrets'
-						className='h-10 w-full rounded-xl border border-zinc-200 bg-white pr-8 pl-10 text-sm font-medium text-zinc-800 shadow-xs outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-500/25 dark:border-zinc-700 dark:bg-zinc-700 dark:text-zinc-200'
+						className='h-10 w-full rounded-xl border border-border-main bg-bg-card pr-8 pl-10 text-sm font-medium text-zinc-800 shadow-xs outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-500/25 dark:border-border-main dark:bg-bg-card dark:text-zinc-100'
 					/>
 					{searchQuery && (
 						<button
