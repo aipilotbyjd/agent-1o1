@@ -518,7 +518,7 @@ const TemplatesCatalogPage = () => {
 							<h1 className='mb-3 text-3xl font-extrabold tracking-tight text-white sm:text-4xl'>
 								Templates Center
 							</h1>
-							<p className='mb-6 max-w-2xl text-xs leading-relaxed text-primary-100 opacity-90 sm:text-sm dark:text-primary-200'>
+							<p className='mb-6 max-w-2xl text-xs leading-relaxed text-purple-100/90 sm:text-sm'>
 								Deploy pre-configured workflows, conversational AI agents, or
 								bundles of matching stacks to build your automation platform in
 								seconds.
@@ -534,7 +534,7 @@ const TemplatesCatalogPage = () => {
 										<div className='text-sm leading-none font-extrabold text-white'>
 											120+
 										</div>
-										<div className='mt-0.5 text-[10px] font-semibold text-primary-200'>
+										<div className='mt-0.5 text-[10px] font-semibold text-purple-200/80'>
 											Templates
 										</div>
 									</div>
@@ -548,7 +548,7 @@ const TemplatesCatalogPage = () => {
 										<div className='text-sm leading-none font-extrabold text-white'>
 											9
 										</div>
-										<div className='mt-0.5 text-[10px] font-semibold text-primary-200'>
+										<div className='mt-0.5 text-[10px] font-semibold text-purple-200/80'>
 											Categories
 										</div>
 									</div>
@@ -562,7 +562,7 @@ const TemplatesCatalogPage = () => {
 										<div className='text-sm leading-none font-extrabold text-white'>
 											2.4K+
 										</div>
-										<div className='mt-0.5 text-[10px] font-semibold text-primary-200'>
+										<div className='mt-0.5 text-[10px] font-semibold text-purple-200/80'>
 											Deployments
 										</div>
 									</div>
