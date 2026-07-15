@@ -101,8 +101,6 @@ const getFlattenedPageItems = (): TSearchItem[] => {
 		...getFlattenPages(pages.agent.subPages as TPages, pages.agent.id),
 		pages.onboarding as TPage,
 		...getFlattenPages(pages.onboarding.subPages as TPages, pages.onboarding.id),
-		pages.auth as TPage,
-		...getFlattenPages(pages.auth as TPages, pages.auth.id),
 	];
 
 	return flattenPages.map((item) => ({

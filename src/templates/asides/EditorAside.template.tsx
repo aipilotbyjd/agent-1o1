@@ -58,6 +58,7 @@ const SearchBar = () => {
 					dimension='default'
 					rounded='rounded-xl'
 					className='mb-4 border border-zinc-200/50 !bg-white shadow-[0_4px_14px_rgba(0,0,0,0.06)] transition-all duration-300 hover:border-zinc-300/80 hover:shadow-[0_6px_20px_rgba(0,0,0,0.09)] dark:border-border-main dark:!bg-bg-card dark:shadow-none dark:placeholder:!text-white dark:!text-white'
+					value=''
 					onClick={open}
 					onChange={() => {}}
 				/>
