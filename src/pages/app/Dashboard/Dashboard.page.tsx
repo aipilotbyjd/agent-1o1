@@ -4,196 +4,77 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
 	GitMerge,
 	Bot,
-	LayoutGrid,
 	Activity,
-	Play,
+	CheckCircle2,
+	AlertTriangle,
+	Timer,
 	Clock,
 	Zap,
 	ArrowRight,
+	ArrowUpRight,
 	Check,
 	Circle,
 	X,
-	MoreVertical,
 	Mail,
 	User,
 	Crown,
-	ChevronRight,
 	Plus,
 	FileText,
+	History,
+	Inbox,
+	ShieldCheck,
 } from 'lucide-react';
 import { OutletContextType } from '@/pages/app/Dashboard/_layouts/Dashboard.layout';
 import Breadcrumb from '@/components/layout/Breadcrumb';
 import Container from '@/components/layout/Container';
 import pages from '@/Routes/pages';
 import { useAuth } from '@/context/authContext';
-import type { TOnboardingStepKey, TOnboardingState } from '@/types/auth.type';
+import type { TOnboardingStepKey } from '@/types/auth.type';
 import { useWorkspaceContext } from '@/context/workspaceContext';
+import { useWorkflowShellStore } from '@/store/workflowShell.store';
+import { useDashboard } from '@/api/modules/dashboard';
+import { STATUS_BADGE_COLORS, type TExecutionStatus } from '@/types/dashboard.type';
 
-const DEFAULT_ONBOARDING: TOnboardingState = {
-	is_complete: false,
-	is_dismissed: false,
-	progress: 4,
-	total: 6,
-	steps: [
-		{
-			key: 'verify_email',
-			label: 'Verify your email',
-			description: 'Confirm your email address to secure your account.',
-			done: false,
-		},
-		{
-			key: 'complete_profile',
-			label: 'Complete your profile',
-			description: 'Add a profile photo so your teammates can recognize you.',
-			done: false,
-		},
-		{
-			key: 'create_workspace',
-			label: 'Create a workspace',
-			description: 'Set up a workspace to organize your workflows.',
-			done: true,
-		},
-		{
-			key: 'add_credential',
-			label: 'Add a credential',
-			description: 'Connect an external service to use in your automation.',
-			done: true,
-		},
-		{
-			key: 'create_workflow',
-			label: 'Create your first workflow',
-			description: 'Build your first automation workflow.',
-			done: true,
-		},
-		{
-			key: 'activate_workflow',
-			label: 'Activate a workflow',
-			description: 'Turn on a workflow and let it run automatically.',
-			done: true,
-		},
-	],
+// ─── Helpers ────────────────────────────────────────────────────────────────
+const formatRelativeTime = (value?: number) => {
+	if (!value) return '—';
+	const ms = value < 1_000_000_000_000 ? value * 1000 : value;
+	const diff = Date.now() - ms;
+	if (Number.isNaN(diff)) return '—';
+	if (diff < 0) return 'just now';
+	const minutes = Math.floor(diff / 60_000);
+	if (minutes < 1) return 'just now';
+	if (minutes < 60) return `${minutes} min${minutes === 1 ? '' : 's'} ago`;
+	const hours = Math.floor(minutes / 60);
+	if (hours < 24) return `${hours} hour${hours === 1 ? '' : 's'} ago`;
+	const days = Math.floor(hours / 24);
+	return `${days} day${days === 1 ? '' : 's'} ago`;
 };
 
-const stats = [
-	{
-		label: 'Total Workflows',
-		value: '8',
-		sub: '4 currently active',
-		icon: GitMerge,
-		iconBg: 'bg-primary-50 border border-primary-200 text-primary-500 dark:bg-primary-400/10 dark:border-primary-400/20 dark:text-primary-400',
-		sparkPath: 'M 0 22 Q 15 8 30 18 T 60 5 T 90 12 T 100 8',
-		sparkColor: '#CFF54A',
-		glowClass:
-			'hover:border-primary-400/50 hover:shadow-[0_8px_20px_var(--color-primary-50)] dark:hover:border-primary-400/30',
-		endX: 100,
-		endY: 8,
-	},
-	{
-		label: 'Active Agents',
-		value: '3',
-		sub: 'Running autonomously',
-		icon: Bot,
-		iconBg: 'bg-primary-50 border border-primary-200 text-primary-500 dark:bg-primary-400/10 dark:border-primary-400/20 dark:text-primary-400',
-		sparkPath: 'M 0 10 Q 20 22 40 10 T 70 18 T 90 5 T 100 8',
-		sparkColor: '#CFF54A',
-		glowClass:
-			'hover:border-primary-400/50 hover:shadow-[0_8px_20px_var(--color-primary-50)] dark:hover:border-primary-400/30',
-		endX: 100,
-		endY: 8,
-	},
-	{
-		label: 'Connected Apps',
-		value: '8',
-		sub: 'OAuth credentials active',
-		icon: LayoutGrid,
-		iconBg: 'bg-primary-50 border border-primary-200 text-primary-500 dark:bg-primary-400/10 dark:border-primary-400/20 dark:text-primary-400',
-		sparkPath: 'M 0 20 Q 20 8 40 22 T 70 8 T 95 18 T 100 15',
-		sparkColor: '#CFF54A',
-		glowClass:
-			'hover:border-primary-400/50 hover:shadow-[0_8px_20px_var(--color-primary-50)] dark:hover:border-primary-400/30',
-		endX: 100,
-		endY: 15,
-	},
-	{
-		label: 'Runs (Last 24h)',
-		value: '1,280',
-		sub: '14% spike today',
-		icon: Activity,
-		iconBg: 'bg-primary-50 border border-primary-200 text-primary-500 dark:bg-primary-400/10 dark:border-primary-400/20 dark:text-primary-400',
-		sparkPath: 'M 0 28 Q 15 15 35 25 T 65 10 T 90 4 T 100 2',
-		sparkColor: '#CFF54A',
-		glowClass:
-			'hover:border-primary-400/50 hover:shadow-[0_8px_20px_var(--color-primary-50)] dark:hover:border-primary-400/30',
-		endX: 100,
-		endY: 2,
-	},
-];
+const formatDuration = (ms?: number) => {
+	if (!ms || ms <= 0) return '—';
+	if (ms < 1000) return `${Math.round(ms)}ms`;
+	const s = ms / 1000;
+	if (s < 60) return `${s.toFixed(s < 10 ? 1 : 0)}s`;
+	const m = Math.floor(s / 60);
+	const rem = Math.round(s % 60);
+	return `${m}m ${rem}s`;
+};
 
-const recentWorkflows = [
-	{
-		id: '1',
-		title: 'Lead enrichment pipeline',
-		status: 'active',
-		lastRun: '12 mins ago',
-		successRate: 98.4,
-	},
-	{
-		id: '2',
-		title: 'Email campaign automation',
-		status: 'active',
-		lastRun: '2 hours ago',
-		successRate: 99.1,
-	},
-	{
-		id: '3',
-		title: 'Support ticket triage',
-		status: 'active',
-		lastRun: '5 hours ago',
-		successRate: 97.6,
-	},
-	{
-		id: '4',
-		title: 'Weekly analytics report',
-		status: 'inactive',
-		lastRun: '1 day ago',
-		successRate: 100.0,
-	},
-];
-
-const quickActions = [
-	{
-		label: 'Create Workflow',
-		icon: Plus,
-		description: 'Build a new automation',
-		color: 'border-border-main bg-bg-card hover:border-primary-400 hover:bg-primary-50 dark:border-border-main dark:bg-bg-card dark:hover:border-primary-400/30',
-		hoverText: 'group-hover:text-primary-500 dark:group-hover:text-primary-400',
-		iconStyle: 'bg-primary-50 text-primary-500 border border-primary-100 dark:bg-primary-400/10 dark:text-primary-400 dark:border-primary-400/20',
-	},
-	{
-		label: 'Add Agent',
-		icon: Bot,
-		description: 'Deploy a new AI agent',
-		color: 'border-border-main bg-bg-card hover:border-primary-400 hover:bg-primary-50 dark:border-border-main dark:bg-bg-card dark:hover:border-primary-400/30',
-		hoverText: 'group-hover:text-primary-500 dark:group-hover:text-primary-400',
-		iconStyle: 'bg-primary-50 text-primary-500 border border-primary-100 dark:bg-primary-400/10 dark:text-primary-400 dark:border-primary-400/20',
-	},
-	{
-		label: 'Connect App',
-		icon: LayoutGrid,
-		description: 'Integrate a new application',
-		color: 'border-border-main bg-bg-card hover:border-primary-400 hover:bg-primary-50 dark:border-border-main dark:bg-bg-card dark:hover:border-primary-400/30',
-		hoverText: 'group-hover:text-primary-500 dark:group-hover:text-primary-400',
-		iconStyle: 'bg-primary-50 text-primary-500 border border-primary-100 dark:bg-primary-400/10 dark:text-primary-400 dark:border-primary-400/20',
-	},
-	{
-		label: 'Browse Templates',
-		icon: FileText,
-		description: 'Explore pre-built workflows',
-		color: 'border-border-main bg-bg-card hover:border-primary-400 hover:bg-primary-50 dark:border-border-main dark:bg-bg-card dark:hover:border-primary-400/30',
-		hoverText: 'group-hover:text-primary-500 dark:group-hover:text-primary-400',
-		iconStyle: 'bg-primary-50 text-primary-500 border border-primary-100 dark:bg-primary-400/10 dark:text-primary-400 dark:border-primary-400/20',
-	},
-];
+// Build an SVG line + area path from a series of values, normalised to a viewbox.
+const buildSpark = (values: number[], w = 100, h = 30) => {
+	if (values.length === 0) return { line: '', area: '' };
+	const max = Math.max(...values, 1);
+	const step = values.length > 1 ? w / (values.length - 1) : 0;
+	const pts = values.map((v, i) => {
+		const x = values.length > 1 ? i * step : w / 2;
+		const y = h - (v / max) * (h - 4) - 2;
+		return [Number(x.toFixed(2)), Number(y.toFixed(2))] as const;
+	});
+	const line = pts.map(([x, y], i) => `${i === 0 ? 'M' : 'L'} ${x} ${y}`).join(' ');
+	const area = `${line} L ${pts[pts.length - 1][0]} ${h} L ${pts[0][0]} ${h} Z`;
+	return { line, area };
+};
 
 const onboardingIcons: Record<TOnboardingStepKey, React.ComponentType<{ size?: number }>> = {
 	verify_email: Mail,
@@ -204,13 +85,77 @@ const onboardingIcons: Record<TOnboardingStepKey, React.ComponentType<{ size?: n
 	activate_workflow: Zap,
 };
 
+// KPI tile tones
+const TONES = {
+	primary: 'bg-primary-50 text-primary-600 dark:bg-primary-400/10 dark:text-primary-400',
+	emerald: 'bg-emerald-50 text-emerald-600 dark:bg-emerald-500/10 dark:text-emerald-400',
+	rose: 'bg-rose-50 text-rose-600 dark:bg-rose-500/10 dark:text-rose-400',
+	blue: 'bg-blue-50 text-blue-600 dark:bg-blue-500/10 dark:text-blue-400',
+} as const;
+
 const DashboardPage = () => {
 	const { setHeaderLeft } = useOutletContext<OutletContextType>();
 	const navigate = useNavigate();
 	const { userData } = useAuth();
 	const { workspaces: apiWorkspaces, activeWorkspaceId } = useWorkspaceContext();
+	const { activeWorkspaceId: fallbackWorkspaceId } = useWorkflowShellStore();
 
-	const [onboarding, setOnboarding] = useState<TOnboardingState>(DEFAULT_ONBOARDING);
+	const currentWorkspaceId = activeWorkspaceId || fallbackWorkspaceId;
+
+	const { data: dashboard, isLoading } = useDashboard(currentWorkspaceId);
+	const summary = dashboard?.summary;
+
+	// ─── Monitoring data ──────────────────────────────────────────────────────
+	const runsToday = summary?.total_executions_today ?? 0;
+	const runningNow = summary?.running_executions ?? 0;
+	const successRate = summary?.success_rate ?? 0;
+	const avgMs = summary?.avg_duration_ms ?? 0;
+	const failures = dashboard?.recent_failures ?? [];
+	const failedCount =
+		dashboard?.executions_by_status?.find((s) => s.status === 'failed')?.count ??
+		failures.length;
+	const recentRuns = dashboard?.recent_executions ?? [];
+	const byDay = dashboard?.executions_by_day ?? [];
+	const trend = buildSpark(byDay.map((d) => d.total));
+	const peakDay = Math.max(0, ...byDay.map((d) => d.total));
+
+	const kpis = [
+		{
+			label: 'Runs (today)',
+			value: runsToday.toLocaleString(),
+			sub: runningNow > 0 ? `${runningNow} running now` : 'No active runs',
+			icon: Activity,
+			tone: TONES.primary,
+		},
+		{
+			label: 'Success rate',
+			value: `${successRate.toFixed(successRate % 1 === 0 ? 0 : 1)}%`,
+			sub: 'Across recent runs',
+			icon: CheckCircle2,
+			tone: TONES.emerald,
+		},
+		{
+			label: 'Failed',
+			value: failedCount.toLocaleString(),
+			sub: failedCount > 0 ? 'Needs attention' : 'All clear',
+			icon: AlertTriangle,
+			tone: TONES.rose,
+		},
+		{
+			label: 'Avg run time',
+			value: formatDuration(avgMs),
+			sub: 'Per execution',
+			icon: Timer,
+			tone: TONES.blue,
+		},
+	];
+
+	// ─── Onboarding (from the authenticated user) ──────────────────────────────
+	const onboarding = userData?.onboarding;
+	const [isOnboardingDismissed, setIsOnboardingDismissed] = useState(false);
+	const showOnboarding =
+		!!onboarding && !onboarding.is_complete && !onboarding.is_dismissed && !isOnboardingDismissed;
+	const nextOnboardingStep = onboarding?.steps.find((item) => !item.done);
 
 	const handleOnboardingAction = (key: TOnboardingStepKey) => {
 		switch (key) {
@@ -224,7 +169,7 @@ const DashboardPage = () => {
 				navigate('/onboarding/create-workspace');
 				break;
 			case 'add_credential':
-				navigate('/apps?connect=true');
+				navigate('/integrations?connect=true');
 				break;
 			case 'create_workflow':
 				navigate('/workflows?create=true');
@@ -235,8 +180,7 @@ const DashboardPage = () => {
 		}
 	};
 
-	const nextOnboardingStep = onboarding.steps.find((item) => !item.done);
-
+	// ─── Banner identity ───────────────────────────────────────────────────────
 	const colorList = [
 		'bg-primary-400',
 		'bg-emerald-600',
@@ -250,9 +194,7 @@ const DashboardPage = () => {
 		color: colorList[index % colorList.length],
 	}));
 	const activeWorkspace = workspaces.find((w) => w.id === activeWorkspaceId) || workspaces[0];
-	const userName =
-		(userData?.firstName === 'Dev' ? 'Sahil' : userData?.firstName) ||
-		'Sahil';
+	const userName = userData?.firstName || userData?.name?.split(' ')[0] || 'there';
 
 	useEffect(() => {
 		setHeaderLeft(<Breadcrumb list={[{ ...pages.app.subPages.dashboard }]} />);
@@ -260,22 +202,38 @@ const DashboardPage = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
+	const shortcuts = [
+		{
+			label: 'New Workflow',
+			description: 'Build a new automation',
+			icon: Plus,
+			onClick: () => navigate(pages.editor.subPages.addWorkflow.to),
+		},
+		{
+			label: 'Browse Templates',
+			description: 'Start from a pre-built flow',
+			icon: FileText,
+			onClick: () => navigate(pages.app.subPages.templates.to),
+		},
+		{
+			label: 'View Run History',
+			description: 'See all past executions',
+			icon: History,
+			onClick: () => navigate(pages.app.subPages.history.to),
+		},
+	];
+
 	return (
 		<Container className='relative overflow-x-hidden overflow-y-auto !bg-bg-main !px-0 !pt-0 font-sans dark:!bg-bg-main'>
-			{/* Grid Background Pattern */}
-			<div className='pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(var(--color-border-main)_1.5px,transparent_1.5px)] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] [background-size:24px_24px] opacity-70 dark:bg-[radial-gradient(var(--color-border-main)_1.5px,transparent_1.5px)]' />
-
-			<div className='pointer-events-none absolute top-0 right-10 -z-10 h-[500px] w-[500px] rounded-full bg-gradient-to-tr from-primary-400/4 to-transparent blur-[120px]' />
-			<div className='pointer-events-none absolute bottom-10 left-1/4 -z-10 h-[400px] w-[400px] rounded-full bg-gradient-to-br from-primary-400/4 to-transparent blur-[100px]' />
+			<div className='pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(var(--color-border-main)_1.5px,transparent_1.5px)] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] [background-size:24px_24px] opacity-70' />
 
 			<div className='mx-auto w-full max-w-7xl space-y-6 p-6 md:p-8'>
-				{/* Welcome Banner */}
+				{/* ─── Welcome banner ─────────────────────────────────────────── */}
 				<motion.div
 					initial={{ opacity: 0, y: -15 }}
 					animate={{ opacity: 1, y: 0 }}
 					transition={{ duration: 0.4 }}
 					className='dark:border-zinc-800 relative overflow-hidden rounded-3xl border border-primary-500/20 bg-gradient-to-r from-primary-400 via-primary-500 to-primary-600 p-6 shadow-xl shadow-primary-500/20 md:p-8 dark:from-[#111315] dark:via-[#141619] dark:to-[#0d0e10] dark:border-zinc-800/80'>
-					{/* Grid Overlay inside Banner */}
 					<div className='pointer-events-none absolute inset-0 bg-[radial-gradient(rgba(255,255,255,0.03)_1px,transparent_1px)] [background-size:16px_16px] opacity-60' />
 
 					<div className='relative flex flex-col justify-between gap-6 md:flex-row md:items-center'>
@@ -287,36 +245,46 @@ const DashboardPage = () => {
 								</span>
 								<motion.span
 									className='inline-block origin-[70%_70%] cursor-default text-2xl select-none md:text-3xl'
-									animate={{
-										rotate: [0, 14, -8, 14, -4, 10, 0],
-									}}
+									animate={{ rotate: [0, 14, -8, 14, -4, 10, 0] }}
 									transition={{
 										duration: 2.5,
 										ease: 'easeInOut',
 										repeat: Infinity,
 										repeatDelay: 3,
-									}}
-									whileHover={{
-										rotate: [0, 20, -10, 20, -10, 0],
-										transition: { duration: 0.6 },
 									}}>
 									👋
 								</motion.span>
 							</h1>
 
 							<p className='max-w-xl text-xs leading-relaxed font-semibold text-slate-700 md:text-sm dark:text-zinc-400'>
-								You have{' '}
-								<span className='font-bold text-slate-950 dark:text-white'>3 active agents</span>{' '}
-								running autonomously across{' '}
-								<span className='font-bold text-slate-955 dark:text-white'>8 workflows.</span>
+								<span className='font-bold text-slate-950 dark:text-white'>
+									{runsToday.toLocaleString()} run{runsToday === 1 ? '' : 's'}
+								</span>{' '}
+								today at{' '}
+								<span className='font-bold text-slate-955 dark:text-white'>
+									{successRate.toFixed(successRate % 1 === 0 ? 0 : 1)}% success
+								</span>
+								{failedCount > 0 ? (
+									<>
+										{' '}
+										·{' '}
+										<span className='font-bold text-rose-700 dark:text-rose-300'>
+											{failedCount} need{failedCount === 1 ? 's' : ''} attention
+										</span>
+									</>
+								) : (
+									<>
+										{' '}
+										· <span className='font-bold text-emerald-700 dark:text-emerald-300'>all healthy</span>
+									</>
+								)}
 							</p>
 
-							{/* Meta Info Badges */}
 							<div className='flex flex-wrap items-center gap-2.5 pt-1'>
 								{/* Active Workspace */}
-								<div className='flex items-center gap-1.5 rounded-full border border-slate-950/10 bg-slate-950/5 px-3 py-1 text-[11px] font-bold text-slate-900 shadow-xs dark:border-white/10 dark:bg-slate-900/60 dark:text-white/95'>
+								<div className='flex items-center gap-1.5 rounded-full border border-slate-955/10 bg-slate-955/5 px-3 py-1 text-[11px] font-bold text-slate-900 shadow-xs dark:border-white/10 dark:bg-slate-900/60 dark:text-white/95'>
 									<span className='text-[10px] font-extrabold tracking-wider text-slate-800/80 uppercase dark:text-zinc-400'>
-										WORKSPACE
+										Workspace
 									</span>
 									<span className='text-slate-900/40 dark:text-zinc-500'>|</span>
 									{activeWorkspace?.color && (
@@ -324,24 +292,31 @@ const DashboardPage = () => {
 											className={`h-2 w-2 rounded-full ${activeWorkspace.color} ring-2 ring-white/10`}
 										/>
 									)}
-									<span className='font-bold'>
-										{activeWorkspace?.name || 'Amaan Studio'}
-									</span>
+									<span className='font-bold'>{activeWorkspace?.name || 'Workspace'}</span>
 								</div>
 
 								{/* Plan Badge */}
-								<div className='flex items-center gap-1 rounded-full border border-slate-950/10 bg-slate-950/5 px-3 py-1 text-[11px] font-bold text-slate-900 dark:border-primary-500/30 dark:bg-[#261546]/85 dark:text-primary-200'>
+								<div className='flex items-center gap-1 rounded-full border border-slate-955/10 bg-slate-955/5 px-3 py-1 text-[11px] font-bold text-slate-900 dark:border-primary-500/30 dark:bg-[#261546]/85 dark:text-primary-200'>
 									<Crown size={11} className='text-slate-900 dark:text-primary-400' />
 									<span>Pro Account</span>
 								</div>
 
 								{/* Status Badge */}
-								<div className='flex items-center gap-1.5 rounded-full border border-slate-950/10 bg-slate-950/5 px-3 py-1 text-[11px] font-bold text-slate-900 dark:border-emerald-500/30 dark:bg-[#0e2a27]/85 dark:text-emerald-300'>
+								<div
+									className={`flex items-center gap-1.5 rounded-full border px-3 py-1 text-[11px] font-bold ${
+										failedCount > 0
+											? 'border-slate-955/10 bg-slate-955/5 text-rose-700 dark:border-rose-500/30 dark:bg-[#2a0e12]/85 dark:text-rose-300'
+											: 'border-slate-955/10 bg-slate-955/5 text-emerald-700 dark:border-emerald-500/30 dark:bg-[#0e2a27]/85 dark:text-emerald-300'
+									}`}>
 									<span className='relative flex h-1.5 w-1.5'>
-										<span className='absolute inline-flex h-full w-full animate-ping rounded-full bg-slate-950 opacity-75 dark:bg-emerald-400'></span>
-										<span className='relative inline-flex h-1.5 w-1.5 rounded-full bg-slate-900 dark:bg-emerald-500'></span>
+										<span
+											className={`absolute inline-flex h-full w-full animate-ping rounded-full opacity-75 ${failedCount > 0 ? 'bg-rose-500 dark:bg-rose-400' : 'bg-emerald-500 dark:bg-emerald-400'}`}
+										/>
+										<span
+											className={`relative inline-flex h-1.5 w-1.5 rounded-full ${failedCount > 0 ? 'bg-rose-600 dark:bg-rose-500' : 'bg-emerald-600 dark:bg-emerald-500'}`}
+										/>
 									</span>
-									<span>Systems Nominal</span>
+									<span>{failedCount > 0 ? 'Attention needed' : 'Systems nominal'}</span>
 								</div>
 							</div>
 						</div>
@@ -439,46 +414,38 @@ const DashboardPage = () => {
 								whileTap={{ scale: 0.98 }}
 								onClick={() => navigate(pages.editor.subPages.addWorkflow.to)}
 								className='flex h-10.5 cursor-pointer items-center gap-2 rounded-xl bg-slate-955 px-6 text-xs font-bold text-white shadow-md shadow-slate-950/15 transition-all hover:bg-slate-900 active:scale-95 dark:bg-gradient-to-r dark:from-primary-400 dark:to-primary-400 dark:text-primary-950 dark:shadow-primary-500/10 dark:hover:brightness-110'>
-								<Zap size={14} strokeWidth={3} />
-								<span>Quick Run</span>
+								<Plus size={14} strokeWidth={3} />
+								<span>New Workflow</span>
 							</motion.button>
 						</div>
 					</div>
 				</motion.div>
 
-				{/* Onboarding Checklist — shown until completed or dismissed */}
+				{/* ─── Onboarding checklist ───────────────────────────────────── */}
 				<AnimatePresence>
-					{onboarding && !onboarding.is_complete && !onboarding.is_dismissed && (
+					{showOnboarding && onboarding && (
 						<motion.div
 							initial={{ opacity: 0, y: -10 }}
 							animate={{ opacity: 1, y: 0 }}
 							exit={{ opacity: 0, y: -10, height: 0 }}
 							transition={{ duration: 0.3 }}
-							className='overflow-hidden rounded-3xl border border-border-main bg-bg-card p-5 shadow-sm dark:border-border-main dark:bg-bg-card'>
+							className='overflow-hidden rounded-3xl border border-border-main bg-bg-card p-5 shadow-sm'>
 							<div className='flex flex-wrap items-start justify-between gap-4'>
 								<div>
 									<p className='text-[10px] font-black tracking-[0.18em] text-primary-600 uppercase dark:text-primary-400'>
-										ACCOUNT SETUP
+										Account setup
 									</p>
 									<h2 className='mt-1 text-sm font-black text-slate-950 dark:text-white'>
-										{onboarding.progress} of {onboarding.total} milestones
-										complete
+										{onboarding.progress} of {onboarding.total} milestones complete
 									</h2>
 								</div>
-								<div className='flex items-center gap-4.5'>
-									<button
-										onClick={() => {}}
-										className='flex items-center gap-1 text-[11px] font-bold text-slate-500 transition-colors hover:text-slate-800 dark:text-zinc-400 dark:hover:text-white'>
-										View all <ArrowRight size={11} />
-									</button>
-									<button
-										type='button'
-										onClick={() => setOnboarding(prev => ({ ...prev, is_dismissed: true }))}
-										className='hover:text-slate-650 flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-bold text-slate-400 transition hover:bg-slate-50 disabled:opacity-50 dark:hover:bg-zinc-800 dark:hover:text-zinc-200'>
-										<X className='h-3.5 w-3.5' />
-										Dismiss
-									</button>
-								</div>
+								<button
+									type='button'
+									onClick={() => setIsOnboardingDismissed(true)}
+									className='flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-bold text-slate-400 transition hover:bg-slate-50 hover:text-slate-650 dark:hover:bg-zinc-800 dark:hover:text-zinc-200'>
+									<X className='h-3.5 w-3.5' />
+									Dismiss
+								</button>
 							</div>
 
 							<div className='mt-3 h-1.5 overflow-hidden rounded-full bg-primary-100/50 dark:bg-primary-900/20'>
@@ -487,74 +454,36 @@ const DashboardPage = () => {
 									style={{
 										width: `${Math.min(100, (onboarding.progress / Math.max(onboarding.total, 1)) * 100)}%`,
 									}}
-									/>
+								/>
 							</div>
 
 							<div className='mt-4 grid gap-3 md:grid-cols-2 lg:grid-cols-3'>
 								{onboarding.steps.map((item) => {
 									const isNext = nextOnboardingStep?.key === item.key;
 									const IconComp = onboardingIcons[item.key] || Circle;
-
-									// Dynamic card classes
-									let cardBorder =
-										'border-border-main bg-bg-card dark:border-border-main dark:bg-bg-card';
-									let iconStyle =
-										'bg-slate-50 text-slate-400 dark:bg-zinc-900 dark:text-zinc-600';
-									let statusIcon = (
-										<Circle className='h-4 w-4 shrink-0 text-slate-300 dark:text-zinc-600' />
-									);
-
-									if (item.done) {
-										if (isNext) {
-											cardBorder =
-												'border-primary-400 bg-bg-card shadow-sm dark:border-primary-400 dark:bg-bg-card';
-											iconStyle =
-												'bg-primary-100/60 text-primary-600 dark:bg-primary-950/40 dark:text-primary-400';
-											statusIcon = (
-												<div className='flex h-4.5 w-4.5 items-center justify-center rounded-full bg-primary-400 text-primary-950'>
-													<Check className='h-3 w-3 stroke-[3]' />
-												</div>
-											);
-										} else {
-											cardBorder =
-												'border-border-main bg-bg-card dark:border-border-main dark:bg-bg-card';
-											iconStyle =
-												'bg-primary-100/50 text-primary-600 dark:bg-primary-950/20 dark:text-primary-400';
-											statusIcon = (
-												<div className='flex h-4.5 w-4.5 items-center justify-center rounded-full bg-primary-400 text-primary-950'>
-													<Check className='h-3 w-3 stroke-[3]' />
-												</div>
-											);
-										}
-									} else {
-										if (isNext) {
-											cardBorder =
-												'border-primary-400 bg-bg-card shadow-sm dark:border-primary-400 dark:bg-bg-card';
-											iconStyle =
-												'bg-primary-100/60 text-primary-600 dark:bg-primary-950/40 dark:text-primary-400';
-											statusIcon = (
-												<Circle className='h-4.5 w-4.5 shrink-0 stroke-[2] text-primary-500' />
-											);
-										}
-									}
-
+									const cardBorder =
+										isNext && !item.done
+											? 'border-primary-400 shadow-sm'
+											: 'border-border-main';
+									const iconStyle = item.done
+										? 'bg-primary-100/50 text-primary-600 dark:bg-primary-950/20 dark:text-primary-400'
+										: isNext
+											? 'bg-primary-100/60 text-primary-600 dark:bg-primary-950/40 dark:text-primary-400'
+											: 'bg-slate-50 text-slate-400 dark:bg-zinc-900 dark:text-zinc-600';
 									return (
 										<button
 											key={item.key}
 											type='button'
 											onClick={() => handleOnboardingAction(item.key)}
-											className={`flex items-center justify-between gap-3 rounded-2xl border p-4 text-left transition-all duration-200 hover:border-primary-400 hover:shadow-md hover:shadow-primary-500/20/[0.01] ${cardBorder}`}>
+											className={`flex items-center justify-between gap-3 rounded-2xl border bg-bg-card p-4 text-left transition-all duration-200 hover:border-primary-400 hover:shadow-md ${cardBorder}`}>
 											<div className='flex min-w-0 flex-1 items-center gap-3.5'>
-												{/* Left step icon */}
 												<div
 													className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl ${iconStyle}`}>
 													<IconComp size={16} />
 												</div>
-
-												{/* Step content */}
 												<div className='min-w-0 flex-1'>
 													<span
-														className={`block truncate text-xs font-black transition-colors ${item.done ? 'text-slate-500 dark:text-zinc-400' : 'text-slate-805 dark:text-zinc-100'}`}>
+														className={`block truncate text-xs font-black ${item.done ? 'text-slate-500 dark:text-zinc-400' : 'text-slate-805 dark:text-zinc-100'}`}>
 														{item.label}
 													</span>
 													<span className='mt-0.5 block truncate text-[10px] leading-relaxed font-semibold text-slate-400 dark:text-zinc-500'>
@@ -562,9 +491,17 @@ const DashboardPage = () => {
 													</span>
 												</div>
 											</div>
-
-											{/* Right side check status */}
-											<div className='shrink-0 pl-1'>{statusIcon}</div>
+											<div className='shrink-0 pl-1'>
+												{item.done ? (
+													<div className='flex h-4.5 w-4.5 items-center justify-center rounded-full bg-primary-400 text-primary-950'>
+														<Check className='h-3 w-3 stroke-[3]' />
+													</div>
+												) : (
+													<Circle
+														className={`h-4.5 w-4.5 shrink-0 ${isNext ? 'text-primary-500' : 'text-slate-300 dark:text-zinc-600'}`}
+													/>
+												)}
+											</div>
 										</button>
 									);
 								})}
@@ -573,118 +510,32 @@ const DashboardPage = () => {
 					)}
 				</AnimatePresence>
 
-				{/* Stats Grid */}
-				<section className='grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4'>
-					{stats.map((stat, i) => {
-						const IconComponent = stat.icon;
+				{/* ─── KPI row ─────────────────────────────────────────────────── */}
+				<section className='grid grid-cols-2 gap-4 lg:grid-cols-4'>
+					{kpis.map((kpi, i) => {
+						const IconComponent = kpi.icon;
 						return (
 							<motion.div
-								key={stat.label}
+								key={kpi.label}
 								initial={{ opacity: 0, y: 16 }}
 								animate={{ opacity: 1, y: 0 }}
-								transition={{ delay: i * 0.07, duration: 0.3 }}
-								whileHover={{ y: -3 }}
-								className={`group relative flex min-h-[105px] flex-col justify-between overflow-hidden rounded-3xl border border-border-main bg-bg-card p-5 shadow-sm transition-all duration-300 dark:border-border-main dark:bg-bg-card ${stat.glowClass}`}>
-								{/* Sparkline element */}
-								<div className='pointer-events-none absolute right-0 bottom-0 left-0 h-9 w-full overflow-hidden opacity-90'>
-									<svg
-										className='h-full w-full overflow-visible'
-										viewBox='0 0 100 30'
-										preserveAspectRatio='none'>
-										<defs>
-											<linearGradient
-												id={`grad-${i}`}
-												x1='0'
-												y1='0'
-												x2='0'
-												y2='1'>
-												<stop
-													offset='0%'
-													stopColor={stat.sparkColor}
-													stopOpacity='0.25'
-												/>
-												<stop
-													offset='100%'
-													stopColor={stat.sparkColor}
-													stopOpacity='0.0'
-												/>
-											</linearGradient>
-										</defs>
-										<path
-											d={stat.sparkPath}
-											fill='none'
-											stroke={stat.sparkColor}
-											strokeWidth='2.2'
-											strokeLinecap='round'
-											strokeLinejoin='round'
-										/>
-										<path
-											d={`${stat.sparkPath} L 100 30 L 0 30 Z`}
-											fill={`url(#grad-${i})`}
-										/>
-										{/* Glowing dot at the end of trend line */}
-										<circle
-											cx={stat.endX}
-											cy={stat.endY}
-											r='2'
-											fill={stat.sparkColor}
-											className='animate-pulse'
-										/>
-										<circle
-											cx={stat.endX}
-											cy={stat.endY}
-											r='4.5'
-											fill={stat.sparkColor}
-											opacity='0.3'
-											className='animate-ping'
-											style={{
-												transformOrigin: `${stat.endX}px ${stat.endY}px`,
-											}}
-										/>
-									</svg>
-								</div>
-
-								<div className='relative z-10 flex items-center gap-4.5'>
-									{/* Icon on the Left */}
+								transition={{ delay: i * 0.06, duration: 0.3 }}
+								className='relative flex flex-col justify-between overflow-hidden rounded-3xl border border-border-main bg-bg-card p-5 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md'>
+								<div className='flex items-center justify-between'>
+									<span className='text-[10px] font-black tracking-wider text-slate-400 uppercase dark:text-zinc-500'>
+										{kpi.label}
+									</span>
 									<div
-										className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border transition-all duration-300 group-hover:scale-105 group-hover:rotate-3 ${stat.iconBg}`}>
-										<IconComponent size={18} />
+										className={`flex h-9 w-9 items-center justify-center rounded-xl ${kpi.tone}`}>
+										<IconComponent size={16} />
 									</div>
-
-									{/* Stats Text on the Right */}
-									<div className='min-w-0 flex-1 space-y-0.5'>
-										<span className='block text-[10px] font-black tracking-wider text-slate-400 uppercase dark:text-zinc-500'>
-											{stat.label}
-										</span>
-										<span className='text-2.5xl block leading-none font-black tracking-tight text-slate-900 dark:text-white'>
-											{stat.value}
-										</span>
-										<div className='flex items-center gap-1.5 pt-0.5'>
-											{i === 0 && (
-												<span className='flex items-center gap-0.5 text-[11px] font-extrabold text-[#10b981] dark:text-emerald-400'>
-													<span className='text-[10px]'>↑</span>
-													<span>{stat.sub}</span>
-												</span>
-											)}
-											{i === 1 && (
-												<span className='dark:text-blue-450 flex items-center gap-1.5 text-[11px] font-extrabold text-[#3b82f6]'>
-													<span className='h-1.5 w-1.5 animate-pulse rounded-full bg-blue-500' />
-													<span>{stat.sub}</span>
-												</span>
-											)}
-											{i === 2 && (
-												<span className='flex items-center gap-1.5 text-[11px] font-extrabold text-[#f59e0b] dark:text-amber-500'>
-													<span className='h-1.5 w-1.5 animate-pulse rounded-full bg-amber-500' />
-													<span>{stat.sub}</span>
-												</span>
-											)}
-											{i === 3 && (
-												<span className='flex items-center gap-0.5 text-[11px] font-extrabold text-[#10b981] dark:text-emerald-400'>
-													<span className='text-[10px]'>↑</span>
-													<span>{stat.sub}</span>
-												</span>
-											)}
-										</div>
+								</div>
+								<div className='mt-4'>
+									<div className='text-3xl font-black tracking-tight text-slate-900 dark:text-white'>
+										{isLoading ? '—' : kpi.value}
+									</div>
+									<div className='mt-0.5 text-[11px] font-semibold text-slate-400 dark:text-zinc-500'>
+										{kpi.sub}
 									</div>
 								</div>
 							</motion.div>
@@ -692,113 +543,234 @@ const DashboardPage = () => {
 					})}
 				</section>
 
+				{/* ─── Main monitoring grid ───────────────────────────────────── */}
 				<div className='grid grid-cols-1 gap-6 lg:grid-cols-3'>
-					{/* Recent Workflows */}
-					<div className='overflow-hidden rounded-3xl border border-border-main bg-bg-card shadow-sm lg:col-span-2 dark:border-border-main dark:bg-bg-card'>
-						<div className='flex items-center justify-between border-b border-border-main px-5 py-4.5 dark:border-border-main'>
-							<span className='text-xs font-black tracking-widest text-text-main uppercase dark:text-text-main'>
-								RECENT WORKFLOWS
-							</span>
-							<button className='flex cursor-pointer items-center gap-1 text-[11px] font-bold text-slate-500 transition-colors hover:text-slate-800 dark:text-zinc-400 dark:hover:text-white'>
-								View all <ArrowRight size={11} />
-							</button>
-						</div>
-						<div className='divide-y divide-border-main dark:divide-border-main'>
-							{recentWorkflows.map((wf) => (
-								<div
-									key={wf.id}
-									onClick={() =>
-										navigate(
-											`${pages.editor.subPages.editWorkflow.to}/${activeWorkspaceId}/${wf.id}`,
-										)
-									}
-									className='group flex cursor-pointer items-center justify-between px-5 py-4 transition-all duration-200 hover:bg-slate-50/50 dark:hover:bg-zinc-800/15'>
-									<div className='flex items-center gap-3.5'>
-										<div className='text-primary-500 flex h-10 w-10 items-center justify-center rounded-2xl border border-primary-500/20 bg-primary-400/10 transition-all duration-300 group-hover:scale-105 group-hover:rotate-3 dark:border-primary-500/10 dark:bg-primary-400/10 dark:text-primary-400'>
-											<GitMerge size={16} />
-										</div>
-										<div>
-											<p className='text-xs font-bold text-text-main transition-colors group-hover:text-primary-500 dark:text-text-main dark:group-hover:text-primary-400'>
-												{wf.title}
-											</p>
-											<p className='mt-1 flex items-center gap-1.5 text-[10px] font-semibold text-text-muted dark:text-text-muted'>
-												<Clock size={10} /> {wf.lastRun}
-											</p>
-										</div>
+					{/* Left: needs attention + recent runs */}
+					<div className='space-y-6 lg:col-span-2'>
+						{/* Needs attention */}
+						<div className='overflow-hidden rounded-3xl border border-border-main bg-bg-card shadow-sm'>
+							<div className='flex items-center justify-between border-b border-border-main px-5 py-4.5'>
+								<span className='flex items-center gap-2 text-xs font-black tracking-widest text-text-main uppercase'>
+									<AlertTriangle size={13} className='text-rose-500' />
+									Needs attention
+								</span>
+								{failures.length > 0 && (
+									<span className='rounded-full bg-rose-500/10 px-2 py-0.5 text-[10px] font-black text-rose-600 dark:text-rose-400'>
+										{failures.length}
+									</span>
+								)}
+							</div>
+							{failures.length === 0 ? (
+								<div className='flex flex-col items-center gap-2 px-5 py-9 text-center'>
+									<div className='flex h-11 w-11 items-center justify-center rounded-2xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400'>
+										<ShieldCheck size={20} />
 									</div>
-									<div
-										className='flex items-center gap-3.5'
-										onClick={(e) => e.stopPropagation()}>
-										<span className='rounded border border-primary-500/20 bg-primary-400/10 px-2 py-0.5 text-[10px] font-extrabold text-primary-600 dark:text-primary-400'>
-											{wf.successRate}% Success
-										</span>
-										<span className='bg-primary-400/10 text-primary-600 flex items-center gap-1 rounded-full border border-primary-500/20 px-2.5 py-0.5 text-[9px] font-black tracking-wider uppercase dark:bg-primary-400/10 dark:text-primary-400'>
-											<span className='h-1.5 w-1.5 animate-pulse rounded-full bg-primary-500' />
-											{wf.status}
-										</span>
-										<button
-											onClick={(e) => {
-												e.stopPropagation();
-											}}
-											className='flex h-7.5 w-7.5 cursor-pointer items-center justify-center rounded-xl bg-slate-100 shadow-xs transition-all hover:scale-105 hover:bg-primary-500 hover:text-primary-950 active:scale-95 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-primary-500 dark:hover:text-primary-950'>
-											<Play size={10} className='fill-current' />
-										</button>
-										<button
-											onClick={(e) => {
-												e.stopPropagation();
-											}}
-											className='hover:text-slate-605 flex h-7.5 w-7.5 cursor-pointer items-center justify-center rounded-xl text-slate-400 hover:bg-slate-100 active:scale-95 dark:text-zinc-500 dark:hover:bg-zinc-800 dark:hover:text-zinc-300'>
-											<MoreVertical size={14} />
-										</button>
-									</div>
+									<p className='text-xs font-bold text-text-main'>No failures — all clear</p>
+									<p className='text-[11px] font-semibold text-text-muted'>
+										Failed runs from your workflows will show up here.
+									</p>
 								</div>
-							))}
+							) : (
+								<div className='divide-y divide-border-main'>
+									{failures.slice(0, 4).map((f) => (
+										<div
+											key={f.id}
+											className='flex items-center justify-between gap-3 px-5 py-3.5'>
+											<div className='flex min-w-0 items-center gap-3'>
+												<div className='flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-rose-500/10 text-rose-500'>
+													<AlertTriangle size={15} />
+												</div>
+												<div className='min-w-0'>
+													<p className='truncate text-xs font-bold text-text-main'>
+														{f.workflow_name}
+													</p>
+													<p className='truncate text-[10px] font-semibold text-rose-500/90'>
+														{f.error_message}
+													</p>
+												</div>
+											</div>
+											<div className='flex shrink-0 items-center gap-3'>
+												<span className='hidden text-[10px] font-semibold text-text-muted sm:block'>
+													{formatRelativeTime(f.failed_at)}
+												</span>
+												<button
+													onClick={() =>
+														navigate(
+															`${pages.editor.subPages.editWorkflow.to}/${currentWorkspaceId}/${f.workflow_id}`,
+														)
+													}
+													className='flex h-7.5 items-center gap-1 rounded-lg border border-rose-500/25 bg-rose-500/5 px-2.5 text-[10px] font-black text-rose-600 transition hover:bg-rose-500 hover:text-white dark:text-rose-400'>
+													Fix <ArrowUpRight size={11} />
+												</button>
+											</div>
+										</div>
+									))}
+								</div>
+							)}
+						</div>
+
+						{/* Recent runs */}
+						<div className='overflow-hidden rounded-3xl border border-border-main bg-bg-card shadow-sm'>
+							<div className='flex items-center justify-between border-b border-border-main px-5 py-4.5'>
+								<span className='flex items-center gap-2 text-xs font-black tracking-widest text-text-main uppercase'>
+									<Activity size={13} className='text-primary-500' />
+									Recent runs
+								</span>
+								<button
+									onClick={() => navigate(pages.app.subPages.history.to)}
+									className='flex cursor-pointer items-center gap-1 text-[11px] font-bold text-slate-500 transition-colors hover:text-slate-800 dark:text-zinc-400 dark:hover:text-white'>
+									View all <ArrowRight size={11} />
+								</button>
+							</div>
+							{isLoading && recentRuns.length === 0 ? (
+								<div className='px-5 py-10 text-center text-xs font-semibold text-text-muted'>
+									Loading recent runs…
+								</div>
+							) : recentRuns.length === 0 ? (
+								<div className='flex flex-col items-center gap-3 px-5 py-10 text-center'>
+									<div className='flex h-11 w-11 items-center justify-center rounded-2xl bg-primary-100/50 text-primary-600 dark:bg-primary-950/40 dark:text-primary-400'>
+										<Inbox size={20} />
+									</div>
+									<p className='text-xs font-bold text-text-main'>No runs yet</p>
+									<button
+										onClick={() => navigate(pages.editor.subPages.addWorkflow.to)}
+										className='mt-1 flex items-center gap-1.5 rounded-xl bg-primary-400 px-3.5 py-2 text-[11px] font-black text-primary-950 transition hover:brightness-110'>
+										<Plus size={12} strokeWidth={3} /> Create Workflow
+									</button>
+								</div>
+							) : (
+								<div className='divide-y divide-border-main'>
+									{recentRuns.slice(0, 6).map((run) => {
+										const badge =
+											STATUS_BADGE_COLORS[run.status as TExecutionStatus] ??
+											STATUS_BADGE_COLORS.queued;
+										return (
+											<div
+												key={run.id}
+												onClick={() =>
+													navigate(
+														`${pages.editor.subPages.editWorkflow.to}/${currentWorkspaceId}/${run.workflow_id}`,
+													)
+												}
+												className='group flex cursor-pointer items-center justify-between gap-3 px-5 py-3.5 transition-colors hover:bg-slate-50/50 dark:hover:bg-zinc-800/15'>
+												<div className='flex min-w-0 items-center gap-3'>
+													<div className='flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-primary-500/15 bg-primary-400/10 text-primary-500 dark:text-primary-400'>
+														<GitMerge size={15} />
+													</div>
+													<div className='min-w-0'>
+														<p className='truncate text-xs font-bold text-text-main transition-colors group-hover:text-primary-500 dark:group-hover:text-primary-400'>
+															{run.workflow_name}
+														</p>
+														<p className='mt-0.5 flex items-center gap-1.5 text-[10px] font-semibold text-text-muted capitalize'>
+															<Clock size={10} /> {formatRelativeTime(run.created_at)}
+															<span className='text-slate-300 dark:text-zinc-700'>·</span>
+															{run.trigger_type}
+														</p>
+													</div>
+												</div>
+												<div className='flex shrink-0 items-center gap-3'>
+													{typeof run.duration_ms === 'number' && (
+														<span className='hidden text-[10px] font-bold text-text-muted sm:block'>
+															{formatDuration(run.duration_ms)}
+														</span>
+													)}
+													<span
+														className={`rounded-full px-2.5 py-0.5 text-[9px] font-black tracking-wider uppercase ${badge.bg} ${badge.text}`}>
+														{run.status}
+													</span>
+												</div>
+											</div>
+										);
+									})}
+								</div>
+							)}
 						</div>
 					</div>
 
-					{/* Quick Actions */}
-					<div className='overflow-hidden rounded-3xl border border-border-main bg-bg-card shadow-sm dark:border-border-main dark:bg-bg-card'>
-						<div className='flex items-center gap-2 border-b border-border-main px-5 py-4.5 dark:border-border-main'>
-							<span className='text-xs font-black tracking-widest text-text-main uppercase dark:text-text-main'>
-								QUICK ACTIONS
-							</span>
-						</div>
-						<div className='space-y-3.5 p-5'>
-							{quickActions.map((action, index) => {
-								const ActionIcon = action.icon;
-								const handleActionClick = () => {
-									if (index === 0) navigate(pages.editor.subPages.addWorkflow.to);
-									else if (index === 1) navigate(pages.app.subPages.agents.to);
-									else if (index === 2) navigate(pages.app.subPages.apps.to);
-									else if (index === 3) navigate(pages.app.subPages.templates.to);
-								};
-								return (
-									<motion.button
-										whileHover={{ scale: 1.015, y: -1 }}
-										whileTap={{ scale: 0.985 }}
-										key={action.label}
-										onClick={handleActionClick}
-										className={`group flex w-full cursor-pointer items-center gap-3.5 rounded-2xl border p-4 text-left shadow-xs backdrop-blur-md transition-all ${action.color}`}>
-										<div
-											className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl transition-all duration-300 group-hover:rotate-3 ${action.iconStyle}`}>
-											<ActionIcon size={15} />
-										</div>
-										<div className='min-w-0 flex-1'>
-											<p
-												className={`text-xs font-bold text-slate-900 transition-colors dark:text-white ${action.hoverText}`}>
-												{action.label}
-											</p>
-											<p className='mt-0.5 text-[10px] leading-normal font-semibold text-slate-400 dark:text-zinc-500'>
-												{action.description}
-											</p>
-										</div>
-										<ChevronRight
-											size={13}
-											className='ml-auto text-slate-400 opacity-80 transition-all group-hover:translate-x-1 group-hover:text-current'
+					{/* Right: activity trend + shortcuts */}
+					<div className='space-y-6'>
+						{/* Activity trend */}
+						<div className='overflow-hidden rounded-3xl border border-border-main bg-bg-card p-5 shadow-sm'>
+							<div className='flex items-center justify-between'>
+								<span className='text-xs font-black tracking-widest text-text-main uppercase'>
+									Run activity
+								</span>
+								<span className='text-[10px] font-semibold text-text-muted'>
+									peak {peakDay}
+								</span>
+							</div>
+							<div className='mt-4 h-24 w-full'>
+								{trend.line ? (
+									<svg
+										viewBox='0 0 100 30'
+										preserveAspectRatio='none'
+										className='h-full w-full overflow-visible'>
+										<defs>
+											<linearGradient id='dash-trend' x1='0' y1='0' x2='0' y2='1'>
+												<stop offset='0%' stopColor='#CFF54A' stopOpacity='0.28' />
+												<stop offset='100%' stopColor='#CFF54A' stopOpacity='0' />
+											</linearGradient>
+										</defs>
+										<path d={trend.area} fill='url(#dash-trend)' />
+										<path
+											d={trend.line}
+											fill='none'
+											stroke='#CFF54A'
+											strokeWidth='2'
+											strokeLinecap='round'
+											strokeLinejoin='round'
 										/>
-									</motion.button>
-								);
-							})}
+									</svg>
+								) : (
+									<div className='flex h-full items-center justify-center text-[11px] font-semibold text-text-muted'>
+										No run data yet
+									</div>
+								)}
+							</div>
+							<div className='mt-3 flex items-center justify-between border-t border-border-main pt-3 text-[11px] font-bold'>
+								<span className='text-text-muted'>This week</span>
+								<span className='text-text-main'>
+									{(summary?.total_executions_week ?? 0).toLocaleString()} runs
+								</span>
+							</div>
+						</div>
+
+						{/* Shortcuts */}
+						<div className='overflow-hidden rounded-3xl border border-border-main bg-bg-card shadow-sm'>
+							<div className='border-b border-border-main px-5 py-4.5'>
+								<span className='text-xs font-black tracking-widest text-text-main uppercase'>
+									Quick actions
+								</span>
+							</div>
+							<div className='space-y-2.5 p-4'>
+								{shortcuts.map((action) => {
+									const ActionIcon = action.icon;
+									return (
+										<motion.button
+											whileHover={{ scale: 1.015 }}
+											whileTap={{ scale: 0.985 }}
+											key={action.label}
+											onClick={action.onClick}
+											className='group flex w-full cursor-pointer items-center gap-3.5 rounded-2xl border border-border-main bg-bg-card p-3.5 text-left transition-all hover:border-primary-400 hover:bg-primary-50 dark:hover:border-primary-400/30 dark:hover:bg-primary-400/5'>
+											<div className='flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-primary-100 bg-primary-50 text-primary-500 transition-transform group-hover:rotate-3 dark:border-primary-400/20 dark:bg-primary-400/10 dark:text-primary-400'>
+												<ActionIcon size={15} />
+											</div>
+											<div className='min-w-0 flex-1'>
+												<p className='text-xs font-bold text-slate-900 transition-colors group-hover:text-primary-500 dark:text-white dark:group-hover:text-primary-400'>
+													{action.label}
+												</p>
+												<p className='mt-0.5 text-[10px] font-semibold text-slate-400 dark:text-zinc-500'>
+													{action.description}
+												</p>
+											</div>
+											<ArrowRight
+												size={13}
+												className='ml-auto text-slate-400 opacity-80 transition-all group-hover:translate-x-1 group-hover:text-primary-500'
+											/>
+										</motion.button>
+									);
+								})}
+							</div>
 						</div>
 					</div>
 				</div>

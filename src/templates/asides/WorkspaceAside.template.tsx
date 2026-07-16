@@ -29,6 +29,8 @@ import avatar from '@/assets/avatar/avatar1.png';
 import { useWorkflowShellStore } from '@/store/workflowShell.store';
 import { useCreateWorkspace } from '@/api/modules/workspaces';
 import { useWorkspaceContext } from '@/context/workspaceContext';
+import { useGlobalSearchStore } from '@/store/globalSearch.store';
+import GlobalSearch from '@/templates/search/GlobalSearch.template';
 
 type TSidebarView =
 	| 'dashboard'
@@ -366,6 +368,7 @@ const WorkspaceAsideTemplate = () => {
 					<button
 						type='button'
 						title='Search workspace'
+						onClick={() => useGlobalSearchStore.getState().open()}
 						className={[
 							'group hover:border-emerald-200 relative flex h-12 w-full items-center gap-3 rounded-2xl border border-zinc-200 bg-zinc-50 text-sm font-semibold text-zinc-600 shadow-sm transition hover:bg-white hover:text-zinc-950 dark:border-white/10 dark:bg-white/[0.045] dark:text-zinc-300 dark:shadow-xl dark:shadow-black/10 dark:hover:border-emerald-300/25 dark:hover:bg-white/[0.07] dark:hover:text-white',
 							sidebarCollapsed ? 'justify-center px-0' : 'px-4',
@@ -666,6 +669,8 @@ const WorkspaceAsideTemplate = () => {
 					</motion.div>
 				)}
 			</AnimatePresence>
+
+			<GlobalSearch />
 		</>
 	);
 };

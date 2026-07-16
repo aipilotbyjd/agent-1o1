@@ -3100,6 +3100,7 @@ __metadata:
     eslint-plugin-react-refresh: "npm:^0.5.2"
     formik: "npm:^2.4.9"
     framer-motion: "npm:^12.40.0"
+    fuse.js: "npm:^7.5.0"
     globals: "npm:^17.6.0"
     i18next: "npm:^26.3.0"
     is-hotkey: "npm:^0.2.0"
@@ -5038,6 +5039,13 @@ __metadata:
   version: 1.2.3
   resolution: "functions-have-names@npm:1.2.3"
   checksum: 10c0/33e77fd29bddc2d9bb78ab3eb854c165909201f88c75faa8272e35899e2d35a8a642a15e7420ef945e1f64a9670d6aa3ec744106b2aa42be68ca5114025954ca
+  languageName: node
+  linkType: hard
+
+"fuse.js@npm:^7.5.0":
+  version: 7.5.0
+  resolution: "fuse.js@npm:7.5.0"
+  checksum: 10c0/1fa51a66063b9b0579921ed1d774864e5e027719d3a4fdb469e6636befa4a9f2f7da626c07da757c6e1ef8a761c7bd3a217e6ecc8e16f0276e1a0f8dd941ff77
   languageName: node
   linkType: hard
 

@@ -24,6 +24,7 @@ import {
 	useUploadAvatar,
 } from '@/api/modules/auth';
 import { useAuth } from '@/context/authContext';
+import { useConfirm } from '@/context/confirmContext';
 import { primaryBtn, secondaryBtn, dangerBtn } from '@/pages/settings/_shared/buttons';
 
 type TProfileForm = {
@@ -103,6 +104,7 @@ const SettingsFieldRow = ({
 const ProfilePage = () => {
 	const navigate = useNavigate();
 	const { userData } = useAuth();
+	const { confirm } = useConfirm();
 	const fileInputRef = useRef<HTMLInputElement>(null);
 	const updateProfile = useUpdateProfile();
 	const uploadAvatar = useUploadAvatar();
@@ -192,9 +194,12 @@ const ProfilePage = () => {
 	};
 
 	const handleDeleteAccount = async () => {
-		const confirmed = window.confirm(
-			'This will permanently delete your account and all of its data.',
-		);
+		const confirmed = await confirm({
+			title: 'Delete Account',
+			confirmText: 'Delete Account',
+			message:
+				'This will permanently delete your account and all of its data. This action cannot be undone.',
+		});
 		if (!confirmed) return;
 
 		try {

@@ -27,6 +27,7 @@ import Container from '@/components/layout/Container';
 import pages from '@/Routes/pages';
 import { notify } from '@/api/core';
 import { useWorkspaceContext } from '@/context/workspaceContext';
+import { useConfirm } from '@/context/confirmContext';
 import {
 	MASKED_CREDENTIAL_VALUE,
 	type ICredential,
@@ -304,6 +305,7 @@ const AppsListPage = () => {
 	}, []);
 
 	const { activeWorkspaceId } = useWorkspaceContext();
+	const { confirm } = useConfirm();
 	const { data: credentialsData, refetch: refetchCredentials } = useCredentials(
 		activeWorkspaceId,
 		{ per_page: 100 },
@@ -645,127 +647,97 @@ const AppsListPage = () => {
 						{/* Stats overview row */}
 						<div className='grid grid-cols-1 gap-5 sm:grid-cols-3'>
 							{/* Card 1: Active Connections */}
-							<div className='group relative flex min-h-[260px] flex-col justify-between overflow-hidden rounded-[24px] border border-slate-200/60 bg-white p-6 shadow-sm transition-all duration-300 hover:border-slate-300/80 hover:shadow-md dark:border-zinc-800/80 dark:bg-[#11131c]'>
-								<div>
-									<div className='flex items-center gap-3'>
-										<div className='flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary-50 text-primary-600 dark:bg-primary-950/20 dark:text-primary-400'>
-											<Cable size={18} className='stroke-[2.2px]' />
-										</div>
-										<span className='text-[11px] font-extrabold tracking-wider text-slate-400 uppercase dark:text-zinc-400'>
-											Active Connections
-										</span>
+							<div className='group relative flex flex-col justify-between overflow-hidden rounded-3xl border border-slate-200/60 bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-primary-500/30 hover:shadow-lg dark:border-zinc-800/80 dark:bg-[#11131c]'>
+								<Cable className='pointer-events-none absolute -top-4 -right-4 h-24 w-24 text-slate-900/[0.03] dark:text-white/[0.04]' />
+								<div className='relative flex items-center gap-3'>
+									<div className='flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-600 dark:bg-emerald-950/20 dark:text-emerald-400'>
+										<Cable size={20} className='stroke-[2.2px]' />
 									</div>
-									<div className='mt-4 flex items-baseline gap-1.5'>
-										<span className='text-3xl font-extrabold text-slate-900 dark:text-white'>
+									<span className='text-[11px] font-extrabold tracking-wider text-slate-400 uppercase dark:text-zinc-400'>
+										Active Connections
+									</span>
+								</div>
+								<div className='relative mt-5'>
+									<div className='flex items-baseline gap-1.5'>
+										<span className='text-4xl font-black tracking-tight text-slate-900 dark:text-white'>
 											{activeConnectionsCount}
 										</span>
-										<span className='text-xs font-semibold text-slate-400 dark:text-zinc-500'>
-											connected
-										</span>
+										<span className='text-xs font-semibold text-slate-400 dark:text-zinc-500'>connected</span>
 									</div>
-								</div>
-
-								<div className='mt-4 flex flex-col items-center rounded-xl border border-dashed border-slate-200 bg-slate-50/50 p-3.5 text-center dark:border-zinc-800 dark:bg-zinc-950/20'>
-									<p className='text-[10px] font-bold text-slate-500 dark:text-zinc-400'>
-										No integrations connected yet
+									<p className='mt-1.5 text-[11px] font-semibold text-slate-400 dark:text-zinc-500'>
+										{activeConnectionsCount > 0
+											? 'Apps linked to your workspace'
+											: 'No apps connected yet'}
 									</p>
-									<p className='mt-0.5 text-[9px] leading-tight text-slate-400 dark:text-zinc-500'>
-										Connect your first app to unlock automations.
-									</p>
-									<button
-										onClick={() => setIsConnectModalOpen(true)}
-										className='mt-2.5 h-7 rounded-lg bg-primary-400 px-3 text-[9px] font-extrabold text-primary-950 transition-all hover:bg-primary-500 active:scale-95'>
-										Browse Apps
-									</button>
 								</div>
+								<button
+									onClick={() => setIsConnectModalOpen(true)}
+									className='relative mt-5 h-9 w-full cursor-pointer rounded-xl bg-primary-400 text-[11px] font-extrabold text-primary-950 transition-all hover:bg-primary-500 active:scale-95'>
+									Browse Apps
+								</button>
 							</div>
 
 							{/* Card 2: Available Catalog */}
-							<div className='group relative flex min-h-[260px] flex-col justify-between overflow-hidden rounded-[24px] border border-slate-200/60 bg-white p-6 shadow-sm transition-all duration-300 hover:border-slate-300/80 hover:shadow-md dark:border-zinc-800/80 dark:bg-[#11131c]'>
-								<div>
-									<div className='flex items-center gap-3'>
-										<div className='flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary-50 text-primary-600 dark:bg-primary-950/20 dark:text-primary-400'>
-											<Grid size={18} className='stroke-[2.2px]' />
-										</div>
-										<span className='text-[11px] font-extrabold tracking-wider text-slate-400 uppercase dark:text-zinc-400'>
-											Available Catalog
-										</span>
+							<div className='group relative flex flex-col justify-between overflow-hidden rounded-3xl border border-slate-200/60 bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-primary-500/30 hover:shadow-lg dark:border-zinc-800/80 dark:bg-[#11131c]'>
+								<Grid className='pointer-events-none absolute -top-4 -right-4 h-24 w-24 text-slate-900/[0.03] dark:text-white/[0.04]' />
+								<div className='relative flex items-center gap-3'>
+									<div className='flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-primary-50 text-primary-600 dark:bg-primary-950/20 dark:text-primary-400'>
+										<Grid size={20} className='stroke-[2.2px]' />
 									</div>
-									<div className='mt-4 flex items-baseline gap-1.5'>
-										<span className='text-3xl font-extrabold text-slate-900 dark:text-white'>
-											{isCredentialTypesLoading
-												? '...'
-												: totalIntegrationsCount}
-											+
-										</span>
-										<span className='text-xs font-semibold text-slate-400 dark:text-zinc-500'>
-											integrations
-										</span>
-									</div>
+									<span className='text-[11px] font-extrabold tracking-wider text-slate-400 uppercase dark:text-zinc-400'>
+										Available Catalog
+									</span>
 								</div>
-
-								<div className='mt-4 flex flex-col gap-2'>
-									{/* Overlapping avatars representation */}
-									<div className='flex items-center gap-1.5'>
-										<div className='flex -space-x-2 overflow-hidden'>
-											<div className='flex h-6.5 w-6.5 shrink-0 items-center justify-center rounded-full bg-[#181717] text-white ring-2 ring-white dark:ring-[#11131c]'>
-												<GithubIcon className='h-3.5 w-3.5' />
-											</div>
-											<div className='flex h-6.5 w-6.5 shrink-0 items-center justify-center rounded-full bg-[#4A154B] text-white ring-2 ring-white dark:ring-[#11131c]'>
-												<Users className='h-3.5 w-3.5' />
-											</div>
-											<div className='flex h-6.5 w-6.5 shrink-0 items-center justify-center rounded-full bg-[#4285F4] text-white ring-2 ring-white dark:ring-[#11131c]'>
-												<Cloud className='h-3.5 w-3.5' />
-											</div>
-										</div>
-										<span className='text-[9.5px] font-bold text-slate-400 dark:text-zinc-500'>
-											New apps added weekly
+								<div className='relative mt-5'>
+									<div className='flex items-baseline gap-1.5'>
+										<span className='text-4xl font-black tracking-tight text-slate-900 dark:text-white'>
+											{isCredentialTypesLoading ? '…' : `${totalIntegrationsCount}+`}
 										</span>
+										<span className='text-xs font-semibold text-slate-400 dark:text-zinc-500'>integrations</span>
 									</div>
-									<button
-										onClick={() => setIsConnectModalOpen(true)}
-										className='dark:text-zinc-350 h-8 w-full rounded-lg border border-slate-200 text-[10px] font-extrabold text-slate-600 transition-all hover:bg-slate-50 dark:border-zinc-800 dark:hover:bg-zinc-800/40'>
-										Explore Catalog
-									</button>
+									<p className='mt-1.5 text-[11px] font-semibold text-slate-400 dark:text-zinc-500'>
+										New apps added weekly
+									</p>
 								</div>
+								<button
+									onClick={() => setIsConnectModalOpen(true)}
+									className='relative mt-5 h-9 w-full cursor-pointer rounded-xl border border-slate-200 text-[11px] font-extrabold text-slate-600 transition-all hover:bg-slate-50 dark:border-zinc-800 dark:text-zinc-350 dark:hover:bg-zinc-800/40'>
+									Explore Catalog
+								</button>
 							</div>
 
 							{/* Card 3: Data Security */}
-							<div className='group relative flex min-h-[260px] flex-col justify-between overflow-hidden rounded-[24px] border border-slate-200/60 bg-white p-6 shadow-sm transition-all duration-300 hover:border-slate-300/80 hover:shadow-md dark:border-zinc-800/80 dark:bg-[#11131c]'>
-								<div>
-									<div className='flex items-center gap-3'>
-										<div className='flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary-50 text-primary-600 dark:bg-primary-950/20 dark:text-primary-400'>
-											<ShieldCheck size={18} className='stroke-[2.2px]' />
-										</div>
-										<span className='text-[11px] font-extrabold tracking-wider text-slate-400 uppercase dark:text-zinc-400'>
-											Data Security
-										</span>
+							<div className='group relative flex flex-col justify-between overflow-hidden rounded-3xl border border-slate-200/60 bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-primary-500/30 hover:shadow-lg dark:border-zinc-800/80 dark:bg-[#11131c]'>
+								<ShieldCheck className='pointer-events-none absolute -top-4 -right-4 h-24 w-24 text-slate-900/[0.03] dark:text-white/[0.04]' />
+								<div className='relative flex items-center gap-3'>
+									<div className='flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-primary-50 text-primary-600 dark:bg-primary-950/20 dark:text-primary-400'>
+										<ShieldCheck size={20} className='stroke-[2.2px]' />
 									</div>
-									<div className='mt-4 flex items-baseline gap-1.5'>
-										<span className='text-3xl font-extrabold text-slate-900 dark:text-white'>
+									<span className='text-[11px] font-extrabold tracking-wider text-slate-400 uppercase dark:text-zinc-400'>
+										Data Security
+									</span>
+								</div>
+								<div className='relative mt-5'>
+									<div className='flex items-baseline gap-1.5'>
+										<span className='text-4xl font-black tracking-tight text-slate-900 dark:text-white'>
 											AES-256
 										</span>
-										<span className='text-xs font-semibold text-slate-400 dark:text-zinc-500'>
-											encrypted
-										</span>
+										<span className='text-xs font-semibold text-slate-400 dark:text-zinc-500'>encrypted</span>
 									</div>
-								</div>
-
-								<div className='mt-4 flex flex-col gap-2.5'>
-									<div className='flex items-center gap-1.5 text-[10px] font-bold text-emerald-500'>
+									<div className='mt-1.5 flex items-center gap-1.5 text-[11px] font-bold text-emerald-500'>
 										<span className='h-1.5 w-1.5 rounded-full bg-emerald-500' />
 										<span>End-to-end credential safety</span>
 									</div>
-									<button
-										onClick={() =>
-											alert(
-												'Credentials are securely stored and encrypted in Transit & at Rest using military-grade AES-256.',
-											)
-										}
-										className='dark:text-zinc-350 h-8 w-full rounded-lg border border-slate-200 text-[10px] font-extrabold text-slate-600 transition-all hover:bg-slate-50 dark:border-zinc-800 dark:hover:bg-zinc-800/40'>
-										Learn More
-									</button>
 								</div>
+								<button
+									onClick={() =>
+										alert(
+											'Credentials are securely stored and encrypted in Transit & at Rest using military-grade AES-256.',
+										)
+									}
+									className='relative mt-5 h-9 w-full cursor-pointer rounded-xl border border-slate-200 text-[11px] font-extrabold text-slate-600 transition-all hover:bg-slate-50 dark:border-zinc-800 dark:text-zinc-350 dark:hover:bg-zinc-800/40'>
+									Learn More
+								</button>
 							</div>
 						</div>
 
@@ -919,7 +891,7 @@ const AppsListPage = () => {
 
 						{/* Main Apps Grid List */}
 						{isCredentialTypesLoading ? (
-							<div className='grid gap-5 md:grid-cols-2 xl:grid-cols-3'>
+							<div className='grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-3'>
 								{Array.from({ length: 6 }).map((_, index) => (
 									<div
 										key={index}
@@ -955,7 +927,7 @@ const AppsListPage = () => {
 								</p>
 							</div>
 						) : (
-							<div className='grid gap-5 md:grid-cols-2 xl:grid-cols-3'>
+							<div className='grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-3'>
 								<AnimatePresence mode='popLayout'>
 									{filteredApps.map((app) => {
 										const IconComponent = app.icon;
@@ -966,120 +938,89 @@ const AppsListPage = () => {
 												initial={{ opacity: 0, scale: 0.96, y: 10 }}
 												animate={{ opacity: 1, scale: 1, y: 0 }}
 												exit={{ opacity: 0, scale: 0.96, y: 10 }}
-												whileHover={{ y: -6, scale: 1.01 }}
-												transition={{
-													type: 'spring',
-													stiffness: 350,
-													damping: 25,
-												}}
-												className='group relative flex flex-col justify-between rounded-[24px] border border-slate-200/60 bg-white p-5 shadow-sm transition-all duration-300 hover:border-primary-500/30 hover:shadow-md dark:border-zinc-800/80 dark:bg-[#11131c] dark:hover:border-primary-500/30'>
-												{/* Brand background glow */}
+												whileHover={{ y: -6 }}
+												transition={{ type: 'spring', stiffness: 350, damping: 25 }}
+												className='group relative flex min-h-[248px] flex-col overflow-hidden rounded-3xl border border-slate-200/60 bg-white p-6 shadow-sm transition-all duration-300 hover:border-primary-500/30 hover:shadow-lg dark:border-zinc-800/80 dark:bg-[#11131c] dark:hover:border-primary-500/30'>
+												{/* Brand glow */}
 												<div
-													className='pointer-events-none absolute -inset-px -z-10 rounded-[24px] opacity-0 blur-md transition-all duration-500 group-hover:opacity-10'
+													className='pointer-events-none absolute -inset-px -z-10 rounded-3xl opacity-0 blur-md transition-all duration-500 group-hover:opacity-10'
 													style={{
-														background: `radial-gradient(circle at 50% 50%, ${app.color} 0%, transparent 70%)`,
+														background: `radial-gradient(circle at 30% 0%, ${app.color} 0%, transparent 70%)`,
 													}}
 												/>
 
-												<div>
-													{/* Card Header row */}
-													<div className='flex items-start justify-between gap-4'>
-														<div
-															className='relative flex h-11 w-11 shrink-0 items-center justify-center rounded-xl text-white shadow-inner transition-transform duration-300 group-hover:scale-105'
-															style={{ backgroundColor: app.color }}>
-															<IconComponent className='h-5.5 w-5.5 text-white' />
-														</div>
-
-														<div className='flex max-w-[130px] shrink-0 flex-wrap items-center justify-end gap-1.5'>
-															{/* Subcategory label tag */}
-															<span className='rounded border border-slate-100 bg-slate-50 px-1.5 py-0.5 text-[9px] font-bold text-slate-500 dark:border-zinc-700/50 dark:bg-zinc-800 dark:text-zinc-400'>
-																{app.subBadge}
-															</span>
-															{app.isOAuth && (
-																<span className='rounded border border-primary-200 bg-primary-50 px-1.5 py-0.5 text-[9px] font-bold text-primary-600 dark:border-primary-900/30 dark:bg-primary-950/20 dark:text-primary-400'>
-																	OAuth
-																</span>
-															)}
-														</div>
+												{/* Header: icon + status */}
+												<div className='flex items-start justify-between gap-3'>
+													<div
+														className='relative flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl text-white shadow-inner transition-transform duration-300 group-hover:scale-105'
+														style={{ backgroundColor: app.color }}>
+														<IconComponent className='h-7 w-7 text-white' />
 													</div>
-
-													{/* Card Name / description */}
-													<div className='mt-4.5 text-left'>
-														<div className='flex items-center gap-1.5'>
-															<h3 className='max-w-[150px] truncate text-sm font-extrabold text-slate-900 dark:text-white'>
-																{app.name}
-															</h3>
-															{app.isConnected && (
-																<span
-																	className='h-1.5 w-1.5 rounded-full bg-emerald-500'
-																	title='Active Connection'
-																/>
-															)}
-														</div>
-														<p className='mt-1.5 line-clamp-2 min-h-[34px] text-[11px] leading-relaxed font-semibold text-slate-400 dark:text-zinc-500'>
-															{app.description}
-														</p>
-													</div>
-
-													{/* Star rating and installs mockup */}
-													<div className='mt-3.5 flex items-center justify-between text-[10px] font-bold text-slate-400 dark:text-zinc-500'>
-														<div className='flex items-center gap-1 text-amber-500'>
-															<span>★</span>
-															<span className='text-slate-800 dark:text-zinc-200'>
-																{app.rating}
+													<div className='flex items-center gap-2'>
+														{app.isConnected && (
+															<span className='inline-flex items-center gap-1 rounded-full border border-emerald-500/25 bg-emerald-500/10 px-2 py-0.5 text-[9px] font-bold text-emerald-600 dark:text-emerald-400'>
+																<span className='h-1.5 w-1.5 rounded-full bg-emerald-500' />
+																Active
 															</span>
-															<span className='text-slate-400 dark:text-zinc-500'>
-																({app.reviews})
-															</span>
-														</div>
-														<div>
-															<span>{app.installs} installs</span>
-														</div>
+														)}
+														<span className='rounded-md border border-slate-100 bg-slate-50 px-2 py-0.5 text-[9px] font-bold text-slate-500 dark:border-zinc-700/50 dark:bg-zinc-800 dark:text-zinc-400'>
+															{app.subBadge}
+														</span>
 													</div>
 												</div>
 
-												{/* Footer connection action row */}
-												<div className='mt-4.5 flex items-center justify-between border-t border-slate-100/80 pt-3 dark:border-zinc-800/60'>
-													{/* Tags Badge pills */}
-													<div className='flex max-w-[120px] items-center gap-1 overflow-hidden'>
-														{app.tags.slice(0, 1).map((t: string) => (
-															<span
-																key={t}
-																className='rounded border border-slate-100/50 bg-slate-50 px-1.5 py-0.5 text-[8.5px] font-extrabold text-slate-400 uppercase dark:border-zinc-800 dark:bg-zinc-800/20 dark:text-zinc-500'>
-																{t}
-															</span>
-														))}
-														{app.isPopular && (
-															<span className='rounded border border-red-100/50 bg-red-50 px-1.5 py-0.5 text-[8.5px] font-extrabold text-red-500 uppercase dark:border-red-900/20 dark:bg-red-950/10'>
-																🔥 Popular
-															</span>
-														)}
-														{app.isNew && !app.isPopular && (
-															<span className='rounded border border-emerald-100/50 bg-green-50 px-1.5 py-0.5 text-[8.5px] font-extrabold text-emerald-600 uppercase dark:border-green-900/20 dark:bg-green-950/10'>
-																✨ New
-															</span>
-														)}
-													</div>
+												{/* Name + badges */}
+												<div className='mt-4 flex flex-wrap items-center gap-x-2 gap-y-1.5'>
+													<h3 className='truncate text-base font-extrabold text-slate-900 dark:text-white'>
+														{app.name}
+													</h3>
+													{app.isOAuth && (
+														<span className='rounded border border-primary-200 bg-primary-50 px-1.5 py-0.5 text-[9px] font-bold text-primary-600 dark:border-primary-900/30 dark:bg-primary-950/20 dark:text-primary-400'>
+															OAuth
+														</span>
+													)}
+													{app.isPopular && (
+														<span className='rounded border border-red-100/50 bg-red-50 px-1.5 py-0.5 text-[9px] font-extrabold text-red-500 uppercase dark:border-red-900/20 dark:bg-red-950/10'>
+															🔥 Popular
+														</span>
+													)}
+													{app.isNew && !app.isPopular && (
+														<span className='rounded border border-emerald-100/50 bg-green-50 px-1.5 py-0.5 text-[9px] font-extrabold text-emerald-600 uppercase dark:border-green-900/20 dark:bg-green-950/10'>
+															✨ New
+														</span>
+													)}
+												</div>
 
+												{/* Description */}
+												<p className='mt-2 line-clamp-2 text-xs leading-relaxed font-semibold text-slate-400 dark:text-zinc-500'>
+													{app.description}
+												</p>
+
+												{/* Footer */}
+												<div className='mt-auto pt-4'>
+													<div className='mb-3 flex items-center justify-between text-[11px] font-bold text-slate-400 dark:text-zinc-500'>
+														<div className='flex items-center gap-1'>
+															<span className='text-amber-500'>★</span>
+															<span className='text-slate-800 dark:text-zinc-200'>{app.rating}</span>
+															<span>({app.reviews})</span>
+														</div>
+														<span>{app.installs} installs</span>
+													</div>
 													<button
-														onClick={() =>
-															handleToggleConnection(app.id)
-														}
+														onClick={() => handleToggleConnection(app.id)}
 														disabled={
 															createCredentialMutation.isPending ||
 															deleteCredentialMutation.isPending ||
 															connectOAuthMutation.isPending
 														}
-														className={`h-7.5 cursor-pointer rounded-lg px-3 text-[10px] font-extrabold transition-all active:scale-95 ${
+														className={`h-10 w-full cursor-pointer rounded-xl text-xs font-extrabold transition-all active:scale-95 ${
 															app.isConnected
 																? 'border border-emerald-500/25 bg-emerald-500/10 text-emerald-600 hover:border-red-500/25 hover:bg-red-50/50 hover:text-red-500 dark:bg-emerald-500/5 dark:text-emerald-400 dark:hover:bg-red-950/10 dark:hover:text-red-400'
 																: 'bg-primary-400 text-primary-950 hover:bg-primary-500'
 														}`}>
 														{app.isConnected
 															? 'Active'
-															: isOAuthCredentialType(
-																		app.credentialType,
-																  )
+															: isOAuthCredentialType(app.credentialType)
 																? 'Authorize'
 																: 'Connect'}
 													</button>
@@ -1243,7 +1184,7 @@ const AppsListPage = () => {
 								initial={{ opacity: 0, scale: 0.96, y: 15 }}
 								animate={{ opacity: 1, scale: 1, y: 0 }}
 								exit={{ opacity: 0, scale: 0.96, y: 15 }}
-								className='relative w-full max-w-2xl overflow-hidden rounded-3xl border border-slate-200/80 bg-white p-6 shadow-2xl dark:border-zinc-800/80 dark:bg-[#11131c]'>
+								className='relative w-full max-w-3xl overflow-hidden rounded-3xl border border-slate-200/80 bg-white p-6 shadow-2xl dark:border-zinc-800/80 dark:bg-[#11131c]'>
 								{/* Close button */}
 								<button
 									aria-label='Close app connection dialog'
@@ -1252,13 +1193,23 @@ const AppsListPage = () => {
 									<CloseIcon className='h-4.5 w-4.5' />
 								</button>
 
-								<div>
-									<h2 className='text-lg font-black text-slate-900 dark:text-white'>
-										Apps Available
-									</h2>
-									<p className='mt-1 text-xs font-bold text-slate-400 dark:text-zinc-500'>
-										Select the app you would like to authenticate with.
-									</p>
+								<div className='flex items-center gap-3.5 pr-10'>
+									<div className='flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-primary-100/60 text-primary-600 dark:bg-primary-950/40 dark:text-primary-400'>
+										<Grid className='h-5 w-5' />
+									</div>
+									<div className='min-w-0'>
+										<div className='flex items-center gap-2'>
+											<h2 className='text-lg font-black text-slate-900 dark:text-white'>
+												Apps Available
+											</h2>
+											<span className='rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-black text-slate-500 dark:bg-zinc-800 dark:text-zinc-400'>
+												{isCredentialTypesLoading ? '…' : `${totalIntegrationsCount}+`}
+											</span>
+										</div>
+										<p className='mt-0.5 text-xs font-bold text-slate-400 dark:text-zinc-500'>
+											Select the app you would like to authenticate with.
+										</p>
+									</div>
 								</div>
 
 								{/* Search available apps */}
@@ -1308,7 +1259,7 @@ const AppsListPage = () => {
 										filteredAvailableApps.map((availableApp) => (
 											<div
 												key={availableApp.id}
-												className='group/item flex flex-col justify-between rounded-2xl border border-slate-100 bg-slate-50/50 p-4 transition-all hover:border-primary-500/20 hover:bg-slate-50 dark:border-zinc-900/30 dark:bg-zinc-950/15 dark:hover:bg-zinc-950/40'>
+												className='group/item flex flex-col justify-between rounded-2xl border border-slate-100 bg-slate-50/50 p-4 transition-all hover:border-primary-500/30 hover:bg-white hover:shadow-sm dark:border-zinc-900/30 dark:bg-zinc-950/15 dark:hover:border-primary-500/30 dark:hover:bg-zinc-950/40'>
 												<div className='flex gap-3'>
 													<div
 														className='flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-white shadow-sm transition-transform group-hover/item:scale-105'
@@ -1344,7 +1295,7 @@ const AppsListPage = () => {
 												</div>
 												<button
 													onClick={() => handleConnectClick(availableApp)}
-													className='mt-3.5 h-8 w-full cursor-pointer rounded-lg border border-slate-200 bg-white text-[11px] font-black transition-all hover:bg-slate-950 hover:text-white dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-200 dark:hover:bg-zinc-50 dark:hover:text-slate-950'>
+													className='mt-3.5 h-9 w-full cursor-pointer rounded-lg border border-slate-200 bg-white text-[11px] font-black text-slate-700 transition-all hover:border-primary-400 hover:bg-primary-400 hover:text-primary-950 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-200 dark:hover:border-primary-400 dark:hover:bg-primary-400 dark:hover:text-primary-950'>
 													{isOAuthCredentialType(
 														availableApp.credentialType,
 													)
@@ -1597,6 +1548,13 @@ const AppsListPage = () => {
 								setSelectedCredentialIdForDetail(null);
 							}}
 							onDelete={async (id) => {
+								const confirmed = await confirm({
+									title: 'Disconnect Credential',
+									confirmText: 'Disconnect',
+									message:
+										'Are you sure you want to disconnect this credential? Any node using it will stop working. This action cannot be undone.',
+								});
+								if (!confirmed) return;
 								await deleteCredentialMutation.mutateAsync(id);
 								setIsDetailModalOpen(false);
 								setSelectedCredentialIdForDetail(null);

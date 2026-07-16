@@ -19,13 +19,11 @@ import {
 	Grid,
 	List,
 	Users,
-	Menu,
 } from 'lucide-react';
 import { OutletContextType } from './_layouts/Templates.layout';
 import Breadcrumb from '@/components/layout/Breadcrumb';
 import Container from '@/components/layout/Container';
 import pages from '@/Routes/pages';
-import useAsideStatus from '@/hooks/useAsideStatus';
 import { useWorkspaceContext } from '@/context/workspaceContext';
 import {
 	useTemplates,
@@ -328,7 +326,6 @@ const AgentChatMock = ({
 
 const TemplatesCatalogPage = () => {
 	const { setHeaderLeft } = useOutletContext<OutletContextType>();
-	const { toggleAside } = useAsideStatus();
 	const navigate = useNavigate();
 	const { activeWorkspaceId } = useWorkspaceContext();
 
@@ -503,14 +500,6 @@ const TemplatesCatalogPage = () => {
 					<div className='grid grid-cols-1 items-center gap-8 lg:grid-cols-12'>
 						<div className='relative z-10 lg:col-span-8'>
 							<div className='flex items-center gap-3 mb-4'>
-								{/* Mobile Toggle Aside Menu Button */}
-								<button
-									onClick={toggleAside}
-									type='button'
-									className='flex h-8 w-8 items-center justify-center rounded-xl border border-zinc-955/20 bg-zinc-955/10 text-zinc-955 shadow-sm md:hidden hover:bg-zinc-955/20 dark:border-white/20 dark:bg-white/10 dark:text-white dark:hover:bg-white/20'
-								>
-									<Menu size={16} />
-								</button>
 								<div className='inline-block rounded-md border border-zinc-955/20 bg-zinc-955/10 px-2.5 py-1 text-[10px] font-bold tracking-wider text-zinc-955 uppercase backdrop-blur-md dark:border-primary-500/20 dark:bg-primary-950/30 dark:text-primary-400'>
 									Ready to use
 								</div>

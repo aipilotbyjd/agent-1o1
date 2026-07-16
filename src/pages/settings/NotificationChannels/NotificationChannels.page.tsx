@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useWorkspaceContext } from '@/context/workspaceContext';
+import { useConfirm } from '@/context/confirmContext';
 import {
 	Plus,
 	Trash2,
@@ -182,6 +183,7 @@ type TEditState = {
 
 const ChannelRow = ({ channel }: { channel: TNotificationChannel }) => {
 	const { activeWorkspaceId } = useWorkspaceContext();
+	const { confirm } = useConfirm();
 	const updateChannel = useUpdateNotificationChannel(activeWorkspaceId);
 	const deleteChannel = useDeleteNotificationChannel(activeWorkspaceId);
 	const testChannel = useTestNotificationChannel(activeWorkspaceId);
@@ -204,8 +206,20 @@ const ChannelRow = ({ channel }: { channel: TNotificationChannel }) => {
 		updateChannel.mutate({ id: channel.id, body: { is_active: !channel.is_active } });
 	};
 
-	const handleDelete = () => {
-		if (!window.confirm(`Delete "${channel.label}"? This cannot be undone.`)) return;
+	const handleDelete = async () => {
+		const confirmed = await confirm({
+			title: 'Delete Channel',
+			message: (
+				<>
+					Are you sure you want to delete{' '}
+					<strong className='font-semibold text-zinc-800 dark:text-zinc-200'>
+						"{channel.label}"
+					</strong>
+					? This cannot be undone.
+				</>
+			),
+		});
+		if (!confirmed) return;
 		deleteChannel.mutate(channel.id);
 	};
 
