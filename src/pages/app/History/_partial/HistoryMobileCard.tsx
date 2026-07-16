@@ -22,7 +22,7 @@ const HistoryMobileCard = ({ displayItem, isSelected, onSelect }: HistoryMobileC
 					className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl shadow-xs ${
 						displayItem.type === 'Chat'
 							? 'bg-primary-50 text-primary-600 dark:bg-primary-950/40 dark:text-primary-400'
-							: 'bg-[#eff6ff] text-blue-600 dark:bg-blue-950/40 dark:text-blue-400'
+							: 'bg-primary-50 text-primary-600 dark:bg-primary-950/40 dark:text-primary-400'
 					}`}>
 					<IconComponent className='h-5.5 w-5.5' />
 				</div>
@@ -39,13 +39,13 @@ const HistoryMobileCard = ({ displayItem, isSelected, onSelect }: HistoryMobileC
 							className={`inline-flex items-center rounded-lg px-2 py-0.5 text-[8.5px] font-black tracking-widest ${
 								displayItem.type === 'Chat'
 									? 'bg-primary-50 text-primary-600 border border-primary-100 dark:border-primary-900/30 dark:bg-primary-950/30 dark:text-primary-400'
-									: 'bg-[#eff6ff] text-[#3b82f6] border border-blue-100 dark:border-blue-900/30 dark:bg-blue-950/30 dark:text-blue-400'
+									: 'bg-primary-50 text-primary-600 border border-primary-100 dark:border-primary-900/30 dark:bg-primary-950/30 dark:text-primary-400'
 							}`}>
 							{displayItem.type === 'Chat' ? 'CHAT' : 'WORKFLOW'}
 						</span>
 
 						<span className='text-[10px] font-bold text-slate-400 dark:text-zinc-500 flex items-center gap-1'>
-							<Link2 size={10} className='text-emerald-500' />
+							<Link2 size={10} className='text-primary-500' />
 							<span className='font-black text-slate-700 dark:text-zinc-250'>
 								{displayItem.credits} cr
 							</span>

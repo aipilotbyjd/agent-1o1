@@ -25,7 +25,7 @@ const HistoryTableRow = ({ displayItem, isSelected, onSelect }: HistoryTableRowP
 					className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl shadow-xs ${
 						displayItem.type === 'Chat'
 							? 'bg-primary-50 text-primary-600 dark:bg-primary-950/40 dark:text-primary-400'
-							: 'bg-blue-50 text-blue-600 dark:bg-blue-950/40 dark:text-blue-400'
+							: 'bg-primary-50 text-primary-600 dark:bg-primary-950/40 dark:text-primary-400'
 					}`}>
 					<IconComponent className='h-5.5 w-5.5' />
 				</div>
@@ -45,7 +45,7 @@ const HistoryTableRow = ({ displayItem, isSelected, onSelect }: HistoryTableRowP
 					className={`inline-flex items-center rounded-lg px-2.5 py-1 text-[9px] font-black tracking-widest ${
 						displayItem.type === 'Chat'
 							? 'border border-primary-100 bg-primary-50 text-primary-600 dark:border-primary-900/30 dark:bg-primary-950/30 dark:text-primary-400'
-							: 'border border-blue-100 bg-blue-50 text-blue-600 dark:border-blue-900/30 dark:bg-blue-950/30 dark:text-blue-400'
+							: 'border border-primary-100 bg-primary-50 text-primary-600 dark:border-primary-900/30 dark:bg-primary-950/30 dark:text-primary-400'
 					}`}>
 					{displayItem.type === 'Chat' ? 'CHAT' : 'WORKFLOW'}
 				</span>
@@ -54,7 +54,7 @@ const HistoryTableRow = ({ displayItem, isSelected, onSelect }: HistoryTableRowP
 			{/* Connections col */}
 			<div className='text-slate-655 col-span-2 flex items-center justify-start gap-1.5 text-xs font-bold dark:text-zinc-400'>
 				<div className='flex h-7 items-center gap-1.5 rounded-lg border border-slate-100 bg-slate-50/50 px-2 dark:border-zinc-800 dark:bg-zinc-950/40'>
-					<Link2 size={12} className='shrink-0 text-emerald-500' />
+					<Link2 size={12} className='shrink-0 text-primary-500' />
 					<span className='dark:text-zinc-250 font-black text-slate-750'>
 						{displayItem.credits} cr
 					</span>

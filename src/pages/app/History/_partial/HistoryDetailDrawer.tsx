@@ -77,7 +77,7 @@ const HistoryDetailDrawer = ({
 											Started
 										</span>
 										<span className='flex items-center gap-1.5 text-xs font-extrabold text-slate-800 dark:text-zinc-200'>
-											<Clock size={13} className='text-emerald-500' />
+											<Clock size={13} className='text-primary-500' />
 											{selectedDetails.timestamp.split('•')[0].trim()}
 										</span>
 									</div>
@@ -136,7 +136,7 @@ const HistoryDetailDrawer = ({
 								onClick={() => onCopyUrl(selectedDetails.id)}
 								className='dark:hover:bg-zinc-800 flex h-11 cursor-pointer items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-4.5 text-xs font-black text-slate-700 shadow-xs transition hover:bg-slate-50 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-200'>
 								{copied ? (
-									<Check size={14} className='text-emerald-500' />
+									<Check size={14} className='text-primary-500' />
 								) : (
 									<Copy size={14} />
 								)}

@@ -154,7 +154,10 @@ const DashboardPage = () => {
 	const onboarding = userData?.onboarding;
 	const [isOnboardingDismissed, setIsOnboardingDismissed] = useState(false);
 	const showOnboarding =
-		!!onboarding && !onboarding.is_complete && !onboarding.is_dismissed && !isOnboardingDismissed;
+		!!onboarding &&
+		!onboarding.is_complete &&
+		!onboarding.is_dismissed &&
+		!isOnboardingDismissed;
 	const nextOnboardingStep = onboarding?.steps.find((item) => !item.done);
 
 	const handleOnboardingAction = (key: TOnboardingStepKey) => {
@@ -224,7 +227,7 @@ const DashboardPage = () => {
 	];
 
 	return (
-		<Container className='relative overflow-x-hidden overflow-y-auto !bg-bg-main !px-0 !pt-0 font-sans dark:!bg-bg-main'>
+		<Container className='!bg-bg-main dark:!bg-bg-main relative overflow-x-hidden overflow-y-auto !px-0 !pt-0 font-sans'>
 			<div className='pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(var(--color-border-main)_1.5px,transparent_1.5px)] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] [background-size:24px_24px] opacity-70' />
 
 			<div className='mx-auto w-full max-w-7xl space-y-6 p-6 md:p-8'>
@@ -233,14 +236,15 @@ const DashboardPage = () => {
 					initial={{ opacity: 0, y: -15 }}
 					animate={{ opacity: 1, y: 0 }}
 					transition={{ duration: 0.4 }}
-					className='relative overflow-hidden rounded-3xl border border-zinc-800/80 bg-gradient-to-r from-[#090b1a] via-[#111438] to-[#250d4f] p-6 shadow-xl shadow-primary-500/20 md:p-8 dark:border-zinc-800 dark:from-[#05060f] dark:via-[#0c0d24] dark:to-[#170932]'>
+					className='border-primary-500/20 from-primary-400 via-primary-500 to-primary-600 shadow-primary-500/20 relative overflow-hidden rounded-3xl border bg-gradient-to-r p-6 shadow-xl md:p-8 dark:border-zinc-800 dark:border-zinc-800/80 dark:from-[#111315] dark:via-[#141619] dark:to-[#0d0e10]'>
+					{/* Grid Overlay inside Banner */}
 					<div className='pointer-events-none absolute inset-0 bg-[radial-gradient(rgba(255,255,255,0.03)_1px,transparent_1px)] [background-size:16px_16px] opacity-60' />
 
 					<div className='relative flex flex-col justify-between gap-6 md:flex-row md:items-center'>
 						<div className='flex-1 space-y-4'>
-							<h1 className='flex flex-wrap items-center gap-2 text-2xl font-black tracking-tight text-white md:text-3xl'>
+							<h1 className='flex flex-wrap items-center gap-2 text-2xl font-black tracking-tight text-slate-900 md:text-3xl dark:text-white'>
 								Welcome back,{' '}
-								<span className='bg-gradient-to-r from-primary-400 via-primary-300 to-blue-400 bg-clip-text text-transparent'>
+								<span className='text-slate-955 dark:from-primary-400 dark:to-primary-300 dark:bg-gradient-to-r dark:bg-clip-text dark:text-transparent'>
 									{userName}
 								</span>
 								<motion.span
@@ -256,75 +260,151 @@ const DashboardPage = () => {
 								</motion.span>
 							</h1>
 
-							<p className='max-w-xl text-xs leading-relaxed font-semibold text-zinc-300 md:text-sm'>
-								<span className='font-bold text-white'>
-									{runsToday.toLocaleString()} run{runsToday === 1 ? '' : 's'}
+							<p className='max-w-xl text-xs leading-relaxed font-semibold text-slate-700 md:text-sm dark:text-zinc-400'>
+								You have{' '}
+								<span className='font-bold text-slate-950 dark:text-white'>
+									3 active agents
 								</span>{' '}
-								today at{' '}
-								<span className='font-bold text-white'>
-									{successRate.toFixed(successRate % 1 === 0 ? 0 : 1)}% success
+								running autonomously across{' '}
+								<span className='text-slate-955 font-bold dark:text-white'>
+									8 workflows.
 								</span>
-								{failedCount > 0 ? (
-									<>
-										{' '}
-										·{' '}
-										<span className='font-bold text-rose-300'>
-											{failedCount} need
-											{failedCount === 1 ? 's' : ''} attention
-										</span>
-									</>
-								) : (
-									<>
-										{' '}
-										· <span className='font-bold text-emerald-300'>all healthy</span>
-									</>
-								)}
 							</p>
 
 							<div className='flex flex-wrap items-center gap-2.5 pt-1'>
-								<div className='flex items-center gap-1.5 rounded-full border border-white/10 bg-slate-900/60 px-3 py-1 text-[11px] font-bold text-white/95 shadow-xs'>
-									<span className='text-[10px] font-extrabold tracking-wider text-zinc-400 uppercase'>
-										Workspace
+								{/* Active Workspace */}
+								<div className='flex items-center gap-1.5 rounded-full border border-slate-950/10 bg-slate-950/5 px-3 py-1 text-[11px] font-bold text-slate-900 shadow-xs dark:border-white/10 dark:bg-slate-900/60 dark:text-white/95'>
+									<span className='text-[10px] font-extrabold tracking-wider text-slate-800/80 uppercase dark:text-zinc-400'>
+										WORKSPACE
 									</span>
-									<span className='text-zinc-600'>|</span>
+									<span className='text-slate-900/40 dark:text-zinc-500'>|</span>
 									{activeWorkspace?.color && (
 										<div
 											className={`h-2 w-2 rounded-full ${activeWorkspace.color} ring-2 ring-white/10`}
 										/>
 									)}
-									<span className='font-bold'>{activeWorkspace?.name || 'Workspace'}</span>
+									<span className='font-bold'>
+										{activeWorkspace?.name || 'Workspace'}
+									</span>
 								</div>
-								<div className='flex items-center gap-1 rounded-full border border-primary-500/30 bg-[#261546]/85 px-3 py-1 text-[11px] font-bold text-primary-200'>
-									<Crown size={11} className='text-primary-400' />
+
+								{/* Plan Badge */}
+								<div className='dark:border-primary-500/30 dark:text-primary-200 flex items-center gap-1 rounded-full border border-slate-950/10 bg-slate-950/5 px-3 py-1 text-[11px] font-bold text-slate-900 dark:bg-[#261546]/85'>
+									<Crown
+										size={11}
+										className='dark:text-primary-400 text-slate-900'
+									/>
 									<span>Pro Account</span>
 								</div>
-								<div
-									className={`flex items-center gap-1.5 rounded-full border px-3 py-1 text-[11px] font-bold ${
-										failedCount > 0
-											? 'border-rose-500/30 bg-[#2a0e12]/85 text-rose-300'
-											: 'border-emerald-500/30 bg-[#0e2a27]/85 text-emerald-300'
-									}`}>
+
+								{/* Status Badge */}
+								<div className='flex items-center gap-1.5 rounded-full border border-slate-950/10 bg-slate-950/5 px-3 py-1 text-[11px] font-bold text-slate-900 dark:border-emerald-500/30 dark:bg-[#0e2a27]/85 dark:text-emerald-300'>
 									<span className='relative flex h-1.5 w-1.5'>
-										<span
-											className={`absolute inline-flex h-full w-full animate-ping rounded-full opacity-75 ${failedCount > 0 ? 'bg-rose-400' : 'bg-emerald-400'}`}
-										/>
-										<span
-											className={`relative inline-flex h-1.5 w-1.5 rounded-full ${failedCount > 0 ? 'bg-rose-500' : 'bg-emerald-500'}`}
-										/>
+										<span className='absolute inline-flex h-full w-full animate-ping rounded-full bg-slate-950 opacity-75 dark:bg-emerald-400'></span>
+										<span className='relative inline-flex h-1.5 w-1.5 rounded-full bg-slate-900 dark:bg-emerald-500'></span>
 									</span>
-									<span>{failedCount > 0 ? 'Attention needed' : 'Systems nominal'}</span>
+									<span>
+										{failedCount > 0 ? 'Attention needed' : 'Systems nominal'}
+									</span>
 								</div>
 							</div>
 						</div>
 
+						{/* Center-Right: Floating Cards Illustration */}
+						<div className='relative mr-4 hidden h-28 w-60 items-center justify-center select-none lg:flex'>
+							{/* Left Floating Badge (Purple Lightning) */}
+							<motion.div
+								initial={{ y: 5, rotate: 12 }}
+								animate={{ y: [-4, 4, -4] }}
+								transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
+								className='from-primary-400 to-primary-400 text-primary-950 shadow-primary-500/30 absolute top-0 left-2 z-20 flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br shadow-lg'
+								style={{
+									transform: 'perspective(800px) rotateY(-20deg) rotateX(15deg)',
+								}}>
+								<Zap size={14} fill='currentColor' />
+							</motion.div>
+
+							{/* Main Analytics Card */}
+							<div
+								className='shadow-primary-500/40 relative z-10 flex h-24 w-44 flex-col justify-between rounded-2xl border border-white/20 bg-white/95 p-3 shadow-2xl dark:bg-zinc-900/90'
+								style={{
+									transform:
+										'perspective(800px) rotateY(-20deg) rotateX(15deg) rotateZ(-2deg)',
+								}}>
+								<div className='flex items-center justify-between'>
+									<div className='flex gap-1'>
+										<div className='bg-primary-200 dark:bg-primary-900 h-1.5 w-6 rounded-full' />
+										<div className='h-1.5 w-3 rounded-full bg-slate-200 dark:bg-zinc-800' />
+									</div>
+									<div className='flex h-3.5 w-3.5 items-center justify-center rounded-full bg-slate-100 dark:bg-zinc-800'>
+										<div className='h-1 w-1 rounded-full bg-slate-400' />
+									</div>
+								</div>
+								{/* SVG Line chart inside */}
+								<div className='mt-2 flex-1'>
+									<svg
+										className='h-10 w-full overflow-visible'
+										viewBox='0 0 100 30'
+										preserveAspectRatio='none'>
+										<defs>
+											<linearGradient
+												id='primary-glow-banner'
+												x1='0'
+												y1='0'
+												x2='0'
+												y2='1'>
+												<stop
+													offset='0%'
+													stopColor='#C4EE3D'
+													stopOpacity='0.4'
+												/>
+												<stop
+													offset='100%'
+													stopColor='#C4EE3D'
+													stopOpacity='0.0'
+												/>
+											</linearGradient>
+										</defs>
+										<path
+											d='M0,25 Q15,5 35,18 T75,8 T100,5'
+											fill='none'
+											stroke='#C4EE3D'
+											strokeWidth='2.5'
+											strokeLinecap='round'
+										/>
+										<path
+											d='M0,25 Q15,5 35,18 T75,8 T100,5 L100,30 L0,30 Z'
+											fill='url(#primary-glow-banner)'
+										/>
+										<circle cx='100' cy='5' r='2.5' fill='#C4EE3D' />
+									</svg>
+								</div>
+							</div>
+
+							{/* Right Floating Badge (Green Robot) */}
+							<motion.div
+								initial={{ y: -5, rotate: -8 }}
+								animate={{ y: [4, -4, 4] }}
+								transition={{ duration: 4.5, repeat: Infinity, ease: 'easeInOut' }}
+								className='from-primary-400 to-primary-500 text-primary-950 shadow-primary-500/30 absolute right-0 bottom-1 z-20 flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br shadow-lg'
+								style={{
+									transform: 'perspective(800px) rotateY(-20deg) rotateX(15deg)',
+								}}>
+								<Bot size={14} />
+							</motion.div>
+						</div>
+
 						<div className='z-10 shrink-0 self-start md:self-center'>
 							<motion.button
-								whileHover={{ scale: 1.02, boxShadow: '0 0 20px rgba(124, 58, 237, 0.35)' }}
+								whileHover={{
+									scale: 1.02,
+									boxShadow: '0 0 20px rgba(15, 23, 42, 0.15)',
+								}}
 								whileTap={{ scale: 0.98 }}
 								onClick={() => navigate(pages.editor.subPages.addWorkflow.to)}
-								className='flex h-10.5 cursor-pointer items-center gap-2 rounded-xl bg-gradient-to-r from-primary-400 to-primary-400 px-6 text-xs font-bold text-primary-950 shadow-md shadow-primary-500/10 transition-all hover:brightness-110 active:scale-95'>
-								<Plus size={14} strokeWidth={3} />
-								<span>New Workflow</span>
+								className='bg-slate-955 dark:from-primary-400 dark:to-primary-400 dark:text-primary-950 dark:shadow-primary-500/10 flex h-10.5 cursor-pointer items-center gap-2 rounded-xl px-6 text-xs font-bold text-white shadow-md shadow-slate-950/15 transition-all hover:bg-slate-900 active:scale-95 dark:bg-gradient-to-r dark:hover:brightness-110'>
+								<Zap size={14} strokeWidth={3} />
+								<span>Quick Run</span>
 							</motion.button>
 						</div>
 					</div>
@@ -338,28 +418,29 @@ const DashboardPage = () => {
 							animate={{ opacity: 1, y: 0 }}
 							exit={{ opacity: 0, y: -10, height: 0 }}
 							transition={{ duration: 0.3 }}
-							className='overflow-hidden rounded-3xl border border-border-main bg-bg-card p-5 shadow-sm'>
+							className='border-border-main bg-bg-card overflow-hidden rounded-3xl border p-5 shadow-sm'>
 							<div className='flex flex-wrap items-start justify-between gap-4'>
 								<div>
-									<p className='text-[10px] font-black tracking-[0.18em] text-primary-600 uppercase dark:text-primary-400'>
+									<p className='text-primary-600 dark:text-primary-400 text-[10px] font-black tracking-[0.18em] uppercase'>
 										Account setup
 									</p>
 									<h2 className='mt-1 text-sm font-black text-slate-950 dark:text-white'>
-										{onboarding.progress} of {onboarding.total} milestones complete
+										{onboarding.progress} of {onboarding.total} milestones
+										complete
 									</h2>
 								</div>
 								<button
 									type='button'
 									onClick={() => setIsOnboardingDismissed(true)}
-									className='flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-bold text-slate-400 transition hover:bg-slate-50 hover:text-slate-650 dark:hover:bg-zinc-800 dark:hover:text-zinc-200'>
+									className='hover:text-slate-650 flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-bold text-slate-400 transition hover:bg-slate-50 dark:hover:bg-zinc-800 dark:hover:text-zinc-200'>
 									<X className='h-3.5 w-3.5' />
 									Dismiss
 								</button>
 							</div>
 
-							<div className='mt-3 h-1.5 overflow-hidden rounded-full bg-primary-100/50 dark:bg-primary-900/20'>
+							<div className='bg-primary-100/50 dark:bg-primary-900/20 mt-3 h-1.5 overflow-hidden rounded-full'>
 								<div
-									className='h-full rounded-full bg-gradient-to-r from-primary-400 to-primary-400 transition-all duration-500'
+									className='from-primary-400 to-primary-400 h-full rounded-full bg-gradient-to-r transition-all duration-500'
 									style={{
 										width: `${Math.min(100, (onboarding.progress / Math.max(onboarding.total, 1)) * 100)}%`,
 									}}
@@ -384,7 +465,7 @@ const DashboardPage = () => {
 											key={item.key}
 											type='button'
 											onClick={() => handleOnboardingAction(item.key)}
-											className={`flex items-center justify-between gap-3 rounded-2xl border bg-bg-card p-4 text-left transition-all duration-200 hover:border-primary-400 hover:shadow-md ${cardBorder}`}>
+											className={`bg-bg-card hover:border-primary-400 flex items-center justify-between gap-3 rounded-2xl border p-4 text-left transition-all duration-200 hover:shadow-md ${cardBorder}`}>
 											<div className='flex min-w-0 flex-1 items-center gap-3.5'>
 												<div
 													className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl ${iconStyle}`}>
@@ -402,7 +483,7 @@ const DashboardPage = () => {
 											</div>
 											<div className='shrink-0 pl-1'>
 												{item.done ? (
-													<div className='flex h-4.5 w-4.5 items-center justify-center rounded-full bg-primary-400 text-primary-950'>
+													<div className='bg-primary-400 text-primary-950 flex h-4.5 w-4.5 items-center justify-center rounded-full'>
 														<Check className='h-3 w-3 stroke-[3]' />
 													</div>
 												) : (
@@ -429,7 +510,7 @@ const DashboardPage = () => {
 								initial={{ opacity: 0, y: 16 }}
 								animate={{ opacity: 1, y: 0 }}
 								transition={{ delay: i * 0.06, duration: 0.3 }}
-								className='relative flex flex-col justify-between overflow-hidden rounded-3xl border border-border-main bg-bg-card p-5 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md'>
+								className='border-border-main bg-bg-card relative flex flex-col justify-between overflow-hidden rounded-3xl border p-5 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md'>
 								<div className='flex items-center justify-between'>
 									<span className='text-[10px] font-black tracking-wider text-slate-400 uppercase dark:text-zinc-500'>
 										{kpi.label}
@@ -457,9 +538,9 @@ const DashboardPage = () => {
 					{/* Left: needs attention + recent runs */}
 					<div className='space-y-6 lg:col-span-2'>
 						{/* Needs attention */}
-						<div className='overflow-hidden rounded-3xl border border-border-main bg-bg-card shadow-sm'>
-							<div className='flex items-center justify-between border-b border-border-main px-5 py-4.5'>
-								<span className='flex items-center gap-2 text-xs font-black tracking-widest text-text-main uppercase'>
+						<div className='border-border-main bg-bg-card overflow-hidden rounded-3xl border shadow-sm'>
+							<div className='border-border-main flex items-center justify-between border-b px-5 py-4.5'>
+								<span className='text-text-main flex items-center gap-2 text-xs font-black tracking-widest uppercase'>
 									<AlertTriangle size={13} className='text-rose-500' />
 									Needs attention
 								</span>
@@ -474,13 +555,15 @@ const DashboardPage = () => {
 									<div className='flex h-11 w-11 items-center justify-center rounded-2xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400'>
 										<ShieldCheck size={20} />
 									</div>
-									<p className='text-xs font-bold text-text-main'>No failures — all clear</p>
-									<p className='text-[11px] font-semibold text-text-muted'>
+									<p className='text-text-main text-xs font-bold'>
+										No failures — all clear
+									</p>
+									<p className='text-text-muted text-[11px] font-semibold'>
 										Failed runs from your workflows will show up here.
 									</p>
 								</div>
 							) : (
-								<div className='divide-y divide-border-main'>
+								<div className='divide-border-main divide-y'>
 									{failures.slice(0, 4).map((f) => (
 										<div
 											key={f.id}
@@ -490,7 +573,7 @@ const DashboardPage = () => {
 													<AlertTriangle size={15} />
 												</div>
 												<div className='min-w-0'>
-													<p className='truncate text-xs font-bold text-text-main'>
+													<p className='text-text-main truncate text-xs font-bold'>
 														{f.workflow_name}
 													</p>
 													<p className='truncate text-[10px] font-semibold text-rose-500/90'>
@@ -499,7 +582,7 @@ const DashboardPage = () => {
 												</div>
 											</div>
 											<div className='flex shrink-0 items-center gap-3'>
-												<span className='hidden text-[10px] font-semibold text-text-muted sm:block'>
+												<span className='text-text-muted hidden text-[10px] font-semibold sm:block'>
 													{formatRelativeTime(f.failed_at)}
 												</span>
 												<button
@@ -519,9 +602,9 @@ const DashboardPage = () => {
 						</div>
 
 						{/* Recent runs */}
-						<div className='overflow-hidden rounded-3xl border border-border-main bg-bg-card shadow-sm'>
-							<div className='flex items-center justify-between border-b border-border-main px-5 py-4.5'>
-								<span className='flex items-center gap-2 text-xs font-black tracking-widest text-text-main uppercase'>
+						<div className='border-border-main bg-bg-card overflow-hidden rounded-3xl border shadow-sm'>
+							<div className='border-border-main flex items-center justify-between border-b px-5 py-4.5'>
+								<span className='text-text-main flex items-center gap-2 text-xs font-black tracking-widest uppercase'>
 									<Activity size={13} className='text-primary-500' />
 									Recent runs
 								</span>
@@ -532,23 +615,25 @@ const DashboardPage = () => {
 								</button>
 							</div>
 							{isLoading && recentRuns.length === 0 ? (
-								<div className='px-5 py-10 text-center text-xs font-semibold text-text-muted'>
+								<div className='text-text-muted px-5 py-10 text-center text-xs font-semibold'>
 									Loading recent runs…
 								</div>
 							) : recentRuns.length === 0 ? (
 								<div className='flex flex-col items-center gap-3 px-5 py-10 text-center'>
-									<div className='flex h-11 w-11 items-center justify-center rounded-2xl bg-primary-100/50 text-primary-600 dark:bg-primary-950/40 dark:text-primary-400'>
+									<div className='bg-primary-100/50 text-primary-600 dark:bg-primary-950/40 dark:text-primary-400 flex h-11 w-11 items-center justify-center rounded-2xl'>
 										<Inbox size={20} />
 									</div>
-									<p className='text-xs font-bold text-text-main'>No runs yet</p>
+									<p className='text-text-main text-xs font-bold'>No runs yet</p>
 									<button
-										onClick={() => navigate(pages.editor.subPages.addWorkflow.to)}
-										className='mt-1 flex items-center gap-1.5 rounded-xl bg-primary-400 px-3.5 py-2 text-[11px] font-black text-primary-950 transition hover:brightness-110'>
+										onClick={() =>
+											navigate(pages.editor.subPages.addWorkflow.to)
+										}
+										className='bg-primary-400 text-primary-950 mt-1 flex items-center gap-1.5 rounded-xl px-3.5 py-2 text-[11px] font-black transition hover:brightness-110'>
 										<Plus size={12} strokeWidth={3} /> Create Workflow
 									</button>
 								</div>
 							) : (
-								<div className='divide-y divide-border-main'>
+								<div className='divide-border-main divide-y'>
 									{recentRuns.slice(0, 6).map((run) => {
 										const badge =
 											STATUS_BADGE_COLORS[run.status as TExecutionStatus] ??
@@ -563,23 +648,26 @@ const DashboardPage = () => {
 												}
 												className='group flex cursor-pointer items-center justify-between gap-3 px-5 py-3.5 transition-colors hover:bg-slate-50/50 dark:hover:bg-zinc-800/15'>
 												<div className='flex min-w-0 items-center gap-3'>
-													<div className='flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-primary-500/15 bg-primary-400/10 text-primary-500 dark:text-primary-400'>
+													<div className='border-primary-500/15 bg-primary-400/10 text-primary-500 dark:text-primary-400 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border'>
 														<GitMerge size={15} />
 													</div>
 													<div className='min-w-0'>
-														<p className='truncate text-xs font-bold text-text-main transition-colors group-hover:text-primary-500 dark:group-hover:text-primary-400'>
+														<p className='text-text-main group-hover:text-primary-500 dark:group-hover:text-primary-400 truncate text-xs font-bold transition-colors'>
 															{run.workflow_name}
 														</p>
-														<p className='mt-0.5 flex items-center gap-1.5 text-[10px] font-semibold text-text-muted capitalize'>
-															<Clock size={10} /> {formatRelativeTime(run.created_at)}
-															<span className='text-slate-300 dark:text-zinc-700'>·</span>
+														<p className='text-text-muted mt-0.5 flex items-center gap-1.5 text-[10px] font-semibold capitalize'>
+															<Clock size={10} />{' '}
+															{formatRelativeTime(run.created_at)}
+															<span className='text-slate-300 dark:text-zinc-700'>
+																·
+															</span>
 															{run.trigger_type}
 														</p>
 													</div>
 												</div>
 												<div className='flex shrink-0 items-center gap-3'>
 													{typeof run.duration_ms === 'number' && (
-														<span className='hidden text-[10px] font-bold text-text-muted sm:block'>
+														<span className='text-text-muted hidden text-[10px] font-bold sm:block'>
 															{formatDuration(run.duration_ms)}
 														</span>
 													)}
@@ -599,12 +687,12 @@ const DashboardPage = () => {
 					{/* Right: activity trend + shortcuts */}
 					<div className='space-y-6'>
 						{/* Activity trend */}
-						<div className='overflow-hidden rounded-3xl border border-border-main bg-bg-card p-5 shadow-sm'>
+						<div className='border-border-main bg-bg-card overflow-hidden rounded-3xl border p-5 shadow-sm'>
 							<div className='flex items-center justify-between'>
-								<span className='text-xs font-black tracking-widest text-text-main uppercase'>
+								<span className='text-text-main text-xs font-black tracking-widest uppercase'>
 									Run activity
 								</span>
-								<span className='text-[10px] font-semibold text-text-muted'>
+								<span className='text-text-muted text-[10px] font-semibold'>
 									peak {peakDay}
 								</span>
 							</div>
@@ -615,9 +703,22 @@ const DashboardPage = () => {
 										preserveAspectRatio='none'
 										className='h-full w-full overflow-visible'>
 										<defs>
-											<linearGradient id='dash-trend' x1='0' y1='0' x2='0' y2='1'>
-												<stop offset='0%' stopColor='#CFF54A' stopOpacity='0.28' />
-												<stop offset='100%' stopColor='#CFF54A' stopOpacity='0' />
+											<linearGradient
+												id='dash-trend'
+												x1='0'
+												y1='0'
+												x2='0'
+												y2='1'>
+												<stop
+													offset='0%'
+													stopColor='#CFF54A'
+													stopOpacity='0.28'
+												/>
+												<stop
+													offset='100%'
+													stopColor='#CFF54A'
+													stopOpacity='0'
+												/>
 											</linearGradient>
 										</defs>
 										<path d={trend.area} fill='url(#dash-trend)' />
@@ -631,12 +732,12 @@ const DashboardPage = () => {
 										/>
 									</svg>
 								) : (
-									<div className='flex h-full items-center justify-center text-[11px] font-semibold text-text-muted'>
+									<div className='text-text-muted flex h-full items-center justify-center text-[11px] font-semibold'>
 										No run data yet
 									</div>
 								)}
 							</div>
-							<div className='mt-3 flex items-center justify-between border-t border-border-main pt-3 text-[11px] font-bold'>
+							<div className='border-border-main mt-3 flex items-center justify-between border-t pt-3 text-[11px] font-bold'>
 								<span className='text-text-muted'>This week</span>
 								<span className='text-text-main'>
 									{(summary?.total_executions_week ?? 0).toLocaleString()} runs
@@ -645,9 +746,9 @@ const DashboardPage = () => {
 						</div>
 
 						{/* Shortcuts */}
-						<div className='overflow-hidden rounded-3xl border border-border-main bg-bg-card shadow-sm'>
-							<div className='border-b border-border-main px-5 py-4.5'>
-								<span className='text-xs font-black tracking-widest text-text-main uppercase'>
+						<div className='border-border-main bg-bg-card overflow-hidden rounded-3xl border shadow-sm'>
+							<div className='border-border-main border-b px-5 py-4.5'>
+								<span className='text-text-main text-xs font-black tracking-widest uppercase'>
 									Quick actions
 								</span>
 							</div>
@@ -660,12 +761,12 @@ const DashboardPage = () => {
 											whileTap={{ scale: 0.985 }}
 											key={action.label}
 											onClick={action.onClick}
-											className='group flex w-full cursor-pointer items-center gap-3.5 rounded-2xl border border-border-main bg-bg-card p-3.5 text-left transition-all hover:border-primary-400 hover:bg-primary-50 dark:hover:border-primary-400/30 dark:hover:bg-primary-400/5'>
-											<div className='flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-primary-100 bg-primary-50 text-primary-500 transition-transform group-hover:rotate-3 dark:border-primary-400/20 dark:bg-primary-400/10 dark:text-primary-400'>
+											className='group border-border-main bg-bg-card hover:border-primary-400 hover:bg-primary-50 dark:hover:border-primary-400/30 dark:hover:bg-primary-400/5 flex w-full cursor-pointer items-center gap-3.5 rounded-2xl border p-3.5 text-left transition-all'>
+											<div className='border-primary-100 bg-primary-50 text-primary-500 dark:border-primary-400/20 dark:bg-primary-400/10 dark:text-primary-400 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border transition-transform group-hover:rotate-3'>
 												<ActionIcon size={15} />
 											</div>
 											<div className='min-w-0 flex-1'>
-												<p className='text-xs font-bold text-slate-900 transition-colors group-hover:text-primary-500 dark:text-white dark:group-hover:text-primary-400'>
+												<p className='group-hover:text-primary-500 dark:group-hover:text-primary-400 text-xs font-bold text-slate-900 transition-colors dark:text-white'>
 													{action.label}
 												</p>
 												<p className='mt-0.5 text-[10px] font-semibold text-slate-400 dark:text-zinc-500'>
@@ -674,7 +775,7 @@ const DashboardPage = () => {
 											</div>
 											<ArrowRight
 												size={13}
-												className='ml-auto text-slate-400 opacity-80 transition-all group-hover:translate-x-1 group-hover:text-primary-500'
+												className='group-hover:text-primary-500 ml-auto text-slate-400 opacity-80 transition-all group-hover:translate-x-1'
 											/>
 										</motion.button>
 									);
