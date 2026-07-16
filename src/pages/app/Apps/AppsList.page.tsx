@@ -27,6 +27,7 @@ import Container from '@/components/layout/Container';
 import pages from '@/Routes/pages';
 import { notify } from '@/api/core';
 import { useWorkspaceContext } from '@/context/workspaceContext';
+import { useConfirm } from '@/context/confirmContext';
 import {
 	MASKED_CREDENTIAL_VALUE,
 	type ICredential,
@@ -304,6 +305,7 @@ const AppsListPage = () => {
 	}, []);
 
 	const { activeWorkspaceId } = useWorkspaceContext();
+	const { confirm } = useConfirm();
 	const { data: credentialsData, refetch: refetchCredentials } = useCredentials(
 		activeWorkspaceId,
 		{ per_page: 100 },
@@ -611,8 +613,8 @@ const AppsListPage = () => {
 	return (
 		<Container className='relative overflow-x-hidden overflow-y-auto bg-[#f8f9fc] bg-[radial-gradient(#e2e8f0_1px,transparent_1px)] [background-size:20px_20px] !p-0 dark:bg-zinc-950 dark:bg-[radial-gradient(#27272a_1px,transparent_1px)]'>
 			{/* Ambient decorative blur glows */}
-			<div className='pointer-events-none absolute top-[-10%] right-[-10%] -z-10 h-[45%] w-[45%] rounded-full bg-gradient-to-tr from-primary-400/5 to-primary-400/5 blur-[120px]' />
-			<div className='pointer-events-none absolute bottom-[-10%] left-[-10%] -z-10 h-[45%] w-[45%] rounded-full bg-gradient-to-br from-primary-500/5 to-primary-500/0 blur-[120px]' />
+			<div className='from-primary-400/5 to-primary-400/5 pointer-events-none absolute top-[-10%] right-[-10%] -z-10 h-[45%] w-[45%] rounded-full bg-gradient-to-tr blur-[120px]' />
+			<div className='from-primary-500/5 to-primary-500/0 pointer-events-none absolute bottom-[-10%] left-[-10%] -z-10 h-[45%] w-[45%] rounded-full bg-gradient-to-br blur-[120px]' />
 
 			<div className='mx-auto flex w-full max-w-7xl flex-col gap-8 p-4 sm:p-6 md:p-10'>
 				{/* Header panel */}
@@ -621,7 +623,7 @@ const AppsListPage = () => {
 						<h1 className='text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white'>
 							Apps
 						</h1>
-						<p className='mt-1 text-[11px] font-extrabold tracking-widest text-primary-700 uppercase dark:text-primary-400'>
+						<p className='text-primary-700 dark:text-primary-400 mt-1 text-[11px] font-extrabold tracking-widest uppercase'>
 							Integrations Hub
 						</p>
 						<p className='mt-1 text-xs font-medium text-slate-500 dark:text-zinc-400'>
@@ -631,7 +633,7 @@ const AppsListPage = () => {
 
 					<button
 						onClick={() => setIsConnectModalOpen(true)}
-						className='flex h-10 shrink-0 cursor-pointer items-center justify-center gap-2 rounded-xl bg-primary-400 px-5 text-xs font-bold text-primary-950 shadow-md shadow-primary-500/10 transition-all hover:bg-primary-500 hover:shadow-lg hover:shadow-primary-500/20 active:scale-95 dark:shadow-none'>
+						className='bg-primary-400 text-primary-950 shadow-primary-500/10 hover:bg-primary-500 hover:shadow-primary-500/20 flex h-10 shrink-0 cursor-pointer items-center justify-center gap-2 rounded-xl px-5 text-xs font-bold shadow-md transition-all hover:shadow-lg active:scale-95 dark:shadow-none'>
 						<Sparkles size={14} className='animate-pulse' />
 						<span>Connect App</span>
 						<ChevronDown size={14} />
@@ -645,137 +647,115 @@ const AppsListPage = () => {
 						{/* Stats overview row */}
 						<div className='grid grid-cols-1 gap-5 sm:grid-cols-3'>
 							{/* Card 1: Active Connections */}
-							<div className='group relative flex min-h-[260px] flex-col justify-between overflow-hidden rounded-[24px] border border-slate-200/60 bg-white p-6 shadow-sm transition-all duration-300 hover:border-slate-300/80 hover:shadow-md dark:border-zinc-800/80 dark:bg-[#11131c]'>
-								<div>
-									<div className='flex items-center gap-3'>
-										<div className='flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary-50 text-primary-600 dark:bg-primary-950/20 dark:text-primary-400'>
-											<Cable size={18} className='stroke-[2.2px]' />
-										</div>
-										<span className='text-[11px] font-extrabold tracking-wider text-slate-400 uppercase dark:text-zinc-400'>
-											Active Connections
-										</span>
+							<div className='group hover:border-primary-500/30 relative flex flex-col justify-between overflow-hidden rounded-3xl border border-slate-200/60 bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg dark:border-zinc-800/80 dark:bg-[#11131c]'>
+								<Cable className='pointer-events-none absolute -top-4 -right-4 h-24 w-24 text-slate-900/[0.03] dark:text-white/[0.04]' />
+								<div className='relative flex items-center gap-3'>
+									<div className='flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-600 dark:bg-emerald-950/20 dark:text-emerald-400'>
+										<Cable size={20} className='stroke-[2.2px]' />
 									</div>
-									<div className='mt-4 flex items-baseline gap-1.5'>
-										<span className='text-3xl font-extrabold text-slate-900 dark:text-white'>
+									<span className='text-[11px] font-extrabold tracking-wider text-slate-400 uppercase dark:text-zinc-400'>
+										Active Connections
+									</span>
+								</div>
+								<div className='relative mt-5'>
+									<div className='flex items-baseline gap-1.5'>
+										<span className='text-4xl font-black tracking-tight text-slate-900 dark:text-white'>
 											{activeConnectionsCount}
 										</span>
 										<span className='text-xs font-semibold text-slate-400 dark:text-zinc-500'>
 											connected
 										</span>
 									</div>
-								</div>
-
-								<div className='mt-4 flex flex-col items-center rounded-xl border border-dashed border-slate-200 bg-slate-50/50 p-3.5 text-center dark:border-zinc-800 dark:bg-zinc-950/20'>
-									<p className='text-[10px] font-bold text-slate-500 dark:text-zinc-400'>
-										No integrations connected yet
+									<p className='mt-1.5 text-[11px] font-semibold text-slate-400 dark:text-zinc-500'>
+										{activeConnectionsCount > 0
+											? 'Apps linked to your workspace'
+											: 'No apps connected yet'}
 									</p>
-									<p className='mt-0.5 text-[9px] leading-tight text-slate-400 dark:text-zinc-500'>
-										Connect your first app to unlock automations.
-									</p>
-									<button
-										onClick={() => setIsConnectModalOpen(true)}
-										className='mt-2.5 h-7 rounded-lg bg-primary-400 px-3 text-[9px] font-extrabold text-primary-950 transition-all hover:bg-primary-500 active:scale-95'>
-										Browse Apps
-									</button>
 								</div>
+								<button
+									onClick={() => setIsConnectModalOpen(true)}
+									className='bg-primary-400 text-primary-950 hover:bg-primary-500 relative mt-5 h-9 w-full cursor-pointer rounded-xl text-[11px] font-extrabold transition-all active:scale-95'>
+									Browse Apps
+								</button>
 							</div>
 
 							{/* Card 2: Available Catalog */}
-							<div className='group relative flex min-h-[260px] flex-col justify-between overflow-hidden rounded-[24px] border border-slate-200/60 bg-white p-6 shadow-sm transition-all duration-300 hover:border-slate-300/80 hover:shadow-md dark:border-zinc-800/80 dark:bg-[#11131c]'>
-								<div>
-									<div className='flex items-center gap-3'>
-										<div className='flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary-50 text-primary-600 dark:bg-primary-950/20 dark:text-primary-400'>
-											<Grid size={18} className='stroke-[2.2px]' />
-										</div>
-										<span className='text-[11px] font-extrabold tracking-wider text-slate-400 uppercase dark:text-zinc-400'>
-											Available Catalog
-										</span>
+							<div className='group hover:border-primary-500/30 relative flex flex-col justify-between overflow-hidden rounded-3xl border border-slate-200/60 bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg dark:border-zinc-800/80 dark:bg-[#11131c]'>
+								<Grid className='pointer-events-none absolute -top-4 -right-4 h-24 w-24 text-slate-900/[0.03] dark:text-white/[0.04]' />
+								<div className='relative flex items-center gap-3'>
+									<div className='bg-primary-50 text-primary-600 dark:bg-primary-950/20 dark:text-primary-400 flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl'>
+										<Grid size={20} className='stroke-[2.2px]' />
 									</div>
-									<div className='mt-4 flex items-baseline gap-1.5'>
-										<span className='text-3xl font-extrabold text-slate-900 dark:text-white'>
+									<span className='text-[11px] font-extrabold tracking-wider text-slate-400 uppercase dark:text-zinc-400'>
+										Available Catalog
+									</span>
+								</div>
+								<div className='relative mt-5'>
+									<div className='flex items-baseline gap-1.5'>
+										<span className='text-4xl font-black tracking-tight text-slate-900 dark:text-white'>
 											{isCredentialTypesLoading
-												? '...'
-												: totalIntegrationsCount}
-											+
+												? '…'
+												: `${totalIntegrationsCount}+`}
 										</span>
 										<span className='text-xs font-semibold text-slate-400 dark:text-zinc-500'>
 											integrations
 										</span>
 									</div>
+									<p className='mt-1.5 text-[11px] font-semibold text-slate-400 dark:text-zinc-500'>
+										New apps added weekly
+									</p>
 								</div>
-
-								<div className='mt-4 flex flex-col gap-2'>
-									{/* Overlapping avatars representation */}
-									<div className='flex items-center gap-1.5'>
-										<div className='flex -space-x-2 overflow-hidden'>
-											<div className='flex h-6.5 w-6.5 shrink-0 items-center justify-center rounded-full bg-[#181717] text-white ring-2 ring-white dark:ring-[#11131c]'>
-												<GithubIcon className='h-3.5 w-3.5' />
-											</div>
-											<div className='flex h-6.5 w-6.5 shrink-0 items-center justify-center rounded-full bg-[#4A154B] text-white ring-2 ring-white dark:ring-[#11131c]'>
-												<Users className='h-3.5 w-3.5' />
-											</div>
-											<div className='flex h-6.5 w-6.5 shrink-0 items-center justify-center rounded-full bg-[#4285F4] text-white ring-2 ring-white dark:ring-[#11131c]'>
-												<Cloud className='h-3.5 w-3.5' />
-											</div>
-										</div>
-										<span className='text-[9.5px] font-bold text-slate-400 dark:text-zinc-500'>
-											New apps added weekly
-										</span>
-									</div>
-									<button
-										onClick={() => setIsConnectModalOpen(true)}
-										className='dark:text-zinc-350 h-8 w-full rounded-lg border border-slate-200 text-[10px] font-extrabold text-slate-600 transition-all hover:bg-slate-50 dark:border-zinc-800 dark:hover:bg-zinc-800/40'>
-										Explore Catalog
-									</button>
-								</div>
+								<button
+									onClick={() => setIsConnectModalOpen(true)}
+									className='dark:text-zinc-350 relative mt-5 h-9 w-full cursor-pointer rounded-xl border border-slate-200 text-[11px] font-extrabold text-slate-600 transition-all hover:bg-slate-50 dark:border-zinc-800 dark:hover:bg-zinc-800/40'>
+									Explore Catalog
+								</button>
 							</div>
 
 							{/* Card 3: Data Security */}
-							<div className='group relative flex min-h-[260px] flex-col justify-between overflow-hidden rounded-[24px] border border-slate-200/60 bg-white p-6 shadow-sm transition-all duration-300 hover:border-slate-300/80 hover:shadow-md dark:border-zinc-800/80 dark:bg-[#11131c]'>
-								<div>
-									<div className='flex items-center gap-3'>
-										<div className='flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary-50 text-primary-600 dark:bg-primary-950/20 dark:text-primary-400'>
-											<ShieldCheck size={18} className='stroke-[2.2px]' />
-										</div>
-										<span className='text-[11px] font-extrabold tracking-wider text-slate-400 uppercase dark:text-zinc-400'>
-											Data Security
-										</span>
+							<div className='group hover:border-primary-500/30 relative flex flex-col justify-between overflow-hidden rounded-3xl border border-slate-200/60 bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg dark:border-zinc-800/80 dark:bg-[#11131c]'>
+								<ShieldCheck className='pointer-events-none absolute -top-4 -right-4 h-24 w-24 text-slate-900/[0.03] dark:text-white/[0.04]' />
+								<div className='relative flex items-center gap-3'>
+									<div className='flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-blue-50 text-blue-600 dark:bg-blue-950/20 dark:text-blue-400'>
+										<ShieldCheck size={20} className='stroke-[2.2px]' />
 									</div>
-									<div className='mt-4 flex items-baseline gap-1.5'>
-										<span className='text-3xl font-extrabold text-slate-900 dark:text-white'>
+									<span className='text-[11px] font-extrabold tracking-wider text-slate-400 uppercase dark:text-zinc-400'>
+										Data Security
+									</span>
+								</div>
+								<div className='relative mt-5'>
+									<div className='flex items-baseline gap-1.5'>
+										<span className='text-4xl font-black tracking-tight text-slate-900 dark:text-white'>
 											AES-256
 										</span>
 										<span className='text-xs font-semibold text-slate-400 dark:text-zinc-500'>
 											encrypted
 										</span>
 									</div>
-								</div>
-
-								<div className='mt-4 flex flex-col gap-2.5'>
-									<div className='flex items-center gap-1.5 text-[10px] font-bold text-emerald-500'>
+									<div className='mt-1.5 flex items-center gap-1.5 text-[11px] font-bold text-emerald-500'>
 										<span className='h-1.5 w-1.5 rounded-full bg-emerald-500' />
 										<span>End-to-end credential safety</span>
 									</div>
-									<button
-										onClick={() =>
-											alert(
-												'Credentials are securely stored and encrypted in Transit & at Rest using military-grade AES-256.',
-											)
-										}
-										className='dark:text-zinc-350 h-8 w-full rounded-lg border border-slate-200 text-[10px] font-extrabold text-slate-600 transition-all hover:bg-slate-50 dark:border-zinc-800 dark:hover:bg-zinc-800/40'>
-										Learn More
-									</button>
 								</div>
+								<button
+									onClick={() =>
+										alert(
+											'Credentials are securely stored and encrypted in Transit & at Rest using military-grade AES-256.',
+										)
+									}
+									className='dark:text-zinc-350 relative mt-5 h-9 w-full cursor-pointer rounded-xl border border-slate-200 text-[11px] font-extrabold text-slate-600 transition-all hover:bg-slate-50 dark:border-zinc-800 dark:hover:bg-zinc-800/40'>
+									Learn More
+								</button>
 							</div>
 						</div>
 
 						{/* Recommended For You Section */}
 						<div className='w-full text-left'>
 							<div className='mb-4 flex items-center gap-2'>
-										<Sparkles size={14} className='text-primary-500' />
-										<h2 className='text-slate-450 text-xs font-extrabold tracking-wider uppercase dark:text-zinc-500'>
-											Recommended For You
-										</h2>
+								<Sparkles size={14} className='text-primary-500' />
+								<h2 className='text-slate-450 text-xs font-extrabold tracking-wider uppercase dark:text-zinc-500'>
+									Recommended For You
+								</h2>
 							</div>
 
 							<div className='grid grid-cols-2 gap-3.5 sm:grid-cols-3 md:grid-cols-6'>
@@ -820,14 +800,14 @@ const AppsListPage = () => {
 									<div
 										key={rec.name}
 										onClick={() => setIsConnectModalOpen(true)}
-										className='group/rec flex cursor-pointer items-center gap-2.5 rounded-2xl border border-slate-200/50 bg-white/70 p-3 shadow-2xs transition-all hover:border-primary-400/35 hover:shadow-xs dark:border-zinc-800/60 dark:bg-zinc-900/40 dark:hover:bg-zinc-900/60'>
+										className='group/rec hover:border-primary-400/35 flex cursor-pointer items-center gap-2.5 rounded-2xl border border-slate-200/50 bg-white/70 p-3 shadow-2xs transition-all hover:shadow-xs dark:border-zinc-800/60 dark:bg-zinc-900/40 dark:hover:bg-zinc-900/60'>
 										<div
 											className='flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-[10px] font-extrabold text-white'
 											style={{ backgroundColor: rec.color }}>
 											{rec.name[0]}
 										</div>
 										<div className='min-w-0 text-left'>
-											<p className='truncate text-[11px] font-extrabold text-slate-900 transition-colors group-hover/rec:text-primary-700 dark:text-white'>
+											<p className='group-hover/rec:text-primary-700 truncate text-[11px] font-extrabold text-slate-900 transition-colors dark:text-white'>
 												{rec.name}
 											</p>
 											<p className='truncate text-[9px] font-semibold text-slate-400 dark:text-zinc-500'>
@@ -842,14 +822,14 @@ const AppsListPage = () => {
 						{/* Search & Categories Filter Bar */}
 						<div className='flex w-full flex-col gap-4'>
 							<div className='group relative flex-1'>
-								<Search className='absolute top-3.5 left-4 h-4.5 w-4.5 text-slate-400 transition-colors duration-200 group-focus-within:text-primary-700 dark:text-zinc-500' />
+								<Search className='group-focus-within:text-primary-700 absolute top-3.5 left-4 h-4.5 w-4.5 text-slate-400 transition-colors duration-200 dark:text-zinc-500' />
 								<input
 									type='search'
 									aria-label='Search integrations'
 									placeholder='Search integrations...'
 									value={searchQuery}
 									onChange={(e) => setSearchQuery(e.target.value)}
-									className='dark:placeholder:text-zinc-650 block h-12 w-full rounded-2xl border border-slate-200/60 bg-white pr-14 pl-12 text-xs font-bold text-slate-900 shadow-sm transition-all duration-200 outline-none placeholder:text-slate-400 focus:border-primary-400/80 focus:ring-4 focus:ring-primary-400/10 dark:border-zinc-800 dark:bg-zinc-900/40 dark:text-zinc-100 dark:focus:border-primary-500 dark:focus:ring-primary-500/15'
+									className='dark:placeholder:text-zinc-650 focus:border-primary-400/80 focus:ring-primary-400/10 dark:focus:border-primary-500 dark:focus:ring-primary-500/15 block h-12 w-full rounded-2xl border border-slate-200/60 bg-white pr-14 pl-12 text-xs font-bold text-slate-900 shadow-sm transition-all duration-200 outline-none placeholder:text-slate-400 focus:ring-4 dark:border-zinc-800 dark:bg-zinc-900/40 dark:text-zinc-100'
 								/>
 								<div className='pointer-events-none absolute top-3.5 right-4 hidden items-center justify-center rounded-md border border-slate-200 bg-slate-50 px-1.5 py-0.5 text-[10px] font-extrabold text-slate-400 shadow-2xs sm:flex dark:border-zinc-800 dark:bg-zinc-800 dark:text-zinc-500'>
 									⌘K
@@ -899,7 +879,7 @@ const AppsListPage = () => {
 												}}
 												className={`flex h-9 shrink-0 cursor-pointer items-center gap-1.5 rounded-xl px-3.5 text-xs transition-all duration-200 ${
 													isActive
-														? 'border border-primary-400 bg-primary-400 font-extrabold text-primary-950 shadow-sm'
+														? 'border-primary-400 bg-primary-400 text-primary-950 border font-extrabold shadow-sm'
 														: 'border border-slate-200/60 bg-white font-bold text-slate-600 shadow-xs hover:bg-slate-50 dark:border-zinc-800/80 dark:bg-[#11131c] dark:text-zinc-400 dark:hover:bg-zinc-800/20'
 												}`}>
 												<span>{cat.emoji}</span>
@@ -911,7 +891,7 @@ const AppsListPage = () => {
 
 								<button
 									onClick={() => alert('Sorting updated.')}
-									className='flex h-9 shrink-0 items-center gap-1.5 rounded-xl border border-slate-200/60 bg-white px-3.5 text-xs font-extrabold text-primary-700 shadow-xs transition-all hover:bg-slate-50 dark:border-zinc-800/80 dark:bg-[#11131c]'>
+									className='text-primary-700 flex h-9 shrink-0 items-center gap-1.5 rounded-xl border border-slate-200/60 bg-white px-3.5 text-xs font-extrabold shadow-xs transition-all hover:bg-slate-50 dark:border-zinc-800/80 dark:bg-[#11131c]'>
 									<span>Sort: Popular</span>
 								</button>
 							</div>
@@ -919,7 +899,7 @@ const AppsListPage = () => {
 
 						{/* Main Apps Grid List */}
 						{isCredentialTypesLoading ? (
-							<div className='grid gap-5 md:grid-cols-2 xl:grid-cols-3'>
+							<div className='grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-3'>
 								{Array.from({ length: 6 }).map((_, index) => (
 									<div
 										key={index}
@@ -941,7 +921,7 @@ const AppsListPage = () => {
 								<button
 									type='button'
 									onClick={() => void refetchCredentialTypes()}
-									className='mt-5 h-10 cursor-pointer rounded-xl bg-primary-400 px-5 text-xs font-bold text-primary-950 shadow-md transition-all active:scale-95'>
+									className='bg-primary-400 text-primary-950 mt-5 h-10 cursor-pointer rounded-xl px-5 text-xs font-bold shadow-md transition-all active:scale-95'>
 									Retry
 								</button>
 							</div>
@@ -955,7 +935,7 @@ const AppsListPage = () => {
 								</p>
 							</div>
 						) : (
-							<div className='grid gap-5 md:grid-cols-2 xl:grid-cols-3'>
+							<div className='grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-3'>
 								<AnimatePresence mode='popLayout'>
 									{filteredApps.map((app) => {
 										const IconComponent = app.icon;
@@ -966,101 +946,82 @@ const AppsListPage = () => {
 												initial={{ opacity: 0, scale: 0.96, y: 10 }}
 												animate={{ opacity: 1, scale: 1, y: 0 }}
 												exit={{ opacity: 0, scale: 0.96, y: 10 }}
-												whileHover={{ y: -6, scale: 1.01 }}
+												whileHover={{ y: -6 }}
 												transition={{
 													type: 'spring',
 													stiffness: 350,
 													damping: 25,
 												}}
-												className='group relative flex flex-col justify-between rounded-[24px] border border-slate-200/60 bg-white p-5 shadow-sm transition-all duration-300 hover:border-primary-500/30 hover:shadow-md dark:border-zinc-800/80 dark:bg-[#11131c] dark:hover:border-primary-500/30'>
-												{/* Brand background glow */}
+												className='group hover:border-primary-500/30 dark:hover:border-primary-500/30 relative flex min-h-[248px] flex-col overflow-hidden rounded-3xl border border-slate-200/60 bg-white p-6 shadow-sm transition-all duration-300 hover:shadow-lg dark:border-zinc-800/80 dark:bg-[#11131c]'>
+												{/* Brand glow */}
 												<div
-													className='pointer-events-none absolute -inset-px -z-10 rounded-[24px] opacity-0 blur-md transition-all duration-500 group-hover:opacity-10'
+													className='pointer-events-none absolute -inset-px -z-10 rounded-3xl opacity-0 blur-md transition-all duration-500 group-hover:opacity-10'
 													style={{
-														background: `radial-gradient(circle at 50% 50%, ${app.color} 0%, transparent 70%)`,
+														background: `radial-gradient(circle at 30% 0%, ${app.color} 0%, transparent 70%)`,
 													}}
 												/>
 
-												<div>
-													{/* Card Header row */}
-													<div className='flex items-start justify-between gap-4'>
-														<div
-															className='relative flex h-11 w-11 shrink-0 items-center justify-center rounded-xl text-white shadow-inner transition-transform duration-300 group-hover:scale-105'
-															style={{ backgroundColor: app.color }}>
-															<IconComponent className='h-5.5 w-5.5 text-white' />
-														</div>
-
-														<div className='flex max-w-[130px] shrink-0 flex-wrap items-center justify-end gap-1.5'>
-															{/* Subcategory label tag */}
-															<span className='rounded border border-slate-100 bg-slate-50 px-1.5 py-0.5 text-[9px] font-bold text-slate-500 dark:border-zinc-700/50 dark:bg-zinc-800 dark:text-zinc-400'>
-																{app.subBadge}
-															</span>
-															{app.isOAuth && (
-																<span className='rounded border border-primary-200 bg-primary-50 px-1.5 py-0.5 text-[9px] font-bold text-primary-600 dark:border-primary-900/30 dark:bg-primary-950/20 dark:text-primary-400'>
-																	OAuth
-																</span>
-															)}
-														</div>
+												{/* Header: icon + status */}
+												<div className='flex items-start justify-between gap-3'>
+													<div
+														className='relative flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl text-white shadow-inner transition-transform duration-300 group-hover:scale-105'
+														style={{ backgroundColor: app.color }}>
+														<IconComponent className='h-7 w-7 text-white' />
 													</div>
-
-													{/* Card Name / description */}
-													<div className='mt-4.5 text-left'>
-														<div className='flex items-center gap-1.5'>
-															<h3 className='max-w-[150px] truncate text-sm font-extrabold text-slate-900 dark:text-white'>
-																{app.name}
-															</h3>
-															{app.isConnected && (
-																<span
-																	className='h-1.5 w-1.5 rounded-full bg-emerald-500'
-																	title='Active Connection'
-																/>
-															)}
-														</div>
-														<p className='mt-1.5 line-clamp-2 min-h-[34px] text-[11px] leading-relaxed font-semibold text-slate-400 dark:text-zinc-500'>
-															{app.description}
-														</p>
-													</div>
-
-													{/* Star rating and installs mockup */}
-													<div className='mt-3.5 flex items-center justify-between text-[10px] font-bold text-slate-400 dark:text-zinc-500'>
-														<div className='flex items-center gap-1 text-amber-500'>
-															<span>★</span>
-															<span className='text-slate-800 dark:text-zinc-200'>
-																{app.rating}
+													<div className='flex items-center gap-2'>
+														{app.isConnected && (
+															<span className='inline-flex items-center gap-1 rounded-full border border-emerald-500/25 bg-emerald-500/10 px-2 py-0.5 text-[9px] font-bold text-emerald-600 dark:text-emerald-400'>
+																<span className='h-1.5 w-1.5 rounded-full bg-emerald-500' />
+																Active
 															</span>
-															<span className='text-slate-400 dark:text-zinc-500'>
-																({app.reviews})
-															</span>
-														</div>
-														<div>
-															<span>{app.installs} installs</span>
-														</div>
+														)}
+														<span className='rounded-md border border-slate-100 bg-slate-50 px-2 py-0.5 text-[9px] font-bold text-slate-500 dark:border-zinc-700/50 dark:bg-zinc-800 dark:text-zinc-400'>
+															{app.subBadge}
+														</span>
 													</div>
 												</div>
 
-												{/* Footer connection action row */}
-												<div className='mt-4.5 flex items-center justify-between border-t border-slate-100/80 pt-3 dark:border-zinc-800/60'>
-													{/* Tags Badge pills */}
-													<div className='flex max-w-[120px] items-center gap-1 overflow-hidden'>
-														{app.tags.slice(0, 1).map((t: string) => (
-															<span
-																key={t}
-																className='rounded border border-slate-100/50 bg-slate-50 px-1.5 py-0.5 text-[8.5px] font-extrabold text-slate-400 uppercase dark:border-zinc-800 dark:bg-zinc-800/20 dark:text-zinc-500'>
-																{t}
-															</span>
-														))}
-														{app.isPopular && (
-															<span className='rounded border border-red-100/50 bg-red-50 px-1.5 py-0.5 text-[8.5px] font-extrabold text-red-500 uppercase dark:border-red-900/20 dark:bg-red-950/10'>
-																🔥 Popular
-															</span>
-														)}
-														{app.isNew && !app.isPopular && (
-															<span className='rounded border border-emerald-100/50 bg-green-50 px-1.5 py-0.5 text-[8.5px] font-extrabold text-emerald-600 uppercase dark:border-green-900/20 dark:bg-green-950/10'>
-																✨ New
-															</span>
-														)}
-													</div>
+												{/* Name + badges */}
+												<div className='mt-4 flex flex-wrap items-center gap-x-2 gap-y-1.5'>
+													<h3 className='truncate text-base font-extrabold text-slate-900 dark:text-white'>
+														{app.name}
+													</h3>
+													{app.isOAuth && (
+														<span className='rounded border border-blue-100 bg-blue-50 px-1.5 py-0.5 text-[9px] font-bold text-blue-600 dark:border-blue-900/30 dark:bg-blue-950/20 dark:text-blue-400'>
+															OAuth
+														</span>
+													)}
+													{app.isPopular && (
+														<span className='rounded border border-red-100/50 bg-red-50 px-1.5 py-0.5 text-[9px] font-extrabold text-red-500 uppercase dark:border-red-900/20 dark:bg-red-950/10'>
+															🔥 Popular
+														</span>
+													)}
+													{app.isNew && !app.isPopular && (
+														<span className='rounded border border-emerald-100/50 bg-green-50 px-1.5 py-0.5 text-[9px] font-extrabold text-emerald-600 uppercase dark:border-green-900/20 dark:bg-green-950/10'>
+															✨ New
+														</span>
+													)}
+												</div>
 
+												{/* Description */}
+												<p className='mt-2 line-clamp-2 text-xs leading-relaxed font-semibold text-slate-400 dark:text-zinc-500'>
+													{app.description}
+												</p>
+
+												{/* Footer */}
+												<div className='mt-auto pt-4'>
+													<div className='mb-3 flex items-center justify-between text-[11px] font-bold text-slate-400 dark:text-zinc-500'>
+														<div className='flex items-center gap-1'>
+															<span className='text-amber-500'>
+																★
+															</span>
+															<span className='text-slate-800 dark:text-zinc-200'>
+																{app.rating}
+															</span>
+															<span>({app.reviews})</span>
+														</div>
+														<span>{app.installs} installs</span>
+													</div>
 													<button
 														onClick={() =>
 															handleToggleConnection(app.id)
@@ -1070,7 +1031,7 @@ const AppsListPage = () => {
 															deleteCredentialMutation.isPending ||
 															connectOAuthMutation.isPending
 														}
-														className={`h-7.5 cursor-pointer rounded-lg px-3 text-[10px] font-extrabold transition-all active:scale-95 ${
+														className={`h-10 w-full cursor-pointer rounded-xl text-xs font-extrabold transition-all active:scale-95 ${
 															app.isConnected
 																? 'border border-emerald-500/25 bg-emerald-500/10 text-emerald-600 hover:border-red-500/25 hover:bg-red-50/50 hover:text-red-500 dark:bg-emerald-500/5 dark:text-emerald-400 dark:hover:bg-red-950/10 dark:hover:text-red-400'
 																: 'bg-primary-400 text-primary-950 hover:bg-primary-500'
@@ -1102,7 +1063,7 @@ const AppsListPage = () => {
 								</h3>
 								<button
 									onClick={() => alert('Recent activities opened.')}
-									className='text-[10px] font-bold text-primary-700 hover:underline'>
+									className='text-primary-700 text-[10px] font-bold hover:underline'>
 									View all
 								</button>
 							</div>
@@ -1145,7 +1106,7 @@ const AppsListPage = () => {
 												</p>
 											</div>
 										</div>
-										<div className='flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-primary-50 text-primary-500 dark:bg-primary-950/20 dark:text-primary-400'>
+										<div className='bg-primary-50 text-primary-500 dark:bg-primary-950/20 dark:text-primary-400 flex h-5 w-5 shrink-0 items-center justify-center rounded-full'>
 											<Check size={11} className='stroke-[3px]' />
 										</div>
 									</div>
@@ -1154,11 +1115,11 @@ const AppsListPage = () => {
 						</div>
 
 						{/* Widget 2: Unlock More Power rocket banner */}
-						<div className='relative overflow-hidden rounded-[24px] border border-primary-100 bg-gradient-to-br from-primary-400/10 via-primary-400/5 to-transparent p-5 shadow-xs dark:border-primary-900/10 dark:from-primary-400/5 dark:to-transparent'>
+						<div className='border-primary-100 from-primary-400/10 via-primary-400/5 dark:border-primary-900/10 dark:from-primary-400/5 relative overflow-hidden rounded-[24px] border bg-gradient-to-br to-transparent p-5 shadow-xs dark:to-transparent'>
 							<div className='pointer-events-none absolute -right-6 -bottom-6 h-16 w-16 opacity-20 select-none'>
 								<Sparkles size={64} className='text-primary-700' />
 							</div>
-							<h3 className='text-xs font-extrabold tracking-wider text-primary-950 uppercase dark:text-primary-400'>
+							<h3 className='text-primary-950 dark:text-primary-400 text-xs font-extrabold tracking-wider uppercase'>
 								Unlock More Power
 							</h3>
 							<p className='mt-2 text-[11px] leading-relaxed font-semibold text-slate-500 dark:text-zinc-400'>
@@ -1167,7 +1128,7 @@ const AppsListPage = () => {
 							</p>
 							<button
 								onClick={() => setIsConnectModalOpen(true)}
-								className='mt-4 flex h-8 w-full items-center justify-center gap-1.5 rounded-lg bg-primary-400 px-3.5 text-[10px] font-extrabold text-primary-950 shadow-xs transition-all hover:bg-primary-500 active:scale-95'>
+								className='bg-primary-400 text-primary-950 hover:bg-primary-500 mt-4 flex h-8 w-full items-center justify-center gap-1.5 rounded-lg px-3.5 text-[10px] font-extrabold shadow-xs transition-all active:scale-95'>
 								<span>Explore Catalog</span>
 								<span>→</span>
 							</button>
@@ -1243,7 +1204,7 @@ const AppsListPage = () => {
 								initial={{ opacity: 0, scale: 0.96, y: 15 }}
 								animate={{ opacity: 1, scale: 1, y: 0 }}
 								exit={{ opacity: 0, scale: 0.96, y: 15 }}
-								className='relative w-full max-w-2xl overflow-hidden rounded-3xl border border-slate-200/80 bg-white p-6 shadow-2xl dark:border-zinc-800/80 dark:bg-[#11131c]'>
+								className='relative w-full max-w-3xl overflow-hidden rounded-3xl border border-slate-200/80 bg-white p-6 shadow-2xl dark:border-zinc-800/80 dark:bg-[#11131c]'>
 								{/* Close button */}
 								<button
 									aria-label='Close app connection dialog'
@@ -1252,13 +1213,25 @@ const AppsListPage = () => {
 									<CloseIcon className='h-4.5 w-4.5' />
 								</button>
 
-								<div>
-									<h2 className='text-lg font-black text-slate-900 dark:text-white'>
-										Apps Available
-									</h2>
-									<p className='mt-1 text-xs font-bold text-slate-400 dark:text-zinc-500'>
-										Select the app you would like to authenticate with.
-									</p>
+								<div className='flex items-center gap-3.5 pr-10'>
+									<div className='bg-primary-100/60 text-primary-600 dark:bg-primary-950/40 dark:text-primary-400 flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl'>
+										<Grid className='h-5 w-5' />
+									</div>
+									<div className='min-w-0'>
+										<div className='flex items-center gap-2'>
+											<h2 className='text-lg font-black text-slate-900 dark:text-white'>
+												Apps Available
+											</h2>
+											<span className='rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-black text-slate-500 dark:bg-zinc-800 dark:text-zinc-400'>
+												{isCredentialTypesLoading
+													? '…'
+													: `${totalIntegrationsCount}+`}
+											</span>
+										</div>
+										<p className='mt-0.5 text-xs font-bold text-slate-400 dark:text-zinc-500'>
+											Select the app you would like to authenticate with.
+										</p>
+									</div>
 								</div>
 
 								{/* Search available apps */}
@@ -1270,7 +1243,7 @@ const AppsListPage = () => {
 										placeholder='Search integrations...'
 										value={modalSearch}
 										onChange={(e) => setModalSearch(e.target.value)}
-										className='dark:placeholder:text-zinc-650 block h-11 w-full rounded-xl border border-slate-200 bg-slate-50 pr-10 pl-10 text-xs font-semibold text-slate-900 transition-all outline-none placeholder:text-slate-400 focus:border-primary-500/80 focus:bg-white focus:ring-4 focus:ring-primary-500/10 dark:border-zinc-800 dark:bg-zinc-950/40 dark:text-zinc-100 dark:focus:border-primary-500 dark:focus:ring-primary-500/15'
+										className='dark:placeholder:text-zinc-650 focus:border-primary-500/80 focus:ring-primary-500/10 dark:focus:border-primary-500 dark:focus:ring-primary-500/15 block h-11 w-full rounded-xl border border-slate-200 bg-slate-50 pr-10 pl-10 text-xs font-semibold text-slate-900 transition-all outline-none placeholder:text-slate-400 focus:bg-white focus:ring-4 dark:border-zinc-800 dark:bg-zinc-950/40 dark:text-zinc-100'
 									/>
 									{modalSearch && (
 										<button
@@ -1308,7 +1281,7 @@ const AppsListPage = () => {
 										filteredAvailableApps.map((availableApp) => (
 											<div
 												key={availableApp.id}
-												className='group/item flex flex-col justify-between rounded-2xl border border-slate-100 bg-slate-50/50 p-4 transition-all hover:border-primary-500/20 hover:bg-slate-50 dark:border-zinc-900/30 dark:bg-zinc-950/15 dark:hover:bg-zinc-950/40'>
+												className='group/item hover:border-primary-500/30 dark:hover:border-primary-500/30 flex flex-col justify-between rounded-2xl border border-slate-100 bg-slate-50/50 p-4 transition-all hover:bg-white hover:shadow-sm dark:border-zinc-900/30 dark:bg-zinc-950/15 dark:hover:bg-zinc-950/40'>
 												<div className='flex gap-3'>
 													<div
 														className='flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-white shadow-sm transition-transform group-hover/item:scale-105'
@@ -1332,7 +1305,7 @@ const AppsListPage = () => {
 															{isOAuthCredentialType(
 																availableApp.credentialType,
 															) && (
-																<span className='rounded border border-primary-200 bg-primary-50 px-1.5 py-0.5 text-[8px] font-black text-primary-600 dark:border-primary-500/20 dark:bg-primary-500/10 dark:text-primary-400'>
+																<span className='border-primary-200 bg-primary-50 text-primary-600 dark:border-primary-500/20 dark:bg-primary-500/10 dark:text-primary-400 rounded border px-1.5 py-0.5 text-[8px] font-black'>
 																	OAuth 2.0
 																</span>
 															)}
@@ -1344,7 +1317,7 @@ const AppsListPage = () => {
 												</div>
 												<button
 													onClick={() => handleConnectClick(availableApp)}
-													className='mt-3.5 h-8 w-full cursor-pointer rounded-lg border border-slate-200 bg-white text-[11px] font-black transition-all hover:bg-slate-950 hover:text-white dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-200 dark:hover:bg-zinc-50 dark:hover:text-slate-950'>
+													className='hover:border-primary-400 hover:bg-primary-400 hover:text-primary-950 dark:hover:border-primary-400 dark:hover:bg-primary-400 dark:hover:text-primary-950 mt-3.5 h-9 w-full cursor-pointer rounded-lg border border-slate-200 bg-white text-[11px] font-black text-slate-700 transition-all dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-200'>
 													{isOAuthCredentialType(
 														availableApp.credentialType,
 													)
@@ -1422,12 +1395,12 @@ const AppsListPage = () => {
 											onChange={(e) => setCredentialName(e.target.value)}
 											placeholder='e.g., My API Key'
 											aria-label='Connection Name'
-											className='block h-11 w-full rounded-xl border border-slate-200 bg-slate-50/50 px-3.5 text-xs font-semibold text-slate-900 transition-all outline-none placeholder:text-slate-400 focus:border-primary-500/80 focus:bg-white focus:ring-4 focus:ring-primary-500/10 dark:border-zinc-800 dark:bg-zinc-950/40 dark:text-zinc-100 dark:placeholder:text-zinc-600 dark:focus:border-primary-500 dark:focus:ring-primary-500/15'
+											className='focus:border-primary-500/80 focus:ring-primary-500/10 dark:focus:border-primary-500 dark:focus:ring-primary-500/15 block h-11 w-full rounded-xl border border-slate-200 bg-slate-50/50 px-3.5 text-xs font-semibold text-slate-900 transition-all outline-none placeholder:text-slate-400 focus:bg-white focus:ring-4 dark:border-zinc-800 dark:bg-zinc-950/40 dark:text-zinc-100 dark:placeholder:text-zinc-600'
 										/>
 									</div>
 
 									{selectedAppUsesOAuth ? (
-										<div className='rounded-2xl border border-primary-500/20 bg-primary-50/60 p-4 text-xs font-semibold text-primary-700 dark:border-primary-500/15 dark:bg-primary-500/10 dark:text-primary-300'>
+										<div className='border-primary-500/20 bg-primary-50/60 text-primary-700 dark:border-primary-500/15 dark:bg-primary-500/10 dark:text-primary-300 rounded-2xl border p-4 text-xs font-semibold'>
 											OAuth will open in a secure popup. Tokens are created by
 											the backend after authorization.
 										</div>
@@ -1464,7 +1437,7 @@ const AppsListPage = () => {
 																			}),
 																		)
 																	}
-																	className='h-4 w-4 rounded border-slate-300 text-primary-600 focus:ring-primary-500'
+																	className='text-primary-600 focus:ring-primary-500 h-4 w-4 rounded border-slate-300'
 																/>
 																<span>
 																	{field.description ??
@@ -1488,7 +1461,7 @@ const AppsListPage = () => {
 																placeholder={field.placeholder}
 																aria-label={field.label}
 																rows={4}
-																className='block w-full resize-none rounded-xl border border-slate-200 bg-slate-50/50 px-3.5 py-3 text-xs font-semibold text-slate-900 transition-all outline-none placeholder:text-slate-400 focus:border-primary-500/80 focus:bg-white focus:ring-4 focus:ring-primary-500/10 dark:border-zinc-800 dark:bg-zinc-950/40 dark:text-zinc-100 dark:placeholder:text-zinc-600 dark:focus:border-primary-500 dark:focus:ring-primary-500/15'
+																className='focus:border-primary-500/80 focus:ring-primary-500/10 dark:focus:border-primary-500 dark:focus:ring-primary-500/15 block w-full resize-none rounded-xl border border-slate-200 bg-slate-50/50 px-3.5 py-3 text-xs font-semibold text-slate-900 transition-all outline-none placeholder:text-slate-400 focus:bg-white focus:ring-4 dark:border-zinc-800 dark:bg-zinc-950/40 dark:text-zinc-100 dark:placeholder:text-zinc-600'
 															/>
 														) : (
 															<input
@@ -1517,7 +1490,7 @@ const AppsListPage = () => {
 																}
 																placeholder={field.placeholder}
 																aria-label={field.label}
-																className='block h-11 w-full rounded-xl border border-slate-200 bg-slate-50/50 px-3.5 text-xs font-semibold text-slate-900 transition-all outline-none placeholder:text-slate-400 focus:border-primary-500/80 focus:bg-white focus:ring-4 focus:ring-primary-500/10 dark:border-zinc-800 dark:bg-zinc-950/40 dark:text-zinc-100 dark:placeholder:text-zinc-600 dark:focus:border-primary-500 dark:focus:ring-primary-500/15'
+																className='focus:border-primary-500/80 focus:ring-primary-500/10 dark:focus:border-primary-500 dark:focus:ring-primary-500/15 block h-11 w-full rounded-xl border border-slate-200 bg-slate-50/50 px-3.5 text-xs font-semibold text-slate-900 transition-all outline-none placeholder:text-slate-400 focus:bg-white focus:ring-4 dark:border-zinc-800 dark:bg-zinc-950/40 dark:text-zinc-100 dark:placeholder:text-zinc-600'
 															/>
 														)}
 														{field.description &&
@@ -1549,7 +1522,7 @@ const AppsListPage = () => {
 									<button
 										disabled={isConnecting || !canSubmitConnection}
 										onClick={handleAuthorize}
-										className='flex h-10 cursor-pointer items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-primary-400 to-primary-400 px-5 text-[11px] font-black text-primary-950 shadow-md transition-all hover:from-primary-400 hover:to-primary-400 active:scale-95 disabled:pointer-events-none disabled:opacity-40'>
+										className='from-primary-400 to-primary-400 text-primary-950 hover:from-primary-400 hover:to-primary-400 flex h-10 cursor-pointer items-center justify-center gap-2 rounded-xl bg-gradient-to-r px-5 text-[11px] font-black shadow-md transition-all active:scale-95 disabled:pointer-events-none disabled:opacity-40'>
 										{isConnecting ? (
 											<>
 												<svg
@@ -1597,6 +1570,13 @@ const AppsListPage = () => {
 								setSelectedCredentialIdForDetail(null);
 							}}
 							onDelete={async (id) => {
+								const confirmed = await confirm({
+									title: 'Disconnect Credential',
+									confirmText: 'Disconnect',
+									message:
+										'Are you sure you want to disconnect this credential? Any node using it will stop working. This action cannot be undone.',
+								});
+								if (!confirmed) return;
 								await deleteCredentialMutation.mutateAsync(id);
 								setIsDetailModalOpen(false);
 								setSelectedCredentialIdForDetail(null);
@@ -1682,7 +1662,7 @@ const DetailModalContent = ({
 				exit={{ opacity: 0, scale: 0.96, y: 15 }}
 				className='relative flex min-h-[200px] w-full max-w-md flex-col items-center justify-center rounded-3xl border border-slate-200/80 bg-white p-6 shadow-2xl dark:border-zinc-800/80 dark:bg-[#11131c]'>
 				<svg
-					className='h-7 w-7 animate-spin text-primary-600'
+					className='text-primary-600 h-7 w-7 animate-spin'
 					xmlns='http://www.w3.org/2000/svg'
 					fill='none'
 					viewBox='0 0 24 24'>
@@ -1758,7 +1738,7 @@ const DetailModalContent = ({
 				</button>
 
 				<div className='flex items-center gap-3.5 border-b border-slate-100 pb-4 dark:border-zinc-800/40'>
-					<div className='flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-primary-400 text-primary-950 shadow-inner'>
+					<div className='bg-primary-400 text-primary-950 flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl shadow-inner'>
 						<Key className='h-5 w-5' />
 					</div>
 					<div>
@@ -1787,12 +1767,12 @@ const DetailModalContent = ({
 							onChange={(e) => setEditName(e.target.value)}
 							placeholder='e.g., My Updated Connection'
 							aria-label='Connection Name'
-							className='block h-11 w-full rounded-xl border border-slate-200 bg-slate-50/50 px-3.5 text-xs font-semibold text-slate-900 transition-all outline-none placeholder:text-slate-400 focus:border-primary-500/80 focus:bg-white focus:ring-4 focus:ring-primary-500/10 dark:border-zinc-800 dark:bg-zinc-950/40 dark:text-zinc-100 dark:placeholder:text-zinc-600 dark:focus:border-primary-500 dark:focus:ring-primary-500/15'
+							className='focus:border-primary-500/80 focus:ring-primary-500/10 dark:focus:border-primary-500 dark:focus:ring-primary-500/15 block h-11 w-full rounded-xl border border-slate-200 bg-slate-50/50 px-3.5 text-xs font-semibold text-slate-900 transition-all outline-none placeholder:text-slate-400 focus:bg-white focus:ring-4 dark:border-zinc-800 dark:bg-zinc-950/40 dark:text-zinc-100 dark:placeholder:text-zinc-600'
 						/>
 					</div>
 
 					{usesOAuth ? (
-						<div className='rounded-2xl border border-primary-500/20 bg-primary-50/60 p-4 text-xs font-semibold text-primary-700 dark:border-primary-500/15 dark:bg-primary-500/10 dark:text-primary-300'>
+						<div className='border-primary-500/20 bg-primary-50/60 text-primary-700 dark:border-primary-500/15 dark:bg-primary-500/10 dark:text-primary-300 rounded-2xl border p-4 text-xs font-semibold'>
 							OAuth token fields are managed by the backend. Use reconnect to
 							re-authorize this account.
 						</div>
@@ -1822,7 +1802,7 @@ const DetailModalContent = ({
 														[fieldKey]: e.target.checked,
 													}))
 												}
-												className='h-4 w-4 rounded border-slate-300 text-primary-600 focus:ring-primary-500'
+												className='text-primary-600 focus:ring-primary-500 h-4 w-4 rounded border-slate-300'
 											/>
 											<span>{field.description ?? field.label}</span>
 										</label>
@@ -1843,7 +1823,7 @@ const DetailModalContent = ({
 											}
 											aria-label={field.label}
 											rows={4}
-											className='block w-full resize-none rounded-xl border border-slate-200 bg-slate-50/50 px-3.5 py-3 text-xs font-semibold text-slate-900 transition-all outline-none placeholder:text-slate-400 focus:border-primary-500/80 focus:bg-white focus:ring-4 focus:ring-primary-500/10 dark:border-zinc-800 dark:bg-zinc-950/40 dark:text-zinc-100 dark:placeholder:text-zinc-600 dark:focus:border-primary-500 dark:focus:ring-primary-500/15'
+											className='focus:border-primary-500/80 focus:ring-primary-500/10 dark:focus:border-primary-500 dark:focus:ring-primary-500/15 block w-full resize-none rounded-xl border border-slate-200 bg-slate-50/50 px-3.5 py-3 text-xs font-semibold text-slate-900 transition-all outline-none placeholder:text-slate-400 focus:bg-white focus:ring-4 dark:border-zinc-800 dark:bg-zinc-950/40 dark:text-zinc-100 dark:placeholder:text-zinc-600'
 										/>
 									) : (
 										<input
@@ -1868,7 +1848,7 @@ const DetailModalContent = ({
 													: field.placeholder
 											}
 											aria-label={field.label}
-											className='block h-11 w-full rounded-xl border border-slate-200 bg-slate-50/50 px-3.5 text-xs font-semibold text-slate-900 transition-all outline-none placeholder:text-slate-400 focus:border-primary-500/80 focus:bg-white focus:ring-4 focus:ring-primary-500/10 dark:border-zinc-800 dark:bg-zinc-950/40 dark:text-zinc-100 dark:placeholder:text-zinc-600 dark:focus:border-primary-500 dark:focus:ring-primary-500/15'
+											className='focus:border-primary-500/80 focus:ring-primary-500/10 dark:focus:border-primary-500 dark:focus:ring-primary-500/15 block h-11 w-full rounded-xl border border-slate-200 bg-slate-50/50 px-3.5 text-xs font-semibold text-slate-900 transition-all outline-none placeholder:text-slate-400 focus:bg-white focus:ring-4 dark:border-zinc-800 dark:bg-zinc-950/40 dark:text-zinc-100 dark:placeholder:text-zinc-600'
 										/>
 									)}
 									{field.secret && (
@@ -1906,7 +1886,7 @@ const DetailModalContent = ({
 							});
 							setIsEditing(false);
 						}}
-						className='flex h-10 cursor-pointer items-center justify-center rounded-xl bg-gradient-to-r from-primary-400 to-primary-400 px-5 text-[11px] font-black text-primary-950 shadow-md transition-all hover:from-primary-400 hover:to-primary-400 active:scale-95 disabled:pointer-events-none disabled:opacity-40'>
+						className='from-primary-400 to-primary-400 text-primary-950 hover:from-primary-400 hover:to-primary-400 flex h-10 cursor-pointer items-center justify-center rounded-xl bg-gradient-to-r px-5 text-[11px] font-black shadow-md transition-all active:scale-95 disabled:pointer-events-none disabled:opacity-40'>
 						{isUpdating ? 'Saving...' : 'Save Changes'}
 					</button>
 				</div>
@@ -1929,7 +1909,7 @@ const DetailModalContent = ({
 			</button>
 
 			<div className='flex items-center gap-3.5 border-b border-slate-100 pb-4 dark:border-zinc-800/40'>
-				<div className='flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-primary-400 text-primary-950 shadow-inner'>
+				<div className='bg-primary-400 text-primary-950 flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl shadow-inner'>
 					<Key className='h-5 w-5' />
 				</div>
 				<div>
@@ -1958,7 +1938,7 @@ const DetailModalContent = ({
 							Auth Method
 						</span>
 						<span
-							className={`mt-1 inline-block rounded-lg px-2 py-0.5 text-xs font-bold ${usesOAuth ? 'border border-primary-500/20 bg-primary-50 text-primary-700 dark:border-primary-500/20 dark:bg-primary-500/10 dark:text-primary-400' : 'border border-slate-200 bg-white text-slate-700 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-300'}`}>
+							className={`mt-1 inline-block rounded-lg px-2 py-0.5 text-xs font-bold ${usesOAuth ? 'border-primary-500/20 bg-primary-50 text-primary-700 dark:border-primary-500/20 dark:bg-primary-500/10 dark:text-primary-400 border' : 'border border-slate-200 bg-white text-slate-700 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-300'}`}>
 							{usesOAuth ? 'OAuth 2.0' : 'API Key'}
 						</span>
 					</div>

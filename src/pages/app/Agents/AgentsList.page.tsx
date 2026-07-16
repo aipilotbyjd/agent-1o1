@@ -17,6 +17,7 @@ import {
 	MoreHorizontal,
 } from 'lucide-react';
 import { OutletContextType } from './_layouts/Agents.layout';
+import { useConfirm } from '@/context/confirmContext';
 import Breadcrumb from '@/components/layout/Breadcrumb';
 import Container from '@/components/layout/Container';
 import pages from '@/Routes/pages';
@@ -102,6 +103,7 @@ const getCategoryIcon = (category: string) => {
 const AgentsListPage = () => {
 	const { setHeaderLeft } = useOutletContext<OutletContextType>();
 	const navigate = useNavigate();
+	const { confirm } = useConfirm();
 
 	useEffect(() => {
 		setHeaderLeft(<Breadcrumb list={[{ ...pages.app.subPages.agents }]} />);
@@ -135,7 +137,21 @@ const AgentsListPage = () => {
 		setAgents((prev) => prev.map((a) => (a.id === id ? { ...a, isActive: !a.isActive } : a)));
 	};
 
-	const handleDelete = (id: string) => {
+	const handleDelete = async (id: string) => {
+		const agent = agents.find((a) => a.id === id);
+		const confirmed = await confirm({
+			title: 'Delete Agent',
+			message: (
+				<>
+					Are you sure you want to delete{' '}
+					<strong className='font-semibold text-zinc-800 dark:text-zinc-200'>
+						{agent ? `"${agent.name}"` : 'this agent'}
+					</strong>
+					? This action cannot be undone.
+				</>
+			),
+		});
+		if (!confirmed) return;
 		setAgents((prev) => prev.filter((a) => a.id !== id));
 	};
 

@@ -22,11 +22,10 @@ const SettingsNavItem = ({ to, icon, text }: { to: string; icon: TIcons; text: s
 			end
 			className={({ isActive }) =>
 				classNames(
-					'flex h-11 w-full items-center gap-3 rounded-lg px-3 text-left text-sm font-semibold transition',
+					'flex h-11 w-full items-center gap-3 rounded-lg px-3 text-left text-sm font-semibold text-zinc-500 transition hover:text-zinc-950 dark:hover:text-white',
 					{
-						'bg-zinc-100 text-zinc-950 dark:bg-white/10 dark:text-white': isActive,
-						'text-zinc-500 hover:bg-zinc-100 hover:text-zinc-900 dark:hover:bg-white/5 dark:hover:text-white':
-							!isActive,
+						'bg-primary-400/10 text-primary-500 dark:text-primary-400': isActive,
+						'hover:bg-zinc-100 dark:hover:bg-white/5': !isActive,
 						'justify-center': !asideStatus,
 					},
 				)
@@ -90,9 +89,6 @@ const SettingsAsideTemplate = () => {
 						<SectionTitle>Organization</SectionTitle>
 						<div className='space-y-1'>
 							<SettingsNavItem {...pages.settings.subPages.workspace} />
-							{pages.app.subPages?.myWorkspace && (
-								<SettingsNavItem {...pages.app.subPages.myWorkspace} />
-							)}
 							{pages.onboarding.subPages?.workspaceList && (
 								<SettingsNavItem {...pages.onboarding.subPages.workspaceList} />
 							)}

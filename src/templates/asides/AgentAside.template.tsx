@@ -18,6 +18,8 @@ import Aside, { AsideBody, AsideFooter } from '@/components/layout/Aside';
 import useAsideStatus from '@/hooks/useAsideStatus';
 import { useAuth } from '@/context/authContext';
 import classNames from 'classnames';
+import { useGlobalSearchStore } from '@/store/globalSearch.store';
+import GlobalSearch from '@/templates/search/GlobalSearch.template';
 
 const AppAsideTemplate = () => {
 	const navigate = useNavigate();
@@ -43,7 +45,9 @@ const AppAsideTemplate = () => {
 				</div>
 				{asideStatus && (
 					<div className='flex items-center gap-2.5'>
-						<button className='text-zinc-400 hover:text-zinc-950 dark:hover:text-white'>
+						<button
+							onClick={() => useGlobalSearchStore.getState().open()}
+							className='text-zinc-400 hover:text-zinc-950 dark:hover:text-white'>
 							<Search size={15} />
 						</button>
 						<button
@@ -196,6 +200,7 @@ const AppAsideTemplate = () => {
 					)}
 				</div>
 			</AsideFooter>
+			<GlobalSearch />
 		</Aside>
 	);
 };

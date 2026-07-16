@@ -43,6 +43,7 @@
 		"dayjs": "^1.11.21",
 		"formik": "^2.4.9",
 		"framer-motion": "^12.40.0",
+		"fuse.js": "^7.5.0",
 		"i18next": "^26.3.0",
 		"is-hotkey": "^0.2.0",
 		"laravel-echo": "^2.3.7",

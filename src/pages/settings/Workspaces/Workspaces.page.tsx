@@ -35,6 +35,7 @@ import {
 	useLeaveWorkspace,
 } from '@/api/modules/workspaces';
 import Spinner from '@/components/ui/Spinner';
+import { useConfirm } from '@/context/confirmContext';
 
 // ─── helpers ───────────────────────────────────────────────────────────────────
 const getInitials = (name: string) =>
@@ -178,6 +179,7 @@ const WorkspacesPage = () => {
 	const { isDarkTheme, setDarkModeStatus } = useDarkMode();
 	const { setActiveWorkspaceId } = useWorkflowShellStore();
 	const { userData } = useAuth();
+	const { confirm } = useConfirm();
 
 	// API
 	const { data: workspacesResponse, isLoading } = useWorkspaces();
@@ -281,7 +283,7 @@ const WorkspacesPage = () => {
 		const name = workspaces.find((w: IWorkspaceCard) => w.id === id)?.name ?? 'workspace';
 		triggerToast(`Entering workspace "${name}"...`, 'info');
 		setActiveWorkspaceId(id);
-		setTimeout(() => navigate('/my-workspace'), 800);
+		setTimeout(() => navigate('/dashboard'), 800);
 	};
 
 	const handleCreateWorkspace = async (e: React.FormEvent) => {
@@ -315,6 +317,20 @@ const WorkspacesPage = () => {
 	};
 
 	const handleDeleteWorkspace = async (id: string, name: string) => {
+		const confirmed = await confirm({
+			title: 'Delete Workspace',
+			confirmText: 'Delete Workspace',
+			message: (
+				<>
+					Are you sure you want to permanently delete workspace{' '}
+					<strong className='font-semibold text-zinc-800 dark:text-zinc-200'>
+						"{name}"
+					</strong>
+					? This action cannot be undone.
+				</>
+			),
+		});
+		if (!confirmed) return;
 		try {
 			await deleteWorkspaceMutation.mutateAsync(id);
 			triggerToast(`Deleted workspace "${name}"`, 'info');
@@ -394,7 +410,7 @@ const WorkspacesPage = () => {
 					role='button'
 					tabIndex={0}
 					className='flex cursor-pointer items-center gap-3'
-					onClick={() => navigate('/my-workspace')}>
+					onClick={() => navigate('/dashboard')}>
 					<img
 						src={isDarkTheme ? LogoDark : LogoLight}
 						alt='agent1o1'

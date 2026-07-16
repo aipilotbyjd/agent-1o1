@@ -254,12 +254,6 @@ const app = {
 			text: 'Dashboard',
 			icon: 'Home09' as TIcons,
 		},
-		myWorkspace: {
-			id: 'myWorkspace',
-			to: '/my-workspace',
-			text: 'My Workspace',
-			icon: 'Layout3Column' as TIcons,
-		},
 		workflows: {
 			id: 'workflows',
 			to: '/workflows',

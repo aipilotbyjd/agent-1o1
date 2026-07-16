@@ -4,9 +4,6 @@ import { lazy } from 'react';
 const DashboardLayout = lazy(() => import('@/pages/app/Dashboard/_layouts/Dashboard.layout'));
 const DashboardPage = lazy(() => import('@/pages/app/Dashboard/Dashboard.page'));
 
-const MyWorkspaceLayout = lazy(() => import('@/pages/app/MyWorkspace/_layouts/MyWorkspace.layout'));
-const MyWorkspacePage = lazy(() => import('@/pages/app/MyWorkspace/MyWorkspace.page'));
-
 const WorkflowsLayout = lazy(() => import('@/pages/app/Workflows/_layouts/Workflows.layout'));
 const WorkflowsListPage = lazy(() => import('@/pages/app/Workflows/WorkflowsList.page'));
 
@@ -34,26 +31,6 @@ const AppPages = [
 			{
 				path: pages.app.subPages.dashboard.to,
 				element: <DashboardPage />,
-			},
-		],
-	},
-	{
-		path: pages.app.subPages.myWorkspace.to,
-		element: <MyWorkspaceLayout />,
-		children: [
-			{
-				path: pages.app.subPages.myWorkspace.to,
-				element: <MyWorkspacePage />,
-			},
-		],
-	},
-	{
-		path: '/dashboard/my-workspace',
-		element: <MyWorkspaceLayout />,
-		children: [
-			{
-				path: '/dashboard/my-workspace',
-				element: <MyWorkspacePage />,
 			},
 		],
 	},
