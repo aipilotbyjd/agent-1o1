@@ -70,6 +70,7 @@ export type TWorkflowEditorAction =
 			status: TNodeRunStatus;
 			durationMs?: number;
 			error?: string;
+			inputPreview?: unknown;
 			outputPreview?: unknown;
 	  }
 	| { type: 'LOAD_WORKFLOW'; workflow: TExportedWorkflow }
@@ -495,6 +496,7 @@ export const workflowEditorReducer = (
 									status: action.status,
 									durationMs: action.durationMs,
 									error: action.error,
+									inputPreview: action.inputPreview,
 									outputPreview: action.outputPreview,
 								},
 							}

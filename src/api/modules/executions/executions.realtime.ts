@@ -12,6 +12,7 @@ export interface IExecutionNodeEvent {
 	execution_id: string;
 	node_id: string;
 	status: string;
+	input?: unknown;
 	output?: unknown;
 	error?: { message?: string } | string | null;
 	duration_ms?: number;

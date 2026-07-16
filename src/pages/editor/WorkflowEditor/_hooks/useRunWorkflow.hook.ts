@@ -61,6 +61,7 @@ type TApiNodeResult = {
 	status?: string;
 	duration_ms?: number;
 	error?: { message?: string };
+	input_data?: unknown;
 	output_data?: unknown;
 };
 
@@ -104,6 +105,7 @@ export const useRunWorkflow = () => {
 		durationMs: number | undefined,
 		error: unknown,
 		output: unknown,
+		input?: unknown,
 	) => {
 		dispatch({
 			type: 'SET_NODE_STATUS',
@@ -111,6 +113,7 @@ export const useRunWorkflow = () => {
 			status: API_NODE_STATUS_MAP[status ?? ''] ?? 'idle',
 			durationMs,
 			error: errorText(error),
+			inputPreview: input,
 			outputPreview: output,
 		});
 		if (status === 'running') {
@@ -170,6 +173,7 @@ export const useRunWorkflow = () => {
 						event.duration_ms,
 						event.error,
 						event.output,
+						event.input,
 					),
 				onWaiting: (event) =>
 					dispatch({
@@ -215,6 +219,7 @@ export const useRunWorkflow = () => {
 						nodeRes.duration_ms,
 						nodeRes.error,
 						nodeRes.output_data,
+						nodeRes.input_data,
 					);
 				}
 
@@ -405,6 +410,9 @@ export const useRunWorkflow = () => {
 				id: node.id,
 				status: 'success',
 				durationMs,
+				// Mirrors the backend's persisted shape (`{ config: <resolved config> }`)
+				// so the card renders identically for simulated and real runs.
+				inputPreview: { config: resolvedValues },
 				outputPreview: output,
 			});
 			nodeRuns.push({ nodeId: node.id, label: node.data.label, status: 'success', durationMs, output });

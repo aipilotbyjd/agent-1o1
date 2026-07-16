@@ -84,6 +84,7 @@ export type TCanvasNodeData = {
 	status?: TNodeRunStatus;
 	durationMs?: number;
 	error?: string;
+	inputPreview?: unknown;
 	outputPreview?: unknown;
 	notes?: string;
 	locked?: boolean;

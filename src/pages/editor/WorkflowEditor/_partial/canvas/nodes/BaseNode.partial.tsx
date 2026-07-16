@@ -26,6 +26,7 @@ import NodeFields from './NodeFields.partial';
 import NodeColorPicker from './NodeColorPicker.partial';
 import NodeCommentsPanel from './NodeCommentsPanel.partial';
 import NodeInlineTest from './NodeInlineTest.partial';
+import NodeRunIO from './NodeRunIO.partial';
 import { tintStyle } from '../../library/library.util';
 import { PORT_TYPE_COLOR } from '../../../_helper/builder.constants';
 import { useWorkflowEditor } from '../../../_context/WorkflowEditorProvider.context';
@@ -309,6 +310,14 @@ const BaseNode = ({ id, data, selected }: NodeProps<TCanvasNode>) => {
 						</span>
 					</div>
 				)}
+
+				{/* Resolved input/output from the last run */}
+				<NodeRunIO
+					inputPreview={data.inputPreview}
+					outputPreview={data.outputPreview}
+					pinned={data.pinned}
+					pinnedOutput={data.pinnedOutput}
+				/>
 
 				{/* Inline node test */}
 				{selected && <NodeInlineTest nodeId={id} defKey={data.defKey} def={def ?? null} />}
