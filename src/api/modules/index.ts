@@ -46,4 +46,5 @@ export * from './admin-settings';
 export * from './trigger-catalog';
 export * from './connector-metrics';
 export * from './vector-store';
+export * from './dashboard';
 
