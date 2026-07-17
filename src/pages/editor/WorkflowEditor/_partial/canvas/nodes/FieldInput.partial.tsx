@@ -1,4 +1,5 @@
-import { ChevronDown } from 'lucide-react';
+import { useState } from 'react';
+import { ChevronDown, X } from 'lucide-react';
 import { useCredentials } from '@/api/modules/credentials';
 import { useWorkspaceContext } from '@/context/workspaceContext';
 import type { TNodeField } from '../../../_types/node.type';
@@ -59,8 +60,72 @@ const CredentialFieldInput = ({ field, value, onChange, compact }: FieldInputPro
 	);
 };
 
+/**
+ * Resource picker. Without a provider-side picker (Drive, Sheets…) wired up, the
+ * user pastes a resource id or link instead — same value, no fake browser.
+ */
+const PickerFieldInput = ({ field, value, onChange, compact }: FieldInputProps) => {
+	const [entering, setEntering] = useState(false);
+	const cls = compact ? compactInputClass : inputClass;
+	const current = String(value ?? '');
+
+	if (current && !entering) {
+		return (
+			<div className='flex items-center gap-1.5 rounded-lg border border-zinc-200 bg-white px-2.5 py-1.5 dark:border-zinc-700 dark:bg-zinc-900'>
+				<span className='flex-1 truncate text-[11px] font-semibold text-zinc-700 dark:text-zinc-300'>
+					{current}
+				</span>
+				<button
+					type='button'
+					aria-label={`Change ${field.label}`}
+					onClick={() => setEntering(true)}
+					className='text-[10px] font-bold text-primary-600 hover:underline dark:text-primary-400'>
+					Change
+				</button>
+				<button
+					type='button'
+					aria-label={`Clear ${field.label}`}
+					onClick={() => onChange('')}
+					className='text-zinc-400 hover:text-rose-500'>
+					<X size={12} />
+				</button>
+			</div>
+		);
+	}
+
+	if (entering) {
+		return (
+			<input
+				autoFocus
+				value={current}
+				onChange={(event) => onChange(event.target.value)}
+				onBlur={() => setEntering(false)}
+				onKeyDown={(event) => {
+					if (event.key === 'Enter' || event.key === 'Escape') setEntering(false);
+				}}
+				placeholder={field.placeholder ?? 'Paste a link or id…'}
+				aria-label={field.label}
+				className={cls}
+			/>
+		);
+	}
+
+	return (
+		<button
+			type='button'
+			onClick={() => setEntering(true)}
+			className='flex w-full items-center justify-center gap-1.5 rounded-lg border border-zinc-200 bg-white px-3 py-1.5 text-[11px] font-bold text-zinc-700 shadow-xs transition hover:bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-800'>
+			{field.pickerLabel ?? `Pick ${field.label}`}
+		</button>
+	);
+};
+
 const FieldInput = ({ field, value, onChange, compact, nodeId }: FieldInputProps) => {
 	const cls = compact ? compactInputClass : inputClass;
+
+	if (field.kind === 'picker') {
+		return <PickerFieldInput field={field} value={value} onChange={onChange} compact={compact} />;
+	}
 
 	// Fields that opt into {{variables}} get the expression editor with autocomplete.
 	if (

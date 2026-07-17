@@ -15,7 +15,8 @@ export const NODE_CATALOG: TNodeDefinition[] = [
 			{
 				key: 'folder',
 				label: 'Folder',
-				kind: 'text',
+				kind: 'picker',
+				pickerLabel: 'Pick Folder',
 				help: 'The Google Drive folder ID to read from.',
 			},
 			{
@@ -23,9 +24,11 @@ export const NODE_CATALOG: TNodeDefinition[] = [
 				label: 'Use Link?',
 				kind: 'toggle',
 				default: false,
+				advanced: true,
 			},
 		],
 		requiresCredential: true,
+		supportsLoopMode: true,
 	},
 	{
 		key: 'trigger.google_form_responses',

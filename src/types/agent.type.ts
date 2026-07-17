@@ -7,6 +7,7 @@ export type TAgent = {
 	temperature: number;
 	max_tokens?: number;
 	is_active: boolean;
+	category?: string | null;
 	skills_count: number;
 	conversations_count: number;
 	skills?: TAgentSkill[];

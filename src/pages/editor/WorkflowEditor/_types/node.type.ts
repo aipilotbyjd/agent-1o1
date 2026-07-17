@@ -36,7 +36,8 @@ export type TFieldKind =
 	| 'multiselect'
 	| 'kv'
 	| 'credential'
-	| 'model';
+	| 'model'
+	| 'picker';
 
 export type TNodeField = {
 	key: string;
@@ -50,6 +51,10 @@ export type TNodeField = {
 	placeholder?: string;
 	supportsVariables?: boolean;
 	rows?: number;
+	/** Hidden behind "Show More Options" until the user opts in. */
+	advanced?: boolean;
+	/** picker only — call to action, e.g. "Pick Folder". */
+	pickerLabel?: string;
 };
 
 export type TNodeDefinition = {
@@ -96,4 +101,8 @@ export type TCanvasNodeData = {
 	// Pinned data: when pinned, the engine reuses this output instead of executing
 	pinned?: boolean;
 	pinnedOutput?: unknown;
+	// When true the node runs once per item of its incoming list input
+	loopMode?: boolean;
+	// Collapsed nodes render header only, hiding fields and description
+	collapsed?: boolean;
 } & Record<string, unknown>;

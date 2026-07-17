@@ -77,6 +77,8 @@ export type TWorkflowEditorAction =
 	// Node customization
 	| { type: 'SET_NODE_COLOR'; id: string; color: string | null }
 	| { type: 'TOGGLE_NODE_BREAKPOINT'; id: string }
+	| { type: 'TOGGLE_NODE_LOOP_MODE'; id: string }
+	| { type: 'TOGGLE_NODE_COLLAPSED'; id: string }
 	| { type: 'ADD_NODE_COMMENT'; id: string; text: string }
 	| { type: 'REMOVE_NODE_COMMENT'; id: string; commentId: string }
 	| {
@@ -556,6 +558,25 @@ export const workflowEditorReducer = (
 				nodes: state.nodes.map((node) =>
 					node.id === action.id
 						? { ...node, data: { ...node.data, breakpoint: !node.data.breakpoint } }
+						: node,
+				),
+			};
+		case 'TOGGLE_NODE_LOOP_MODE':
+			return {
+				...state,
+				workflow: { ...state.workflow, savingState: 'dirty', updatedAt: Date.now() },
+				nodes: state.nodes.map((node) =>
+					node.id === action.id
+						? { ...node, data: { ...node.data, loopMode: !node.data.loopMode } }
+						: node,
+				),
+			};
+		case 'TOGGLE_NODE_COLLAPSED':
+			return {
+				...state,
+				nodes: state.nodes.map((node) =>
+					node.id === action.id
+						? { ...node, data: { ...node.data, collapsed: !node.data.collapsed } }
 						: node,
 				),
 			};
