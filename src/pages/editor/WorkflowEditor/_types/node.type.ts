@@ -99,6 +99,11 @@ export type TCanvasNodeData = {
 	comments?: TNodeComment[];
 	testOutput?: unknown;
 	testStatus?: 'idle' | 'running' | 'success' | 'error';
+	// Resolved input the node ran against, error message, and wall time — captured
+	// from a real single-node test run so the card can show input/output/timing.
+	testInput?: unknown;
+	testError?: string;
+	testDurationMs?: number;
 	// Pinned data: when pinned, the engine reuses this output instead of executing
 	pinned?: boolean;
 	pinnedOutput?: unknown;

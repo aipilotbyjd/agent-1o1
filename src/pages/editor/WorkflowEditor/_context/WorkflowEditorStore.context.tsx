@@ -87,6 +87,9 @@ export type TWorkflowEditorAction =
 			id: string;
 			status: 'idle' | 'running' | 'success' | 'error';
 			output?: unknown;
+			input?: unknown;
+			error?: string;
+			durationMs?: number;
 	  }
 	// UI state
 	| { type: 'SET_SHORTCUTS_OPEN'; open: boolean }
@@ -631,6 +634,9 @@ export const workflowEditorReducer = (
 									...node.data,
 									testStatus: action.status,
 									testOutput: action.output,
+									testInput: action.input,
+									testError: action.error,
+									testDurationMs: action.durationMs,
 								},
 							}
 						: node,

@@ -432,6 +432,7 @@ const TriggerNode = ({ id, data, selected }: NodeProps<TCanvasNode>) => {
 
 			{selected && def && (
 				<NodeIOPanel
+					nodeId={id}
 					inputs={def.inputs ?? []}
 					outputs={def.outputs ?? []}
 					hasIncoming={hasIncoming}

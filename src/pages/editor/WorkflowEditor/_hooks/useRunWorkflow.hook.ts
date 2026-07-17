@@ -13,6 +13,7 @@ import { getRunOrder } from '../_helper/runGraph.helper';
 import {
 	buildRuntimeContext,
 	executeNode,
+	firstList,
 	isEdgeActive,
 	resolveNodeValues,
 	type TNodeOutputs,
@@ -376,6 +377,22 @@ export const useRunWorkflow = () => {
 			try {
 				if (usePinned) {
 					output = node.data.pinnedOutput;
+				} else if (node.data.loopMode) {
+					// Per-node Loop Mode: fan out over the incoming list, running the
+					// node once per item and collecting outputs — mirrors the backend
+					// NodeRunner. Falls back to a single run when no list is available.
+					const primaryInput = inputs.length <= 1 ? inputs[0] : inputs;
+					const list = firstList(primaryInput);
+					if (list) {
+						const itemOutputs = list.map(
+							(item) => executeNode(node, [item], resolvedValues).output,
+						);
+						output = { items: itemOutputs, count: itemOutputs.length };
+					} else {
+						const result = executeNode(node, inputs, resolvedValues);
+						output = result.output;
+						if (result.branch) branches[node.id] = result.branch;
+					}
 				} else {
 					const result = executeNode(node, inputs, resolvedValues);
 					output = result.output;

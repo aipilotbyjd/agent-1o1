@@ -1,9 +1,12 @@
-import { Link2 } from 'lucide-react';
+import { GripVertical, Link2 } from 'lucide-react';
 import { PORT_TYPE_COLOR } from '../../../_helper/builder.constants';
+import { buildOutputToken, setTokenDragData } from '../../../_helper/tokenDrag.helper';
 import NodeHelpTip from './NodeHelpTip.partial';
 import type { TNodePort } from '../../../_types/node.type';
 
 type Props = {
+	/** Id of the node these ports belong to — the source of dragged output tokens. */
+	nodeId: string;
 	inputs: TNodePort[];
 	outputs: TNodePort[];
 	/** True when at least one edge already feeds this node. */
@@ -17,7 +20,7 @@ const portLabel = (port: TNodePort) =>
  * Side cards mirroring Gumloop: an "connect an input" hint while nothing is wired
  * up, and the node's real output ports tinted by port type.
  */
-const NodeIOPanel = ({ inputs, outputs, hasIncoming }: Props) => (
+const NodeIOPanel = ({ nodeId, inputs, outputs, hasIncoming }: Props) => (
 	<>
 		<div className='pointer-events-auto absolute top-0 left-[360px] z-10 flex w-[200px] flex-col gap-1 rounded-2xl border border-dashed border-zinc-200 bg-zinc-50/70 p-3 text-zinc-500 shadow-xs dark:border-zinc-800 dark:bg-zinc-900/30'>
 			{hasIncoming ? (
@@ -66,14 +69,19 @@ const NodeIOPanel = ({ inputs, outputs, hasIncoming }: Props) => (
 					{outputs.map((port) => (
 						<div
 							key={port.id}
-							title={`${port.name}: ${port.type}`}
-							className='flex items-center justify-between rounded-lg border px-2.5 py-1.5 text-[9px] font-bold'
+							draggable
+							onDragStart={(event) =>
+								setTokenDragData(event.dataTransfer, buildOutputToken(nodeId, port.name))
+							}
+							title={`Drag "${portLabel(port)}" into a field to use it — ${port.name}: ${port.type}`}
+							className='flex cursor-grab items-center justify-between rounded-lg border px-2.5 py-1.5 text-[9px] font-bold transition active:cursor-grabbing hover:brightness-110'
 							style={{
 								color: PORT_TYPE_COLOR[port.type] ?? PORT_TYPE_COLOR.any,
 								borderColor: `${PORT_TYPE_COLOR[port.type] ?? PORT_TYPE_COLOR.any}33`,
 								backgroundColor: `${PORT_TYPE_COLOR[port.type] ?? PORT_TYPE_COLOR.any}0d`,
 							}}>
-							<span className='truncate'>{portLabel(port)}</span>
+							<GripVertical size={10} className='mr-1 shrink-0 opacity-50' />
+							<span className='flex-1 truncate'>{portLabel(port)}</span>
 							<Link2 size={11} className='ml-1.5 shrink-0 opacity-70' />
 						</div>
 					))}

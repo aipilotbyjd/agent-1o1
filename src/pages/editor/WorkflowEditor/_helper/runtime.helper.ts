@@ -50,6 +50,26 @@ export const buildRuntimeContext = (
 	return ctx;
 };
 
+/**
+ * Extract an iterable list from a value: the value itself when it's an array, or
+ * the first array-valued field (preferring conventional names) when it's an
+ * object. Mirrors the backend NodeRunner::firstList so per-node Loop Mode fans
+ * out over the same list in the local simulation as it does in a real run.
+ */
+export const firstList = (value: unknown): unknown[] | null => {
+	if (Array.isArray(value)) return value;
+	if (value && typeof value === 'object') {
+		const obj = value as Record<string, unknown>;
+		for (const key of ['items', 'data', 'results', 'rows', 'records', 'body']) {
+			if (Array.isArray(obj[key])) return obj[key] as unknown[];
+		}
+		for (const nested of Object.values(obj)) {
+			if (Array.isArray(nested)) return nested as unknown[];
+		}
+	}
+	return null;
+};
+
 const stringifyToken = (value: unknown): string => {
 	if (value === null || value === undefined) return '';
 	if (typeof value === 'object') return JSON.stringify(value);

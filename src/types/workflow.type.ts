@@ -274,6 +274,8 @@ export interface ITestNodeDto {
 export interface ITestNodeResult {
 	success: boolean;
 	output?: Record<string, unknown>;
+	/** The resolved input the node ran against (e.g. `{ config: … }`). */
+	input?: Record<string, unknown>;
 	error?: string;
 	duration: number;
 }

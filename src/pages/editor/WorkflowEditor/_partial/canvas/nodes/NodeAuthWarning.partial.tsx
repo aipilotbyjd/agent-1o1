@@ -23,7 +23,7 @@ const NodeAuthWarning = () => {
 						event.stopPropagation();
 						dispatch({ type: 'SET_LINK_CREDENTIALS_OPEN', open: true });
 					}}
-					className='border-zinc-250 nodrag mt-1 flex cursor-pointer items-center gap-1.5 self-start rounded-md border bg-white px-2.5 py-1 text-[11px] font-semibold text-primary-600 shadow-xs hover:bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900 dark:text-primary-400'>
+					className='border-zinc-250 nodrag mt-1 flex cursor-pointer items-center gap-1.5 self-start rounded-md border bg-white px-2.5 py-1 text-[11px] font-semibold text-primary-600 shadow-xs hover:bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900 dark:text-primary-400 dark:hover:bg-zinc-800'>
 					Authenticate credentials
 				</button>
 			</div>

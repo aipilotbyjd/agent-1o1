@@ -333,7 +333,7 @@ const BaseNode = ({ id, data, selected }: NodeProps<TCanvasNode>) => {
 				/>
 
 				{/* Inline node test */}
-				{selected && <NodeInlineTest nodeId={id} defKey={data.defKey} def={def ?? null} />}
+				{selected && <NodeInlineTest nodeId={id} defKey={data.defKey} />}
 			</div>
 
 
@@ -358,7 +358,7 @@ const BaseNode = ({ id, data, selected }: NodeProps<TCanvasNode>) => {
 			)}
 
 			{selected && (
-				<NodeIOPanel inputs={inputs} outputs={outputs} hasIncoming={hasIncoming} />
+				<NodeIOPanel nodeId={id} inputs={inputs} outputs={outputs} hasIncoming={hasIncoming} />
 			)}
 
 		</motion.div>

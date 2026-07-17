@@ -1,59 +1,85 @@
-import { useState } from 'react';
-import { Beaker, ChevronDown, ChevronUp, CheckCircle2, AlertCircle, Loader2 } from 'lucide-react';
+import { useMemo, useState } from 'react';
+import { Beaker, ChevronDown, ChevronUp, CheckCircle2, AlertCircle, Loader2, Clock } from 'lucide-react';
+import { useTestNode } from '@/api/modules/workflows/editor.hooks';
 import { useWorkflowEditor } from '../../../_context/WorkflowEditorProvider.context';
-import type { TNodeDefinition } from '../../../_types/node.type';
 
-const MOCK_OUTPUTS: Record<string, unknown> = {
-	'trigger.webhook': { method: 'POST', body: { userId: 'u_123', event: 'signup' } },
-	'ai.agent': { response: 'Processed successfully.', tokens: 142, confidence: 0.94 },
-	'ai.extract': { fields: { name: 'John Doe', email: 'john@example.com' } },
-	'data.http': { status: 200, data: { id: 1, value: 'sample' } },
-	'data.database': {
-		rows: [
-			{ id: 1, name: 'Alice' },
-			{ id: 2, name: 'Bob' },
-		],
-		count: 2,
-	},
-	'logic.condition': { branch: 'true', passed: true },
-	'integration.slack': { ok: true, messageId: 'msg_abc123' },
-	'output.display': { rendered: true },
-};
-
+/**
+ * Inline "Test Node" — runs this single node for real against the backend engine
+ * (resolving config + invoking the handler) and shows the actual input it ran on,
+ * the produced output, timing, and any real error. Upstream data, when a previous
+ * run or pinned output is available, is fed in as the node's input.
+ */
 const NodeInlineTest = ({
 	nodeId,
 	defKey,
-	def,
 }: {
 	nodeId: string;
 	defKey: string;
-	def: TNodeDefinition | null;
 }) => {
 	const { state, dispatch } = useWorkflowEditor();
 	const node = state.nodes.find((n) => n.id === nodeId);
+	const ws = state.workflow.workspaceId;
+	const testNode = useTestNode(ws ?? '');
+
 	const testStatus = node?.data.testStatus ?? 'idle';
 	const testOutput = node?.data.testOutput;
+	const testInput = node?.data.testInput;
+	const testError = node?.data.testError;
+	const testDurationMs = node?.data.testDurationMs;
 	const [expanded, setExpanded] = useState(false);
+	const [showInput, setShowInput] = useState(false);
+
+	// Gather the sample input for the test: the last output of each directly
+	// upstream node (from a prior run or pinned data), keyed by that node's id so
+	// the backend can resolve the node's real {{ id.output.* }} tokens. Empty when
+	// nothing upstream has produced output yet.
+	const upstreamInput = useMemo<Record<string, unknown>>(() => {
+		const input: Record<string, unknown> = {};
+		state.edges
+			.filter((edge) => edge.target === nodeId)
+			.forEach((edge) => {
+				const source = state.nodes.find((n) => n.id === edge.source);
+				if (!source) return;
+				const output = source.data.pinned
+					? source.data.pinnedOutput
+					: source.data.outputPreview;
+				if (output !== undefined) input[source.id] = output;
+			});
+		return input;
+	}, [state.edges, state.nodes, nodeId]);
 
 	const runTest = async (e: React.MouseEvent) => {
 		e.stopPropagation();
+		if (!ws || testStatus === 'running') return;
+
 		dispatch({ type: 'SET_NODE_TEST_STATUS', id: nodeId, status: 'running' });
+		setExpanded(true);
 
-		await new Promise((resolve) => setTimeout(resolve, 900 + Math.random() * 600));
+		try {
+			const result = await testNode.mutateAsync({
+				node_type: defKey,
+				parameters: (node?.data.values ?? {}) as Record<string, unknown>,
+				input: upstreamInput,
+			});
 
-		const succeed = Math.random() > 0.15;
-		if (succeed) {
-			const output = MOCK_OUTPUTS[defKey] ?? { result: 'OK', timestamp: Date.now() };
-			dispatch({ type: 'SET_NODE_TEST_STATUS', id: nodeId, status: 'success', output });
-		} else {
+			dispatch({
+				type: 'SET_NODE_TEST_STATUS',
+				id: nodeId,
+				status: result.success ? 'success' : 'error',
+				output: result.output,
+				input: result.input,
+				error: result.error,
+				durationMs: result.duration,
+			});
+		} catch (err) {
 			dispatch({
 				type: 'SET_NODE_TEST_STATUS',
 				id: nodeId,
 				status: 'error',
-				output: { error: 'Simulated test failure', code: 500 },
+				error:
+					err instanceof Error ? err.message : 'Test request failed — check the connection.',
 			});
 		}
-		setExpanded(true);
 	};
 
 	const statusIcon = {
@@ -65,50 +91,101 @@ const NodeInlineTest = ({
 
 	const btnClass = {
 		idle: 'border-zinc-200 text-zinc-500 hover:border-primary-300 hover:text-primary-600 dark:border-zinc-700 dark:hover:border-primary-700 dark:hover:text-primary-400',
-		running:
-			'border-sky-300 text-sky-600 dark:border-sky-700 dark:text-sky-400 cursor-not-allowed',
-		success:
-			'border-emerald-300 text-emerald-600 dark:border-emerald-700 dark:text-emerald-400',
+		running: 'border-sky-300 text-sky-600 dark:border-sky-700 dark:text-sky-400 cursor-not-allowed',
+		success: 'border-emerald-300 text-emerald-600 dark:border-emerald-700 dark:text-emerald-400',
 		error: 'border-rose-300 text-rose-600 dark:border-rose-700 dark:text-rose-400',
 	}[testStatus];
+
+	const hasResult = testStatus === 'success' || testStatus === 'error';
+	const isError = testStatus === 'error';
 
 	return (
 		<div className='mt-3'>
 			<div className='flex items-center gap-2'>
 				<button
 					type='button'
-					disabled={testStatus === 'running'}
+					disabled={testStatus === 'running' || !ws}
 					onClick={runTest}
-					className={`flex flex-1 items-center justify-center gap-1.5 rounded-lg border py-1.5 text-[11px] font-bold transition ${btnClass}`}>
+					title={ws ? 'Run this node once with the current settings' : 'Save the workflow first'}
+					className={`flex flex-1 items-center justify-center gap-1.5 rounded-lg border py-1.5 text-[11px] font-bold transition disabled:opacity-60 ${btnClass}`}>
 					{statusIcon}
 					{testStatus === 'running' ? 'Testing…' : 'Test Node'}
 				</button>
-				{testOutput !== undefined && (
+				{hasResult && (
 					<button
 						type='button'
 						onClick={(e) => {
 							e.stopPropagation();
 							setExpanded((prev) => !prev);
 						}}
+						aria-label={expanded ? 'Collapse test result' : 'Expand test result'}
 						className='flex h-7 w-7 items-center justify-center rounded-lg border border-zinc-200 text-zinc-400 hover:text-zinc-600 dark:border-zinc-700'>
 						{expanded ? <ChevronUp size={12} /> : <ChevronDown size={12} />}
 					</button>
 				)}
 			</div>
 
-			{expanded && testOutput !== undefined && (
+			{expanded && hasResult && (
 				<div
-					className={`mt-2 rounded-lg border p-2 ${
-						testStatus === 'error'
+					className={`mt-2 rounded-lg border ${
+						isError
 							? 'border-rose-100 bg-rose-50 dark:border-rose-900/30 dark:bg-rose-950/20'
 							: 'border-emerald-100 bg-emerald-50 dark:border-emerald-900/30 dark:bg-emerald-950/20'
 					}`}>
-					<div className='mb-1 text-[10px] font-bold tracking-wide text-zinc-500 uppercase'>
-						Test Output
+					{/* Status + timing header */}
+					<div className='flex items-center justify-between border-b border-black/5 px-2.5 py-1.5 dark:border-white/5'>
+						<span
+							className={`flex items-center gap-1 text-[10px] font-bold tracking-wide uppercase ${
+								isError ? 'text-rose-600 dark:text-rose-400' : 'text-emerald-600 dark:text-emerald-400'
+							}`}>
+							{isError ? <AlertCircle size={11} /> : <CheckCircle2 size={11} />}
+							{isError ? 'Failed' : 'Success'}
+						</span>
+						{typeof testDurationMs === 'number' && (
+							<span className='flex items-center gap-1 text-[10px] font-medium text-zinc-500 dark:text-zinc-400'>
+								<Clock size={10} />
+								{testDurationMs}ms
+							</span>
+						)}
 					</div>
-					<pre className='max-h-28 overflow-y-auto text-[10px] text-zinc-700 dark:text-zinc-300'>
-						{JSON.stringify(testOutput, null, 2)}
-					</pre>
+
+					<div className='p-2'>
+						{isError ? (
+							<pre className='max-h-28 overflow-y-auto text-[10px] font-medium whitespace-pre-wrap text-rose-700 dark:text-rose-300'>
+								{testError || 'Node test failed.'}
+							</pre>
+						) : (
+							<>
+								<div className='mb-1 text-[10px] font-bold tracking-wide text-zinc-500 uppercase'>
+									Output
+								</div>
+								<pre className='max-h-40 overflow-y-auto text-[10px] text-zinc-700 dark:text-zinc-300'>
+									{JSON.stringify(testOutput, null, 2)}
+								</pre>
+							</>
+						)}
+
+						{/* Resolved input the node ran on — collapsible, Gumloop-style inspection. */}
+						{testInput !== undefined && (
+							<div className='mt-2 border-t border-black/5 pt-2 dark:border-white/5'>
+								<button
+									type='button'
+									onClick={(e) => {
+										e.stopPropagation();
+										setShowInput((prev) => !prev);
+									}}
+									className='flex items-center gap-1 text-[10px] font-bold tracking-wide text-zinc-400 uppercase hover:text-zinc-600 dark:hover:text-zinc-200'>
+									{showInput ? <ChevronUp size={10} /> : <ChevronDown size={10} />}
+									Input
+								</button>
+								{showInput && (
+									<pre className='mt-1 max-h-28 overflow-y-auto text-[10px] text-zinc-600 dark:text-zinc-400'>
+										{JSON.stringify(testInput, null, 2)}
+									</pre>
+								)}
+							</div>
+						)}
+					</div>
 				</div>
 			)}
 		</div>

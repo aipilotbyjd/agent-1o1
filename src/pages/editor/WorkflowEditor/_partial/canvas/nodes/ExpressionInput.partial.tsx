@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { Braces, CornerDownLeft } from 'lucide-react';
 import { useWorkflowEditor } from '../../../_context/WorkflowEditorProvider.context';
 import { collectUpstreamVariables } from '../../../_helper/variables.helper';
+import { getTokenFromDrop, TOKEN_DND_MIME } from '../../../_helper/tokenDrag.helper';
 import { buildRuntimeContext, resolveExpressions } from '../../../_helper/runtime.helper';
 import type { TNodeField } from '../../../_types/node.type';
 import type { TNodeOutputs } from '../../../_helper/runtime.helper';
@@ -24,8 +25,12 @@ const ExpressionInput = ({ field, value, onChange, compact, nodeId, className }:
 	const { state } = useWorkflowEditor();
 	const ref = useRef<HTMLTextAreaElement | HTMLInputElement | null>(null);
 	const blurTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+	// Start index of the fragment the autocomplete will replace on select — the
+	// `{{` for a brace trigger, or the `@` for the Gumloop-style `@` inserter.
+	const triggerStart = useRef<number>(-1);
 	const [query, setQuery] = useState<string | null>(null);
 	const [activeIndex, setActiveIndex] = useState(0);
+	const [dragOver, setDragOver] = useState(false);
 
 	// Clear any pending blur timer on unmount so we never setState after teardown.
 	useEffect(() => () => {
@@ -67,29 +72,79 @@ const ExpressionInput = ({ field, value, onChange, compact, nodeId, className }:
 	const syncQuery = (el: HTMLTextAreaElement | HTMLInputElement) => {
 		const caret = el.selectionStart ?? el.value.length;
 		const before = el.value.slice(0, caret);
-		const open = before.lastIndexOf('{{');
-		if (open === -1 || before.indexOf('}}', open) !== -1) {
-			setQuery(null);
+
+		// Primary trigger: an unclosed `{{` before the caret.
+		const braceOpen = before.lastIndexOf('{{');
+		if (braceOpen !== -1 && before.indexOf('}}', braceOpen) === -1) {
+			triggerStart.current = braceOpen;
+			setQuery(before.slice(braceOpen + 2));
+			setActiveIndex(0);
 			return;
 		}
-		setQuery(before.slice(open + 2));
-		setActiveIndex(0);
+
+		// Alternate trigger: an `@` at a word boundary (Gumloop-style inserter). The
+		// fragment after it may contain word chars/spaces so multi-word node labels
+		// like "HTTP Request" still match; if nothing matches, the menu just hides.
+		const at = before.lastIndexOf('@');
+		if (at !== -1 && (at === 0 || /\s/.test(before[at - 1]))) {
+			const fragment = before.slice(at + 1);
+			if (/^[\w .-]*$/.test(fragment)) {
+				triggerStart.current = at;
+				setQuery(fragment);
+				setActiveIndex(0);
+				return;
+			}
+		}
+
+		triggerStart.current = -1;
+		setQuery(null);
 	};
 
 	const insertToken = (token: string) => {
 		const el = ref.current;
 		if (!el) return;
 		const caret = el.selectionStart ?? text.length;
-		const before = text.slice(0, caret);
-		const open = before.lastIndexOf('{{');
-		const next = `${text.slice(0, open)}${token}${text.slice(caret)}`;
+		const start = triggerStart.current >= 0 ? triggerStart.current : caret;
+		const next = `${text.slice(0, start)}${token}${text.slice(caret)}`;
 		onChange(next);
 		setQuery(null);
+		triggerStart.current = -1;
 		requestAnimationFrame(() => {
 			el.focus();
-			const pos = open + token.length;
+			const pos = start + token.length;
 			el.setSelectionRange(pos, pos);
 		});
+	};
+
+	/** Insert text at the current caret/selection (used when an output pill is dropped). */
+	const insertAtCaret = (insert: string) => {
+		const el = ref.current;
+		const caret = el?.selectionStart ?? text.length;
+		const end = el?.selectionEnd ?? caret;
+		const next = `${text.slice(0, caret)}${insert}${text.slice(end)}`;
+		onChange(next);
+		requestAnimationFrame(() => {
+			el?.focus();
+			const pos = caret + insert.length;
+			el?.setSelectionRange(pos, pos);
+		});
+	};
+
+	const onDrop = (event: React.DragEvent<HTMLTextAreaElement | HTMLInputElement>) => {
+		const token = getTokenFromDrop(event.dataTransfer);
+		if (!token) return;
+		// Own the insertion so the browser doesn't also paste the text/plain fallback.
+		event.preventDefault();
+		setDragOver(false);
+		insertAtCaret(token);
+	};
+
+	const onDragOver = (event: React.DragEvent<HTMLTextAreaElement | HTMLInputElement>) => {
+		if (event.dataTransfer.types.includes(TOKEN_DND_MIME)) {
+			event.preventDefault();
+			event.dataTransfer.dropEffect = 'copy';
+			if (!dragOver) setDragOver(true);
+		}
 	};
 
 	const onKeyDown = (event: React.KeyboardEvent) => {
@@ -114,7 +169,7 @@ const ExpressionInput = ({ field, value, onChange, compact, nodeId, className }:
 		value: text,
 		placeholder: field.placeholder,
 		'aria-label': field.label,
-		className: `${className} ${isMultiline ? 'font-mono' : ''}`,
+		className: `${className} ${isMultiline ? 'font-mono' : ''} ${dragOver ? 'ring-2 ring-emerald-400/60 border-emerald-400' : ''}`,
 		onChange: (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
 			onChange(event.target.value);
 			syncQuery(event.target);
@@ -124,6 +179,9 @@ const ExpressionInput = ({ field, value, onChange, compact, nodeId, className }:
 			syncQuery(event.currentTarget),
 		onClick: (event: React.MouseEvent<HTMLTextAreaElement | HTMLInputElement>) =>
 			syncQuery(event.currentTarget),
+		onDrop,
+		onDragOver,
+		onDragLeave: () => setDragOver(false),
 		onBlur: () => {
 			if (blurTimer.current) clearTimeout(blurTimer.current);
 			// Delay so a mousedown on a suggestion can register before the list closes.
@@ -178,6 +236,12 @@ const ExpressionInput = ({ field, value, onChange, compact, nodeId, className }:
 			{hasTokens && !previewChanged && variables.length === 0 && (
 				<div className='mt-1 text-[10px] text-zinc-400'>
 					Connect upstream nodes to use their data here.
+				</div>
+			)}
+			{!hasTokens && query === null && variables.length > 0 && (
+				<div className='mt-1 text-[10px] text-zinc-400'>
+					Type <span className='font-mono text-zinc-500 dark:text-zinc-300'>@</span> or drag an
+					output here to insert data.
 				</div>
 			)}
 		</div>
