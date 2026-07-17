@@ -52,7 +52,7 @@ interface ICardHeaderSeparatorProps extends HTMLAttributes<HTMLDivElement> {
 export const CardHeaderSeparator: FC<ICardHeaderSeparatorProps> = (props) => {
 	const { className, ...rest } = props;
 
-	const classes = classNames('h-8 rounded-full border-s border-border-main', className);
+	const classes = classNames('h-8 rounded-full border-s border-zinc-500/25', className);
 
 	return <div className={classes} {...rest}></div>;
 };
@@ -205,10 +205,10 @@ const Card = forwardRef<HTMLDivElement, ICardProps>((props, ref) => {
 	const { roundedCustom } = useRoundedSize(themeConfig.rounded);
 
 	const cardClasses = classNames(
-		'flex flex-col bg-bg-card dark:bg-bg-card border border-border-main shadow-sm',
+		'flex flex-col bg-white dark:bg-zinc-950 border dark:border-zinc-500/25 border-zinc-500/10',
 		'overflow-hidden',
 		{ [`${rounded as TRounded}`]: rounded !== 'auto' },
-		{ 'rounded-3xl': rounded === 'auto' },
+		{ [`${roundedCustom(1)}`]: rounded === 'auto' },
 		className,
 	);
 

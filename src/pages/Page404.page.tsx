@@ -13,7 +13,7 @@ const Page404Page = () => {
 			<button aria-label='Homepage' onClick={() => navigate('/')}>
 				<img
 					src={isDarkTheme ? LogoDark : LogoLight}
-					alt='agent1o1'
+					alt='Boltify'
 					className='h-18 cursor-pointer transition-all duration-300 ease-in-out'
 				/>
 			</button>

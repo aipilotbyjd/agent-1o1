@@ -6,7 +6,7 @@ const MailLayout = () => {
 	return (
 		<>
 			<MailAsideTemplate />
-			<Wrapper borderDisabled={true}>
+			<Wrapper>
 				<Outlet />
 			</Wrapper>
 		</>

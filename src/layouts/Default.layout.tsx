@@ -11,7 +11,7 @@ const DefaultLayout = () => {
 	return (
 		<>
 			<DefaultAsideTemplate />
-			<Wrapper borderDisabled={true}>
+			<Wrapper>
 				<Suspense
 					fallback={
 						<>
