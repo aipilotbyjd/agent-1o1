@@ -257,11 +257,11 @@ const DashboardPage = () => {
 							</h1>
 
 							<p className='max-w-xl text-xs leading-relaxed font-semibold text-slate-700 md:text-sm dark:text-zinc-400'>
-								<span className='font-bold text-slate-950 dark:text-white'>
+								<span className='font-bold text-[#101828] dark:text-white'>
 									{runsToday.toLocaleString()} run{runsToday === 1 ? '' : 's'}
 								</span>{' '}
 								today at{' '}
-								<span className='font-bold text-slate-955 dark:text-white'>
+								<span className='font-bold text-[#101828] dark:text-white'>
 									{successRate.toFixed(successRate % 1 === 0 ? 0 : 1)}% success
 								</span>
 								{failedCount > 0 ? (
@@ -282,7 +282,7 @@ const DashboardPage = () => {
 
 							<div className='flex flex-wrap items-center gap-2.5 pt-1'>
 								{/* Active Workspace */}
-								<div className='flex items-center gap-1.5 rounded-full border border-slate-955/10 bg-slate-955/5 px-3 py-1 text-[11px] font-bold text-slate-900 shadow-xs dark:border-white/10 dark:bg-slate-900/60 dark:text-white/95'>
+								<div className='flex items-center gap-1.5 rounded-full border border-white/20 bg-white/40 px-3 py-1 text-[11px] font-bold text-slate-900 shadow-xs dark:border-white/10 dark:bg-slate-900/60 dark:text-white/95'>
 									<span className='text-[10px] font-extrabold tracking-wider text-slate-800/80 uppercase dark:text-zinc-400'>
 										Workspace
 									</span>
@@ -296,8 +296,8 @@ const DashboardPage = () => {
 								</div>
 
 								{/* Plan Badge */}
-								<div className='flex items-center gap-1 rounded-full border border-slate-955/10 bg-slate-955/5 px-3 py-1 text-[11px] font-bold text-slate-900 dark:border-primary-500/30 dark:bg-[#261546]/85 dark:text-primary-200'>
-									<Crown size={11} className='text-slate-900 dark:text-primary-400' />
+								<div className='flex items-center gap-1 rounded-full border border-purple-100 bg-white px-3 py-1 text-[11px] font-bold text-purple-700 shadow-xs dark:border-purple-500/30 dark:bg-purple-950/45 dark:text-purple-300'>
+									<Crown size={11} className='text-purple-600 dark:text-purple-400' />
 									<span>Pro Account</span>
 								</div>
 
@@ -305,8 +305,8 @@ const DashboardPage = () => {
 								<div
 									className={`flex items-center gap-1.5 rounded-full border px-3 py-1 text-[11px] font-bold ${
 										failedCount > 0
-											? 'border-slate-955/10 bg-slate-955/5 text-rose-700 dark:border-rose-500/30 dark:bg-[#2a0e12]/85 dark:text-rose-300'
-											: 'border-slate-955/10 bg-slate-955/5 text-emerald-700 dark:border-emerald-500/30 dark:bg-[#0e2a27]/85 dark:text-emerald-300'
+											? 'border-white/20 bg-white/40 text-rose-800 dark:border-rose-500/30 dark:bg-[#2a0e12]/85 dark:text-rose-300'
+											: 'border-white/20 bg-white/40 text-emerald-800 dark:border-emerald-500/30 dark:bg-[#0e2a27]/85 dark:text-emerald-300'
 									}`}>
 									<span className='relative flex h-1.5 w-1.5'>
 										<span
@@ -413,7 +413,7 @@ const DashboardPage = () => {
 								}}
 								whileTap={{ scale: 0.98 }}
 								onClick={() => navigate(pages.editor.subPages.addWorkflow.to)}
-								className='flex h-10.5 cursor-pointer items-center gap-2 rounded-xl bg-slate-955 px-6 text-xs font-bold text-white shadow-md shadow-slate-950/15 transition-all hover:bg-slate-900 active:scale-95 dark:bg-gradient-to-r dark:from-primary-400 dark:to-primary-400 dark:text-primary-950 dark:shadow-primary-500/10 dark:hover:brightness-110'>
+								className='flex h-10.5 cursor-pointer items-center gap-2 rounded-xl bg-[#101828] px-6 text-xs font-bold text-white shadow-md shadow-slate-950/15 transition-all hover:bg-[#1e293b] active:scale-95 dark:bg-gradient-to-r dark:from-primary-400 dark:to-primary-400 dark:text-primary-950 dark:shadow-primary-500/10 dark:hover:brightness-110'>
 								<Plus size={14} strokeWidth={3} />
 								<span>New Workflow</span>
 							</motion.button>

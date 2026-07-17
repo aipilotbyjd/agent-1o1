@@ -496,18 +496,18 @@ const TemplatesCatalogPage = () => {
 
 			<div className='mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8'>
 				{/* Hero header banner */}
-				<div className='relative mb-8 overflow-hidden rounded-3xl border border-primary-500/20 bg-gradient-to-r from-primary-400 via-primary-500 to-primary-600 px-6 py-8 text-zinc-955 shadow-xl sm:px-10 sm:py-12 dark:border-zinc-800 dark:bg-gradient-to-r dark:from-[#111315] dark:via-[#141619] dark:to-[#0d0e10] dark:text-white'>
+				<div className='relative mb-8 overflow-hidden rounded-3xl border border-primary-500/20 bg-gradient-to-r from-primary-400 via-primary-500 to-primary-600 px-6 py-8 text-[#101828] shadow-xl sm:px-10 sm:py-12 dark:border-zinc-800 dark:bg-gradient-to-r dark:from-[#111315] dark:via-[#141619] dark:to-[#0d0e10] dark:text-white'>
 					<div className='grid grid-cols-1 items-center gap-8 lg:grid-cols-12'>
 						<div className='relative z-10 lg:col-span-8'>
 							<div className='flex items-center gap-3 mb-4'>
-								<div className='inline-block rounded-md border border-zinc-955/20 bg-zinc-955/10 px-2.5 py-1 text-[10px] font-bold tracking-wider text-zinc-955 uppercase backdrop-blur-md dark:border-primary-500/20 dark:bg-primary-950/30 dark:text-primary-400'>
+								<div className='inline-block rounded-md border border-white/30 bg-white/40 px-2.5 py-1 text-[10px] font-bold tracking-wider text-[#101828] uppercase backdrop-blur-md dark:border-primary-500/20 dark:bg-primary-950/30 dark:text-primary-400'>
 									Ready to use
 								</div>
 							</div>
-							<h1 className='mb-3 text-3xl font-extrabold tracking-tight text-zinc-955 sm:text-4xl dark:text-white'>
+							<h1 className='mb-3 text-3xl font-extrabold tracking-tight text-[#101828] sm:text-4xl dark:text-white'>
 								Templates Center
 							</h1>
-							<p className='mb-6 max-w-2xl text-xs leading-relaxed text-zinc-800 sm:text-sm dark:text-zinc-400'>
+							<p className='mb-6 max-w-2xl text-xs leading-relaxed text-zinc-850 sm:text-sm dark:text-zinc-400'>
 								Deploy pre-configured workflows, conversational AI agents, or
 								bundles of matching stacks to build your automation platform in
 								seconds.
@@ -515,43 +515,43 @@ const TemplatesCatalogPage = () => {
 
 							{/* Stats Cards Row inside Hero */}
 							<div className='mt-6 flex flex-wrap items-center gap-4'>
-								<div className='flex items-center gap-3 rounded-2xl border border-zinc-955/10 bg-zinc-955/10 px-4 py-2.5 shadow-sm backdrop-blur-md dark:border-zinc-800 dark:bg-zinc-900/60'>
-									<div className='flex h-8 w-8 items-center justify-center rounded-lg bg-zinc-955/10 dark:bg-zinc-850'>
-										<Workflow className='h-4.5 w-4.5 text-zinc-955 dark:text-primary-400' />
+								<div className='flex items-center gap-3 rounded-2xl border border-white/20 bg-white/40 px-4 py-2.5 shadow-xs backdrop-blur-md dark:border-zinc-800 dark:bg-zinc-900/60'>
+									<div className='flex h-8 w-8 items-center justify-center rounded-lg bg-white/50 dark:bg-zinc-850'>
+										<Workflow className='h-4.5 w-4.5 text-[#101828] dark:text-primary-400' />
 									</div>
 									<div>
-										<div className='text-sm leading-none font-extrabold text-zinc-955 dark:text-white'>
+										<div className='text-sm leading-none font-extrabold text-[#101828] dark:text-white'>
 											120+
 										</div>
-										<div className='mt-0.5 text-[10px] font-semibold text-zinc-800 dark:text-zinc-500'>
+										<div className='mt-0.5 text-[10px] font-semibold text-slate-800 dark:text-zinc-500'>
 											Templates
 										</div>
 									</div>
 								</div>
 
-								<div className='flex items-center gap-3 rounded-2xl border border-zinc-955/10 bg-zinc-955/10 px-4 py-2.5 shadow-sm backdrop-blur-md dark:border-zinc-800 dark:bg-zinc-900/60'>
-									<div className='flex h-8 w-8 items-center justify-center rounded-lg bg-zinc-955/10 dark:bg-zinc-850'>
-										<Layers className='h-4.5 w-4.5 text-zinc-955 dark:text-primary-400' />
+								<div className='flex items-center gap-3 rounded-2xl border border-white/20 bg-white/40 px-4 py-2.5 shadow-xs backdrop-blur-md dark:border-zinc-800 dark:bg-zinc-900/60'>
+									<div className='flex h-8 w-8 items-center justify-center rounded-lg bg-white/50 dark:bg-zinc-850'>
+										<Layers className='h-4.5 w-4.5 text-[#101828] dark:text-primary-400' />
 									</div>
 									<div>
-										<div className='text-sm leading-none font-extrabold text-zinc-955 dark:text-white'>
+										<div className='text-sm leading-none font-extrabold text-[#101828] dark:text-white'>
 											9
 										</div>
-										<div className='mt-0.5 text-[10px] font-semibold text-zinc-800 dark:text-zinc-500'>
+										<div className='mt-0.5 text-[10px] font-semibold text-slate-800 dark:text-zinc-500'>
 											Categories
 										</div>
 									</div>
 								</div>
 
-								<div className='flex items-center gap-3 rounded-2xl border border-zinc-955/10 bg-zinc-955/10 px-4 py-2.5 shadow-sm backdrop-blur-md dark:border-zinc-800 dark:bg-zinc-900/60'>
-									<div className='flex h-8 w-8 items-center justify-center rounded-lg bg-zinc-955/10 dark:bg-zinc-850'>
-										<Sparkles className='h-4.5 w-4.5 text-zinc-955 dark:text-primary-400' />
+								<div className='flex items-center gap-3 rounded-2xl border border-white/20 bg-white/40 px-4 py-2.5 shadow-xs backdrop-blur-md dark:border-zinc-800 dark:bg-zinc-900/60'>
+									<div className='flex h-8 w-8 items-center justify-center rounded-lg bg-white/50 dark:bg-zinc-850'>
+										<Sparkles className='h-4.5 w-4.5 text-[#101828] dark:text-primary-400' />
 									</div>
 									<div>
-										<div className='text-sm leading-none font-extrabold text-zinc-955 dark:text-white'>
+										<div className='text-sm leading-none font-extrabold text-[#101828] dark:text-white'>
 											2.4K+
 										</div>
-										<div className='mt-0.5 text-[10px] font-semibold text-zinc-800 dark:text-zinc-500'>
+										<div className='mt-0.5 text-[10px] font-semibold text-slate-800 dark:text-zinc-500'>
 											Deployments
 										</div>
 									</div>
@@ -1032,37 +1032,37 @@ const TemplatesCatalogPage = () => {
 								return (
 									<div
 										key={wf.id}
-										className='group dark:bg-zinc-950 dark:border-zinc-800 flex cursor-pointer flex-col rounded-2xl border border-zinc-200/50 bg-white p-4.5 transition-all duration-200 hover:border-primary-300 hover:shadow-md dark:hover:border-primary-800'
+										className='group relative flex cursor-pointer flex-col rounded-2xl border border-slate-200/60 bg-white p-5 transition-all duration-300 hover:-translate-y-1 hover:border-primary-400 dark:border-zinc-800/80 dark:bg-zinc-950 hover:shadow-[0_12px_24px_-10px_rgba(16,24,40,0.06)] dark:hover:border-primary-400/50 dark:hover:shadow-[0_12px_24px_-10px_rgba(0,0,0,0.5)]'
 										onClick={() => setPreviewId(wf.id)}>
 										<div className='mb-3.5 flex items-start justify-between'>
 											<div className='flex items-center gap-3 truncate'>
 												<div
 													style={{ backgroundColor: `${displayColor}12` }}
-													className='flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-zinc-100/50 dark:border-zinc-800/50'>
+													className='flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-zinc-100/50 dark:border-zinc-800/50 group-hover:scale-105 transition-transform duration-300'>
 													<Workflow
-														className='h-4.5 w-4.5'
+														className='h-5 w-5'
 														style={{ color: displayColor }}
 													/>
 												</div>
-												<div className='truncate'>
-													<h4 className='truncate text-xs font-bold text-zinc-800 transition-colors group-hover:text-primary-600 dark:text-zinc-200 dark:group-hover:text-primary-400'>
+												<div className='truncate space-y-0.5'>
+													<h4 className='truncate text-[13px] font-black text-slate-900 transition-colors group-hover:text-primary-600 dark:text-zinc-50 dark:group-hover:text-primary-400 leading-snug'>
 														{wf.name}
 													</h4>
-													<span className='mt-0.5 block truncate text-[10px] font-medium text-zinc-400 capitalize'>
+													<span className='block truncate text-[9px] font-extrabold tracking-wider text-slate-400 dark:text-zinc-500 uppercase'>
 														{wf.category}
 													</span>
 												</div>
 											</div>
-											<button className='rounded p-1 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300'>
+											<button className='rounded-lg p-1.5 text-slate-400 hover:bg-slate-50 hover:text-slate-700 dark:hover:bg-zinc-900 dark:hover:text-zinc-200 transition-colors'>
 												<span className='text-sm leading-none font-bold'>
 													...
 												</span>
 											</button>
 										</div>
-										<p className='mb-4 line-clamp-2 text-[11px] leading-relaxed text-zinc-500 dark:text-zinc-400'>
+										<p className='mb-4 line-clamp-2 text-[11px] leading-relaxed font-semibold text-slate-500 dark:text-zinc-400'>
 											{wf.description}
 										</p>
-										<div className='mt-auto flex items-center justify-between border-t border-zinc-100 pt-3 dark:border-zinc-900'>
+										<div className='mt-auto flex items-center justify-between border-t border-slate-100/80 pt-3.5 dark:border-zinc-900/60'>
 											<div className='flex flex-wrap gap-1'>
 												{wf.required_credentials
 													?.slice(0, 1)
@@ -1071,26 +1071,26 @@ const TemplatesCatalogPage = () => {
 														return (
 															<span
 																key={cred}
-																className={`rounded border px-1.5 py-0.5 text-[8px] font-bold ${style.bg} ${style.border} ${style.text}`}>
+																className={`rounded-full border px-2.5 py-0.5 text-[9px] font-bold ${style.bg} ${style.border} ${style.text}`}>
 																{cred}
 															</span>
 														);
 													})}
 												{(!wf.required_credentials ||
 													wf.required_credentials.length === 0) && (
-													<span className='rounded border border-zinc-200 bg-zinc-50 px-1.5 py-0.5 text-[8px] font-medium text-zinc-400 dark:border-zinc-800 dark:bg-zinc-900/60'>
+													<span className='rounded-full border border-zinc-200/60 bg-zinc-50/50 px-2.5 py-0.5 text-[9px] font-semibold text-zinc-450 dark:border-zinc-800/80 dark:bg-zinc-900/40 dark:text-zinc-500'>
 														No creds
 													</span>
 												)}
 												{wf.required_credentials &&
 													wf.required_credentials.length > 1 && (
-														<span className='rounded border border-zinc-200 bg-zinc-50 px-1.5 py-0.5 text-[8px] font-bold text-zinc-400 dark:border-zinc-800 dark:bg-[#18181b]'>
+														<span className='rounded-full border border-zinc-200/60 bg-zinc-50/50 px-2 py-0.5 text-[9px] font-bold text-zinc-450 dark:border-zinc-800/80 dark:bg-zinc-900/40 dark:text-zinc-500'>
 															+{wf.required_credentials.length - 1}
 														</span>
 													)}
 											</div>
-											<div className='flex items-center gap-1 text-[10px] font-medium text-zinc-400'>
-												<Users className='h-3.5 w-3.5' />
+											<div className='flex items-center gap-1.5 text-[10px] font-bold text-slate-400 dark:text-zinc-500'>
+												<Users className='h-3.5 w-3.5 text-slate-400/80 dark:text-zinc-650' />
 												<span>{formatUsageCount(wf.usage_count)}</span>
 											</div>
 										</div>
@@ -1104,42 +1104,42 @@ const TemplatesCatalogPage = () => {
 								return (
 									<div
 										key={agent.id}
-										className='group dark:bg-zinc-950 dark:border-zinc-800 flex cursor-pointer flex-col rounded-2xl border border-zinc-200/50 bg-white p-4.5 transition-all duration-200 hover:border-primary-300 hover:shadow-md dark:hover:border-primary-800'
+										className='group relative flex cursor-pointer flex-col rounded-2xl border border-slate-200/60 bg-white p-5 transition-all duration-300 hover:-translate-y-1 hover:border-primary-400 dark:border-zinc-800/80 dark:bg-zinc-950 hover:shadow-[0_12px_24px_-10px_rgba(16,24,40,0.06)] dark:hover:border-primary-400/50 dark:hover:shadow-[0_12px_24px_-10px_rgba(0,0,0,0.5)]'
 										onClick={() => setPreviewId(agent.id)}>
 										<div className='mb-3.5 flex items-start justify-between'>
 											<div className='flex items-center gap-3 truncate'>
 												<div
 													style={{ backgroundColor: `${displayColor}12` }}
-													className='flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-zinc-100/50 dark:border-zinc-800/50'>
+													className='flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-zinc-100/50 dark:border-zinc-800/50 group-hover:scale-105 transition-transform duration-300'>
 													<Cpu
-														className='h-4.5 w-4.5'
+														className='h-5 w-5'
 														style={{ color: displayColor }}
 													/>
 												</div>
-												<div className='truncate'>
-													<h4 className='truncate text-xs font-bold text-zinc-800 transition-colors group-hover:text-primary-600 dark:text-zinc-200 dark:group-hover:text-primary-400'>
+												<div className='truncate space-y-0.5'>
+													<h4 className='truncate text-[13px] font-black text-slate-900 transition-colors group-hover:text-primary-600 dark:text-zinc-50 dark:group-hover:text-primary-400 leading-snug'>
 														{agent.name}
 													</h4>
-													<span className='mt-0.5 block truncate text-[10px] font-medium text-zinc-400 capitalize'>
+													<span className='block truncate text-[9px] font-extrabold tracking-wider text-slate-400 dark:text-zinc-500 uppercase'>
 														{agent.category}
 													</span>
 												</div>
 											</div>
-											<button className='hover:text-zinc-600 rounded p-1 text-zinc-400 dark:hover:text-zinc-300'>
+											<button className='rounded-lg p-1.5 text-slate-400 hover:bg-slate-50 hover:text-slate-700 dark:hover:bg-zinc-900 dark:hover:text-zinc-200 transition-colors'>
 												<span className='text-sm leading-none font-bold'>
 													...
 												</span>
 											</button>
 										</div>
-										<p className='mb-4 line-clamp-2 text-[11px] leading-relaxed text-zinc-500 dark:text-zinc-400'>
+										<p className='mb-4 line-clamp-2 text-[11px] leading-relaxed font-semibold text-slate-500 dark:text-zinc-400'>
 											{agent.description}
 										</p>
-										<div className='mt-auto flex items-center justify-between border-t border-zinc-100 pt-3 dark:border-zinc-900'>
-											<span className='max-w-[80px] truncate rounded border border-primary-200/30 bg-primary-50 px-1.5 py-0.5 text-[8px] font-bold text-primary-600 dark:bg-primary-950/20 dark:text-primary-400'>
+										<div className='mt-auto flex items-center justify-between border-t border-slate-100/80 pt-3.5 dark:border-zinc-900/60'>
+											<span className='max-w-[100px] truncate rounded-full border border-primary-200 bg-primary-50 px-2 py-0.5 text-[9px] font-bold text-primary-700 dark:border-primary-500/20 dark:bg-primary-950/20 dark:text-primary-400'>
 												{agent.llm_model}
 											</span>
-											<div className='flex items-center gap-1 text-[10px] font-medium text-zinc-400'>
-												<Users className='h-3.5 w-3.5' />
+											<div className='flex items-center gap-1.5 text-[10px] font-bold text-slate-400 dark:text-zinc-500'>
+												<Users className='h-3.5 w-3.5 text-slate-400/80 dark:text-zinc-650' />
 												<span>{formatUsageCount(agent.usage_count)}</span>
 											</div>
 										</div>
@@ -1153,42 +1153,42 @@ const TemplatesCatalogPage = () => {
 								return (
 									<div
 										key={coll.id}
-										className='group dark:bg-zinc-950 dark:border-zinc-800 flex cursor-pointer flex-col rounded-2xl border border-zinc-200/50 bg-white p-4.5 transition-all duration-200 hover:border-amber-300 hover:shadow-md dark:hover:border-amber-800'
+										className='group relative flex cursor-pointer flex-col rounded-2xl border border-slate-200/60 bg-white p-5 transition-all duration-300 hover:-translate-y-1 hover:border-amber-400 dark:border-zinc-800/80 dark:bg-zinc-950 hover:shadow-[0_12px_24px_-10px_rgba(16,24,40,0.06)] dark:hover:border-amber-400/50 dark:hover:shadow-[0_12px_24px_-10px_rgba(0,0,0,0.5)]'
 										onClick={() => setPreviewId(coll.id)}>
 										<div className='mb-3.5 flex items-start justify-between'>
 											<div className='flex items-center gap-3 truncate'>
 												<div
 													style={{ backgroundColor: `${displayColor}12` }}
-													className='flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-zinc-100/50 dark:border-zinc-800/50'>
+													className='flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-zinc-100/50 dark:border-zinc-800/50 group-hover:scale-105 transition-transform duration-300'>
 													<Layers
-														className='h-4.5 w-4.5'
+														className='h-5 w-5'
 														style={{ color: displayColor }}
 													/>
 												</div>
-												<div className='truncate'>
-													<h4 className='truncate text-xs font-bold text-zinc-800 transition-colors group-hover:text-amber-600 dark:text-zinc-200 dark:group-hover:text-amber-400'>
+												<div className='truncate space-y-0.5'>
+													<h4 className='truncate text-[13px] font-black text-slate-900 transition-colors group-hover:text-amber-600 dark:text-zinc-50 dark:group-hover:text-amber-400 leading-snug'>
 														{coll.name}
 													</h4>
-													<span className='mt-0.5 block truncate text-[10px] font-medium text-zinc-400'>
+													<span className='block truncate text-[9px] font-extrabold tracking-wider text-slate-400 dark:text-zinc-500 uppercase'>
 														Collection Bundle
 													</span>
 												</div>
 											</div>
-											<button className='hover:text-zinc-600 rounded p-1 text-zinc-400 dark:hover:text-zinc-300'>
+											<button className='rounded-lg p-1.5 text-slate-400 hover:bg-slate-50 hover:text-slate-700 dark:hover:bg-zinc-900 dark:hover:text-zinc-200 transition-colors'>
 												<span className='text-sm leading-none font-bold'>
 													...
 												</span>
 											</button>
 										</div>
-										<p className='mb-4 line-clamp-2 text-[11px] leading-relaxed text-zinc-500 dark:text-zinc-400'>
+										<p className='mb-4 line-clamp-2 text-[11px] leading-relaxed font-semibold text-slate-500 dark:text-zinc-400'>
 											{coll.description}
 										</p>
-										<div className='mt-auto flex items-center justify-between border-t border-zinc-100 pt-3 dark:border-zinc-900'>
-											<span className='rounded-full border border-amber-200/40 bg-amber-50 px-2 py-0.5 text-[8px] font-bold text-amber-700 dark:bg-amber-950/20 dark:text-amber-400'>
-												{coll.items.length} items
+										<div className='mt-auto flex items-center justify-between border-t border-slate-100/80 pt-3.5 dark:border-zinc-900/60'>
+											<span className='max-w-[100px] truncate rounded-full border border-amber-200 bg-amber-50 px-2.5 py-0.5 text-[9px] font-bold text-amber-700 dark:border-amber-500/20 dark:bg-amber-950/20 dark:text-amber-400'>
+												{coll.items?.length || 0} items
 											</span>
-											<div className='flex items-center gap-1 text-[10px] font-medium text-zinc-400'>
-												<Users className='h-3.5 w-3.5' />
+											<div className='flex items-center gap-1.5 text-[10px] font-bold text-slate-400 dark:text-zinc-500'>
+												<Users className='h-3.5 w-3.5 text-slate-400/80 dark:text-zinc-650' />
 												<span>{formatUsageCount(coll.usage_count)}</span>
 											</div>
 										</div>

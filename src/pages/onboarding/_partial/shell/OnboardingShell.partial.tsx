@@ -21,6 +21,8 @@ import DiscoveryStep from '../steps/DiscoveryStep.partial';
 import { useOnboardingState } from '@/api/modules/onboarding';
 import { useEffect } from 'react';
 import type { TOnboardingStep } from '../../_types/onboarding.type';
+import { LogoDark, LogoLight } from '@/assets/images';
+import useDarkMode from '@/hooks/useDarkMode';
 
 const mapStepKeyToIndex = (key: string): TOnboardingStep => {
 	switch (key) {
@@ -36,6 +38,7 @@ const mapStepKeyToIndex = (key: string): TOnboardingStep => {
 };
 
 const OnboardingShellInner = () => {
+	const { isDarkTheme } = useDarkMode();
 	const { state, dispatch } = useOnboardingStore();
 	const { data: onboardingData, isLoading } = useOnboardingState();
 	const [initialized, setInitialized] = useState(false);
@@ -133,14 +136,11 @@ const OnboardingShellInner = () => {
 
 			<header className='relative z-10 w-full px-6 py-5 sm:block hidden'>
 				<div className='mx-auto flex max-w-7xl items-center justify-between'>
-					<div className='flex items-center gap-3'>
-						<div className='flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-tr from-primary-400 to-primary-400 text-primary-950 shadow-lg shadow-primary-500/25'>
-							<span className='text-base font-extrabold tracking-tighter'>A1</span>
-						</div>
-						<span className='bg-gradient-to-r from-slate-900 via-slate-800 to-slate-950 bg-clip-text text-xl font-black text-transparent dark:from-white dark:via-zinc-200 dark:to-zinc-100'>
-							Agent1o1
-						</span>
-					</div>
+					<img
+						src={isDarkTheme ? LogoDark : LogoLight}
+						alt='agent1o1'
+						className='h-10 transition-all duration-300 ease-in-out'
+					/>
 					{step > 1 && (
 						<button
 							type='button'
@@ -159,21 +159,18 @@ const OnboardingShellInner = () => {
 					layout
 					transition={{ type: 'spring', stiffness: 220, damping: 26 }}
 					style={{ maxWidth: isDualColumn ? '1024px' : '480px' }}
-					className='w-full overflow-hidden sm:rounded-[2rem] sm:border border-slate-200/80 bg-white/95 shadow-2xl backdrop-blur-xl dark:border-zinc-800/80 dark:bg-zinc-900/95 max-sm:min-h-screen max-sm:rounded-none max-sm:border-none max-sm:shadow-none max-sm:flex max-sm:flex-col max-sm:bg-white dark:max-sm:bg-zinc-900'>
+					className='relative w-full overflow-hidden sm:rounded-[2rem] sm:border border-slate-200/80 bg-white/95 shadow-2xl backdrop-blur-xl dark:border-zinc-800/80 dark:bg-zinc-900/95 max-sm:min-h-screen max-sm:rounded-none max-sm:border-none max-sm:shadow-none max-sm:flex max-sm:flex-col max-sm:bg-white dark:max-sm:bg-zinc-900'>
 					<div className={`grid ${isDualColumn ? 'lg:grid-cols-2' : 'grid-cols-1'} max-sm:flex max-sm:flex-col max-sm:flex-1`}>
 						{/* Left: Form */}
 						<div className='flex min-h-[520px] max-sm:min-h-0 max-sm:flex-1 flex-col justify-between p-6 md:p-10 max-sm:px-5 max-sm:py-6'>
 							<div>
 								{/* Mobile Header (only visible on mobile) */}
 								<div className='mb-6 flex items-center justify-between sm:hidden'>
-									<div className='flex items-center gap-3'>
-										<div className='flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-tr from-primary-400 to-primary-400 text-primary-950 shadow-lg shadow-primary-500/25'>
-											<span className='text-sm font-extrabold tracking-tighter'>A1</span>
-										</div>
-										<span className='bg-gradient-to-r from-slate-900 via-slate-800 to-slate-950 bg-clip-text text-lg font-black text-transparent dark:from-white dark:via-zinc-200 dark:to-zinc-100'>
-											Agent1o1
-										</span>
-									</div>
+									<img
+										src={isDarkTheme ? LogoDark : LogoLight}
+										alt='agent1o1'
+										className='h-9 transition-all duration-300 ease-in-out'
+									/>
 									{step > 1 && (
 										<button
 											type='button'
