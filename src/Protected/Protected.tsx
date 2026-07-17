@@ -3,8 +3,7 @@ import { useAuth } from '@/context/authContext';
 import { LogoDark } from '@/assets/images';
 
 const Protected = ({ role }: { role: string }) => {
-	const { userData, isAuthenticated, isLoading } = useAuth();
-	void role;
+	const { userData, tokenStorage, isLoading } = useAuth();
 
 	if (isLoading) {
 		return (
@@ -13,7 +12,7 @@ const Protected = ({ role }: { role: string }) => {
 			</div>
 		);
 	}
-	if (!isAuthenticated || !userData) {
+	if (!tokenStorage || !userData?.role.includes(role)) {
 		return <Navigate to='/login' />;
 	}
 
