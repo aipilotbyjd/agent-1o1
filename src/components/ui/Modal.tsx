@@ -94,7 +94,7 @@ interface IModalBodyProps extends HTMLAttributes<HTMLDivElement>, IModalBodyClon
 	className?: string;
 }
 // @end-snippet:: interface
-export const ModalBody: FC<IModalBodyProps> = (props) => {
+export const ModalBody = forwardRef<HTMLDivElement, IModalBodyProps>((props, ref) => {
 	const { children, className, isScrollable = defaultProps.isScrollable, ...rest } = props;
 
 	const classes = classNames('grow px-4 pb-4 first:pt-4', {
@@ -103,13 +103,14 @@ export const ModalBody: FC<IModalBodyProps> = (props) => {
 
 	return (
 		<div
+			ref={ref}
 			data-component-name='Modal/ModalBody'
 			className={classNames(classes, className)}
 			{...rest}>
 			{children}
 		</div>
 	);
-};
+});
 ModalBody.displayName = 'ModalBody';
 
 // @start-snippet:: interface

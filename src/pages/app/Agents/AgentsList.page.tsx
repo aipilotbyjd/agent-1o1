@@ -21,6 +21,9 @@ import { useConfirm } from '@/context/confirmContext';
 import Breadcrumb from '@/components/layout/Breadcrumb';
 import Container from '@/components/layout/Container';
 import pages from '@/Routes/pages';
+import { useWorkspaceContext } from '@/context/workspaceContext';
+import { useWorkflowShellStore } from '@/store/workflowShell.store';
+import { useAgents, useUpdateAgent, useDeleteAgent } from '@/api/modules/agents';
 
 interface IAgentItem {
 	id: string;
@@ -30,44 +33,8 @@ interface IAgentItem {
 	isActive: boolean;
 	skillsCount: number;
 	conversationsCount: number;
-	category: 'Development' | 'Sales' | 'Operations';
+	category: string;
 }
-
-const initialAgents: IAgentItem[] = [
-	{
-		id: 'agent-1',
-		name: 'Lead Classification Agent',
-		description:
-			'Classifies inbound leads based on intent and enriches metadata using CRM profiles.',
-		model: 'GPT-4o',
-		isActive: true,
-		skillsCount: 3,
-		conversationsCount: 148,
-		category: 'Sales',
-	},
-	{
-		id: 'agent-2',
-		name: 'Code Reviewer Assistant',
-		description:
-			'Analyzes repository pull requests, runs security linters, and suggests inline optimizations.',
-		model: 'Gemini 1.5 Pro',
-		isActive: true,
-		skillsCount: 1,
-		conversationsCount: 27,
-		category: 'Development',
-	},
-	{
-		id: 'agent-3',
-		name: 'Jira Escalator Agent',
-		description:
-			'Monitors developer Slack channels for emergency reports and escalates issues to Jira tickets.',
-		model: 'Claude 3.5 Sonnet',
-		isActive: false,
-		skillsCount: 2,
-		conversationsCount: 89,
-		category: 'Operations',
-	},
-];
 
 const getModelColor = (model: string) => {
 	const lower = model.toLowerCase();
@@ -111,7 +78,29 @@ const AgentsListPage = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
-	const [agents, setAgents] = useState<IAgentItem[]>(initialAgents);
+	const { activeWorkspaceId } = useWorkspaceContext();
+	const { activeWorkspaceId: fallbackWorkspaceId } = useWorkflowShellStore();
+	const currentWorkspaceId = activeWorkspaceId || fallbackWorkspaceId;
+
+	const { data: apiAgents, isLoading } = useAgents(currentWorkspaceId);
+	const updateAgentMutation = useUpdateAgent(currentWorkspaceId);
+	const deleteAgentMutation = useDeleteAgent(currentWorkspaceId);
+
+	// Map backend agents → view model
+	const agents = useMemo<IAgentItem[]>(() => {
+		if (!apiAgents || apiAgents.length === 0) return [];
+		return apiAgents.map((a) => ({
+			id: a.id,
+			name: a.name,
+			description: a.description || 'No description provided.',
+			model: a.model,
+			isActive: a.is_active,
+			skillsCount: a.skills_count ?? 0,
+			conversationsCount: a.conversations_count ?? 0,
+			category: a.category || 'Uncategorized',
+		}));
+	}, [apiAgents]);
+
 	const [searchQuery, setSearchQuery] = useState('');
 	const [selectedCategory, setSelectedCategory] = useState<
 		'All' | 'Active' | 'Development' | 'Sales' | 'Operations'
@@ -134,7 +123,9 @@ const AgentsListPage = () => {
 	}, [agents, searchQuery, selectedCategory]);
 
 	const handleToggleActive = (id: string) => {
-		setAgents((prev) => prev.map((a) => (a.id === id ? { ...a, isActive: !a.isActive } : a)));
+		const agent = agents.find((a) => a.id === id);
+		if (!agent) return;
+		updateAgentMutation.mutate({ agentId: id, body: { is_active: !agent.isActive } });
 	};
 
 	const handleDelete = async (id: string) => {
@@ -152,7 +143,7 @@ const AgentsListPage = () => {
 			),
 		});
 		if (!confirmed) return;
-		setAgents((prev) => prev.filter((a) => a.id !== id));
+		deleteAgentMutation.mutate(id);
 	};
 
 	return (
@@ -436,6 +427,21 @@ const AgentsListPage = () => {
 				</div>
 
 				{/* Agent List Cards */}
+				{isLoading ? (
+					<div className='flex items-center justify-center rounded-3xl border border-border-main bg-bg-card py-16 text-xs font-semibold text-slate-400 dark:text-zinc-500'>
+						Loading agents…
+					</div>
+				) : filteredAgents.length === 0 ? (
+					<div className='flex flex-col items-center justify-center gap-2 rounded-3xl border border-border-main bg-bg-card py-16 text-center'>
+						<Bot size={28} className='text-slate-300 dark:text-zinc-600' />
+						<p className='text-sm font-bold text-slate-700 dark:text-zinc-300'>
+							No agents yet
+						</p>
+						<p className='text-xs font-semibold text-slate-400 dark:text-zinc-500'>
+							Build your first agent to get started.
+						</p>
+					</div>
+				) : (
 				<div className='grid gap-6 md:grid-cols-2 xl:grid-cols-3'>
 					<AnimatePresence mode='popLayout'>
 						{filteredAgents.map((agent) => {
@@ -568,6 +574,7 @@ const AgentsListPage = () => {
 						})}
 					</AnimatePresence>
 				</div>
+				)}
 
 				{/* Bottom Banner Section */}
 				<div className='flex flex-col justify-between gap-4 rounded-3xl border border-border-main bg-bg-card p-6 shadow-sm backdrop-blur-md sm:flex-row sm:items-center dark:border-border-main dark:bg-bg-card'>

@@ -586,7 +586,8 @@ const GlobalSearch = () => {
 	return (
 		<Modal
 			isOpen={isOpen}
-			setIsOpen={(open: boolean) => {
+			setIsOpen={(val) => {
+				const open = typeof val === 'function' ? val(isOpen) : val;
 				if (!open) close();
 			}}
 			rounded='rounded-2xl'
