@@ -31,7 +31,12 @@ export const normalizeError = (client: AxiosInstance) => {
 					notify.error('Too many requests. Please slow down.');
 					break;
 				default:
-					if (status && status >= 500) {
+					if (status === 502) {
+						// Upstream model provider rejected the request (bad model id,
+						// missing/invalid API key, etc.) — the backend already put a
+						// specific, safe-to-show reason in `message`.
+						notify.error(message);
+					} else if (status && status >= 500) {
 						notify.error('Server error. Please try again later.');
 					} else if (!status) {
 						console.warn('Network error. Check your connection.');

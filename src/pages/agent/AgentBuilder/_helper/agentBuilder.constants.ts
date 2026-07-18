@@ -1,6 +1,72 @@
 import { Bot, CalendarDays, FileText, Flame, PanelTop, Users, Zap, Star } from 'lucide-react';
 import type { TAgentTemplate } from '../_types/agentBuilder.type';
 
+/**
+ * Models available to agents, cheapest/fastest first.
+ *
+ * Routed entirely through the 'anyapi' provider (App\Ai\AnyApiProvider) — the
+ * only gateway with a configured key in this environment (ANYAPI_API_KEY).
+ * Model ids are vendor-prefixed OpenRouter-style ('openai/…', 'anthropic/…',
+ * 'google/…'), per config('ai.providers.anyapi.models').
+ */
+export const agentModelOptions: {
+	id: string;
+	provider: 'anyapi';
+	label: string;
+	tier: string;
+	description: string;
+}[] = [
+	{
+		id: 'openai/gpt-4o-mini',
+		provider: 'anyapi',
+		label: 'GPT-4o Mini',
+		tier: 'Very cheap',
+		description: "OpenAI's lowest-cost model. Best for simple, high-volume tasks where cost matters most.",
+	},
+	{
+		id: 'google/gemini-2.0-flash-lite',
+		provider: 'anyapi',
+		label: 'Gemini 2.0 Flash Lite',
+		tier: 'Very cheap',
+		description: "Google's lowest-cost model. Good for simple, high-volume tasks.",
+	},
+	{
+		id: 'deepseek/deepseek-chat',
+		provider: 'anyapi',
+		label: 'DeepSeek Chat',
+		tier: 'Very cheap',
+		description: 'DeepSeek-V3. Extremely low cost per token, strong for coding and reasoning tasks.',
+	},
+	{
+		id: 'moonshotai/kimi-k2',
+		provider: 'anyapi',
+		label: 'Kimi K2',
+		tier: 'Cheap',
+		description: "Moonshot AI's Kimi K2. Large context window at a low cost.",
+	},
+	{
+		id: 'anthropic/claude-haiku-4-5-20251001',
+		provider: 'anyapi',
+		label: 'Haiku 4.5',
+		tier: 'Fast & cheap',
+		description: 'Best for high-volume, simple tasks. Lowest-cost Claude model.',
+	},
+	{
+		id: 'anthropic/claude-sonnet-5',
+		provider: 'anyapi',
+		label: 'Sonnet 5',
+		tier: 'Balanced',
+		description: 'Strong all-round reasoning at a moderate cost. Good default.',
+	},
+	{
+		id: 'anthropic/claude-opus-4-8',
+		provider: 'anyapi',
+		label: 'Opus 4.8',
+		tier: 'Most capable',
+		description: 'Best for complex, high-stakes tasks. Highest cost per message.',
+	},
+];
+
 export const agentTemplateTabs = [
 	'All',
 	'Sales & Outreach',

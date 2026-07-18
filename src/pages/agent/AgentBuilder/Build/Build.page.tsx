@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router';
 import { motion, AnimatePresence } from 'framer-motion';
+import ReactMarkdown, { type Components } from 'react-markdown';
 import {
 	ArrowUp,
 	Bot,
@@ -59,7 +60,7 @@ import {
 	ImageIcon,
 } from 'lucide-react';
 import AgentTemplateCard from '../_partial/AgentTemplateCard.partial';
-import { agentTemplateTabs, agentTemplates } from '../_helper/agentBuilder.constants';
+import { agentTemplateTabs, agentTemplates, agentModelOptions } from '../_helper/agentBuilder.constants';
 import MainAppBar, { MainAppBarPillButton, MainAppBarIconButton } from '@/pages/app/_partial/MainAppBar.partial';
 import { toast } from 'react-toastify';
 import useDarkMode from '@/hooks/useDarkMode';
@@ -83,6 +84,36 @@ interface TMessage {
 	followUp?: string;
 	actions?: { label: string; type: string }[];
 }
+
+/** Markdown rendering for agent replies, sized for this page's chat bubble type scale. */
+const mdComponents: Components = {
+	p: ({ children }) => <p className='mb-2 last:mb-0 whitespace-pre-line'>{children}</p>,
+	strong: ({ children }) => <strong className='font-black text-zinc-900 dark:text-white'>{children}</strong>,
+	em: ({ children }) => <em className='italic'>{children}</em>,
+	ul: ({ children }) => <ul className='mb-2 ml-4 list-disc space-y-1 last:mb-0'>{children}</ul>,
+	ol: ({ children }) => <ol className='mb-2 ml-4 list-decimal space-y-1 last:mb-0'>{children}</ol>,
+	li: ({ children }) => <li className='pl-0.5'>{children}</li>,
+	h1: ({ children }) => <h1 className='mb-1.5 text-base font-black'>{children}</h1>,
+	h2: ({ children }) => <h2 className='mb-1.5 text-sm font-black'>{children}</h2>,
+	h3: ({ children }) => <h3 className='mb-1 text-sm font-bold'>{children}</h3>,
+	code: ({ children }) => (
+		<code className='rounded bg-zinc-100 px-1 py-0.5 font-mono text-[12px] text-primary-700 dark:bg-zinc-800 dark:text-primary-400'>
+			{children}
+		</code>
+	),
+	pre: ({ children }) => (
+		<pre className='mb-2 overflow-x-auto rounded-lg bg-zinc-100 p-3 text-[12px] dark:bg-zinc-950'>{children}</pre>
+	),
+	a: ({ children, href }) => (
+		<a
+			href={href}
+			target='_blank'
+			rel='noreferrer'
+			className='underline underline-offset-2 hover:text-primary-600 dark:hover:text-primary-400'>
+			{children}
+		</a>
+	),
+};
 
 const BuildPage = () => {
 	const { agentId: routeAgentId } = useParams<{ agentId?: string }>();
@@ -133,6 +164,10 @@ const BuildPage = () => {
 	const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 	const [activeSidebarTab, setActiveSidebarTab] = useState<'agent' | 'settings' | 'chatDetails'>('agent');
 	const [agentInstructions, setAgentInstructions] = useState('');
+	const [agentModel, setAgentModel] = useState(
+		agentModelOptions.find((m) => m.label === 'Sonnet 5')?.id ?? agentModelOptions[0].id,
+	);
+	const [isModelPickerOpen, setIsModelPickerOpen] = useState(false);
 	const [allowSelfUpdates, setAllowSelfUpdates] = useState(true);
 	const [agentDescription, setAgentDescription] = useState(
 		'An agent that helps me research competitors, analyze their strategies, products, pricing, marketing, reviews, and overall market positioning.'
@@ -168,6 +203,12 @@ const BuildPage = () => {
 		setAgentName(existingAgent.name);
 		setAgentDescription(existingAgent.description ?? '');
 		setAgentInstructions(existingAgent.instructions ?? '');
+		// Only trust a saved model if it's still a valid, AnyAPI-prefixed option —
+		// agents saved before the AnyAPI switch may hold a stale unprefixed id
+		// (e.g. 'claude-opus-4-8'), which AnyAPI can't resolve and 502s on.
+		if (existingAgent.model && agentModelOptions.some((m) => m.id === existingAgent.model)) {
+			setAgentModel(existingAgent.model);
+		}
 	}, [existingAgent]);
 
 	// Creates the agent on first save, updates it on every save after that.
@@ -177,6 +218,8 @@ const BuildPage = () => {
 			name: agentName.trim() || 'Untitled Agent',
 			description: agentDescription,
 			instructions: agentInstructions || 'You are a helpful assistant.',
+			model: agentModel,
+			provider: agentModelOptions.find((m) => m.id === agentModel)?.provider ?? 'anyapi',
 		};
 
 		if (currentAgentId) {
@@ -1055,7 +1098,11 @@ const BuildPage = () => {
 														? 'bg-primary-400/10 text-zinc-950 dark:bg-primary-400/25 dark:text-zinc-100 rounded-tr-none'
 														: 'bg-white text-zinc-800 border border-zinc-200/80 dark:bg-zinc-900/60 dark:text-zinc-200 dark:border-zinc-800/85 rounded-tl-none shadow-2xs'
 												}`}>
-													<p className='whitespace-pre-line'>{message.text}</p>
+													{isUser ? (
+														<p className='whitespace-pre-line'>{message.text}</p>
+													) : (
+														<ReactMarkdown components={mdComponents}>{message.text}</ReactMarkdown>
+													)}
 
 													{/* Structured Table for data responses */}
 													{message.type === 'table' && message.headers && message.data && (
@@ -1418,17 +1465,56 @@ const BuildPage = () => {
 										</div>
 
 										{/* Model Selector Card */}
-										<div className='flex items-center justify-between rounded-xl border border-zinc-100 p-3 bg-zinc-50/20 dark:border-zinc-800 dark:bg-zinc-950/20 cursor-pointer hover:border-zinc-300 dark:hover:border-zinc-700 transition'>
-											<div className='flex items-center gap-3'>
-												<div className='flex h-9 w-9 items-center justify-center rounded-xl bg-blue-500/10 text-blue-600 dark:bg-blue-500/5 dark:text-blue-400'>
-													<Sparkles size={16} fill="currentColor" />
+										<div className='relative'>
+											<button
+												type='button'
+												onClick={() => setIsModelPickerOpen((v) => !v)}
+												className='flex w-full items-center justify-between rounded-xl border border-zinc-100 p-3 bg-zinc-50/20 dark:border-zinc-800 dark:bg-zinc-950/20 cursor-pointer hover:border-zinc-300 dark:hover:border-zinc-700 transition'>
+												<div className='flex items-center gap-3'>
+													<div className='flex h-9 w-9 items-center justify-center rounded-xl bg-blue-500/10 text-blue-600 dark:bg-blue-500/5 dark:text-blue-400'>
+														<Sparkles size={16} fill='currentColor' />
+													</div>
+													<div className='flex flex-col text-left'>
+														<span className='text-[10px] font-black tracking-wide text-zinc-400 uppercase'>Model</span>
+														<span className='text-xs font-black text-zinc-800 dark:text-zinc-200'>
+															{agentModelOptions.find((m) => m.id === agentModel)?.label ?? agentModel}
+														</span>
+													</div>
 												</div>
-												<div className='flex flex-col'>
-													<span className='text-[10px] font-black tracking-wide text-zinc-400 uppercase'>Recommended Model</span>
-													<span className='text-xs font-black text-zinc-800 dark:text-zinc-200'>Gemini 3.5 Flash</span>
-												</div>
-											</div>
-											<ChevronDown size={14} className='text-zinc-400' />
+												<ChevronDown size={14} className={`text-zinc-400 transition-transform ${isModelPickerOpen ? 'rotate-180' : ''}`} />
+											</button>
+
+											{isModelPickerOpen && (
+												<>
+													<div className='fixed inset-0 z-10' onClick={() => setIsModelPickerOpen(false)} />
+													<div className='absolute left-0 right-0 z-20 mt-1.5 rounded-xl border border-zinc-200 bg-white p-1.5 shadow-lg dark:border-zinc-800 dark:bg-zinc-900'>
+														{agentModelOptions.map((option) => (
+															<button
+																key={option.id}
+																type='button'
+																onClick={() => {
+																	setAgentModel(option.id);
+																	setIsModelPickerOpen(false);
+																}}
+																className={`flex w-full flex-col items-start gap-0.5 rounded-lg px-3 py-2 text-left transition ${
+																	option.id === agentModel
+																		? 'bg-primary-50 dark:bg-primary-950/30'
+																		: 'hover:bg-zinc-50 dark:hover:bg-zinc-800'
+																}`}>
+																<div className='flex w-full items-center justify-between'>
+																	<span className='text-xs font-black text-zinc-800 dark:text-zinc-200'>{option.label}</span>
+																	<span className='rounded-full bg-zinc-100 px-2 py-0.5 text-[9px] font-bold text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400'>
+																		{option.tier}
+																	</span>
+																</div>
+																<span className='text-[10px] font-semibold text-zinc-400 dark:text-zinc-500'>
+																	{option.description}
+																</span>
+															</button>
+														))}
+													</div>
+												</>
+											)}
 										</div>
 
 										{/* Instructions Textarea */}
