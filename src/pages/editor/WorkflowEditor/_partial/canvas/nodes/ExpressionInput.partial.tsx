@@ -23,7 +23,7 @@ const TOKEN_RE = /\{\{.*?\}\}/g;
 // Structural class only — color comes from the source node's own accent color
 // (set via inline style) so a chip visually matches where its value comes from.
 const CHIP_CLS =
-	'mx-0.5 inline-flex items-center gap-1 rounded-md border px-1.5 py-0.5 align-middle text-[10px] font-semibold select-none';
+	'mx-0.5 my-0.5 inline-flex items-center gap-1 rounded-md border px-1.5 py-0.5 align-middle text-[10px] font-semibold select-none';
 const CHIP_X_CLS = 'ml-0.5 cursor-pointer rounded-full px-0.5 opacity-70 hover:opacity-100';
 const DEFAULT_CHIP_COLOR = '#10b981';
 
@@ -384,9 +384,11 @@ const ExpressionInput = ({ field, value, onChange, compact, nodeId, className }:
 			)}
 
 			{hasTokens && previewChanged && (
-				<div className='mt-1 flex items-start gap-1 text-[10px] text-zinc-500 dark:text-zinc-400'>
-					<CornerDownLeft size={10} className='mt-0.5 shrink-0 text-emerald-500' />
-					<span className='truncate font-mono'>{preview || '(empty)'}</span>
+				<div className='mt-1.5 flex items-start gap-1.5 rounded-md border border-zinc-200 bg-zinc-50 px-2 py-1.5 dark:border-zinc-800 dark:bg-zinc-900/50'>
+					<CornerDownLeft size={11} className='mt-0.5 shrink-0 text-emerald-500' />
+					<span className='line-clamp-3 min-w-0 flex-1 font-mono text-[10px] break-all text-zinc-600 dark:text-zinc-400'>
+						{preview || '(empty)'}
+					</span>
 				</div>
 			)}
 			{hasTokens && !previewChanged && variables.length === 0 && (
