@@ -296,7 +296,7 @@ const MembersPage = () => {
 									{members.map((member) => (
 										<Tr
 											key={member.id || member.user_id}
-											className='transition-colors hover:bg-zinc-50/50 dark:hover:bg-zinc-900/30'>
+											className='transition-colors'>
 											<Td className='flex items-center gap-3 border-0 py-4'>
 												{member.avatar ? (
 													<img
@@ -445,7 +445,7 @@ const MembersPage = () => {
 								{invitations.map((inv) => (
 									<Tr
 										key={inv.id}
-										className='transition-colors hover:bg-zinc-50/50 dark:hover:bg-zinc-900/30'>
+										className='transition-colors'>
 										<Td className='border-0 py-4 text-sm font-bold text-zinc-900 dark:text-white'>
 											{inv.email}
 										</Td>

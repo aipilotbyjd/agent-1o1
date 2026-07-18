@@ -103,7 +103,7 @@ layer(base);
 .dark {
 	--primary-50: rgba(207, 245, 74, 0.10);
 	--primary-100: rgba(207, 245, 74, 0.15);
-	--primary-200: #2A2D31;
+	--primary-200: #EAF4BC;
 	--primary-300: #DFEE98;
 	--primary-400: #CFF54A;
 	--primary-500: #C4EE3D;
@@ -257,18 +257,93 @@ layer(base);
 	}
 }
 
-.Toastify__toast {
-	@apply border border-zinc-500/25;
+/* ── Toasts: dark-glass, brand-matched ─────────────────────────────── */
+:root {
+	--toastify-toast-min-height: 1.5rem !important;
 }
+
+.Toastify__toast-container {
+	width: 22rem;
+}
+
+/* Per-status accent color (drives the left bar + icon chip) */
+.Toastify__toast--success {
+	--toast-accent: var(--toastify-color-success);
+}
+.Toastify__toast--error {
+	--toast-accent: var(--toastify-color-error);
+}
+.Toastify__toast--info {
+	--toast-accent: var(--toastify-color-info);
+}
+.Toastify__toast--warning {
+	--toast-accent: var(--toastify-color-warning);
+}
+.Toastify__toast--default {
+	--toast-accent: #cff54a; /* brand lime */
+}
+
+.Toastify__toast {
+	position: relative;
+	overflow: hidden;
+	padding: 0.875rem 1rem;
+	border-radius: 1rem;
+	border: 1px solid rgba(255, 255, 255, 0.08);
+	background: rgba(18, 20, 23, 0.82);
+	color: #e4e4e7;
+	font-family: 'Urbanist', ui-sans-serif, system-ui, sans-serif;
+	backdrop-filter: blur(18px) saturate(160%);
+	-webkit-backdrop-filter: blur(18px) saturate(160%);
+	box-shadow:
+		inset 3px 0 0 0 var(--toast-accent, #cff54a),
+		inset 0 1px 0 0 rgba(255, 255, 255, 0.05),
+		0 24px 48px -24px rgba(0, 0, 0, 0.7);
+}
+
+.Toastify__toast-body {
+	align-items: center;
+	gap: 0.75rem;
+	margin: 0;
+	padding: 0;
+	font-size: 0.8125rem;
+	font-weight: 600;
+	line-height: 1.35;
+	color: #e4e4e7;
+}
+
+/* Icon rendered as a tinted rounded chip */
+.Toastify__toast-icon {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-shrink: 0;
+	width: 2rem;
+	height: 2rem;
+	margin-inline-end: 0.25rem;
+	border-radius: 0.625rem;
+	background: color-mix(in srgb, var(--toast-accent, #cff54a) 16%, transparent);
+	box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--toast-accent, #cff54a) 32%, transparent);
+}
+.Toastify__toast-icon svg {
+	width: 1rem;
+	height: 1rem;
+	fill: var(--toast-accent, #cff54a);
+}
+
 .Toastify__close-button {
-	@apply end-4 top-4;
+	align-self: center;
+	margin-inline-start: 0.5rem;
+	color: #a1a1aa;
+	opacity: 0.6;
+	transition: opacity 0.15s ease;
+}
+.Toastify__close-button:hover {
+	opacity: 1;
 }
 .Toastify__close-button > svg {
-	@apply fill-zinc-500 stroke-zinc-950 stroke-1;
-}
-:root {
-	--toastify-toast-padding: 1rem !important;
-	--toastify-toast-min-height: 1.5rem !important;
+	@apply h-4 w-4;
+	fill: currentColor;
+	stroke: none;
 }
 
 .rc-tree .rc-tree-treenode span.rc-tree-switcher.rc-tree-switcher_open {

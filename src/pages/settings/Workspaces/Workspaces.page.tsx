@@ -1093,7 +1093,7 @@ const WorkspaceCard = ({
 						<div
 							key={idx}
 							title={member.name}
-							className={`flex h-7.5 w-7.5 items-center justify-center rounded-full border border-white text-[9px] font-black text-white shadow-2xs ${member.color} dark:border-zinc-950`}>
+							className={`flex h-7.5 w-7.5 items-center justify-center rounded-full border border-white text-[9px] font-black text-primary-950 shadow-2xs ${member.color} dark:border-zinc-950`}>
 							{member.initials}
 						</div>
 					))}
