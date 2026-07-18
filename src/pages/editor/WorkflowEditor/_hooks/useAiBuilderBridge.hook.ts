@@ -13,10 +13,15 @@ import type {
 } from '@/types/workflowBuilder.type';
 import { useWorkflowEditor } from '../_context/WorkflowEditorProvider.context';
 import { useWorkflowRouteParams } from './useWorkflowRouteParams.hook';
-import { builderDraftToCanvas, builderNodeToCanvas } from '../_helper/builderDraft.helper';
+import {
+	builderDraftToCanvas,
+	builderNodeToCanvas,
+	canvasToBuilderDraft,
+} from '../_helper/builderDraft.helper';
 
 const POLL_INTERVAL_MS = 2500;
 const POLL_TIMEOUT_MS = 120_000;
+const DRAFT_SYNC_DEBOUNCE_MS = 1500;
 
 // Tool names as resolved by Laravel\Ai\Tools\ToolNameResolver — our tool
 // classes don't define name(), so it falls back to class_basename(), i.e. the
@@ -58,7 +63,7 @@ const parseToolResult = (result: unknown): Record<string, unknown> | null => {
  */
 export const useAiBuilderBridge = () => {
 	const { echo } = useRealtime();
-	const { dispatch } = useWorkflowEditor();
+	const { state, dispatch } = useWorkflowEditor();
 	const { workspaceId, workflowId } = useWorkflowRouteParams();
 
 	const builderSessionId = useAiChatStore((s) => s.builderSessionId);
@@ -83,6 +88,14 @@ export const useAiBuilderBridge = () => {
 	const pendingToolArgs = useRef<Map<string, { toolName: string; args: Record<string, unknown> }>>(
 		new Map(),
 	);
+
+	// Set right before the canvas is overwritten wholesale from the backend
+	// (resume-on-mount, or the final reconciliation after an AI reply) so the
+	// draft-sync effect below doesn't immediately echo that same state right
+	// back to the server as a redundant "manual edit".
+	const skipNextSyncRef = useRef(false);
+	const lastSyncedDraftRef = useRef<string>('');
+	const syncTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
 	// Keep the store's API context in sync with the route.
 	useEffect(() => {
@@ -109,7 +122,10 @@ export const useAiBuilderBridge = () => {
 					nodes: session.nodes_draft ?? [],
 					edges: session.edges_draft ?? [],
 				});
-				if (nodes.length) dispatch({ type: 'APPLY_BUILDER_DRAFT', nodes, edges });
+				if (nodes.length) {
+					skipNextSyncRef.current = true;
+					dispatch({ type: 'APPLY_BUILDER_DRAFT', nodes, edges });
+				}
 			})
 			.catch(() => {
 				/* stale/deleted session — leave the fresh chat as-is */
@@ -203,6 +219,7 @@ export const useAiBuilderBridge = () => {
 		applyReadyMessage(event);
 		if ((event.draft?.nodes?.length ?? 0) > 0) {
 			const { nodes, edges } = builderDraftToCanvas(event.draft);
+			skipNextSyncRef.current = true;
 			dispatch({ type: 'APPLY_BUILDER_DRAFT', nodes, edges });
 		}
 	};
@@ -278,4 +295,36 @@ export const useAiBuilderBridge = () => {
 			window.clearInterval(timer);
 		};
 	}, [workspaceId, builderSessionId, pendingMessageId, isThinking]);
+
+	// Sync manual canvas edits (drag, delete, add from the library, rename,
+	// etc.) back into the builder session's draft, debounced, so the AI's next
+	// message operates on what's actually on the canvas — not just whatever it
+	// last wrote itself. Paused while the AI is mid-turn to avoid racing its
+	// own writes to the same session.
+	useEffect(() => {
+		if (!workspaceId || !builderSessionId || isThinking) return;
+
+		const draft = canvasToBuilderDraft(state.nodes, state.edges);
+		const snapshot = JSON.stringify(draft);
+
+		if (skipNextSyncRef.current) {
+			skipNextSyncRef.current = false;
+			lastSyncedDraftRef.current = snapshot;
+			return;
+		}
+		if (snapshot === lastSyncedDraftRef.current) return;
+
+		if (syncTimerRef.current) clearTimeout(syncTimerRef.current);
+		syncTimerRef.current = setTimeout(() => {
+			lastSyncedDraftRef.current = snapshot;
+			WorkflowBuilderService.syncDraft(workspaceId, builderSessionId, draft).catch(() => {
+				// Best-effort — the next canvas edit (or the AI's own next turn,
+				// which reads live state via read_draft_workflow) will retry.
+			});
+		}, DRAFT_SYNC_DEBOUNCE_MS);
+
+		return () => {
+			if (syncTimerRef.current) clearTimeout(syncTimerRef.current);
+		};
+	}, [state.nodes, state.edges, workspaceId, builderSessionId, isThinking]);
 };

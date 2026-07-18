@@ -16,6 +16,7 @@ export const WorkflowBuilderEndpoints = {
 	sessionDelete: (ws: string, id: string) => `${base(ws)}/sessions/${id}`,
 	sessionValidate: (ws: string, id: string) => `${base(ws)}/sessions/${id}/validate`,
 	sessionSave: (ws: string, id: string) => `${base(ws)}/sessions/${id}/save`,
+	sessionDraftSync: (ws: string, id: string) => `${base(ws)}/sessions/${id}/draft`,
 
 	// ── Messages ──────────────────────────────────────
 	messages: (ws: string, id: string) => `${base(ws)}/sessions/${id}/messages`,

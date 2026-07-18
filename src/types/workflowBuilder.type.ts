@@ -122,6 +122,13 @@ export interface IRenameSessionDto {
 	title: string;
 }
 
+/** Pushes the canvas's current state back into the builder session's draft —
+ * see `sessionDraftSync` — so the AI's tools see manual edits made outside chat. */
+export interface ISyncDraftDto {
+	nodes: IBuilderNode[];
+	edges: IBuilderEdge[];
+}
+
 export interface ISendBuilderMessageDto {
 	message: string;
 }

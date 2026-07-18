@@ -12,6 +12,7 @@ import type {
 	IListVersionsParams,
 	ICreateSessionDto,
 	IRenameSessionDto,
+	ISyncDraftDto,
 	ISendBuilderMessageDto,
 	TCreateSessionResponse,
 	ISendMessageResponse,
@@ -60,6 +61,12 @@ export const WorkflowBuilderService = {
 
 	saveSession: (ws: string, id: string) =>
 		axiosClient.post<TApiResponse<IWorkflow>>(E.sessionSave(ws, id)).then(unwrap<IWorkflow>),
+
+	/** Syncs manual canvas edits back into the session's draft so the AI stays aware of them. */
+	syncDraft: (ws: string, id: string, body: ISyncDraftDto) =>
+		axiosClient
+			.patch<TApiResponse<IBuilderSession>>(E.sessionDraftSync(ws, id), body)
+			.then(unwrap<IBuilderSession>),
 
 	// ── Messages ──────────────────────────────────────
 	listMessages: (ws: string, id: string, params?: IListMessagesParams, signal?: AbortSignal) =>

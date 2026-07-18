@@ -53,3 +53,39 @@ export const builderDraftToCanvas = (
 	nodes: (draft?.nodes ?? []).map(builderNodeToCanvas),
 	edges: (draft?.edges ?? []).map(builderEdgeToCanvas),
 });
+
+/**
+ * Reverse of the above — used to sync manual canvas edits (drag, delete, add
+ * from the library, rename, etc.) back into the builder session's draft, so
+ * the AI's tools see the current state instead of whatever it last wrote
+ * itself. Sticky notes are excluded — they have no backend node type and
+ * would fail the AI's node-type validation.
+ */
+export const canvasNodeToBuilder = (node: TCanvasNode): IBuilderNode => ({
+	id: node.id,
+	type: node.data.defKey,
+	name: node.data.label || node.data.defKey,
+	config: node.data.values ?? {},
+	position: { x: node.position.x, y: node.position.y },
+});
+
+export const canvasEdgeToBuilder = (edge: TCanvasEdge): IBuilderEdge => ({
+	source: edge.source,
+	target: edge.target,
+	sourceHandle: edge.sourceHandle ?? undefined,
+	targetHandle: edge.targetHandle ?? undefined,
+});
+
+export const canvasToBuilderDraft = (
+	nodes: TCanvasNode[],
+	edges: TCanvasEdge[],
+): IBuilderDraft => {
+	const realNodes = nodes.filter((node) => node.type !== 'note');
+	const realNodeIds = new Set(realNodes.map((node) => node.id));
+	return {
+		nodes: realNodes.map(canvasNodeToBuilder),
+		edges: edges
+			.filter((edge) => realNodeIds.has(edge.source) && realNodeIds.has(edge.target))
+			.map(canvasEdgeToBuilder),
+	};
+};
