@@ -3,10 +3,19 @@ import { persist } from 'zustand/middleware';
 import { WorkflowBuilderService } from '@/api/modules/workflow-builder/workflow-builder.service';
 import { isSessionQueued } from '@/types/workflowBuilder.type';
 import type {
+	IBuilderDraft,
 	IBuilderMessage,
 	IBuilderMessageReadyEvent,
 	IBuilderSession,
 } from '@/types/workflowBuilder.type';
+
+export type TAiChatMode = 'build' | 'ask';
+
+export type TAiToolActivity = {
+	id: string;
+	toolName: string;
+	status: 'running' | 'done' | 'error';
+};
 
 export type TAiChatMessage = {
 	id: string;
@@ -16,6 +25,9 @@ export type TAiChatMessage = {
 	avatarUrl?: string;
 	isThought?: boolean;
 	isError?: boolean;
+	/** Present on a failed send — lets the transcript offer a one-click Retry. */
+	retryPrompt?: string;
+	retryMode?: TAiChatMode;
 };
 
 export type TAiChatSession = {
@@ -46,18 +58,39 @@ type TAiChatState = {
 	// The builder session id the bridge has already hydrated chat/canvas from.
 	hydratedSessionId: string | null;
 
+	// A draft the backend just generated, held for review instead of applied
+	// straight to the canvas — see setPendingDraft/clearPendingDraft.
+	pendingDraft: IBuilderDraft | null;
+	pendingDraftMessageId: string | null;
+
+	// Live reply-in-progress, filled by text_delta/tool_call/tool_result events
+	// ahead of the final builder.message.ready. Reset whenever a new prompt goes
+	// out and whenever the reply lands (success or failure).
+	streamingText: string;
+	toolActivity: TAiToolActivity[];
+
 	// Set by the editor once route params are known so the store can call the API.
 	setBuilderContext: (workspaceId: string | null, workflowId?: string | null) => void;
 
-	startChat: (initialPrompt: string) => void;
-	sendMessage: (prompt: string) => void;
-	submitPrompt: (prompt: string) => void;
+	startChat: (initialPrompt: string, mode?: TAiChatMode) => void;
+	sendMessage: (prompt: string, mode?: TAiChatMode) => void;
+	submitPrompt: (prompt: string, mode?: TAiChatMode) => void;
+
+	// Called by the realtime bridge as a reply streams in.
+	appendTextDelta: (delta: string) => void;
+	pushToolCall: (id: string, toolName: string) => void;
+	resolveToolResult: (id: string, successful: boolean) => void;
 
 	// Called by the realtime bridge when the backend finishes processing.
 	applyReadyMessage: (event: IBuilderMessageReadyEvent) => void;
-	failPending: (message?: string) => void;
+	failPending: (message?: string, retryPrompt?: string, retryMode?: TAiChatMode) => void;
 	// Rebuilds chat state from the authoritative backend session (on reload/resume).
 	hydrateFromBackend: (session: IBuilderSession) => void;
+
+	// Holds a freshly generated draft for review; the panel renders Apply/Discard
+	// against it instead of the bridge silently writing it to the canvas.
+	setPendingDraft: (draft: IBuilderDraft, messageId: string) => void;
+	clearPendingDraft: () => void;
 
 	setThinking: (thinking: boolean) => void;
 	resetChat: () => void;
@@ -158,6 +191,10 @@ export const useAiChatStore = create<TAiChatState>()(
 			workflowId: null,
 			sessionByWorkflow: {},
 			hydratedSessionId: null,
+			pendingDraft: null,
+			pendingDraftMessageId: null,
+			streamingText: '',
+			toolActivity: [],
 
 			setBuilderContext: (workspaceId, workflowId) =>
 				set((state) => {
@@ -182,12 +219,14 @@ export const useAiChatStore = create<TAiChatState>()(
 									isChatActive: false,
 									workflowBuildStep: 0,
 									errorText: null,
+									streamingText: '',
+									toolActivity: [],
 								}
 							: {}),
 					};
 				}),
 
-			startChat: (initialPrompt) => {
+			startChat: (initialPrompt, mode) => {
 				const clean = initialPrompt.trim();
 				if (!clean) return;
 
@@ -205,14 +244,16 @@ export const useAiChatStore = create<TAiChatState>()(
 					errorText: null,
 					workflowBuildStep: 0,
 					builderSessionId: null, // fresh conversation → new backend session
+					streamingText: '',
+					toolActivity: [],
 					messages,
 					sessions: syncActiveSessionIntoList(state.sessions, state.activeSessionId, messages),
 				}));
 
-				get().submitPrompt(clean);
+				get().submitPrompt(clean, mode);
 			},
 
-			sendMessage: (prompt) => {
+			sendMessage: (prompt, mode) => {
 				const clean = prompt.trim();
 				if (!clean) return;
 
@@ -228,11 +269,13 @@ export const useAiChatStore = create<TAiChatState>()(
 					isChatActive: true,
 					isThinking: true,
 					errorText: null,
+					streamingText: '',
+					toolActivity: [],
 					messages,
 					sessions: syncActiveSessionIntoList(state.sessions, state.activeSessionId, messages),
 				}));
 
-				get().submitPrompt(clean);
+				get().submitPrompt(clean, mode);
 			},
 
 			/**
@@ -242,20 +285,27 @@ export const useAiChatStore = create<TAiChatState>()(
 			 * (handled by the editor's builder bridge), so we only start the request
 			 * here and surface transport-level failures.
 			 */
-			submitPrompt: (prompt) => {
+			submitPrompt: (prompt, mode) => {
 				const { workspaceId, workflowId, builderSessionId } = get();
 
 				if (!workspaceId) {
-					get().failPending('No active workspace — open a workspace to build workflows.');
+					get().failPending('No active workspace — open a workspace to build workflows.', prompt, mode);
 					return;
 				}
 
+				// "Ask" mode sends the same message but tells the builder not to touch
+				// the canvas — the displayed chat bubble stays the clean prompt text.
+				const apiPrompt =
+					mode === 'ask'
+						? `[Ask mode: answer the question below about this workflow. Do not add, remove, or modify any nodes or connections — just explain.]\n\n${prompt}`
+						: prompt;
+
 				const request = builderSessionId
 					? WorkflowBuilderService.sendMessage(workspaceId, builderSessionId, {
-							message: prompt,
+							message: apiPrompt,
 						}).then((res) => set({ pendingMessageId: res.message_id }))
 					: WorkflowBuilderService.createSession(workspaceId, {
-							prompt,
+							prompt: apiPrompt,
 							workflow_id: workflowId ?? undefined,
 						}).then((res) => {
 							const newId = isSessionQueued(res) ? res.session_id : res.id;
@@ -274,9 +324,25 @@ export const useAiChatStore = create<TAiChatState>()(
 					const message =
 						(error as { response?: { data?: { message?: string } } })?.response?.data?.message ??
 						'Could not reach the workflow builder. Please try again.';
-					get().failPending(message);
+					get().failPending(message, prompt, mode);
 				});
 			},
+
+			appendTextDelta: (delta) => set((state) => ({ streamingText: state.streamingText + delta })),
+
+			pushToolCall: (id, toolName) =>
+				set((state) => ({
+					toolActivity: [...state.toolActivity, { id, toolName, status: 'running' }],
+				})),
+
+			resolveToolResult: (id, successful) =>
+				set((state) => ({
+					toolActivity: state.toolActivity.map((activity) =>
+						activity.id === id
+							? { ...activity, status: successful ? 'done' : 'error' }
+							: activity,
+					),
+				})),
 
 			applyReadyMessage: (event) => {
 				const assistantMsg: TAiChatMessage = {
@@ -289,7 +355,7 @@ export const useAiChatStore = create<TAiChatState>()(
 				set((state) => {
 					// Avoid duplicating a message we've already appended.
 					if (state.messages.some((m) => m.id === assistantMsg.id)) {
-						return { isThinking: false };
+						return { isThinking: false, streamingText: '', toolActivity: [] };
 					}
 					const messages = [...state.messages, assistantMsg];
 					return {
@@ -298,13 +364,15 @@ export const useAiChatStore = create<TAiChatState>()(
 						builderSessionId: event.session.id,
 						pendingMessageId: null,
 						workflowBuildStep: (event.draft?.nodes?.length ?? 0) > 0 ? 3 : 0,
+						streamingText: '',
+						toolActivity: [],
 						messages,
 						sessions: syncActiveSessionIntoList(state.sessions, state.activeSessionId, messages),
 					};
 				});
 			},
 
-			failPending: (message) => {
+			failPending: (message, retryPrompt, retryMode) => {
 				const text = message ?? 'Something went wrong generating the workflow.';
 				set((state) => {
 					const errMsg: TAiChatMessage = {
@@ -313,12 +381,16 @@ export const useAiChatStore = create<TAiChatState>()(
 						text,
 						timestamp: getCurrentTimeStr(),
 						isError: true,
+						retryPrompt,
+						retryMode,
 					};
 					const messages = [...state.messages, errMsg];
 					return {
 						isThinking: false,
 						errorText: text,
 						pendingMessageId: null,
+						streamingText: '',
+						toolActivity: [],
 						messages,
 						sessions: syncActiveSessionIntoList(state.sessions, state.activeSessionId, messages),
 					};
@@ -352,6 +424,11 @@ export const useAiChatStore = create<TAiChatState>()(
 				}));
 			},
 
+			setPendingDraft: (draft, messageId) =>
+				set({ pendingDraft: draft, pendingDraftMessageId: messageId }),
+
+			clearPendingDraft: () => set({ pendingDraft: null, pendingDraftMessageId: null }),
+
 			setThinking: (thinking) => set({ isThinking: thinking }),
 
 			resetChat: () => {
@@ -361,6 +438,10 @@ export const useAiChatStore = create<TAiChatState>()(
 					workflowBuildStep: 0,
 					errorText: null,
 					builderSessionId: null,
+					pendingDraft: null,
+					pendingDraftMessageId: null,
+					streamingText: '',
+					toolActivity: [],
 					messages,
 					sessions: syncActiveSessionIntoList(state.sessions, state.activeSessionId, messages),
 				}));
@@ -373,6 +454,10 @@ export const useAiChatStore = create<TAiChatState>()(
 					workflowBuildStep: 0,
 					errorText: null,
 					builderSessionId: null,
+					pendingDraft: null,
+					pendingDraftMessageId: null,
+					streamingText: '',
+					toolActivity: [],
 					messages: [WELCOME_MESSAGE],
 				});
 			},
@@ -389,6 +474,10 @@ export const useAiChatStore = create<TAiChatState>()(
 						builderSessionId: null,
 						pendingMessageId: null,
 						hydratedSessionId: null,
+						pendingDraft: null,
+						pendingDraftMessageId: null,
+						streamingText: '',
+						toolActivity: [],
 						sessionByWorkflow: rest,
 						messages: [WELCOME_MESSAGE],
 						activeSessionId: makeSessionId(),
@@ -407,6 +496,10 @@ export const useAiChatStore = create<TAiChatState>()(
 					workflowBuildStep: 0,
 					errorText: null,
 					builderSessionId: null, // continuing an old chat starts a fresh backend session
+					pendingDraft: null,
+					pendingDraftMessageId: null,
+					streamingText: '',
+					toolActivity: [],
 				});
 			},
 

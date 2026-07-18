@@ -1,8 +1,43 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useMemo } from 'react';
 import { useWorkflowEditor } from '../../_context/WorkflowEditorProvider.context';
 import { useAiChatStore } from '@/store/aiChat.store';
 import { useAuth } from '@/context/authContext';
-import { Paperclip, Sparkles, ArrowUp, History, Plus, Trash2, MessageSquare, X } from 'lucide-react';
+import {
+	Paperclip,
+	Sparkles,
+	ArrowUp,
+	History,
+	Plus,
+	Trash2,
+	MessageSquare,
+	X,
+	RotateCcw,
+	Check,
+	GitBranch,
+	Loader2,
+	CheckCircle2,
+	XCircle,
+} from 'lucide-react';
+import { builderDraftToCanvas } from '../../_helper/builderDraft.helper';
+
+/** Matches an in-progress `@mention` fragment at the end of typed text. */
+const MENTION_RE = /@([\w .-]*)$/;
+
+/** Friendly present-tense label for a live tool-call progress line. */
+const TOOL_LABELS: Record<string, string> = {
+	add_node: 'Adding a node',
+	remove_node: 'Removing a node',
+	update_node: 'Updating a node',
+	connect_nodes: 'Connecting nodes',
+	disconnect_nodes: 'Disconnecting nodes',
+	list_available_nodes: 'Looking up available nodes',
+	inspect_node_schema: 'Checking node requirements',
+	read_draft_workflow: 'Reading the current draft',
+};
+
+const formatToolLabel = (toolName: string) =>
+	TOOL_LABELS[toolName] ??
+	toolName.replace(/_/g, ' ').replace(/\b\w/g, (letter) => letter.toUpperCase());
 
 const formatRelativeTime = (ts: number) => {
 	const diffMs = Date.now() - ts;
@@ -22,6 +57,8 @@ const AiBuilderPanel = () => {
 
 	const messages = useAiChatStore((store) => store.messages);
 	const isThinking = useAiChatStore((store) => store.isThinking);
+	const streamingText = useAiChatStore((store) => store.streamingText);
+	const toolActivity = useAiChatStore((store) => store.toolActivity);
 	const sessions = useAiChatStore((store) => store.sessions);
 	const activeSessionId = useAiChatStore((store) => store.activeSessionId);
 	const sendMessage = useAiChatStore((store) => store.sendMessage);
@@ -29,26 +66,65 @@ const AiBuilderPanel = () => {
 	const newChat = useAiChatStore((store) => store.newChat);
 	const loadSession = useAiChatStore((store) => store.loadSession);
 	const deleteSession = useAiChatStore((store) => store.deleteSession);
+	const pendingDraft = useAiChatStore((store) => store.pendingDraft);
+	const pendingDraftMessageId = useAiChatStore((store) => store.pendingDraftMessageId);
+	const clearPendingDraft = useAiChatStore((store) => store.clearPendingDraft);
 
 	const [promptInput, setPromptInput] = useState('');
 	const [mode, setMode] = useState<'build' | 'ask'>('build');
 	const [showHistory, setShowHistory] = useState(false);
+	const [mentionQuery, setMentionQuery] = useState<string | null>(null);
 	const messagesEndRef = useRef<HTMLDivElement>(null);
+	const textareaRef = useRef<HTMLTextAreaElement>(null);
 
 	const sortedSessions = [...sessions].sort((a, b) => b.updatedAt - a.updatedAt);
 
-	// Scroll to bottom when messages change
+	// Nodes currently on the canvas, matched against an in-progress @mention.
+	const mentionMatches = useMemo(() => {
+		if (mentionQuery === null) return [];
+		const q = mentionQuery.toLowerCase();
+		return state.nodes
+			.filter((node) => (node.data.label || '').toLowerCase().includes(q))
+			.slice(0, 6);
+	}, [mentionQuery, state.nodes]);
+
+	// Scroll to bottom when messages change (or the live reply grows)
 	useEffect(() => {
 		messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-	}, [messages, isThinking]);
+	}, [messages, isThinking, streamingText, toolActivity]);
 
 	if (!state.ui.aiPanelOpen) return null;
+
+	const updateMentionQuery = (value: string) => {
+		const match = MENTION_RE.exec(value);
+		setMentionQuery(match ? match[1] : null);
+	};
+
+	const insertMention = (label: string) => {
+		const withoutFragment = promptInput.replace(MENTION_RE, '');
+		const next = `${withoutFragment}@${label} `;
+		setPromptInput(next);
+		setMentionQuery(null);
+		textareaRef.current?.focus();
+	};
 
 	const handleSend = () => {
 		const clean = promptInput.trim();
 		if (!clean) return;
 		setPromptInput('');
-		sendMessage(clean);
+		setMentionQuery(null);
+		sendMessage(clean, mode);
+	};
+
+	const handleRetry = (retryPrompt: string, retryMode?: 'build' | 'ask') => {
+		sendMessage(retryPrompt, retryMode ?? 'build');
+	};
+
+	const handleApplyDraft = () => {
+		if (!pendingDraft) return;
+		const { nodes, edges } = builderDraftToCanvas(pendingDraft);
+		dispatch({ type: 'APPLY_BUILDER_DRAFT', nodes, edges });
+		clearPendingDraft();
 	};
 
 	const handleExit = () => {
@@ -160,8 +236,29 @@ const AiBuilderPanel = () => {
 										</div>
 									)}
 									<div className='whitespace-pre-line'>{message.text}</div>
+
+									{message.isError && message.retryPrompt && (
+										<button
+											type='button'
+											onClick={() => handleRetry(message.retryPrompt!, message.retryMode)}
+											className='mt-2 flex items-center gap-1.5 rounded-lg border border-rose-200 bg-white px-2.5 py-1 text-[11px] font-bold text-rose-600 shadow-xs hover:bg-rose-50 dark:border-rose-900/40 dark:bg-zinc-900 dark:text-rose-400 dark:hover:bg-rose-950/30'
+										>
+											<RotateCcw size={11} />
+											<span>Retry</span>
+										</button>
+									)}
 								</div>
 							</div>
+
+							{/* Draft review — appears under the message that produced it */}
+							{!isUser && pendingDraft && pendingDraftMessageId === message.id && (
+								<DraftReviewCard
+									draft={pendingDraft}
+									currentNodeIds={state.nodes.map((n) => n.id)}
+									onApply={handleApplyDraft}
+									onDiscard={clearPendingDraft}
+								/>
+							)}
 						</div>
 					);
 				})}
@@ -175,11 +272,37 @@ const AiBuilderPanel = () => {
 							<span className='font-bold text-zinc-700 dark:text-zinc-300'>Workflow Builder</span>
 						</div>
 						<div className='flex justify-start'>
-							<div className='bg-white text-zinc-500 rounded-2xl rounded-tl-xs border border-zinc-150 px-4 py-2.5 text-[13px] shadow-xs dark:bg-zinc-900 dark:text-zinc-400 dark:border-zinc-800'>
-								<span className='inline-flex items-center gap-1.5'>
-									<span className='h-1.5 w-1.5 rounded-full bg-primary-400 animate-ping' />
-									Thinking...
-								</span>
+							<div className='max-w-[85%] rounded-2xl rounded-tl-xs border border-zinc-150 bg-white px-4 py-2.5 text-[13px] text-zinc-800 shadow-xs dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-200'>
+								{/* Live tool-call progress — what the agent is actually doing */}
+								{toolActivity.length > 0 && (
+									<div className='mb-2 flex flex-col gap-1 border-b border-zinc-100 pb-2 dark:border-zinc-800'>
+										{toolActivity.map((activity) => (
+											<div
+												key={activity.id}
+												className='flex items-center gap-1.5 text-[11px] font-medium text-zinc-500 dark:text-zinc-400'>
+												{activity.status === 'running' && (
+													<Loader2 size={11} className='animate-spin text-primary-500' />
+												)}
+												{activity.status === 'done' && (
+													<CheckCircle2 size={11} className='text-emerald-500' />
+												)}
+												{activity.status === 'error' && (
+													<XCircle size={11} className='text-rose-500' />
+												)}
+												<span>{formatToolLabel(activity.toolName)}</span>
+											</div>
+										))}
+									</div>
+								)}
+
+								{streamingText ? (
+									<div className='whitespace-pre-line'>{streamingText}</div>
+								) : (
+									<span className='inline-flex items-center gap-1.5 text-zinc-500 dark:text-zinc-400'>
+										<span className='h-1.5 w-1.5 rounded-full bg-primary-400 animate-ping' />
+										Thinking...
+									</span>
+								)}
 							</div>
 						</div>
 					</div>
@@ -190,16 +313,38 @@ const AiBuilderPanel = () => {
 			{/* Input Container */}
 			<div className='shrink-0 border-t border-zinc-150 bg-white p-4 dark:border-zinc-800 dark:bg-zinc-950'>
 				<div className='relative rounded-2xl border border-zinc-200 bg-zinc-50/50 p-3 shadow-xs dark:border-zinc-800 dark:bg-zinc-900'>
+					{mentionQuery !== null && mentionMatches.length > 0 && (
+						<ul className='absolute bottom-full left-3 z-30 mb-1.5 max-h-40 w-56 overflow-y-auto rounded-lg border border-zinc-200 bg-white py-1 text-[11px] shadow-lg dark:border-zinc-700 dark:bg-zinc-900'>
+							{mentionMatches.map((node) => (
+								<li key={node.id}>
+									<button
+										type='button'
+										onMouseDown={(e) => {
+											e.preventDefault();
+											insertMention(node.data.label || node.data.defKey);
+										}}
+										className='flex w-full items-center gap-2 px-2.5 py-1.5 text-left text-zinc-700 hover:bg-zinc-50 dark:text-zinc-300 dark:hover:bg-zinc-800'>
+										<span className='truncate font-medium'>{node.data.label || node.data.defKey}</span>
+									</button>
+								</li>
+							))}
+						</ul>
+					)}
 					<textarea
+						ref={textareaRef}
 						value={promptInput}
-						onChange={(e) => setPromptInput(e.target.value)}
+						onChange={(e) => {
+							setPromptInput(e.target.value);
+							updateMentionQuery(e.target.value);
+						}}
 						onKeyDown={(e) => {
-							if (e.key === 'Enter' && !e.shiftKey) {
+							if (e.key === 'Enter' && !e.shiftKey && mentionQuery === null) {
 								e.preventDefault();
 								handleSend();
 							}
+							if (e.key === 'Escape') setMentionQuery(null);
 						}}
-						placeholder='Describe what you want to automate today...'
+						placeholder='Describe what you want to automate today... (@ to reference a node)'
 						className='w-full min-h-[50px] max-h-[120px] resize-none border-none bg-transparent p-0 text-sm text-zinc-800 placeholder-zinc-400 outline-none focus:ring-0 focus:outline-none dark:text-zinc-200'
 					/>
 
@@ -208,8 +353,9 @@ const AiBuilderPanel = () => {
 						<div className='flex items-center gap-1'>
 							<button
 								type='button'
-								title='Attach file'
-								className='flex h-7 w-7 items-center justify-center rounded-lg text-zinc-400 hover:bg-zinc-100 hover:text-zinc-600 dark:hover:bg-zinc-800'
+								disabled
+								title='Attachments are coming soon'
+								className='flex h-7 w-7 cursor-not-allowed items-center justify-center rounded-lg text-zinc-300 dark:text-zinc-600'
 							>
 								<Paperclip size={14} />
 							</button>
@@ -258,7 +404,12 @@ const AiBuilderPanel = () => {
 
 				<div className='mt-2.5 text-center'>
 					<span className='text-[10px] text-zinc-400 dark:text-zinc-500 font-medium'>
-						Having Trouble? <a href='#' className='underline hover:text-zinc-600 dark:hover:text-zinc-300'>Report an Issue or Bug</a>
+						Having Trouble?{' '}
+					<a
+						href='mailto:support@agent1o1.com?subject=Workflow%20Builder%20issue'
+						className='underline hover:text-zinc-600 dark:hover:text-zinc-300'>
+						Report an Issue or Bug
+					</a>
 					</span>
 				</div>
 			</div>
@@ -359,6 +510,66 @@ const AiBuilderPanel = () => {
 				</div>
 			</div>
 		</aside>
+	);
+};
+
+/** Summarizes what a generated draft would change, with Apply / Discard. */
+const DraftReviewCard = ({
+	draft,
+	currentNodeIds,
+	onApply,
+	onDiscard,
+}: {
+	draft: { nodes: { id: string }[]; edges: unknown[] };
+	currentNodeIds: string[];
+	onApply: () => void;
+	onDiscard: () => void;
+}) => {
+	const existing = new Set(currentNodeIds);
+	const addedCount = draft.nodes.filter((node) => !existing.has(node.id)).length;
+	const updatedCount = draft.nodes.length - addedCount;
+
+	return (
+		<div className='flex justify-start'>
+			<div className='max-w-[85%] rounded-2xl border border-primary-200 bg-primary-50/60 p-3 text-[12px] dark:border-primary-900/40 dark:bg-primary-950/20'>
+				<div className='mb-2 flex items-center gap-1.5 font-bold text-primary-700 dark:text-primary-300'>
+					<GitBranch size={13} />
+					Ready to apply
+				</div>
+				<div className='mb-3 flex flex-wrap gap-1.5 text-[11px] font-semibold text-zinc-600 dark:text-zinc-300'>
+					{addedCount > 0 && (
+						<span className='rounded-full bg-emerald-100 px-2 py-0.5 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400'>
+							+{addedCount} node{addedCount === 1 ? '' : 's'}
+						</span>
+					)}
+					{updatedCount > 0 && (
+						<span className='rounded-full bg-amber-100 px-2 py-0.5 text-amber-700 dark:bg-amber-950/40 dark:text-amber-400'>
+							{updatedCount} updated
+						</span>
+					)}
+					{draft.edges.length > 0 && (
+						<span className='rounded-full bg-zinc-200/70 px-2 py-0.5 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300'>
+							{draft.edges.length} connection{draft.edges.length === 1 ? '' : 's'}
+						</span>
+					)}
+				</div>
+				<div className='flex items-center gap-2'>
+					<button
+						type='button'
+						onClick={onApply}
+						className='flex flex-1 items-center justify-center gap-1.5 rounded-lg bg-primary-500 px-3 py-1.5 text-[11px] font-bold text-white shadow-xs transition hover:bg-primary-600'>
+						<Check size={12} />
+						Apply to canvas
+					</button>
+					<button
+						type='button'
+						onClick={onDiscard}
+						className='rounded-lg border border-zinc-200 bg-white px-3 py-1.5 text-[11px] font-bold text-zinc-600 shadow-xs transition hover:bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-800'>
+						Discard
+					</button>
+				</div>
+			</div>
+		</div>
 	);
 };
 

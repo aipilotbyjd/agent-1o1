@@ -41,6 +41,10 @@ export const useAiBuilderBridge = () => {
 	const applyReadyMessage = useAiChatStore((s) => s.applyReadyMessage);
 	const hydrateFromBackend = useAiChatStore((s) => s.hydrateFromBackend);
 	const failPending = useAiChatStore((s) => s.failPending);
+	const setPendingDraft = useAiChatStore((s) => s.setPendingDraft);
+	const appendTextDelta = useAiChatStore((s) => s.appendTextDelta);
+	const pushToolCall = useAiChatStore((s) => s.pushToolCall);
+	const resolveToolResult = useAiChatStore((s) => s.resolveToolResult);
 
 	// Guards against applying the same assistant message twice (e.g. realtime and
 	// poll both delivering it).
@@ -82,7 +86,9 @@ export const useAiBuilderBridge = () => {
 		};
 	}, [workspaceId, builderSessionId, hydratedSessionId, hydrateFromBackend, dispatch]);
 
-	// Shared handler: apply an assistant result (from realtime or poll) exactly once.
+	// Shared handler: surface an assistant result (from realtime or poll) exactly
+	// once. The generated draft is held for the user to review — see
+	// AiBuilderPanel's Apply/Discard — rather than written to the canvas here.
 	const applyResult = (event: IBuilderMessageReadyEvent) => {
 		if (appliedMessageIds.current.has(event.message.id)) return;
 		appliedMessageIds.current.add(event.message.id);
@@ -93,8 +99,9 @@ export const useAiBuilderBridge = () => {
 		}
 
 		applyReadyMessage(event);
-		const { nodes, edges } = builderDraftToCanvas(event.draft);
-		dispatch({ type: 'APPLY_BUILDER_DRAFT', nodes, edges });
+		if ((event.draft?.nodes?.length ?? 0) > 0) {
+			setPendingDraft(event.draft, event.message.id);
+		}
 	};
 
 	// Realtime path — instant when broadcasting is healthy.
@@ -104,6 +111,9 @@ export const useAiBuilderBridge = () => {
 		const unsubscribe = subscribeToBuilderSession(echo as unknown as IEchoLike, builderSessionId, {
 			onReady: applyResult,
 			onError: applyResult,
+			onTextDelta: (event) => appendTextDelta(event.delta),
+			onToolCall: (event) => pushToolCall(event.tool_id, event.tool_name),
+			onToolResult: (event) => resolveToolResult(event.tool_id, event.successful),
 		});
 
 		return unsubscribe;

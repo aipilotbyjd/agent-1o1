@@ -251,3 +251,61 @@ export interface IBuilderMessageReadyEvent {
 	};
 	error: boolean;
 }
+
+// ─── Realtime (WebSocket) — live streaming ───────────────────
+// Emitted on the same `builder.session.{session_id}` channel while a reply is
+// being generated, ahead of the final `builder.message.ready`. One stream is
+// in flight per session at a time (matches the store's `pendingMessageId`).
+
+export interface IBuilderStreamTextDeltaEvent {
+	type: 'text_delta';
+	id: string;
+	invocation_id: string | null;
+	message_id: string;
+	delta: string;
+	timestamp: number;
+}
+
+export interface IBuilderStreamToolCallEvent {
+	type: 'tool_call';
+	id: string;
+	invocation_id: string | null;
+	tool_id: string;
+	tool_name: string;
+	arguments: Record<string, unknown>;
+	reasoning_id?: string | null;
+	timestamp: number;
+}
+
+export interface IBuilderStreamToolResultEvent {
+	type: 'tool_result';
+	id: string;
+	invocation_id: string | null;
+	tool_id: string;
+	tool_name: string;
+	result: unknown;
+	successful: boolean;
+	error: string | null;
+	timestamp: number;
+}
+
+export interface IBuilderStreamStartEvent {
+	type: 'stream_start';
+	provider: string;
+	model: string;
+	timestamp: number;
+}
+
+export interface IBuilderStreamEndEvent {
+	type: 'stream_end';
+	reason: string;
+	usage?: Record<string, unknown> | null;
+	timestamp: number;
+}
+
+export interface IBuilderStreamErrorEvent {
+	type: 'error';
+	message: string;
+	recoverable: boolean;
+	timestamp: number;
+}
