@@ -70,7 +70,22 @@ import useAsideStatus from '@/hooks/useAsideStatus';
 import pages from '@/Routes/pages';
 import { useWorkspaceContext } from '@/context/workspaceContext';
 import { useWorkflowShellStore } from '@/store/workflowShell.store';
-import { useAgent, useCreateAgent, useUpdateAgent, useDeleteAgent } from '@/api/modules/agents';
+import {
+	useAgent,
+	useCreateAgent,
+	useUpdateAgent,
+	useDeleteAgent,
+	useAgentSkills,
+	useCreateAgentSkill,
+	useAttachAgentSkill,
+	useDetachAgentSkill,
+	useAgentTriggers,
+	useCreateAgentTrigger,
+	useUpdateAgentTrigger,
+	useDeleteAgentTrigger,
+	useFireAgentTrigger,
+} from '@/api/modules/agents';
+import type { TAgentTriggerType } from '@/types/agent.type';
 import { AgentService } from '@/api/modules/agents/agents.service';
 import { subscribeToAgentStream } from '@/api/modules/agents/agents.realtime';
 import { useRealtime } from '@/context/realtimeContext';
@@ -198,6 +213,27 @@ const BuildPage = () => {
 	const updateAgentMutation = useUpdateAgent(workspaceId);
 	const deleteAgentMutation = useDeleteAgent(workspaceId);
 
+	// Skills — workspace catalog + this agent's attachments
+	const { data: workspaceSkills } = useAgentSkills(workspaceId);
+	const createSkillMutation = useCreateAgentSkill(workspaceId);
+	const attachSkillMutation = useAttachAgentSkill(workspaceId);
+	const detachSkillMutation = useDetachAgentSkill(workspaceId);
+	const [isSkillPanelOpen, setIsSkillPanelOpen] = useState(false);
+	const [newSkillName, setNewSkillName] = useState('');
+	const [newSkillInstructions, setNewSkillInstructions] = useState('');
+
+	// Triggers
+	const { data: agentTriggers } = useAgentTriggers(workspaceId, currentAgentId ?? '');
+	const createTriggerMutation = useCreateAgentTrigger(workspaceId, currentAgentId ?? '');
+	const updateTriggerMutation = useUpdateAgentTrigger(workspaceId, currentAgentId ?? '');
+	const deleteTriggerMutation = useDeleteAgentTrigger(workspaceId, currentAgentId ?? '');
+	const fireTriggerMutation = useFireAgentTrigger(workspaceId, currentAgentId ?? '');
+	const [isTriggerPanelOpen, setIsTriggerPanelOpen] = useState(false);
+	const [newTriggerType, setNewTriggerType] = useState<TAgentTriggerType>('schedule');
+	const [newTriggerCron, setNewTriggerCron] = useState('0 9 * * *');
+	const [newTriggerEventName, setNewTriggerEventName] = useState('');
+	const [newTriggerInitialMessage, setNewTriggerInitialMessage] = useState('');
+
 	const [activeTab, setActiveTab] = useState('All');
 	const [promptText, setPromptText] = useState('');
 	const { isDarkTheme, setDarkModeStatus } = useDarkMode();
@@ -323,6 +359,77 @@ const BuildPage = () => {
 			await deleteAgentMutation.mutateAsync(currentAgentId);
 		}
 		navigate(pages.app.subPages.agents.to);
+	};
+
+	// Skills/Triggers both operate on a real agent id — save a draft first if needed.
+	const openSkillPanel = async () => {
+		await ensureAgentPersisted();
+		setIsSkillPanelOpen(true);
+	};
+
+	const openTriggerPanel = async () => {
+		await ensureAgentPersisted();
+		setIsTriggerPanelOpen(true);
+	};
+
+	const attachedSkillIds = new Set((existingAgent?.skills ?? []).map((s) => s.id));
+	const availableSkillsToAttach = (workspaceSkills ?? []).filter((s) => !attachedSkillIds.has(s.id));
+
+	const handleAttachSkill = (skillId: string) => {
+		if (!currentAgentId) return;
+		attachSkillMutation.mutate({ agentId: currentAgentId, skillId });
+	};
+
+	const handleDetachSkill = (skillId: string) => {
+		if (!currentAgentId) return;
+		detachSkillMutation.mutate({ agentId: currentAgentId, skillId });
+	};
+
+	const handleCreateAndAttachSkill = async () => {
+		if (!currentAgentId || !newSkillName.trim() || !newSkillInstructions.trim()) return;
+		const skill = await createSkillMutation.mutateAsync({
+			name: newSkillName.trim(),
+			instructions: newSkillInstructions.trim(),
+		});
+		attachSkillMutation.mutate({ agentId: currentAgentId, skillId: skill.id });
+		setNewSkillName('');
+		setNewSkillInstructions('');
+	};
+
+	const handleCreateTrigger = () => {
+		if (!currentAgentId) return;
+		const config: Record<string, unknown> =
+			newTriggerType === 'schedule'
+				? { cron: newTriggerCron }
+				: newTriggerType === 'event'
+					? { event: newTriggerEventName }
+					: {};
+
+		createTriggerMutation.mutate({
+			type: newTriggerType,
+			config,
+			initial_message: newTriggerInitialMessage || undefined,
+			is_active: true,
+		});
+		setNewTriggerEventName('');
+		setNewTriggerInitialMessage('');
+	};
+
+	const handleToggleTrigger = (triggerId: string, isActive: boolean) => {
+		updateTriggerMutation.mutate({ triggerId, body: { is_active: !isActive } });
+	};
+
+	const handleDeleteTrigger = (triggerId: string) => {
+		deleteTriggerMutation.mutate(triggerId);
+	};
+
+	const handleFireTrigger = (triggerId: string) => {
+		fireTriggerMutation.mutate({ triggerId });
+	};
+
+	const handleCopyWebhookUrl = (url: string) => {
+		navigator.clipboard.writeText(url).catch(() => {});
+		toast.success('Webhook URL copied!');
 	};
 
 	// Auto-scroll chat to bottom
@@ -1701,28 +1808,138 @@ const BuildPage = () => {
 									</div>
 
 									{/* Triggers Section */}
-									<div className='rounded-2xl border border-zinc-200 bg-white p-4 dark:border-zinc-800 dark:bg-zinc-900/40 space-y-2'>
+									<div className='rounded-2xl border border-zinc-200 bg-white p-4 dark:border-zinc-800 dark:bg-zinc-900/40 space-y-3'>
 										<div className='flex items-center justify-between'>
 											<div className='flex items-center gap-2'>
 												<div className='flex h-7 w-7 items-center justify-center rounded-lg bg-primary-400/10 text-primary-600 dark:bg-primary-400/5 dark:text-primary-400'>
 													<Zap size={14} fill="currentColor" />
 												</div>
-												<div className='flex items-center gap-2'>
-													<h4 className='text-xs font-black text-zinc-900 dark:text-white'>Triggers</h4>
-													<span className='inline-flex items-center gap-1 text-[9px] font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-500/5 px-2 py-0.5 rounded-full'>
-														<span className='h-1.5 w-1.5 rounded-full bg-emerald-500' />
-														<span>AI Managed: ON</span>
-													</span>
-												</div>
+												<h4 className='text-xs font-black text-zinc-900 dark:text-white'>Triggers</h4>
 											</div>
-											<button onClick={() => toast.info('Trigger creation opened')} className='flex items-center gap-1 rounded-lg border border-zinc-200 bg-white px-2.5 py-1 text-[10px] font-black text-primary-600 hover:bg-zinc-50 dark:border-primary-500/20 dark:bg-zinc-900 dark:text-primary-400 dark:hover:bg-zinc-800'>
+											<button
+												onClick={openTriggerPanel}
+												className='flex items-center gap-1 rounded-lg border border-zinc-200 bg-white px-2.5 py-1 text-[10px] font-black text-primary-600 hover:bg-zinc-50 dark:border-primary-500/20 dark:bg-zinc-900 dark:text-primary-400 dark:hover:bg-zinc-800'>
 												<Plus size={10} />
 												<span>Trigger</span>
 											</button>
 										</div>
-										<p className='text-[10px] font-semibold text-zinc-400 dark:text-zinc-500 pl-9'>
-											Define events or conditions that activate this agent.
-										</p>
+
+										{(agentTriggers ?? []).length === 0 && !isTriggerPanelOpen && (
+											<p className='text-[10px] font-semibold text-zinc-400 dark:text-zinc-500 pl-9'>
+												Define events or conditions that activate this agent.
+											</p>
+										)}
+
+										{(agentTriggers ?? []).length > 0 && (
+											<div className='space-y-2 pl-9'>
+												{(agentTriggers ?? []).map((trigger) => (
+													<div
+														key={trigger.id}
+														className='flex flex-col gap-1.5 rounded-xl border border-zinc-100 bg-zinc-50/20 p-3 dark:border-zinc-800 dark:bg-zinc-950/20'>
+														<div className='flex items-center justify-between'>
+															<div className='flex items-center gap-2'>
+																<span className='rounded-full bg-zinc-100 px-2 py-0.5 text-[9px] font-black uppercase text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400'>
+																	{trigger.type}
+																</span>
+																<button
+																	onClick={() => handleToggleTrigger(trigger.id, trigger.is_active)}
+																	className={`relative inline-flex h-4 w-7 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors ${
+																		trigger.is_active ? 'bg-primary-400' : 'bg-zinc-200 dark:bg-zinc-800'
+																	}`}>
+																	<span
+																		className={`pointer-events-none inline-block h-3 w-3 transform rounded-full bg-white shadow-sm transition duration-200 ${
+																			trigger.is_active ? 'translate-x-3' : 'translate-x-0'
+																		}`}
+																	/>
+																</button>
+															</div>
+															<div className='flex items-center gap-2'>
+																<button
+																	onClick={() => handleFireTrigger(trigger.id)}
+																	title='Fire now'
+																	className='text-zinc-400 hover:text-primary-600 dark:hover:text-primary-400'>
+																	<Play size={12} />
+																</button>
+																<button
+																	onClick={() => handleDeleteTrigger(trigger.id)}
+																	title='Delete trigger'
+																	className='text-zinc-400 hover:text-rose-500'>
+																	<Trash2 size={12} />
+																</button>
+															</div>
+														</div>
+														{trigger.webhook_url && (
+															<button
+																onClick={() => handleCopyWebhookUrl(trigger.webhook_url!)}
+																className='flex items-center gap-1.5 truncate text-left text-[10px] font-semibold text-zinc-400 hover:text-primary-600 dark:text-zinc-500 dark:hover:text-primary-400'>
+																<Copy size={10} className='shrink-0' />
+																<span className='truncate'>{trigger.webhook_url}</span>
+															</button>
+														)}
+													</div>
+												))}
+											</div>
+										)}
+
+										{isTriggerPanelOpen && (
+											<div className='space-y-2.5 rounded-xl border border-zinc-100 bg-zinc-50/20 p-3 dark:border-zinc-800 dark:bg-zinc-950/20 ml-9'>
+												<div className='flex gap-1.5'>
+													{(['schedule', 'webhook', 'event'] as TAgentTriggerType[]).map((t) => (
+														<button
+															key={t}
+															type='button'
+															onClick={() => setNewTriggerType(t)}
+															className={`rounded-lg px-2.5 py-1 text-[10px] font-black capitalize transition ${
+																newTriggerType === t
+																	? 'bg-primary-400 text-primary-950'
+																	: 'border border-zinc-200 bg-white text-zinc-500 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-400'
+															}`}>
+															{t}
+														</button>
+													))}
+												</div>
+												{newTriggerType === 'schedule' && (
+													<input
+														type='text'
+														value={newTriggerCron}
+														onChange={(e) => setNewTriggerCron(e.target.value)}
+														placeholder='Cron expression (0 9 * * *)'
+														className='w-full rounded-lg border border-zinc-200 bg-white px-2.5 py-1.5 text-[11px] font-mono text-zinc-800 outline-none focus:border-primary-500/50 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-200'
+													/>
+												)}
+												{newTriggerType === 'event' && (
+													<input
+														type='text'
+														value={newTriggerEventName}
+														onChange={(e) => setNewTriggerEventName(e.target.value)}
+														placeholder='Event name'
+														className='w-full rounded-lg border border-zinc-200 bg-white px-2.5 py-1.5 text-[11px] font-semibold text-zinc-800 outline-none focus:border-primary-500/50 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-200'
+													/>
+												)}
+												<input
+													type='text'
+													value={newTriggerInitialMessage}
+													onChange={(e) => setNewTriggerInitialMessage(e.target.value)}
+													placeholder='Initial message (optional)'
+													className='w-full rounded-lg border border-zinc-200 bg-white px-2.5 py-1.5 text-[11px] font-semibold text-zinc-800 outline-none focus:border-primary-500/50 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-200'
+												/>
+												<div className='flex justify-end gap-2'>
+													<button
+														onClick={() => setIsTriggerPanelOpen(false)}
+														className='rounded-lg px-2.5 py-1 text-[10px] font-bold text-zinc-500 hover:bg-zinc-100 dark:hover:bg-zinc-800'>
+														Cancel
+													</button>
+													<button
+														onClick={() => {
+															handleCreateTrigger();
+															setIsTriggerPanelOpen(false);
+														}}
+														className='rounded-lg bg-primary-400 px-3 py-1 text-[10px] font-black text-primary-950 hover:bg-primary-500'>
+														Create
+													</button>
+												</div>
+											</div>
+										)}
 									</div>
 
 									{/* Apps Section */}
@@ -1789,28 +2006,110 @@ const BuildPage = () => {
 									</div>
 
 									{/* Skills Section */}
-									<div className='rounded-2xl border border-zinc-200 bg-white p-4 dark:border-zinc-800 dark:bg-zinc-900/40 space-y-2'>
+									<div className='rounded-2xl border border-zinc-200 bg-white p-4 dark:border-zinc-800 dark:bg-zinc-900/40 space-y-3'>
 										<div className='flex items-center justify-between'>
 											<div className='flex items-center gap-2'>
 												<div className='flex h-7 w-7 items-center justify-center rounded-lg bg-primary-400/10 text-primary-600 dark:bg-primary-400/5 dark:text-primary-400'>
 													<Cpu size={14} />
 												</div>
-												<div className='flex items-center gap-2'>
-													<h4 className='text-xs font-black text-zinc-900 dark:text-white'>Skills</h4>
-													<span className='inline-flex items-center gap-1 text-[9px] font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-500/5 px-2 py-0.5 rounded-full'>
-														<span className='h-1.5 w-1.5 rounded-full bg-emerald-500' />
-														<span>AI Skill Editing: ON</span>
-													</span>
-												</div>
+												<h4 className='text-xs font-black text-zinc-900 dark:text-white'>Skills</h4>
 											</div>
-											<button onClick={() => toast.info('Skill configuration opened')} className='flex items-center gap-1 rounded-lg border border-zinc-200 bg-white px-2.5 py-1 text-[10px] font-black text-primary-600 hover:bg-zinc-50 dark:border-primary-500/20 dark:bg-zinc-900 dark:text-primary-400 dark:hover:bg-zinc-800'>
+											<button
+												onClick={openSkillPanel}
+												className='flex items-center gap-1 rounded-lg border border-zinc-200 bg-white px-2.5 py-1 text-[10px] font-black text-primary-600 hover:bg-zinc-50 dark:border-primary-500/20 dark:bg-zinc-900 dark:text-primary-400 dark:hover:bg-zinc-800'>
 												<Plus size={10} />
 												<span>Skill</span>
 											</button>
 										</div>
-										<p className='text-[10px] font-semibold text-zinc-400 dark:text-zinc-500 pl-9'>
-											Add custom skills to extend your agent's abilities.
-										</p>
+
+										{(existingAgent?.skills ?? []).length === 0 && !isSkillPanelOpen && (
+											<p className='text-[10px] font-semibold text-zinc-400 dark:text-zinc-500 pl-9'>
+												Add custom skills to extend your agent's abilities.
+											</p>
+										)}
+
+										{(existingAgent?.skills ?? []).length > 0 && (
+											<div className='space-y-2 pl-9'>
+												{(existingAgent?.skills ?? []).map((skill) => (
+													<div
+														key={skill.id}
+														className='flex items-center justify-between py-1.5 border-b border-zinc-100 dark:border-zinc-800/80 last:border-0'>
+														<div className='flex flex-col min-w-0'>
+															<span className='text-xs font-black text-zinc-800 dark:text-zinc-200'>{skill.name}</span>
+															{skill.description && (
+																<span className='truncate text-[10px] font-semibold text-zinc-400 dark:text-zinc-500'>
+																	{skill.description}
+																</span>
+															)}
+														</div>
+														<button
+															onClick={() => handleDetachSkill(skill.id)}
+															title='Remove skill'
+															className='shrink-0 text-zinc-400 hover:text-rose-500'>
+															<X size={13} />
+														</button>
+													</div>
+												))}
+											</div>
+										)}
+
+										{isSkillPanelOpen && (
+											<div className='space-y-3 rounded-xl border border-zinc-100 bg-zinc-50/20 p-3 dark:border-zinc-800 dark:bg-zinc-950/20 ml-9'>
+												{availableSkillsToAttach.length > 0 && (
+													<div className='space-y-1.5'>
+														<span className='text-[10px] font-black text-zinc-400 uppercase tracking-wider'>
+															Attach existing
+														</span>
+														{availableSkillsToAttach.map((skill) => (
+															<button
+																key={skill.id}
+																onClick={() => handleAttachSkill(skill.id)}
+																className='flex w-full items-center justify-between rounded-lg border border-zinc-200 bg-white px-2.5 py-1.5 text-left hover:bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900 dark:hover:bg-zinc-800'>
+																<span className='text-[11px] font-bold text-zinc-700 dark:text-zinc-300'>{skill.name}</span>
+																<Plus size={11} className='text-primary-500' />
+															</button>
+														))}
+													</div>
+												)}
+
+												<div className='space-y-1.5'>
+													<span className='text-[10px] font-black text-zinc-400 uppercase tracking-wider'>
+														Create new
+													</span>
+													<input
+														type='text'
+														value={newSkillName}
+														onChange={(e) => setNewSkillName(e.target.value)}
+														placeholder='Skill name'
+														className='w-full rounded-lg border border-zinc-200 bg-white px-2.5 py-1.5 text-[11px] font-semibold text-zinc-800 outline-none focus:border-primary-500/50 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-200'
+													/>
+													<textarea
+														rows={2}
+														value={newSkillInstructions}
+														onChange={(e) => setNewSkillInstructions(e.target.value)}
+														placeholder='Instructions for this skill...'
+														className='w-full rounded-lg border border-zinc-200 bg-white px-2.5 py-1.5 text-[11px] font-semibold text-zinc-800 outline-none focus:border-primary-500/50 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-200'
+													/>
+												</div>
+
+												<div className='flex justify-end gap-2'>
+													<button
+														onClick={() => setIsSkillPanelOpen(false)}
+														className='rounded-lg px-2.5 py-1 text-[10px] font-bold text-zinc-500 hover:bg-zinc-100 dark:hover:bg-zinc-800'>
+														Cancel
+													</button>
+													<button
+														onClick={async () => {
+															await handleCreateAndAttachSkill();
+															setIsSkillPanelOpen(false);
+														}}
+														disabled={!newSkillName.trim() || !newSkillInstructions.trim()}
+														className='rounded-lg bg-primary-400 px-3 py-1 text-[10px] font-black text-primary-950 hover:bg-primary-500 disabled:opacity-40'>
+														Create & Attach
+													</button>
+												</div>
+											</div>
+										)}
 									</div>
 
 									{/* Subagents Section */}
