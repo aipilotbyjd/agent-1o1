@@ -3,7 +3,6 @@ import { notify } from '@/api/core';
 import type {
 	TAgent,
 	TAgentSkill,
-	TAgentConversation,
 	TSendAgentMessageDto,
 	TAgentTrigger,
 	TAgentSkillReference,
@@ -173,8 +172,7 @@ export const useAgentConversation = (ws: string, agentId: string, conversationId
 export const useCreateAgentConversation = (ws: string, agentId: string) => {
 	const qc = useQueryClient();
 	return useMutation({
-		mutationFn: (body?: Partial<TAgentConversation>) =>
-			AgentService.createConversation(ws, agentId, body),
+		mutationFn: (body: TSendAgentMessageDto) => AgentService.createConversation(ws, agentId, body),
 		onSuccess: () => {
 			qc.invalidateQueries({ queryKey: agentKeys.conversations(ws, agentId) });
 		},
@@ -261,24 +259,6 @@ export const useFireAgentTrigger = (ws: string, agentId: string) =>
 		onSuccess: () => notify.success('Trigger fired'),
 		onError: notify.fromError('Failed to fire trigger'),
 	});
-
-export const useExecuteAgent = (ws: string) => {
-	const qc = useQueryClient();
-	return useMutation({
-		mutationFn: ({
-			agentId,
-			body,
-		}: {
-			agentId: string;
-			body: { message: string; context?: Record<string, unknown> };
-		}) => AgentService.execute(ws, agentId, body),
-		onSuccess: () => {
-			qc.invalidateQueries({ queryKey: ['executions', ws] });
-			notify.success('Agent execution triggered successfully');
-		},
-		onError: notify.fromError('Failed to trigger agent execution'),
-	});
-};
 
 // ── Agent Skill References ───────────────────────────
 export const useAddAgentSkillReference = (ws: string, skillId: string) => {

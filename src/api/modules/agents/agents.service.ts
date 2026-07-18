@@ -5,13 +5,12 @@ import type {
 	TAgent,
 	TAgentSkill,
 	TAgentConversation,
-	TAgentMessage,
+	TAgentConversationTurn,
 	TSendAgentMessageDto,
 	TAgentTrigger,
 	TAgentSkillReference,
 	TAgentSkillScript,
 } from '@/types/agent.type';
-import type { TExecution } from '@/types/execution.type';
 import { AgentEndpoints as E, AgentSkillEndpoints as S } from './agents.endpoints';
 
 export const AgentService = {
@@ -46,22 +45,16 @@ export const AgentService = {
 			.get<TApiResponse<TAgentConversation[]>>(E.conversations(ws, agentId), { signal })
 			.then(unwrap<TAgentConversation[]>),
 
-	createConversation: (ws: string, agentId: string, body?: Partial<TAgentConversation>) =>
+	/** Starts a conversation by sending its first message; agent replies inline. */
+	createConversation: (ws: string, agentId: string, body: TSendAgentMessageDto) =>
 		axiosClient
-			.post<TApiResponse<TAgentConversation>>(E.conversationCreate(ws, agentId), body)
-			.then(unwrap<TAgentConversation>),
+			.post<TApiResponse<TAgentConversationTurn>>(E.conversationCreate(ws, agentId), body)
+			.then(unwrap<TAgentConversationTurn>),
 
-	conversationDetail: (
-		ws: string,
-		agentId: string,
-		conversationId: string,
-		signal?: AbortSignal,
-	) =>
+	conversationDetail: (ws: string, agentId: string, conversationId: string, signal?: AbortSignal) =>
 		axiosClient
-			.get<
-				TApiResponse<TAgentConversation & { messages?: TAgentMessage[] }>
-			>(E.conversationDetail(ws, agentId, conversationId), { signal })
-			.then(unwrap<TAgentConversation & { messages?: TAgentMessage[] }>),
+			.get<TApiResponse<TAgentConversation>>(E.conversationDetail(ws, agentId, conversationId), { signal })
+			.then(unwrap<TAgentConversation>),
 
 	deleteConversation: (ws: string, agentId: string, conversationId: string) =>
 		axiosClient.delete(E.conversationDelete(ws, agentId, conversationId)).then(() => undefined),
@@ -73,8 +66,10 @@ export const AgentService = {
 		body: TSendAgentMessageDto,
 	) =>
 		axiosClient
-			.post<TApiResponse<TAgentMessage>>(E.sendMessage(ws, agentId, conversationId), body)
-			.then(unwrap<TAgentMessage>),
+			.post<
+				TApiResponse<TAgentConversationTurn>
+			>(E.sendMessage(ws, agentId, conversationId), body)
+			.then(unwrap<TAgentConversationTurn>),
 
 	listTriggers: (ws: string, agentId: string, signal?: AbortSignal) =>
 		axiosClient
@@ -98,15 +93,6 @@ export const AgentService = {
 		axiosClient
 			.post<TApiResponse<unknown>>(E.triggerFire(ws, agentId, triggerId), body)
 			.then(unwrap<unknown>),
-
-	execute: (
-		ws: string,
-		agentId: string,
-		body: { message: string; context?: Record<string, unknown> },
-	) =>
-		axiosClient
-			.post<TApiResponse<TExecution>>(E.execute(ws, agentId), body)
-			.then(unwrap<TExecution>),
 };
 
 export const AgentSkillService = {

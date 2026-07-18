@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
 	ArrowUp,
@@ -63,9 +64,13 @@ import MainAppBar, { MainAppBarPillButton, MainAppBarIconButton } from '@/pages/
 import { toast } from 'react-toastify';
 import useDarkMode from '@/hooks/useDarkMode';
 import DARK_MODE from '@/constants/darkMode.constant';
-import mockChatData from '@/mocks/agentChatData.json';
 import { LogoFyr } from '@/assets/images';
 import useAsideStatus from '@/hooks/useAsideStatus';
+import pages from '@/Routes/pages';
+import { useWorkspaceContext } from '@/context/workspaceContext';
+import { useWorkflowShellStore } from '@/store/workflowShell.store';
+import { useAgent, useCreateAgent, useUpdateAgent, useDeleteAgent } from '@/api/modules/agents';
+import { AgentService } from '@/api/modules/agents/agents.service';
 
 interface TMessage {
 	id: string;
@@ -80,6 +85,20 @@ interface TMessage {
 }
 
 const BuildPage = () => {
+	const { agentId: routeAgentId } = useParams<{ agentId?: string }>();
+	const navigate = useNavigate();
+	const { activeWorkspaceId } = useWorkspaceContext();
+	const { activeWorkspaceId: fallbackWorkspaceId } = useWorkflowShellStore();
+	const workspaceId = activeWorkspaceId || fallbackWorkspaceId;
+
+	const [currentAgentId, setCurrentAgentId] = useState<string | undefined>(routeAgentId);
+	const [conversationId, setConversationId] = useState<string | null>(null);
+
+	const { data: existingAgent } = useAgent(workspaceId, currentAgentId ?? '');
+	const createAgentMutation = useCreateAgent(workspaceId);
+	const updateAgentMutation = useUpdateAgent(workspaceId);
+	const deleteAgentMutation = useDeleteAgent(workspaceId);
+
 	const [activeTab, setActiveTab] = useState('All');
 	const [promptText, setPromptText] = useState('');
 	const { isDarkTheme, setDarkModeStatus } = useDarkMode();
@@ -141,6 +160,58 @@ const BuildPage = () => {
 
 	const toggleDarkMode = () => {
 		setDarkModeStatus(isDarkTheme ? DARK_MODE.LIGHT : DARK_MODE.DARK);
+	};
+
+	// Hydrate the form once the real agent record loads (edit mode)
+	useEffect(() => {
+		if (!existingAgent) return;
+		setAgentName(existingAgent.name);
+		setAgentDescription(existingAgent.description ?? '');
+		setAgentInstructions(existingAgent.instructions ?? '');
+	}, [existingAgent]);
+
+	// Creates the agent on first save, updates it on every save after that.
+	// Returns the persisted agent's id so callers (chat, settings) can use it immediately.
+	const ensureAgentPersisted = async (): Promise<string> => {
+		const payload = {
+			name: agentName.trim() || 'Untitled Agent',
+			description: agentDescription,
+			instructions: agentInstructions || 'You are a helpful assistant.',
+		};
+
+		if (currentAgentId) {
+			await updateAgentMutation.mutateAsync({ agentId: currentAgentId, body: payload });
+			return currentAgentId;
+		}
+
+		const created = await createAgentMutation.mutateAsync(payload);
+		setCurrentAgentId(created.id);
+		navigate(`${pages.agent.subPages.editAgent.to}/${created.id}`, { replace: true });
+		return created.id;
+	};
+
+	const handleSaveAgent = async () => {
+		if (isSaving) return;
+		setIsSaving(true);
+		setSaveStatus('Saving changes...');
+		try {
+			await ensureAgentPersisted();
+			const now = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+			setSaveStatus(`Saved at ${now}`);
+			toast.success('Agent saved successfully!');
+		} catch {
+			setSaveStatus('Failed to save');
+		} finally {
+			setIsSaving(false);
+		}
+	};
+
+	const handleDeleteAgent = async () => {
+		setIsMoreDropdownOpen(false);
+		if (currentAgentId) {
+			await deleteAgentMutation.mutateAsync(currentAgentId);
+		}
+		navigate(pages.app.subPages.agents.to);
 	};
 
 	// Auto-scroll chat to bottom
@@ -326,47 +397,58 @@ const BuildPage = () => {
 		startPreview(matchedName, matchedIcon, matchedColor, greeting);
 	};
 
-	// Process message and find match from JSON
-	const sendChatMessage = (messageText: string) => {
-		if (!messageText.trim()) return;
+// Sends a message to the real agent — persists the agent first if this is
+	// still an unsaved draft, then starts or continues its conversation.
+	const sendChatMessage = async (messageText: string) => {
+		const trimmed = messageText.trim();
+		if (!trimmed || !workspaceId) return;
 
 		const userMsg: TMessage = {
 			id: 'user-' + Date.now(),
 			sender: 'user',
-			text: messageText,
+			text: trimmed,
 			timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
 		};
 
 		setChatHistory((prev) => [...prev, userMsg]);
 		setIsTyping(true);
 
-		const query = messageText.toLowerCase();
-		let matched = mockChatData.find((item: any) => {
-			if (item.keywords.includes('default')) return false;
-			return item.keywords.some((kw: string) => query.includes(kw));
-		});
+		try {
+			const agentIdForRun = await ensureAgentPersisted();
 
-		if (!matched) {
-			matched = mockChatData.find((item: any) => item.keywords.includes('default'));
-		}
+			const turn = conversationId
+				? await AgentService.sendMessage(workspaceId, agentIdForRun, conversationId, {
+						message: trimmed,
+					})
+				: await AgentService.createConversation(workspaceId, agentIdForRun, { message: trimmed });
 
-		setTimeout(() => {
-			if (matched) {
-				const agentMsg: TMessage = {
-					id: 'agent-' + Date.now(),
-					sender: 'agent',
-					text: matched.response,
-					timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-					type: matched.type as any,
-					headers: matched.headers,
-					data: matched.data,
-					followUp: matched.followUp,
-					actions: matched.actions,
-				};
-				setChatHistory((prev) => [...prev, agentMsg]);
+			if (!conversationId && turn.conversation_id) {
+				setConversationId(turn.conversation_id);
 			}
+
+			const agentMsg: TMessage = {
+				id: 'agent-' + Date.now(),
+				sender: 'agent',
+				text: turn.response,
+				timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+				type: 'text',
+			};
+			setChatHistory((prev) => [...prev, agentMsg]);
+		} catch {
+			setChatHistory((prev) => [
+				...prev,
+				{
+					id: 'agent-error-' + Date.now(),
+					sender: 'agent',
+					text: "Sorry, I couldn't process that — please try again.",
+					timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+					type: 'text',
+				},
+			]);
+			toast.error('Failed to reach the agent.');
+		} finally {
 			setIsTyping(false);
-		}, 1200);
+		}
 	};
 
 	// Action chip clicks in chat response
@@ -461,18 +543,7 @@ const BuildPage = () => {
 							{isDarkTheme ? <Sun size={15} /> : <Moon size={15} />}
 						</MainAppBarIconButton>
 						{/* Save button with loading feedback */}
-						<MainAppBarPillButton 
-							onClick={() => {
-								if (isSaving) return;
-								setIsSaving(true);
-								setSaveStatus('Saving changes...');
-								setTimeout(() => {
-									setIsSaving(false);
-									const now = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-									setSaveStatus(`Saved at ${now}`);
-									toast.success('Agent draft saved successfully!');
-								}, 1000);
-							}}>
+						<MainAppBarPillButton onClick={handleSaveAgent}>
 							{isSaving ? (
 								<Loader2 size={15} className='animate-spin text-primary-600 dark:text-primary-400' />
 							) : (
@@ -772,6 +843,7 @@ const BuildPage = () => {
 												<button
 													onClick={() => {
 														setIsMoreDropdownOpen(false);
+														setConversationId(null);
 														const greeting = `Hi! I'm your ${agentName}. How can I help you today?`;
 														setChatHistory([
 															{
@@ -816,19 +888,10 @@ const BuildPage = () => {
 												<div className='my-1 border-t border-zinc-100 dark:border-white/5' />
 												
 												<button
-													onClick={() => {
-														setIsMoreDropdownOpen(false);
-														setIsPreviewMode(false);
-														setAgentName('Lead Generation Agent');
-														setAgentDescription('An agent that helps me research competitors...');
-														setAgentInstructions('');
-														setAgentIcon(Bot);
-														setAgentIconColor('purple');
-														toast.error('Agent draft reset/deleted.');
-													}}
+													onClick={handleDeleteAgent}
 													className='flex w-full items-center gap-2 rounded-lg px-2.5 py-2 text-left text-xs font-semibold text-rose-600 hover:bg-rose-50 dark:text-rose-400 dark:hover:bg-rose-950/20 transition-colors'>
 													<Trash2 size={13} />
-													Delete Agent Draft
+													Delete Agent
 												</button>
 											</motion.div>
 										</>
@@ -1324,9 +1387,9 @@ const BuildPage = () => {
 										className='flex h-8 w-8 items-center justify-center rounded-lg border border-zinc-200 bg-white text-zinc-500 hover:bg-zinc-100 hover:text-zinc-950 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800'>
 										<Undo2 size={14} />
 									</button>
-									<button 
-										onClick={() => {
-											toast.success('Agent configuration saved!');
+									<button
+										onClick={async () => {
+											await handleSaveAgent();
 											setIsSettingsOpen(false);
 										}}
 										className='flex h-8 items-center gap-1 rounded-lg bg-primary-400 px-3 text-[11px] font-bold text-primary-950 shadow-md shadow-primary-500/20 hover:bg-primary-500 transition active:scale-95 dark:shadow-none'>

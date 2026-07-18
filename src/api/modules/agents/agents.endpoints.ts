@@ -9,7 +9,6 @@ export const AgentEndpoints = {
 		`/workspaces/${ws}/agents/${agentId}/skills/attach`,
 	detachSkill: (ws: string, agentId: string, skillId: string) =>
 		`/workspaces/${ws}/agents/${agentId}/skills/${skillId}`,
-	execute: (ws: string, agentId: string) => `/workspaces/${ws}/agents/${agentId}/execute`,
 	conversations: (ws: string, agentId: string) =>
 		`/workspaces/${ws}/agents/${agentId}/conversations`,
 	conversationCreate: (ws: string, agentId: string) =>

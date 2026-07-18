@@ -1,79 +1,111 @@
+export type TAgentToolConfig = {
+	id: string;
+	node_type: string;
+	tool_name?: string | null;
+	tool_description?: string | null;
+	is_enabled: boolean;
+	sort_order: number;
+};
+
 export type TAgent = {
 	id: string;
 	name: string;
-	description: string;
+	slug: string;
+	description: string | null;
+	instructions: string;
 	model: string;
-	system_prompt: string;
-	temperature: number;
-	max_tokens?: number;
+	provider: string;
+	max_steps: number;
+	timeout_seconds: number;
 	is_active: boolean;
 	category?: string | null;
-	skills_count: number;
-	conversations_count: number;
+	metadata?: Record<string, unknown> | null;
+	default_workflow_id?: string | null;
+	skills_count?: number;
+	conversations_count?: number;
 	skills?: TAgentSkill[];
-	created_at: number;
-	updated_at: number;
+	tool_configs?: TAgentToolConfig[];
+	triggers?: TAgentTrigger[];
+	created_at: string;
+	updated_at: string;
+};
+
+export type TAgentSkillReference = {
+	id: string;
+	title: string;
+	content: string;
+	sort_order: number;
+};
+
+export type TAgentSkillScript = {
+	id: string;
+	name: string;
+	description: string;
+	language: 'php' | 'javascript';
+	code: string;
+	is_enabled: boolean;
+	created_at: string;
+	updated_at: string;
 };
 
 export type TAgentSkill = {
 	id: string;
 	name: string;
-	type: 'api_call' | 'vector_search' | 'workflow' | 'script';
-	description: string;
-	config: Record<string, unknown>;
-	created_at: number;
+	slug: string;
+	description: string | null;
+	instructions: string;
+	is_shared: boolean;
+	version: number;
+	sort_order?: number;
+	references?: TAgentSkillReference[];
+	scripts?: TAgentSkillScript[];
+	references_count?: number;
+	scripts_count?: number;
+	created_at: string;
+	updated_at: string;
 };
 
-export type TAgentConversation = {
-	id: string;
-	session_id: string;
-	messages_count: number;
-	started_at: number;
-	last_message_at: number;
+/** What the conversation `store` / `sendMessage` endpoints actually return. */
+export type TAgentConversationTurn = {
+	conversation_id: string | null;
+	response: string;
 };
 
 export type TAgentMessage = {
 	id: string;
 	role: 'user' | 'assistant' | 'system' | 'tool';
 	content: string;
-	created_at: number;
+	created_at: string;
+};
+
+/** Shape returned by conversation `index` / `show`. */
+export type TAgentConversation = {
+	id: string;
+	title: string | null;
+	agent_id: string;
+	user_id: number;
+	messages?: TAgentMessage[];
+	created_at: string;
+	updated_at: string;
 };
 
 export type TSendAgentMessageDto = {
-	content: string;
-	metadata?: Record<string, unknown>;
+	message: string;
 };
 
-export type TAgentTriggerType = 'cron' | 'webhook' | 'event';
+export type TAgentTriggerType = 'schedule' | 'webhook' | 'event';
 
 export type TAgentTrigger = {
 	id: string;
 	agent_id: string;
 	type: TAgentTriggerType;
-	name: string;
-	config: Record<string, unknown>;
+	config: Record<string, unknown> | null;
+	initial_message?: string | null;
 	is_active: boolean;
-	created_at: number;
-	updated_at: number;
-};
-
-export type TAgentSkillReference = {
-	id: string;
-	skill_id: string;
-	url?: string;
-	title: string;
-	type: string;
-	created_at: number;
-};
-
-export type TAgentSkillScript = {
-	id: string;
-	skill_id: string;
-	name: string;
-	language: string;
-	source: string;
-	created_at: number;
-	updated_at: number;
+	webhook_url?: string;
+	last_fired_at?: string | null;
+	created_at: string;
+	updated_at: string;
 };
 
 export type TAgentSortBy = 'name' | 'created_at' | 'updated_at' | 'conversations_count';
