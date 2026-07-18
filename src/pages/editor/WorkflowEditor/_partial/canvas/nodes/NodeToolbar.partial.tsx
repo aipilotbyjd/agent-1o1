@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
-import { Copy, Pencil, Play, SlidersHorizontal, Trash2 } from 'lucide-react';
+import { Copy, Loader2, Pencil, Play, SlidersHorizontal, Trash2 } from 'lucide-react';
 import { useWorkflowEditor } from '../../../_context/WorkflowEditorProvider.context';
-import { runNodeTest } from '../../../_helper/nodeTest.helper';
+import { useNodeTestRunner } from '../../../_hooks/useNodeTestRunner.hook';
 import ConfigureInputsDialog from '../../dialogs/ConfigureInputsDialog.partial';
 import type { TNodeField } from '../../../_types/node.type';
 
@@ -22,6 +22,7 @@ const NodeToolbar = ({ nodeId, defKey, label, fields }: Props) => {
 	const [renaming, setRenaming] = useState(false);
 	const [draftLabel, setDraftLabel] = useState(label);
 	const renameRef = useRef<HTMLInputElement>(null);
+	const { runTest, testStatus, canRun } = useNodeTestRunner(nodeId, defKey);
 
 	useEffect(() => {
 		if (renaming) renameRef.current?.select();
@@ -33,11 +34,9 @@ const NodeToolbar = ({ nodeId, defKey, label, fields }: Props) => {
 		setRenaming(false);
 	};
 
-	const handleTest = async (event: React.MouseEvent) => {
+	const handleTest = (event: React.MouseEvent) => {
 		event.stopPropagation();
-		dispatch({ type: 'SET_NODE_TEST_STATUS', id: nodeId, status: 'running' });
-		const { status, output } = await runNodeTest(defKey);
-		dispatch({ type: 'SET_NODE_TEST_STATUS', id: nodeId, status, output });
+		runTest();
 	};
 
 	return (
@@ -94,9 +93,18 @@ const NodeToolbar = ({ nodeId, defKey, label, fields }: Props) => {
 							<SlidersHorizontal size={13} strokeWidth={2.5} />
 							<span>Configure Inputs</span>
 						</button>
-						<button type='button' onClick={handleTest} className={buttonClass}>
-							<Play size={13} strokeWidth={2.5} />
-							<span>Test</span>
+						<button
+							type='button'
+							onClick={handleTest}
+							disabled={!canRun || testStatus === 'running'}
+							title={canRun ? 'Run this node once with the current settings' : 'Save the workflow first'}
+							className={`${buttonClass} disabled:cursor-not-allowed disabled:opacity-50`}>
+							{testStatus === 'running' ? (
+								<Loader2 size={13} strokeWidth={2.5} className='animate-spin' />
+							) : (
+								<Play size={13} strokeWidth={2.5} />
+							)}
+							<span>{testStatus === 'running' ? 'Testing…' : 'Test'}</span>
 						</button>
 						<button
 							type='button'

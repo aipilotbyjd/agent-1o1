@@ -1,7 +1,7 @@
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import { Beaker, ChevronDown, ChevronUp, CheckCircle2, AlertCircle, Loader2, Clock } from 'lucide-react';
-import { useTestNode } from '@/api/modules/workflows/editor.hooks';
 import { useWorkflowEditor } from '../../../_context/WorkflowEditorProvider.context';
+import { useNodeTestRunner } from '../../../_hooks/useNodeTestRunner.hook';
 
 /**
  * Inline "Test Node" — runs this single node for real against the backend engine
@@ -16,12 +16,10 @@ const NodeInlineTest = ({
 	nodeId: string;
 	defKey: string;
 }) => {
-	const { state, dispatch } = useWorkflowEditor();
+	const { state } = useWorkflowEditor();
 	const node = state.nodes.find((n) => n.id === nodeId);
-	const ws = state.workflow.workspaceId;
-	const testNode = useTestNode(ws ?? '');
+	const { runTest: runNodeTest, testStatus, canRun } = useNodeTestRunner(nodeId, defKey);
 
-	const testStatus = node?.data.testStatus ?? 'idle';
 	const testOutput = node?.data.testOutput;
 	const testInput = node?.data.testInput;
 	const testError = node?.data.testError;
@@ -29,57 +27,10 @@ const NodeInlineTest = ({
 	const [expanded, setExpanded] = useState(false);
 	const [showInput, setShowInput] = useState(false);
 
-	// Gather the sample input for the test: the last output of each directly
-	// upstream node (from a prior run or pinned data), keyed by that node's id so
-	// the backend can resolve the node's real {{ id.output.* }} tokens. Empty when
-	// nothing upstream has produced output yet.
-	const upstreamInput = useMemo<Record<string, unknown>>(() => {
-		const input: Record<string, unknown> = {};
-		state.edges
-			.filter((edge) => edge.target === nodeId)
-			.forEach((edge) => {
-				const source = state.nodes.find((n) => n.id === edge.source);
-				if (!source) return;
-				const output = source.data.pinned
-					? source.data.pinnedOutput
-					: source.data.outputPreview;
-				if (output !== undefined) input[source.id] = output;
-			});
-		return input;
-	}, [state.edges, state.nodes, nodeId]);
-
-	const runTest = async (e: React.MouseEvent) => {
+	const runTest = (e: React.MouseEvent) => {
 		e.stopPropagation();
-		if (!ws || testStatus === 'running') return;
-
-		dispatch({ type: 'SET_NODE_TEST_STATUS', id: nodeId, status: 'running' });
 		setExpanded(true);
-
-		try {
-			const result = await testNode.mutateAsync({
-				node_type: defKey,
-				parameters: (node?.data.values ?? {}) as Record<string, unknown>,
-				input: upstreamInput,
-			});
-
-			dispatch({
-				type: 'SET_NODE_TEST_STATUS',
-				id: nodeId,
-				status: result.success ? 'success' : 'error',
-				output: result.output,
-				input: result.input,
-				error: result.error,
-				durationMs: result.duration,
-			});
-		} catch (err) {
-			dispatch({
-				type: 'SET_NODE_TEST_STATUS',
-				id: nodeId,
-				status: 'error',
-				error:
-					err instanceof Error ? err.message : 'Test request failed — check the connection.',
-			});
-		}
+		runNodeTest();
 	};
 
 	const statusIcon = {
@@ -104,9 +55,9 @@ const NodeInlineTest = ({
 			<div className='flex items-center gap-2'>
 				<button
 					type='button'
-					disabled={testStatus === 'running' || !ws}
+					disabled={testStatus === 'running' || !canRun}
 					onClick={runTest}
-					title={ws ? 'Run this node once with the current settings' : 'Save the workflow first'}
+					title={canRun ? 'Run this node once with the current settings' : 'Save the workflow first'}
 					className={`flex flex-1 items-center justify-center gap-1.5 rounded-lg border py-1.5 text-[11px] font-bold transition disabled:opacity-60 ${btnClass}`}>
 					{statusIcon}
 					{testStatus === 'running' ? 'Testing…' : 'Test Node'}
