@@ -4,6 +4,7 @@ import { WorkflowBuilderService } from '@/api/modules/workflow-builder/workflow-
 import { isSessionQueued } from '@/types/workflowBuilder.type';
 import type {
 	IBuilderMessage,
+	IBuilderMessageAction,
 	IBuilderMessageReadyEvent,
 	IBuilderSession,
 } from '@/types/workflowBuilder.type';
@@ -36,6 +37,16 @@ export type TAiChatMessage = {
 	/** Present on a failed send — lets the transcript offer a one-click Retry. */
 	retryPrompt?: string;
 	retryMode?: TAiChatMode;
+	/**
+	 * The live scratchpad (reasoning + tool calls) captured at the moment this
+	 * reply finished, so "what the AI did" stays visible/collapsible under the
+	 * message instead of disappearing once streaming ends. Populated for
+	 * replies received live in this session.
+	 */
+	timeline?: TAiTimelineItem[];
+	/** Lighter-weight equivalent for messages loaded from history — the backend
+	 * only persists the before/after diff, not the full reasoning stream. */
+	actionsSummary?: IBuilderMessageAction[];
 };
 
 export type TAiChatSession = {
@@ -155,6 +166,7 @@ const mapBackendMessage = (m: IBuilderMessage): TAiChatMessage => ({
 	text: m.processing_status === 'failed' ? (m.error_message ?? 'Something went wrong.') : m.content,
 	timestamp: formatTs(m.created_at),
 	isError: m.processing_status === 'failed',
+	actionsSummary: m.actions && m.actions.length > 0 ? m.actions : undefined,
 });
 
 const INITIAL_SESSION_ID = makeSessionId();
@@ -362,18 +374,27 @@ export const useAiChatStore = create<TAiChatState>()(
 				})),
 
 			applyReadyMessage: (event) => {
-				const assistantMsg: TAiChatMessage = {
-					id: event.message.id,
-					role: 'assistant',
-					text: event.message.content,
-					timestamp: getCurrentTimeStr(),
-				};
-
 				set((state) => {
 					// Avoid duplicating a message we've already appended.
-					if (state.messages.some((m) => m.id === assistantMsg.id)) {
+					if (state.messages.some((m) => m.id === event.message.id)) {
 						return { isThinking: false, streamTimeline: [] };
 					}
+
+					// Carry the live scratchpad over onto the finished message so
+					// "what the AI did" stays visible (collapsed) instead of
+					// vanishing the moment streaming ends.
+					const assistantMsg: TAiChatMessage = {
+						id: event.message.id,
+						role: 'assistant',
+						text: event.message.content,
+						timestamp: getCurrentTimeStr(),
+						timeline: state.streamTimeline.length > 0 ? state.streamTimeline : undefined,
+						actionsSummary:
+							event.message.actions && event.message.actions.length > 0
+								? event.message.actions
+								: undefined,
+					};
+
 					const messages = [...state.messages, assistantMsg];
 					return {
 						isThinking: false,

@@ -47,11 +47,20 @@ export type TBuilderMessageRole = 'user' | 'assistant';
 
 export type TBuilderMessageStatus = 'pending' | 'processing' | 'completed' | 'failed';
 
+/** One entry in a message's action diff — see ProcessBuilderMessageJob::buildActionDiff(). */
+export interface IBuilderMessageAction {
+	type: 'node_added' | 'node_removed' | 'node_updated' | 'edges_added' | 'edges_removed';
+	node_id?: string;
+	node_type?: string;
+	label?: string;
+	count?: number;
+}
+
 export interface IBuilderMessage {
 	id: string;
 	role: TBuilderMessageRole;
 	content: string;
-	actions?: Record<string, unknown> | null;
+	actions?: IBuilderMessageAction[] | null;
 	processing_status: TBuilderMessageStatus;
 	error_message?: string | null;
 	draft_version_id?: string | null;

@@ -1,7 +1,10 @@
 import { useState, useRef, useEffect, useMemo } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import ReactMarkdown, { type Components } from 'react-markdown';
 import { useWorkflowEditor } from '../../_context/WorkflowEditorProvider.context';
-import { useAiChatStore, type TAiTimelineItem } from '@/store/aiChat.store';
+import { useAiChatStore, type TAiChatMessage, type TAiTimelineItem } from '@/store/aiChat.store';
 import { useAuth } from '@/context/authContext';
+import type { IBuilderMessageAction } from '@/types/workflowBuilder.type';
 import {
 	Paperclip,
 	Sparkles,
@@ -23,8 +26,51 @@ import {
 	Search,
 	Wrench,
 	Square,
+	Copy,
+	Check,
+	AlertCircle,
+	Workflow,
+	Bug,
+	Tag,
+	HelpCircle,
 } from 'lucide-react';
 import type { TCanvasNode } from '../../_types/canvas.type';
+
+/** Starter prompts shown in the empty state, before the first message. */
+const STARTER_SUGGESTIONS: { icon: typeof Workflow; label: string; prompt: string; mode: 'build' | 'ask' }[] = [
+	{ icon: Workflow, label: 'Explain this flow to me', prompt: 'Explain what this workflow does, step by step.', mode: 'ask' },
+	{ icon: Bug, label: 'Help me debug this flow', prompt: 'Something in this workflow isn’t working as expected — help me find the issue.', mode: 'ask' },
+	{ icon: Tag, label: 'Rename my nodes to be more descriptive', prompt: 'Rename all the nodes in this workflow to be clearer and more descriptive.', mode: 'build' },
+	{ icon: HelpCircle, label: 'What can you do?', prompt: 'What can you help me with in this workflow builder?', mode: 'ask' },
+];
+
+/** Compact markdown rendering sized for the chat bubble's 13px type scale. */
+const mdComponents: Components = {
+	p: ({ children }) => <p className='mb-1.5 last:mb-0'>{children}</p>,
+	strong: ({ children }) => (
+		<strong className='font-bold text-zinc-900 dark:text-white'>{children}</strong>
+	),
+	em: ({ children }) => <em className='italic'>{children}</em>,
+	ul: ({ children }) => <ul className='mb-1.5 ml-4 list-disc space-y-0.5 last:mb-0'>{children}</ul>,
+	ol: ({ children }) => (
+		<ol className='mb-1.5 ml-4 list-decimal space-y-0.5 last:mb-0'>{children}</ol>
+	),
+	li: ({ children }) => <li className='pl-0.5'>{children}</li>,
+	code: ({ children }) => (
+		<code className='rounded bg-zinc-100 px-1 py-0.5 font-mono text-[11.5px] text-primary-700 dark:bg-zinc-800 dark:text-primary-400'>
+			{children}
+		</code>
+	),
+	a: ({ children, href }) => (
+		<a
+			href={href}
+			target='_blank'
+			rel='noreferrer'
+			className='underline underline-offset-2 hover:text-primary-600 dark:hover:text-primary-400'>
+			{children}
+		</a>
+	),
+};
 
 /** Matches an in-progress `@mention` fragment at the end of typed text. */
 const MENTION_RE = /@([\w .-]*)$/;
@@ -221,7 +267,7 @@ const AiBuilderPanel = () => {
 	return (
 		<aside className='relative flex h-full w-full flex-col overflow-hidden border-r border-zinc-200 bg-white text-zinc-900 dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-100 select-none'>
 			{/* Header */}
-			<div className='shrink-0 border-b border-zinc-150 bg-white px-4 py-3 dark:border-zinc-800 dark:bg-zinc-950'>
+			<div className='shrink-0 border-b border-zinc-200 bg-white px-4 py-3 dark:border-zinc-800 dark:bg-zinc-950'>
 				<div className='flex items-center justify-between gap-2'>
 					<div className='flex items-center gap-2.5'>
 						<button
@@ -233,15 +279,18 @@ const AiBuilderPanel = () => {
 						>
 							<History size={14} />
 						</button>
-						<div className='flex h-9 w-9 items-center justify-center rounded-xl bg-primary-400 text-primary-950'>
+						<div className='flex h-9 w-9 items-center justify-center rounded-xl bg-primary-400 text-primary-950 shadow-sm shadow-primary-500/40'>
 							<Sparkles size={18} className="fill-white" />
 						</div>
 						<div>
 							<div className='text-sm font-bold text-zinc-800 dark:text-white'>
 								Workflow Builder
 							</div>
-							<div className='text-[10px] text-zinc-400 dark:text-zinc-500 font-medium'>
-								Your AI workflow building assistant
+							<div className='flex items-center gap-1 text-[10px] font-medium text-zinc-400 dark:text-zinc-500'>
+								<span className='h-1.5 w-1.5 rounded-full bg-emerald-400' />
+								{state.nodes.length > 0
+									? `Aware of ${state.nodes.length} node${state.nodes.length === 1 ? '' : 's'} on canvas`
+									: 'Your AI workflow building assistant'}
 							</div>
 						</div>
 					</div>
@@ -270,53 +319,66 @@ const AiBuilderPanel = () => {
 			</div>
 
 			{/* Chat Messages */}
-			<div className='min-h-0 flex-1 overflow-y-auto p-4 space-y-5 bg-zinc-50/40 dark:bg-zinc-950/20'>
-				{messages.map((message) => {
-					const isUser = message.role === 'user';
-					return (
-						<div key={message.id} className='space-y-1'>
-							{/* Message Header */}
-							<div className={`flex items-center gap-2 text-xs text-zinc-400 dark:text-zinc-500 font-medium ${isUser ? 'justify-end' : ''}`}>
-								{!isUser && (
-									<>
-										<div className='flex h-5 w-5 items-center justify-center rounded-full bg-primary-100 text-primary-600 dark:bg-primary-950 dark:text-primary-400'>
-											<Sparkles size={11} className="fill-current" />
-										</div>
-										<span className='font-bold text-zinc-700 dark:text-zinc-300'>Workflow Builder</span>
-									</>
-								)}
-								{message.timestamp && <span>{message.timestamp}</span>}
-								{isUser && (
-									<>
-										<img src={userAvatar} alt='User' className='h-5 w-5 rounded-full object-cover border border-zinc-200' />
-									</>
-								)}
-							</div>
-
-							{/* Message Body */}
-							<div className={`flex ${isUser ? 'justify-end' : 'justify-start'}`}>
-								<div className={`max-w-[85%] rounded-2xl px-4 py-2.5 text-[13px] leading-relaxed shadow-xs ${
-									isUser
-										? 'bg-primary-50 text-primary-900 rounded-tr-xs border border-primary-100 dark:bg-primary-950/30 dark:text-primary-200 dark:border-primary-900/40'
-										: 'bg-white text-zinc-800 rounded-tl-xs border border-zinc-150 dark:bg-zinc-900 dark:text-zinc-200 dark:border-zinc-800'
-								}`}>
-									<div className='whitespace-pre-line'>{message.text}</div>
-
-									{message.isError && message.retryPrompt && (
-										<button
-											type='button'
-											onClick={() => handleRetry(message.retryPrompt!, message.retryMode)}
-											className='mt-2 flex items-center gap-1.5 rounded-lg border border-rose-200 bg-white px-2.5 py-1 text-[11px] font-bold text-rose-600 shadow-xs hover:bg-rose-50 dark:border-rose-900/40 dark:bg-zinc-900 dark:text-rose-400 dark:hover:bg-rose-950/30'
-										>
-											<RotateCcw size={11} />
-											<span>Retry</span>
-										</button>
-									)}
-								</div>
-							</div>
+			<div className='min-h-0 flex-1 overflow-y-auto p-4 space-y-1.5 bg-zinc-50/40 dark:bg-zinc-950/20'>
+				{messages.length <= 1 && !isThinking && (
+					<motion.div
+						initial={{ opacity: 0, y: 6 }}
+						animate={{ opacity: 1, y: 0 }}
+						transition={{ duration: 0.25 }}
+						className='flex flex-col items-center px-2 pt-6 pb-4 text-center'>
+						<div className='mb-3 flex h-11 w-11 items-center justify-center rounded-2xl bg-primary-400 text-primary-950 shadow-sm shadow-primary-500/40'>
+							<Sparkles size={20} className='fill-white' />
 						</div>
-					);
-				})}
+						<h2 className='text-base font-bold text-zinc-800 dark:text-white'>
+							{userData?.name ? `Hey ${userData.name.split(' ')[0]}, how can I help?` : 'How can I help?'}
+						</h2>
+						<p className='mt-1 max-w-[240px] text-[12px] leading-relaxed text-zinc-400 dark:text-zinc-500'>
+							Describe what you want to automate, or try one of these:
+						</p>
+
+						<div className='mt-4 flex w-full flex-col gap-1.5'>
+							{STARTER_SUGGESTIONS.map((suggestion) => (
+								<button
+									key={suggestion.label}
+									type='button'
+									onClick={() => {
+										setMode(suggestion.mode);
+										sendMessage(suggestion.prompt, suggestion.mode);
+									}}
+									className='group flex items-center gap-2.5 rounded-xl border border-zinc-200 bg-white px-3 py-2.5 text-left text-[12.5px] font-semibold text-zinc-600 shadow-xs transition hover:border-primary-300 hover:bg-primary-50/50 hover:text-zinc-900 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:border-primary-700 dark:hover:bg-primary-950/20 dark:hover:text-white'>
+									<span className='flex h-6 w-6 shrink-0 items-center justify-center rounded-lg bg-zinc-100 text-zinc-500 transition group-hover:bg-primary-100 group-hover:text-primary-600 dark:bg-zinc-800 dark:text-zinc-400 dark:group-hover:bg-primary-500/15 dark:group-hover:text-primary-400'>
+										<suggestion.icon size={13} />
+									</span>
+									{suggestion.label}
+									<ChevronRight
+										size={13}
+										className='ml-auto shrink-0 text-zinc-300 transition group-hover:translate-x-0.5 group-hover:text-primary-500 dark:text-zinc-700'
+									/>
+								</button>
+							))}
+						</div>
+					</motion.div>
+				)}
+
+				{(messages.length > 1 || isThinking) && (
+					<AnimatePresence initial={false}>
+						{messages.map((message, index) => (
+							<motion.div
+								key={message.id}
+								initial={{ opacity: 0, y: 8 }}
+								animate={{ opacity: 1, y: 0 }}
+								transition={{ duration: 0.2, ease: 'easeOut' }}>
+								<ChatMessage
+									message={message}
+									showHeader={index === 0 || messages[index - 1].role !== message.role}
+									userAvatar={userAvatar}
+									onRetry={handleRetry}
+									nodes={state.nodes}
+								/>
+							</motion.div>
+						))}
+					</AnimatePresence>
+				)}
 
 				{/* Live scratchpad — reasoning + tool calls as they stream, not a bubble */}
 				{isThinking && (
@@ -384,12 +446,12 @@ const AiBuilderPanel = () => {
 			</div>
 
 			{/* Input Container */}
-			<div className='shrink-0 border-t border-zinc-150 bg-white p-4 dark:border-zinc-800 dark:bg-zinc-950'>
+			<div className='shrink-0 border-t border-zinc-200 bg-white p-4 dark:border-zinc-800 dark:bg-zinc-950'>
 				<div
 					className={`relative rounded-2xl border p-3 shadow-xs transition-colors ${
 						isThinking
 							? 'border-primary-300 bg-primary-50/30 ring-2 ring-primary-200/60 dark:border-primary-700 dark:bg-primary-950/10 dark:ring-primary-900/40'
-							: 'border-zinc-200 bg-zinc-50/50 dark:border-zinc-800 dark:bg-zinc-900'
+							: 'border-zinc-200 bg-zinc-50/50 focus-within:border-primary-300 focus-within:ring-2 focus-within:ring-primary-200/60 dark:border-zinc-800 dark:bg-zinc-900 dark:focus-within:border-primary-700 dark:focus-within:ring-primary-900/40'
 					}`}>
 					{mentionQuery !== null && mentionMatches.length > 0 && (
 						<ul className='absolute bottom-full left-3 z-30 mb-1.5 max-h-40 w-56 overflow-y-auto rounded-lg border border-zinc-200 bg-white py-1 text-[11px] shadow-lg dark:border-zinc-700 dark:bg-zinc-900'>
@@ -518,7 +580,7 @@ const AiBuilderPanel = () => {
 					showHistory ? 'translate-x-0' : '-translate-x-full'
 				}`}
 			>
-				<div className='flex shrink-0 items-center justify-between border-b border-zinc-150 px-3.5 py-3 dark:border-zinc-800'>
+				<div className='flex shrink-0 items-center justify-between border-b border-zinc-200 px-3.5 py-3 dark:border-zinc-800'>
 					<div className='flex items-center gap-1.5 text-sm font-bold text-zinc-800 dark:text-white'>
 						<History size={14} className='text-zinc-400 dark:text-zinc-500' />
 						Chat History
@@ -602,6 +664,192 @@ const AiBuilderPanel = () => {
 				</div>
 			</div>
 		</aside>
+	);
+};
+
+/**
+ * One chat message. Avatar + sender name only render for the first message in
+ * a consecutive run from the same sender (Slack/Discord-style grouping) so a
+ * back-and-forth conversation doesn't repeat "Workflow Builder" on every line.
+ */
+const ChatMessage = ({
+	message,
+	showHeader,
+	userAvatar,
+	onRetry,
+	nodes,
+}: {
+	message: TAiChatMessage;
+	showHeader: boolean;
+	userAvatar: string;
+	onRetry: (prompt: string, mode?: 'build' | 'ask') => void;
+	nodes: TCanvasNode[];
+}) => {
+	const isUser = message.role === 'user';
+	const [copied, setCopied] = useState(false);
+
+	const handleCopy = () => {
+		navigator.clipboard.writeText(message.text).catch(() => {});
+		setCopied(true);
+		setTimeout(() => setCopied(false), 1200);
+	};
+
+	return (
+		<div className={`group flex gap-2 ${isUser ? 'flex-row-reverse' : ''} ${showHeader ? 'mt-3' : 'mt-0.5'}`}>
+			<div className='w-6 shrink-0'>
+				{showHeader &&
+					(isUser ? (
+						<img
+							src={userAvatar}
+							alt='User'
+							className='h-6 w-6 rounded-full border border-zinc-200 object-cover dark:border-zinc-700'
+						/>
+					) : (
+						<div className='flex h-6 w-6 items-center justify-center rounded-full bg-primary-100 text-primary-600 dark:bg-primary-950 dark:text-primary-400'>
+							<Sparkles size={12} className='fill-current' />
+						</div>
+					))}
+			</div>
+
+			<div className={`flex min-w-0 max-w-[82%] flex-col gap-1 ${isUser ? 'items-end' : 'items-start'}`}>
+				{showHeader && (
+					<div
+						className={`flex items-center gap-1.5 px-1 text-[10.5px] font-bold text-zinc-500 dark:text-zinc-400 ${isUser ? 'flex-row-reverse' : ''}`}>
+						<span>{isUser ? 'You' : 'Workflow Builder'}</span>
+						{message.timestamp && (
+							<span className='font-medium text-zinc-400 dark:text-zinc-500'>
+								{message.timestamp}
+							</span>
+						)}
+					</div>
+				)}
+
+				{!isUser && (message.timeline?.length || message.actionsSummary?.length) ? (
+					<MessageSteps message={message} nodes={nodes} />
+				) : null}
+
+				<div
+					className={`relative rounded-2xl px-3.5 py-2.5 text-[13px] leading-relaxed shadow-xs ${
+						isUser
+							? 'rounded-tr-sm border border-primary-200/70 bg-primary-100 text-primary-950 dark:border-primary-500/20 dark:bg-primary-500/15 dark:text-primary-100'
+							: message.isError
+								? 'rounded-tl-sm border border-rose-200 bg-rose-50 text-rose-700 dark:border-rose-900/40 dark:bg-rose-950/20 dark:text-rose-300'
+								: 'rounded-tl-sm border border-zinc-200 bg-white text-zinc-800 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-200'
+					}`}>
+					{message.isError && (
+						<div className='mb-1.5 flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wide'>
+							<AlertCircle size={12} />
+							Something went wrong
+						</div>
+					)}
+
+					{isUser ? (
+						<div className='whitespace-pre-line'>{message.text}</div>
+					) : (
+						<div className='chat-markdown'>
+							<ReactMarkdown components={mdComponents}>{message.text}</ReactMarkdown>
+						</div>
+					)}
+
+					{message.isError && message.retryPrompt && (
+						<button
+							type='button'
+							onClick={() => onRetry(message.retryPrompt!, message.retryMode)}
+							className='mt-2 flex items-center gap-1.5 rounded-lg border border-rose-200 bg-white px-2.5 py-1 text-[11px] font-bold text-rose-600 shadow-xs hover:bg-rose-50 dark:border-rose-900/40 dark:bg-zinc-900 dark:text-rose-400 dark:hover:bg-rose-950/30'
+						>
+							<RotateCcw size={11} />
+							<span>Retry</span>
+						</button>
+					)}
+
+					{!isUser && !message.isError && (
+						<button
+							type='button'
+							onClick={handleCopy}
+							title='Copy message'
+							className='absolute -bottom-2.5 right-1 flex h-5 w-5 items-center justify-center rounded-md border border-zinc-200 bg-white text-zinc-400 opacity-0 shadow-xs transition hover:text-zinc-700 group-hover:opacity-100 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-500 dark:hover:text-zinc-200'>
+							{copied ? <Check size={10} /> : <Copy size={10} />}
+						</button>
+					)}
+				</div>
+			</div>
+		</div>
+	);
+};
+
+/**
+ * What the AI actually did to produce this reply, shown exactly as it looked
+ * while it was happening — no summarizing, no collapsing behind a toggle.
+ * Prefers the rich live-captured `timeline`; falls back to the lighter
+ * `actionsSummary` for messages loaded from history (the backend only
+ * persists the before/after diff, not the full reasoning stream).
+ */
+const MessageSteps = ({ message, nodes }: { message: TAiChatMessage; nodes: TCanvasNode[] }) => {
+	// The timeline's trailing text segment is the same text already shown as
+	// the message itself — drop it here so it isn't duplicated, while keeping
+	// any genuine reasoning that happened *between* tool calls earlier on.
+	const timeline = message.timeline;
+	const stepItems =
+		timeline && timeline[timeline.length - 1]?.kind === 'text' ? timeline.slice(0, -1) : timeline;
+
+	if (!stepItems?.length && !message.actionsSummary?.length) return null;
+
+	return (
+		<div className='flex w-full max-w-full flex-col gap-1.5 px-1'>
+			{stepItems
+				? stepItems.map((item) =>
+						item.kind === 'text' ? (
+							<p
+								key={item.id}
+								className='text-[12.5px] leading-relaxed text-zinc-500 dark:text-zinc-400'>
+								{item.text}
+							</p>
+						) : (
+							<ToolLine key={item.id} item={item} nodes={nodes} />
+						),
+					)
+				: message.actionsSummary?.map((action, index) => (
+						<ActionSummaryLine key={index} action={action} />
+					))}
+		</div>
+	);
+};
+
+/** One line in a historical message's lightweight action summary. */
+const ActionSummaryLine = ({ action }: { action: IBuilderMessageAction }) => {
+	const map: Record<string, { Icon: typeof Search; text: string; tone: string }> = {
+		node_added: {
+			Icon: CirclePlus,
+			text: `Added ${action.label ?? action.node_id ?? 'node'}`,
+			tone: 'text-emerald-500',
+		},
+		node_removed: {
+			Icon: Trash2,
+			text: `Removed ${action.label ?? action.node_id ?? 'node'}`,
+			tone: 'text-rose-500',
+		},
+		node_updated: {
+			Icon: Pencil,
+			text: `Updated ${action.label ?? action.node_id ?? 'node'}`,
+			tone: 'text-amber-500',
+		},
+		edges_added: {
+			Icon: Link2,
+			text: `Added ${action.count ?? 1} connection${(action.count ?? 1) === 1 ? '' : 's'}`,
+			tone: 'text-primary-500',
+		},
+		edges_removed: {
+			Icon: Unlink,
+			text: `Removed ${action.count ?? 1} connection${(action.count ?? 1) === 1 ? '' : 's'}`,
+			tone: 'text-rose-500',
+		},
+	};
+	const entry = map[action.type] ?? { Icon: Wrench, text: action.type, tone: 'text-zinc-400' };
+	return (
+		<div className='flex items-center gap-1.5 text-[11px] font-medium text-zinc-500 dark:text-zinc-400'>
+			<entry.Icon size={11} className={`shrink-0 ${entry.tone}`} />
+			<span>{entry.text}</span>
+		</div>
 	);
 };
 
