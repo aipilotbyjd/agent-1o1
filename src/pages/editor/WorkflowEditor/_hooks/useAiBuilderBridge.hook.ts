@@ -6,13 +6,40 @@ import {
 	subscribeToBuilderSession,
 	type IEchoLike,
 } from '@/api/modules/workflow-builder/workflow-builder.realtime';
-import type { IBuilderMessage, IBuilderMessageReadyEvent } from '@/types/workflowBuilder.type';
+import type {
+	IBuilderMessage,
+	IBuilderMessageReadyEvent,
+	IBuilderNodePosition,
+} from '@/types/workflowBuilder.type';
 import { useWorkflowEditor } from '../_context/WorkflowEditorProvider.context';
 import { useWorkflowRouteParams } from './useWorkflowRouteParams.hook';
-import { builderDraftToCanvas } from '../_helper/builderDraft.helper';
+import { builderDraftToCanvas, builderNodeToCanvas } from '../_helper/builderDraft.helper';
 
 const POLL_INTERVAL_MS = 2500;
 const POLL_TIMEOUT_MS = 120_000;
+
+// Tool names as resolved by Laravel\Ai\Tools\ToolNameResolver — our tool
+// classes don't define name(), so it falls back to class_basename(), i.e. the
+// PascalCase class name verbatim (see App\Agents\Tools\Draft\*).
+const TOOL_ADD_NODE = 'AddNodeTool';
+const TOOL_REMOVE_NODE = 'RemoveNodeTool';
+const TOOL_UPDATE_NODE = 'UpdateNodeTool';
+const TOOL_CONNECT_NODES = 'ConnectNodesTool';
+const TOOL_DISCONNECT_NODES = 'DisconnectNodesTool';
+
+/** The tool handlers return `json_encode(...)` — parse it back, defensively. */
+const parseToolResult = (result: unknown): Record<string, unknown> | null => {
+	if (result && typeof result === 'object') return result as Record<string, unknown>;
+	if (typeof result === 'string') {
+		try {
+			const parsed = JSON.parse(result);
+			return parsed && typeof parsed === 'object' ? parsed : null;
+		} catch {
+			return null;
+		}
+	}
+	return null;
+};
 
 /**
  * Connects the AI chat store to the real backend workflow builder.
@@ -21,9 +48,10 @@ const POLL_TIMEOUT_MS = 120_000;
  * - Subscribes to the builder session's private realtime channel for instant
  *   results, AND polls the session as a fallback (realtime auth can be flaky on
  *   some deploys). Whichever arrives first wins; the other is a no-op.
- *
- * When a result arrives it pushes the assistant reply into the chat and applies
- * the generated nodes/edges to the canvas.
+ * - Applies the canvas live, node-by-node, as each tool call in the agent's run
+ *   succeeds (Gumloop-style) — not just once at the very end. The final
+ *   `builder.message.ready` still runs APPLY_BUILDER_DRAFT as the authoritative
+ *   reconciliation, in case any granular step was missed.
  *
  * Mount once inside the editor (where the WorkflowEditor + Realtime providers and
  * the route params are all available).
@@ -41,7 +69,6 @@ export const useAiBuilderBridge = () => {
 	const applyReadyMessage = useAiChatStore((s) => s.applyReadyMessage);
 	const hydrateFromBackend = useAiChatStore((s) => s.hydrateFromBackend);
 	const failPending = useAiChatStore((s) => s.failPending);
-	const setPendingDraft = useAiChatStore((s) => s.setPendingDraft);
 	const appendTextDelta = useAiChatStore((s) => s.appendTextDelta);
 	const pushToolCall = useAiChatStore((s) => s.pushToolCall);
 	const resolveToolResult = useAiChatStore((s) => s.resolveToolResult);
@@ -49,6 +76,13 @@ export const useAiBuilderBridge = () => {
 	// Guards against applying the same assistant message twice (e.g. realtime and
 	// poll both delivering it).
 	const appliedMessageIds = useRef<Set<string>>(new Set());
+
+	// Arguments of tool calls currently in flight, keyed by tool_id, so the
+	// matching tool_result can be turned into a canvas mutation without waiting
+	// for the whole reply.
+	const pendingToolArgs = useRef<Map<string, { toolName: string; args: Record<string, unknown> }>>(
+		new Map(),
+	);
 
 	// Keep the store's API context in sync with the route.
 	useEffect(() => {
@@ -86,11 +120,79 @@ export const useAiBuilderBridge = () => {
 		};
 	}, [workspaceId, builderSessionId, hydratedSessionId, hydrateFromBackend, dispatch]);
 
+	// Turn one successful tool call into an immediate, targeted canvas mutation
+	// — the tool's own call arguments carry everything needed (name/config/
+	// position); the result is only consulted for AddNodeTool, since the
+	// backend auto-generates the node id when the call left it blank.
+	const applyToolMutation = (toolId: string, successful: boolean, result: unknown) => {
+		const pending = pendingToolArgs.current.get(toolId);
+		pendingToolArgs.current.delete(toolId);
+		if (!pending || !successful) return;
+
+		const { toolName, args } = pending;
+
+		switch (toolName) {
+			case TOOL_ADD_NODE: {
+				const type = args.type as string | undefined;
+				if (!type) return;
+				const resultData = parseToolResult(result);
+				const nodeId = (resultData?.node_id as string | undefined) || (args.id as string) || toolId;
+				dispatch({
+					type: 'BUILDER_ADD_NODE',
+					node: builderNodeToCanvas({
+						id: nodeId,
+						type,
+						name: (args.name as string) || type,
+						config: (args.config as Record<string, unknown>) ?? {},
+						position: (args.position as IBuilderNodePosition) ?? { x: 0, y: 200 },
+					}),
+				});
+				return;
+			}
+			case TOOL_REMOVE_NODE: {
+				const nodeId = args.node_id as string | undefined;
+				if (nodeId) dispatch({ type: 'BUILDER_REMOVE_NODE', id: nodeId });
+				return;
+			}
+			case TOOL_UPDATE_NODE: {
+				const nodeId = args.node_id as string | undefined;
+				if (!nodeId) return;
+				dispatch({
+					type: 'BUILDER_UPDATE_NODE',
+					id: nodeId,
+					name: args.name as string | undefined,
+					config: args.config as Record<string, unknown> | undefined,
+					position: args.position as IBuilderNodePosition | undefined,
+				});
+				return;
+			}
+			case TOOL_CONNECT_NODES: {
+				const source = args.source as string | undefined;
+				const target = args.target as string | undefined;
+				if (!source || !target) return;
+				dispatch({
+					type: 'ADD_EDGE',
+					source,
+					target,
+					sourceHandle: args.source_handle as string | undefined,
+					targetHandle: args.target_handle as string | undefined,
+				});
+				return;
+			}
+			case TOOL_DISCONNECT_NODES: {
+				const source = args.source as string | undefined;
+				const target = args.target as string | undefined;
+				if (source && target) dispatch({ type: 'BUILDER_REMOVE_EDGE', source, target });
+			}
+		}
+	};
+
 	// Shared handler: surface an assistant result (from realtime or poll) exactly
-	// once. The generated draft is held for the user to review — see
-	// AiBuilderPanel's Apply/Discard — rather than written to the canvas here.
+	// once. Nodes/edges have already been live-applied per tool call as the
+	// agent worked — this runs once more as the authoritative reconciliation.
 	const applyResult = (event: IBuilderMessageReadyEvent) => {
 		if (appliedMessageIds.current.has(event.message.id)) return;
+		if (useAiChatStore.getState().ignoredMessageIds.has(event.message.id)) return;
 		appliedMessageIds.current.add(event.message.id);
 
 		if (event.error) {
@@ -100,7 +202,8 @@ export const useAiBuilderBridge = () => {
 
 		applyReadyMessage(event);
 		if ((event.draft?.nodes?.length ?? 0) > 0) {
-			setPendingDraft(event.draft, event.message.id);
+			const { nodes, edges } = builderDraftToCanvas(event.draft);
+			dispatch({ type: 'APPLY_BUILDER_DRAFT', nodes, edges });
 		}
 	};
 
@@ -112,8 +215,17 @@ export const useAiBuilderBridge = () => {
 			onReady: applyResult,
 			onError: applyResult,
 			onTextDelta: (event) => appendTextDelta(event.delta),
-			onToolCall: (event) => pushToolCall(event.tool_id, event.tool_name),
-			onToolResult: (event) => resolveToolResult(event.tool_id, event.successful),
+			onToolCall: (event) => {
+				pendingToolArgs.current.set(event.tool_id, {
+					toolName: event.tool_name,
+					args: event.arguments,
+				});
+				pushToolCall(event.tool_id, event.tool_name, event.arguments);
+			},
+			onToolResult: (event) => {
+				resolveToolResult(event.tool_id, event.successful);
+				applyToolMutation(event.tool_id, event.successful, event.result);
+			},
 		});
 
 		return unsubscribe;
@@ -122,7 +234,9 @@ export const useAiBuilderBridge = () => {
 
 	// Polling fallback — works even when the WebSocket never connects. Waits for
 	// the specific assistant message the backend queued (pendingMessageId) to
-	// reach a terminal status, so it never applies a stale earlier reply.
+	// reach a terminal status, so it never applies a stale earlier reply. It
+	// only ever sees the final state (no granular tool-call events), which is
+	// fine — APPLY_BUILDER_DRAFT reconciles everything in one shot.
 	useEffect(() => {
 		if (!workspaceId || !builderSessionId || !pendingMessageId || !isThinking) return;
 

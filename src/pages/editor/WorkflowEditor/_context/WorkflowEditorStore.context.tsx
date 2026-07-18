@@ -78,6 +78,20 @@ export type TWorkflowEditorAction =
 	  }
 	| { type: 'LOAD_WORKFLOW'; workflow: TExportedWorkflow }
 	| { type: 'APPLY_BUILDER_DRAFT'; nodes: TCanvasNode[]; edges: TCanvasEdge[] }
+	// Granular live-apply — the AI builder dispatches these per tool call as it
+	// works, so the canvas updates node-by-node instead of waiting for the whole
+	// reply (Gumloop-style). APPLY_BUILDER_DRAFT still runs once at the end as
+	// the authoritative reconciliation.
+	| { type: 'BUILDER_ADD_NODE'; node: TCanvasNode }
+	| {
+			type: 'BUILDER_UPDATE_NODE';
+			id: string;
+			name?: string;
+			config?: Record<string, unknown>;
+			position?: TCanvasPosition;
+	  }
+	| { type: 'BUILDER_REMOVE_NODE'; id: string }
+	| { type: 'BUILDER_REMOVE_EDGE'; source: string; target: string }
 	// Node customization
 	| { type: 'SET_NODE_COLOR'; id: string; color: string | null }
 	| { type: 'TOGGLE_NODE_BREAKPOINT'; id: string }
@@ -594,6 +608,58 @@ export const workflowEditorReducer = (
 				edges: action.edges,
 				workflow: { ...next.workflow, savingState: 'dirty' },
 				ui: { ...next.ui, selectedNodeId: null, selectedNodeIds: [] },
+			};
+		}
+		case 'BUILDER_ADD_NODE': {
+			if (state.nodes.some((node) => node.id === action.node.id)) return state;
+			const next = withHistory(state);
+			return {
+				...next,
+				nodes: [...next.nodes, action.node],
+				workflow: { ...next.workflow, savingState: 'dirty' },
+			};
+		}
+		case 'BUILDER_UPDATE_NODE': {
+			const next = withHistory(state);
+			return {
+				...next,
+				nodes: next.nodes.map((node) =>
+					node.id === action.id
+						? {
+								...node,
+								position: action.position ?? node.position,
+								data: {
+									...node.data,
+									label: action.name ?? node.data.label,
+									values: action.config
+										? { ...node.data.values, ...action.config }
+										: node.data.values,
+								},
+							}
+						: node,
+				),
+				workflow: { ...next.workflow, savingState: 'dirty' },
+			};
+		}
+		case 'BUILDER_REMOVE_NODE': {
+			const next = withHistory(state);
+			return {
+				...next,
+				nodes: next.nodes.filter((node) => node.id !== action.id),
+				edges: next.edges.filter(
+					(edge) => edge.source !== action.id && edge.target !== action.id,
+				),
+				workflow: { ...next.workflow, savingState: 'dirty' },
+			};
+		}
+		case 'BUILDER_REMOVE_EDGE': {
+			const next = withHistory(state);
+			return {
+				...next,
+				edges: next.edges.filter(
+					(edge) => !(edge.source === action.source && edge.target === action.target),
+				),
+				workflow: { ...next.workflow, savingState: 'dirty' },
 			};
 		}
 		case 'SET_NODE_COLOR': {

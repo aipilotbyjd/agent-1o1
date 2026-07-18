@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect, useMemo } from 'react';
 import { useWorkflowEditor } from '../../_context/WorkflowEditorProvider.context';
-import { useAiChatStore } from '@/store/aiChat.store';
+import { useAiChatStore, type TAiTimelineItem } from '@/store/aiChat.store';
 import { useAuth } from '@/context/authContext';
 import {
 	Paperclip,
@@ -12,32 +12,81 @@ import {
 	MessageSquare,
 	X,
 	RotateCcw,
-	Check,
-	GitBranch,
 	Loader2,
 	CheckCircle2,
 	XCircle,
+	ChevronRight,
+	CirclePlus,
+	Pencil,
+	Link2,
+	Unlink,
+	Search,
+	Wrench,
+	Square,
 } from 'lucide-react';
-import { builderDraftToCanvas } from '../../_helper/builderDraft.helper';
+import type { TCanvasNode } from '../../_types/canvas.type';
 
 /** Matches an in-progress `@mention` fragment at the end of typed text. */
 const MENTION_RE = /@([\w .-]*)$/;
 
-/** Friendly present-tense label for a live tool-call progress line. */
-const TOOL_LABELS: Record<string, string> = {
-	add_node: 'Adding a node',
-	remove_node: 'Removing a node',
-	update_node: 'Updating a node',
-	connect_nodes: 'Connecting nodes',
-	disconnect_nodes: 'Disconnecting nodes',
-	list_available_nodes: 'Looking up available nodes',
-	inspect_node_schema: 'Checking node requirements',
-	read_draft_workflow: 'Reading the current draft',
+const prettify = (raw: string) =>
+	raw.replace(/[_-]+/g, ' ').replace(/\b\w/g, (letter) => letter.toUpperCase());
+
+const nodeLabel = (nodes: TCanvasNode[], id: unknown): string => {
+	if (typeof id !== 'string' || !id) return 'node';
+	return nodes.find((n) => n.id === id)?.data.label || id;
 };
 
-const formatToolLabel = (toolName: string) =>
-	TOOL_LABELS[toolName] ??
-	toolName.replace(/_/g, ' ').replace(/\b\w/g, (letter) => letter.toUpperCase());
+/**
+ * Icon + dynamic present-tense caption for a live tool call, built from that
+ * call's actual arguments (not a generic per-tool label) — Gumloop-style.
+ * `toolName` is the resolved Laravel\Ai tool name, which (since our tool
+ * classes don't define name()) falls back to the PascalCase class basename.
+ */
+const describeToolCall = (
+	toolName: string,
+	args: Record<string, unknown>,
+	nodes: TCanvasNode[],
+): { Icon: typeof Search; text: string } => {
+	switch (toolName) {
+		case 'AddNodeTool': {
+			const type = typeof args.type === 'string' ? args.type : '';
+			const label = (typeof args.name === 'string' && args.name) || prettify(type || 'node');
+			return { Icon: CirclePlus, text: `Add ${label} node` };
+		}
+		case 'RemoveNodeTool':
+			return { Icon: Trash2, text: `Remove ${nodeLabel(nodes, args.node_id)} node` };
+		case 'UpdateNodeTool':
+			return { Icon: Pencil, text: `Update ${nodeLabel(nodes, args.node_id)} node` };
+		case 'ConnectNodesTool':
+			return {
+				Icon: Link2,
+				text: `Connect ${nodeLabel(nodes, args.source)} → ${nodeLabel(nodes, args.target)}`,
+			};
+		case 'DisconnectNodesTool':
+			return {
+				Icon: Unlink,
+				text: `Disconnect ${nodeLabel(nodes, args.source)} → ${nodeLabel(nodes, args.target)}`,
+			};
+		case 'ListAvailableNodesTool':
+			return {
+				Icon: Search,
+				text:
+					typeof args.category === 'string' && args.category
+						? `Look up ${prettify(args.category)} nodes`
+						: 'Look up available nodes',
+			};
+		case 'InspectNodeSchemaTool':
+			return {
+				Icon: Search,
+				text: `Check requirements for ${prettify(typeof args.node_type === 'string' ? args.node_type : 'node')}`,
+			};
+		case 'ReadDraftWorkflowTool':
+			return { Icon: Search, text: 'Read the current draft' };
+		default:
+			return { Icon: Wrench, text: prettify(toolName.replace(/Tool$/, '')) };
+	}
+};
 
 const formatRelativeTime = (ts: number) => {
 	const diffMs = Date.now() - ts;
@@ -57,23 +106,21 @@ const AiBuilderPanel = () => {
 
 	const messages = useAiChatStore((store) => store.messages);
 	const isThinking = useAiChatStore((store) => store.isThinking);
-	const streamingText = useAiChatStore((store) => store.streamingText);
-	const toolActivity = useAiChatStore((store) => store.toolActivity);
+	const streamTimeline = useAiChatStore((store) => store.streamTimeline);
 	const sessions = useAiChatStore((store) => store.sessions);
 	const activeSessionId = useAiChatStore((store) => store.activeSessionId);
 	const sendMessage = useAiChatStore((store) => store.sendMessage);
+	const stopThinking = useAiChatStore((store) => store.stopThinking);
 	const exitChat = useAiChatStore((store) => store.exitChat);
 	const newChat = useAiChatStore((store) => store.newChat);
 	const loadSession = useAiChatStore((store) => store.loadSession);
 	const deleteSession = useAiChatStore((store) => store.deleteSession);
-	const pendingDraft = useAiChatStore((store) => store.pendingDraft);
-	const pendingDraftMessageId = useAiChatStore((store) => store.pendingDraftMessageId);
-	const clearPendingDraft = useAiChatStore((store) => store.clearPendingDraft);
 
 	const [promptInput, setPromptInput] = useState('');
 	const [mode, setMode] = useState<'build' | 'ask'>('build');
 	const [showHistory, setShowHistory] = useState(false);
 	const [mentionQuery, setMentionQuery] = useState<string | null>(null);
+	const [stepsExpanded, setStepsExpanded] = useState(true);
 	const messagesEndRef = useRef<HTMLDivElement>(null);
 	const textareaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -88,10 +135,41 @@ const AiBuilderPanel = () => {
 			.slice(0, 6);
 	}, [mentionQuery, state.nodes]);
 
+	// The last timeline entry is "in progress"; everything before it is settled
+	// history, shown in a collapsible section — mirrors Gumloop's builder.
+	const activeItem: TAiTimelineItem | undefined = streamTimeline[streamTimeline.length - 1];
+	const historyItems = streamTimeline.slice(0, -1);
+	const toolCount = streamTimeline.filter((item) => item.kind === 'tool').length;
+
+	// Typewriter for the active text segment only — earlier segments already
+	// finished streaming and render in full immediately. Resets whenever the
+	// active item's identity changes (new segment, or a tool call interrupts).
+	const activeTextTarget = activeItem?.kind === 'text' ? activeItem.text : '';
+	const [displayedActiveText, setDisplayedActiveText] = useState('');
+	const displayedRef = useRef('');
+	useEffect(() => {
+		displayedRef.current = '';
+		setDisplayedActiveText('');
+	}, [activeItem?.id]);
+	useEffect(() => {
+		if (!isThinking || activeItem?.kind !== 'text') return;
+		let raf: number;
+		const tick = () => {
+			if (displayedRef.current.length < activeTextTarget.length) {
+				const next = activeTextTarget.slice(0, displayedRef.current.length + 2);
+				displayedRef.current = next;
+				setDisplayedActiveText(next);
+			}
+			raf = requestAnimationFrame(tick);
+		};
+		raf = requestAnimationFrame(tick);
+		return () => cancelAnimationFrame(raf);
+	}, [isThinking, activeItem?.kind, activeTextTarget]);
+
 	// Scroll to bottom when messages change (or the live reply grows)
 	useEffect(() => {
 		messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-	}, [messages, isThinking, streamingText, toolActivity]);
+	}, [messages, isThinking, displayedActiveText, streamTimeline.length]);
 
 	if (!state.ui.aiPanelOpen) return null;
 
@@ -110,21 +188,15 @@ const AiBuilderPanel = () => {
 
 	const handleSend = () => {
 		const clean = promptInput.trim();
-		if (!clean) return;
+		if (!clean || isThinking) return;
 		setPromptInput('');
 		setMentionQuery(null);
+		setStepsExpanded(true);
 		sendMessage(clean, mode);
 	};
 
 	const handleRetry = (retryPrompt: string, retryMode?: 'build' | 'ask') => {
 		sendMessage(retryPrompt, retryMode ?? 'build');
-	};
-
-	const handleApplyDraft = () => {
-		if (!pendingDraft) return;
-		const { nodes, edges } = builderDraftToCanvas(pendingDraft);
-		dispatch({ type: 'APPLY_BUILDER_DRAFT', nodes, edges });
-		clearPendingDraft();
 	};
 
 	const handleExit = () => {
@@ -228,13 +300,6 @@ const AiBuilderPanel = () => {
 										? 'bg-primary-50 text-primary-900 rounded-tr-xs border border-primary-100 dark:bg-primary-950/30 dark:text-primary-200 dark:border-primary-900/40'
 										: 'bg-white text-zinc-800 rounded-tl-xs border border-zinc-150 dark:bg-zinc-900 dark:text-zinc-200 dark:border-zinc-800'
 								}`}>
-									{/* If assistant, display thought block if applicable */}
-									{!isUser && message.isThought && (
-										<div className='mb-2 flex items-center gap-1.5 text-[11px] font-semibold text-zinc-400 dark:text-zinc-500 border-b border-zinc-100 dark:border-zinc-800 pb-1.5'>
-											<Sparkles size={11} className="text-primary-500" />
-											<span className='italic'>Thought for a couple of seconds</span>
-										</div>
-									)}
 									<div className='whitespace-pre-line'>{message.text}</div>
 
 									{message.isError && message.retryPrompt && (
@@ -249,61 +314,69 @@ const AiBuilderPanel = () => {
 									)}
 								</div>
 							</div>
-
-							{/* Draft review — appears under the message that produced it */}
-							{!isUser && pendingDraft && pendingDraftMessageId === message.id && (
-								<DraftReviewCard
-									draft={pendingDraft}
-									currentNodeIds={state.nodes.map((n) => n.id)}
-									onApply={handleApplyDraft}
-									onDiscard={clearPendingDraft}
-								/>
-							)}
 						</div>
 					);
 				})}
 
+				{/* Live scratchpad — reasoning + tool calls as they stream, not a bubble */}
 				{isThinking && (
-					<div className='space-y-1'>
+					<div className='space-y-1.5'>
 						<div className='flex items-center gap-2 text-xs text-zinc-400 dark:text-zinc-500 font-medium'>
 							<div className='flex h-5 w-5 items-center justify-center rounded-full bg-primary-100 text-primary-600 dark:bg-primary-950 dark:text-primary-400 animate-pulse'>
 								<Sparkles size={11} />
 							</div>
 							<span className='font-bold text-zinc-700 dark:text-zinc-300'>Workflow Builder</span>
 						</div>
-						<div className='flex justify-start'>
-							<div className='max-w-[85%] rounded-2xl rounded-tl-xs border border-zinc-150 bg-white px-4 py-2.5 text-[13px] text-zinc-800 shadow-xs dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-200'>
-								{/* Live tool-call progress — what the agent is actually doing */}
-								{toolActivity.length > 0 && (
-									<div className='mb-2 flex flex-col gap-1 border-b border-zinc-100 pb-2 dark:border-zinc-800'>
-										{toolActivity.map((activity) => (
-											<div
-												key={activity.id}
-												className='flex items-center gap-1.5 text-[11px] font-medium text-zinc-500 dark:text-zinc-400'>
-												{activity.status === 'running' && (
-													<Loader2 size={11} className='animate-spin text-primary-500' />
-												)}
-												{activity.status === 'done' && (
-													<CheckCircle2 size={11} className='text-emerald-500' />
-												)}
-												{activity.status === 'error' && (
-													<XCircle size={11} className='text-rose-500' />
-												)}
-												<span>{formatToolLabel(activity.toolName)}</span>
-											</div>
-										))}
-									</div>
-								)}
 
-								{streamingText ? (
-									<div className='whitespace-pre-line'>{streamingText}</div>
-								) : (
-									<span className='inline-flex items-center gap-1.5 text-zinc-500 dark:text-zinc-400'>
-										<span className='h-1.5 w-1.5 rounded-full bg-primary-400 animate-ping' />
-										Thinking...
-									</span>
-								)}
-							</div>
+						<div className='pl-7'>
+							{streamTimeline.length === 0 && (
+								<div className='flex items-center gap-1.5 text-[12px] text-zinc-500 dark:text-zinc-400'>
+									<span className='h-1.5 w-1.5 rounded-full bg-primary-400 animate-ping' />
+									Getting started…
+								</div>
+							)}
+
+							{toolCount > 0 && (
+								<button
+									type='button'
+									onClick={() => setStepsExpanded((v) => !v)}
+									className='mb-1.5 flex items-center gap-1 text-[11px] font-bold text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-200'>
+									<ChevronRight
+										size={12}
+										className={`transition-transform ${stepsExpanded ? 'rotate-90' : ''}`}
+									/>
+									{toolCount} step{toolCount === 1 ? '' : 's'}
+								</button>
+							)}
+
+							{stepsExpanded && historyItems.length > 0 && (
+								<div className='mb-2 flex flex-col gap-1.5'>
+									{historyItems.map((item) =>
+										item.kind === 'text' ? (
+											<p
+												key={item.id}
+												className='text-[12.5px] leading-relaxed text-zinc-500 dark:text-zinc-400'>
+												{item.text}
+											</p>
+										) : (
+											<ToolLine key={item.id} item={item} nodes={state.nodes} />
+										),
+									)}
+								</div>
+							)}
+
+							{activeItem && (
+								<div className='flex items-start gap-2 rounded-xl border border-zinc-200 bg-white px-3 py-2 text-[12.5px] font-medium text-zinc-700 shadow-xs dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-200'>
+									{activeItem.kind === 'tool' ? (
+										<ActiveToolLine item={activeItem} nodes={state.nodes} />
+									) : (
+										<span className='whitespace-pre-line'>
+											{displayedActiveText}
+											<span className='ml-0.5 inline-block h-3.5 w-[2px] animate-pulse bg-current align-middle' />
+										</span>
+									)}
+								</div>
+							)}
 						</div>
 					</div>
 				)}
@@ -312,7 +385,12 @@ const AiBuilderPanel = () => {
 
 			{/* Input Container */}
 			<div className='shrink-0 border-t border-zinc-150 bg-white p-4 dark:border-zinc-800 dark:bg-zinc-950'>
-				<div className='relative rounded-2xl border border-zinc-200 bg-zinc-50/50 p-3 shadow-xs dark:border-zinc-800 dark:bg-zinc-900'>
+				<div
+					className={`relative rounded-2xl border p-3 shadow-xs transition-colors ${
+						isThinking
+							? 'border-primary-300 bg-primary-50/30 ring-2 ring-primary-200/60 dark:border-primary-700 dark:bg-primary-950/10 dark:ring-primary-900/40'
+							: 'border-zinc-200 bg-zinc-50/50 dark:border-zinc-800 dark:bg-zinc-900'
+					}`}>
 					{mentionQuery !== null && mentionMatches.length > 0 && (
 						<ul className='absolute bottom-full left-3 z-30 mb-1.5 max-h-40 w-56 overflow-y-auto rounded-lg border border-zinc-200 bg-white py-1 text-[11px] shadow-lg dark:border-zinc-700 dark:bg-zinc-900'>
 							{mentionMatches.map((node) => (
@@ -333,6 +411,7 @@ const AiBuilderPanel = () => {
 					<textarea
 						ref={textareaRef}
 						value={promptInput}
+						disabled={isThinking}
 						onChange={(e) => {
 							setPromptInput(e.target.value);
 							updateMentionQuery(e.target.value);
@@ -344,8 +423,8 @@ const AiBuilderPanel = () => {
 							}
 							if (e.key === 'Escape') setMentionQuery(null);
 						}}
-						placeholder='Describe what you want to automate today... (@ to reference a node)'
-						className='w-full min-h-[50px] max-h-[120px] resize-none border-none bg-transparent p-0 text-sm text-zinc-800 placeholder-zinc-400 outline-none focus:ring-0 focus:outline-none dark:text-zinc-200'
+						placeholder={isThinking ? 'Responding…' : 'Describe what you want to automate today... (@ to reference a node)'}
+						className='w-full min-h-[50px] max-h-[120px] resize-none border-none bg-transparent p-0 text-sm text-zinc-800 placeholder-zinc-400 outline-none focus:ring-0 focus:outline-none disabled:cursor-not-allowed dark:text-zinc-200'
 					/>
 
 					{/* Action Buttons inside Input Box */}
@@ -367,7 +446,8 @@ const AiBuilderPanel = () => {
 								<button
 									type='button'
 									onClick={() => setMode('build')}
-									className={`flex items-center gap-1 rounded-md px-2.5 py-1 transition ${
+									disabled={isThinking}
+									className={`flex items-center gap-1 rounded-md px-2.5 py-1 transition disabled:cursor-not-allowed ${
 										mode === 'build'
 											? 'bg-white text-zinc-900 shadow-xs dark:bg-zinc-700 dark:text-white'
 											: 'text-zinc-400 hover:text-zinc-700 dark:text-zinc-500'
@@ -379,7 +459,8 @@ const AiBuilderPanel = () => {
 								<button
 									type='button'
 									onClick={() => setMode('ask')}
-									className={`rounded-md px-2.5 py-1 transition ${
+									disabled={isThinking}
+									className={`rounded-md px-2.5 py-1 transition disabled:cursor-not-allowed ${
 										mode === 'ask'
 											? 'bg-white text-zinc-900 shadow-xs dark:bg-zinc-700 dark:text-white'
 											: 'text-zinc-400 hover:text-zinc-700 dark:text-zinc-500'
@@ -389,15 +470,26 @@ const AiBuilderPanel = () => {
 								</button>
 							</div>
 
-							{/* Send Button */}
-							<button
-								type='button'
-								onClick={handleSend}
-								disabled={!promptInput.trim() || isThinking}
-								className='flex h-7 w-7 items-center justify-center rounded-full bg-primary-400 text-primary-950 transition hover:bg-primary-500 active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed'
-							>
-								<ArrowUp size={14} strokeWidth={2.5} />
-							</button>
+							{/* Send / Stop Button */}
+							{isThinking ? (
+								<button
+									type='button'
+									onClick={stopThinking}
+									title='Stop'
+									className='flex h-7 w-7 items-center justify-center rounded-full bg-rose-500 text-white transition hover:bg-rose-600 active:scale-95'
+								>
+									<Square size={11} fill='currentColor' />
+								</button>
+							) : (
+								<button
+									type='button'
+									onClick={handleSend}
+									disabled={!promptInput.trim()}
+									className='flex h-7 w-7 items-center justify-center rounded-full bg-primary-400 text-primary-950 transition hover:bg-primary-500 active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed'
+								>
+									<ArrowUp size={14} strokeWidth={2.5} />
+								</button>
+							)}
 						</div>
 					</div>
 				</div>
@@ -513,63 +605,45 @@ const AiBuilderPanel = () => {
 	);
 };
 
-/** Summarizes what a generated draft would change, with Apply / Discard. */
-const DraftReviewCard = ({
-	draft,
-	currentNodeIds,
-	onApply,
-	onDiscard,
+/** One completed tool-call line in the collapsed step history. */
+const ToolLine = ({
+	item,
+	nodes,
 }: {
-	draft: { nodes: { id: string }[]; edges: unknown[] };
-	currentNodeIds: string[];
-	onApply: () => void;
-	onDiscard: () => void;
+	item: Extract<TAiTimelineItem, { kind: 'tool' }>;
+	nodes: TCanvasNode[];
 }) => {
-	const existing = new Set(currentNodeIds);
-	const addedCount = draft.nodes.filter((node) => !existing.has(node.id)).length;
-	const updatedCount = draft.nodes.length - addedCount;
-
+	const { Icon, text } = describeToolCall(item.toolName, item.arguments, nodes);
 	return (
-		<div className='flex justify-start'>
-			<div className='max-w-[85%] rounded-2xl border border-primary-200 bg-primary-50/60 p-3 text-[12px] dark:border-primary-900/40 dark:bg-primary-950/20'>
-				<div className='mb-2 flex items-center gap-1.5 font-bold text-primary-700 dark:text-primary-300'>
-					<GitBranch size={13} />
-					Ready to apply
-				</div>
-				<div className='mb-3 flex flex-wrap gap-1.5 text-[11px] font-semibold text-zinc-600 dark:text-zinc-300'>
-					{addedCount > 0 && (
-						<span className='rounded-full bg-emerald-100 px-2 py-0.5 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400'>
-							+{addedCount} node{addedCount === 1 ? '' : 's'}
-						</span>
-					)}
-					{updatedCount > 0 && (
-						<span className='rounded-full bg-amber-100 px-2 py-0.5 text-amber-700 dark:bg-amber-950/40 dark:text-amber-400'>
-							{updatedCount} updated
-						</span>
-					)}
-					{draft.edges.length > 0 && (
-						<span className='rounded-full bg-zinc-200/70 px-2 py-0.5 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300'>
-							{draft.edges.length} connection{draft.edges.length === 1 ? '' : 's'}
-						</span>
-					)}
-				</div>
-				<div className='flex items-center gap-2'>
-					<button
-						type='button'
-						onClick={onApply}
-						className='flex flex-1 items-center justify-center gap-1.5 rounded-lg bg-primary-500 px-3 py-1.5 text-[11px] font-bold text-white shadow-xs transition hover:bg-primary-600'>
-						<Check size={12} />
-						Apply to canvas
-					</button>
-					<button
-						type='button'
-						onClick={onDiscard}
-						className='rounded-lg border border-zinc-200 bg-white px-3 py-1.5 text-[11px] font-bold text-zinc-600 shadow-xs transition hover:bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-800'>
-						Discard
-					</button>
-				</div>
-			</div>
+		<div className='flex items-center gap-1.5 text-[11px] font-medium text-zinc-500 dark:text-zinc-400'>
+			{item.status === 'running' && <Loader2 size={11} className='shrink-0 animate-spin text-primary-500' />}
+			{item.status === 'done' && <CheckCircle2 size={11} className='shrink-0 text-emerald-500' />}
+			{item.status === 'error' && <XCircle size={11} className='shrink-0 text-rose-500' />}
+			<Icon size={11} className='shrink-0 opacity-60' />
+			<span>{text}</span>
 		</div>
+	);
+};
+
+/** The currently in-flight tool call, shown prominently and boxed. */
+const ActiveToolLine = ({
+	item,
+	nodes,
+}: {
+	item: Extract<TAiTimelineItem, { kind: 'tool' }>;
+	nodes: TCanvasNode[];
+}) => {
+	const { Icon, text } = describeToolCall(item.toolName, item.arguments, nodes);
+	return (
+		<>
+			{item.status === 'running' && <Loader2 size={13} className='mt-0.5 shrink-0 animate-spin text-primary-500' />}
+			{item.status === 'done' && <CheckCircle2 size={13} className='mt-0.5 shrink-0 text-emerald-500' />}
+			{item.status === 'error' && <XCircle size={13} className='mt-0.5 shrink-0 text-rose-500' />}
+			<span className='flex items-center gap-1.5'>
+				<Icon size={12} className='shrink-0 opacity-60' />
+				{text}
+			</span>
+		</>
 	);
 };
 

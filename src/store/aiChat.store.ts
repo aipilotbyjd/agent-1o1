@@ -3,7 +3,6 @@ import { persist } from 'zustand/middleware';
 import { WorkflowBuilderService } from '@/api/modules/workflow-builder/workflow-builder.service';
 import { isSessionQueued } from '@/types/workflowBuilder.type';
 import type {
-	IBuilderDraft,
 	IBuilderMessage,
 	IBuilderMessageReadyEvent,
 	IBuilderSession,
@@ -11,11 +10,20 @@ import type {
 
 export type TAiChatMode = 'build' | 'ask';
 
-export type TAiToolActivity = {
-	id: string;
-	toolName: string;
-	status: 'running' | 'done' | 'error';
-};
+/**
+ * One entry in the live "scratchpad" — an ordered timeline of reasoning text
+ * and tool calls exactly as they streamed in, rendered directly (no chat
+ * bubble) the way Gumloop's builder shows its work.
+ */
+export type TAiTimelineItem =
+	| { kind: 'text'; id: string; text: string }
+	| {
+			kind: 'tool';
+			id: string;
+			toolName: string;
+			arguments: Record<string, unknown>;
+			status: 'running' | 'done' | 'error';
+	  };
 
 export type TAiChatMessage = {
 	id: string;
@@ -58,16 +66,16 @@ type TAiChatState = {
 	// The builder session id the bridge has already hydrated chat/canvas from.
 	hydratedSessionId: string | null;
 
-	// A draft the backend just generated, held for review instead of applied
-	// straight to the canvas — see setPendingDraft/clearPendingDraft.
-	pendingDraft: IBuilderDraft | null;
-	pendingDraftMessageId: string | null;
+	// Live reply-in-progress: an ordered timeline of reasoning text and tool
+	// calls, exactly as they streamed in. The canvas is live-applied per tool
+	// call by the bridge as this grows — see useAiBuilderBridge. Reset on every
+	// new prompt and once the reply lands (success, failure, or stop).
+	streamTimeline: TAiTimelineItem[];
 
-	// Live reply-in-progress, filled by text_delta/tool_call/tool_result events
-	// ahead of the final builder.message.ready. Reset whenever a new prompt goes
-	// out and whenever the reply lands (success or failure).
-	streamingText: string;
-	toolActivity: TAiToolActivity[];
+	// Assistant message ids to silently ignore if they arrive after a stop —
+	// the backend job isn't actually cancelled (no cancel endpoint exists), so
+	// this is what makes "stop" not un-do itself later.
+	ignoredMessageIds: Set<string>;
 
 	// Set by the editor once route params are known so the store can call the API.
 	setBuilderContext: (workspaceId: string | null, workflowId?: string | null) => void;
@@ -78,7 +86,7 @@ type TAiChatState = {
 
 	// Called by the realtime bridge as a reply streams in.
 	appendTextDelta: (delta: string) => void;
-	pushToolCall: (id: string, toolName: string) => void;
+	pushToolCall: (id: string, toolName: string, args: Record<string, unknown>) => void;
 	resolveToolResult: (id: string, successful: boolean) => void;
 
 	// Called by the realtime bridge when the backend finishes processing.
@@ -87,10 +95,8 @@ type TAiChatState = {
 	// Rebuilds chat state from the authoritative backend session (on reload/resume).
 	hydrateFromBackend: (session: IBuilderSession) => void;
 
-	// Holds a freshly generated draft for review; the panel renders Apply/Discard
-	// against it instead of the bridge silently writing it to the canvas.
-	setPendingDraft: (draft: IBuilderDraft, messageId: string) => void;
-	clearPendingDraft: () => void;
+	/** Soft stop — hides the in-flight reply and ignores it if it lands later. */
+	stopThinking: () => void;
 
 	setThinking: (thinking: boolean) => void;
 	resetChat: () => void;
@@ -191,10 +197,8 @@ export const useAiChatStore = create<TAiChatState>()(
 			workflowId: null,
 			sessionByWorkflow: {},
 			hydratedSessionId: null,
-			pendingDraft: null,
-			pendingDraftMessageId: null,
-			streamingText: '',
-			toolActivity: [],
+			streamTimeline: [],
+			ignoredMessageIds: new Set(),
 
 			setBuilderContext: (workspaceId, workflowId) =>
 				set((state) => {
@@ -219,8 +223,7 @@ export const useAiChatStore = create<TAiChatState>()(
 									isChatActive: false,
 									workflowBuildStep: 0,
 									errorText: null,
-									streamingText: '',
-									toolActivity: [],
+									streamTimeline: [],
 								}
 							: {}),
 					};
@@ -244,8 +247,7 @@ export const useAiChatStore = create<TAiChatState>()(
 					errorText: null,
 					workflowBuildStep: 0,
 					builderSessionId: null, // fresh conversation → new backend session
-					streamingText: '',
-					toolActivity: [],
+					streamTimeline: [],
 					messages,
 					sessions: syncActiveSessionIntoList(state.sessions, state.activeSessionId, messages),
 				}));
@@ -269,8 +271,7 @@ export const useAiChatStore = create<TAiChatState>()(
 					isChatActive: true,
 					isThinking: true,
 					errorText: null,
-					streamingText: '',
-					toolActivity: [],
+					streamTimeline: [],
 					messages,
 					sessions: syncActiveSessionIntoList(state.sessions, state.activeSessionId, messages),
 				}));
@@ -328,19 +329,35 @@ export const useAiChatStore = create<TAiChatState>()(
 				});
 			},
 
-			appendTextDelta: (delta) => set((state) => ({ streamingText: state.streamingText + delta })),
+			appendTextDelta: (delta) =>
+				set((state) => {
+					const timeline = state.streamTimeline;
+					const last = timeline[timeline.length - 1];
+					if (last && last.kind === 'text') {
+						return {
+							streamTimeline: [
+								...timeline.slice(0, -1),
+								{ ...last, text: last.text + delta },
+							],
+						};
+					}
+					return { streamTimeline: [...timeline, { kind: 'text', id: makeId(), text: delta }] };
+				}),
 
-			pushToolCall: (id, toolName) =>
+			pushToolCall: (id, toolName, args) =>
 				set((state) => ({
-					toolActivity: [...state.toolActivity, { id, toolName, status: 'running' }],
+					streamTimeline: [
+						...state.streamTimeline,
+						{ kind: 'tool', id, toolName, arguments: args, status: 'running' },
+					],
 				})),
 
 			resolveToolResult: (id, successful) =>
 				set((state) => ({
-					toolActivity: state.toolActivity.map((activity) =>
-						activity.id === id
-							? { ...activity, status: successful ? 'done' : 'error' }
-							: activity,
+					streamTimeline: state.streamTimeline.map((item) =>
+						item.kind === 'tool' && item.id === id
+							? { ...item, status: successful ? 'done' : 'error' }
+							: item,
 					),
 				})),
 
@@ -355,7 +372,7 @@ export const useAiChatStore = create<TAiChatState>()(
 				set((state) => {
 					// Avoid duplicating a message we've already appended.
 					if (state.messages.some((m) => m.id === assistantMsg.id)) {
-						return { isThinking: false, streamingText: '', toolActivity: [] };
+						return { isThinking: false, streamTimeline: [] };
 					}
 					const messages = [...state.messages, assistantMsg];
 					return {
@@ -364,8 +381,7 @@ export const useAiChatStore = create<TAiChatState>()(
 						builderSessionId: event.session.id,
 						pendingMessageId: null,
 						workflowBuildStep: (event.draft?.nodes?.length ?? 0) > 0 ? 3 : 0,
-						streamingText: '',
-						toolActivity: [],
+						streamTimeline: [],
 						messages,
 						sessions: syncActiveSessionIntoList(state.sessions, state.activeSessionId, messages),
 					};
@@ -389,8 +405,7 @@ export const useAiChatStore = create<TAiChatState>()(
 						isThinking: false,
 						errorText: text,
 						pendingMessageId: null,
-						streamingText: '',
-						toolActivity: [],
+						streamTimeline: [],
 						messages,
 						sessions: syncActiveSessionIntoList(state.sessions, state.activeSessionId, messages),
 					};
@@ -424,10 +439,18 @@ export const useAiChatStore = create<TAiChatState>()(
 				}));
 			},
 
-			setPendingDraft: (draft, messageId) =>
-				set({ pendingDraft: draft, pendingDraftMessageId: messageId }),
-
-			clearPendingDraft: () => set({ pendingDraft: null, pendingDraftMessageId: null }),
+			stopThinking: () => {
+				set((state) => {
+					const nextIgnored = new Set(state.ignoredMessageIds);
+					if (state.pendingMessageId) nextIgnored.add(state.pendingMessageId);
+					return {
+						isThinking: false,
+						pendingMessageId: null,
+						streamTimeline: [],
+						ignoredMessageIds: nextIgnored,
+					};
+				});
+			},
 
 			setThinking: (thinking) => set({ isThinking: thinking }),
 
@@ -438,10 +461,7 @@ export const useAiChatStore = create<TAiChatState>()(
 					workflowBuildStep: 0,
 					errorText: null,
 					builderSessionId: null,
-					pendingDraft: null,
-					pendingDraftMessageId: null,
-					streamingText: '',
-					toolActivity: [],
+					streamTimeline: [],
 					messages,
 					sessions: syncActiveSessionIntoList(state.sessions, state.activeSessionId, messages),
 				}));
@@ -454,10 +474,7 @@ export const useAiChatStore = create<TAiChatState>()(
 					workflowBuildStep: 0,
 					errorText: null,
 					builderSessionId: null,
-					pendingDraft: null,
-					pendingDraftMessageId: null,
-					streamingText: '',
-					toolActivity: [],
+					streamTimeline: [],
 					messages: [WELCOME_MESSAGE],
 				});
 			},
@@ -474,10 +491,7 @@ export const useAiChatStore = create<TAiChatState>()(
 						builderSessionId: null,
 						pendingMessageId: null,
 						hydratedSessionId: null,
-						pendingDraft: null,
-						pendingDraftMessageId: null,
-						streamingText: '',
-						toolActivity: [],
+						streamTimeline: [],
 						sessionByWorkflow: rest,
 						messages: [WELCOME_MESSAGE],
 						activeSessionId: makeSessionId(),
@@ -496,10 +510,7 @@ export const useAiChatStore = create<TAiChatState>()(
 					workflowBuildStep: 0,
 					errorText: null,
 					builderSessionId: null, // continuing an old chat starts a fresh backend session
-					pendingDraft: null,
-					pendingDraftMessageId: null,
-					streamingText: '',
-					toolActivity: [],
+					streamTimeline: [],
 				});
 			},
 
