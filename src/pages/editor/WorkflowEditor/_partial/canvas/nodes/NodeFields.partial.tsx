@@ -11,9 +11,11 @@ type Props = {
 	nodeId: string;
 	fields: TNodeField[];
 	values: Record<string, unknown>;
+	/** Skip the "Show More Options" collapse and render every field up front. */
+	forceExpanded?: boolean;
 };
 
-const NodeFields = ({ nodeId, fields, values }: Props) => {
+const NodeFields = ({ nodeId, fields, values, forceExpanded }: Props) => {
 	const { dispatch } = useWorkflowEditor();
 	const [expanded, setExpanded] = useState(false);
 
@@ -35,7 +37,7 @@ const NodeFields = ({ nodeId, fields, values }: Props) => {
 
 	if (fields.length === 0) return null;
 
-	const visible = expanded ? [...always, ...extra] : always;
+	const visible = forceExpanded || expanded ? [...always, ...extra] : always;
 
 	return (
 		<div
@@ -67,7 +69,7 @@ const NodeFields = ({ nodeId, fields, values }: Props) => {
 				</div>
 			))}
 
-			{extra.length > 0 && (
+			{!forceExpanded && extra.length > 0 && (
 				<button
 					type='button'
 					onClick={() => setExpanded((value) => !value)}

@@ -96,7 +96,7 @@ const Canvas = () => {
 		flowPosition: { x: number; y: number };
 	} | null>(null);
 
-	const { isDraggingNode, onDragOver, onDragLeave, onDrop } = useCanvasDrop((event) =>
+	const { onDragOver, onDragLeave, onDrop } = useCanvasDrop((event) =>
 		reactFlow.screenToFlowPosition({ x: event.clientX, y: event.clientY }),
 	);
 	const validationIssues = useMemo(
@@ -425,9 +425,6 @@ const Canvas = () => {
 				<CanvasEmptyState />
 			) : (
 				<CanvasStats nodes={state.nodes.length} edges={state.edges.length} />
-			)}
-			{isDraggingNode && (
-				<div className='pointer-events-none absolute inset-4 rounded-2xl border-2 border-dashed border-primary-500/70 bg-primary-400/10' />
 			)}
 			<CanvasSearch />
 			<NodeDocumentationPanel />

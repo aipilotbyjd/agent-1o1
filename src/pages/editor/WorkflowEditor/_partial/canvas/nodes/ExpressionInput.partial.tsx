@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { Braces, CornerDownLeft } from 'lucide-react';
+import { CornerDownLeft } from 'lucide-react';
 import { useWorkflowEditor } from '../../../_context/WorkflowEditorProvider.context';
 import { collectUpstreamVariables } from '../../../_helper/variables.helper';
 import { getTokenFromDrop, TOKEN_DND_MIME } from '../../../_helper/tokenDrag.helper';
@@ -20,12 +20,12 @@ type TSegment = { type: 'text'; value: string } | { type: 'token'; value: string
 
 const TOKEN_RE = /\{\{.*?\}\}/g;
 
-// Full Tailwind class strings (kept as literals so the JIT compiler emits them)
-// for the chips we inject into the contentEditable surface as raw HTML.
+// Structural class only — color comes from the source node's own accent color
+// (set via inline style) so a chip visually matches where its value comes from.
 const CHIP_CLS =
-	'mx-0.5 inline-flex items-center gap-1 rounded-md border border-emerald-300/70 bg-emerald-50 px-1.5 py-0.5 align-middle text-[10px] font-semibold text-emerald-700 select-none dark:border-emerald-800 dark:bg-emerald-950/50 dark:text-emerald-300';
-const CHIP_X_CLS =
-	'ml-0.5 cursor-pointer rounded-full px-0.5 text-emerald-500 hover:text-emerald-700 dark:hover:text-emerald-200';
+	'mx-0.5 inline-flex items-center gap-1 rounded-md border px-1.5 py-0.5 align-middle text-[10px] font-semibold select-none';
+const CHIP_X_CLS = 'ml-0.5 cursor-pointer rounded-full px-0.5 opacity-70 hover:opacity-100';
+const DEFAULT_CHIP_COLOR = '#10b981';
 
 const prettify = (raw: string) =>
 	raw.replace(/[_-]+/g, ' ').replace(/\b\w/g, (letter) => letter.toUpperCase());
@@ -99,10 +99,10 @@ const ExpressionInput = ({ field, value, onChange, compact, nodeId, className }:
 		[nodeId, state.nodes, state.edges],
 	);
 
-	// token → upstream node label, so a chip can show where the value comes from.
+	// token → upstream node label + color, so a chip can show where the value comes from.
 	const tokenNode = useMemo(() => {
-		const map = new Map<string, string>();
-		variables.forEach((v) => map.set(v.token, v.nodeLabel));
+		const map = new Map<string, { label: string; color: string }>();
+		variables.forEach((v) => map.set(v.token, { label: v.nodeLabel, color: v.nodeColor }));
 		return map;
 	}, [variables]);
 
@@ -133,11 +133,13 @@ const ExpressionInput = ({ field, value, onChange, compact, nodeId, className }:
 		const name = inner.split('.').pop() ?? inner;
 		const node = tokenNode.get(token);
 		const label = prettify(name);
-		const title = `${node ? `${node} / ` : ''}${label}`;
+		const title = `${node ? `${node.label} / ` : ''}${label}`;
+		const color = node?.color ?? DEFAULT_CHIP_COLOR;
+		const style = `border-color:${color}55;background-color:${color}1a;color:${color};`;
 		return (
-			`<span data-token="${escapeAttr(token)}" contenteditable="false" title="${escapeAttr(title)}" class="${CHIP_CLS}">` +
+			`<span data-token="${escapeAttr(token)}" contenteditable="false" title="${escapeAttr(title)}" style="${style}" class="${CHIP_CLS}">` +
 			(node
-				? `<span class="max-w-[80px] truncate opacity-60">${escapeHtml(node)}</span><span class="opacity-30">/</span>`
+				? `<span class="max-w-[80px] truncate opacity-60">${escapeHtml(node.label)}</span><span class="opacity-30">/</span>`
 				: '') +
 			`<span class="max-w-[120px] truncate">${escapeHtml(label)}</span>` +
 			`<span data-remove="1" class="${CHIP_X_CLS}">×</span>` +
@@ -364,10 +366,13 @@ const ExpressionInput = ({ field, value, onChange, compact, nodeId, className }:
 								}}
 								className={`flex w-full items-center gap-2 px-2.5 py-1.5 text-left ${
 									index === activeIndex
-										? 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300'
+										? 'bg-zinc-100 dark:bg-zinc-800'
 										: 'text-zinc-700 hover:bg-zinc-50 dark:text-zinc-300 dark:hover:bg-zinc-800'
 								}`}>
-								<Braces size={11} className='shrink-0 text-emerald-500' />
+								<span
+									className='h-2 w-2 shrink-0 rounded-full'
+									style={{ backgroundColor: variable.nodeColor }}
+								/>
 								<span className='truncate font-medium'>{variable.nodeLabel}</span>
 								<span className='ml-auto truncate font-mono text-[10px] text-zinc-400'>
 									.{variable.outputId}

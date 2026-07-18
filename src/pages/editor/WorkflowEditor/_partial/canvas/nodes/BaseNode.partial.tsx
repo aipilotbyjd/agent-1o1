@@ -32,7 +32,7 @@ import NodeToolbar from './NodeToolbar.partial';
 import NodeIOPanel from './NodeIOPanel.partial';
 import NodeLoopToggle from './NodeLoopToggle.partial';
 import NodeAuthWarning from './NodeAuthWarning.partial';
-import { tintStyle } from '../../library/library.util';
+import { tintStyle, getNodeAccentColor } from '../../library/library.util';
 import { PORT_TYPE_COLOR } from '../../../_helper/builder.constants';
 import { useWorkflowEditor } from '../../../_context/WorkflowEditorProvider.context';
 import type { TCanvasNode } from '../../../_types/canvas.type';
@@ -136,11 +136,17 @@ const BaseNode = ({ id, data, selected }: NodeProps<TCanvasNode>) => {
 					? sourceDef.outputs
 					: [{ id: 'out', name: 'output', type: 'any' as const }];
 			const sourceLabel = sourceNode.data.label || sourceDef?.label || 'Node';
+			const sourceColor = getNodeAccentColor(
+				sourceId,
+				sourceNode.data.color as string | undefined,
+				sourceDef?.colorHex,
+			);
 			return sourceOutputs.map((port) => ({
 				id: `${sourceId}:${port.id}`,
 				sourceId,
 				port,
 				sourceLabel,
+				sourceColor,
 			}));
 		});
 	const nodeIndex = state.nodes.findIndex((node) => node.id === id) + 1;
@@ -156,7 +162,7 @@ const BaseNode = ({ id, data, selected }: NodeProps<TCanvasNode>) => {
 	const comments = (data.comments ?? []) as TNodeComment[];
 
 	const NodeIcon = iconMap[data.defKey as keyof typeof iconMap];
-	const effectiveColorHex = (data.color as string | undefined) ?? def?.colorHex;
+	const effectiveColorHex = getNodeAccentColor(id, data.color as string | undefined, def?.colorHex);
 
 	const brand = (def?.key.split('.')[0] ?? def?.category ?? 'node')
 		.replace(/[_-]+/g, ' ')
@@ -165,12 +171,17 @@ const BaseNode = ({ id, data, selected }: NodeProps<TCanvasNode>) => {
 
 	const durationMs = typeof data.durationMs === 'number' ? data.durationMs : undefined;
 
+	const colorRing = data.color ? `, 0 0 0 3px ${data.color}14` : '';
+	const baseShadow = `0 1px 2px rgba(24,24,27,0.04), 0 12px 28px -8px rgba(24,24,27,0.14)${colorRing}`;
+	const hoverShadow = `0 2px 4px rgba(24,24,27,0.05), 0 22px 44px -10px rgba(24,24,27,0.22)${colorRing}`;
+
 	return (
 		<motion.div
-			whileHover={{ y: -1 }}
-			transition={{ duration: 0.14 }}
+			animate={{ boxShadow: baseShadow }}
+			whileHover={{ y: -2, boxShadow: hoverShadow }}
+			transition={{ duration: 0.18 }}
 			className={[
-				'group relative w-[320px] rounded-xl border p-0.5 text-left shadow-sm transition-all duration-200 hover:shadow-md',
+				'group relative w-[320px] rounded-[26px] border p-1.5 text-left ring-1 ring-inset ring-white/60 dark:ring-white/[0.03]',
 				'bg-white text-zinc-950 dark:bg-zinc-950 dark:text-zinc-100',
 				selected
 					? 'border-primary-500 ring-2 ring-primary-500/15 dark:border-primary-500'
@@ -179,11 +190,7 @@ const BaseNode = ({ id, data, selected }: NodeProps<TCanvasNode>) => {
 				isActiveRunNode ? 'ring-2 ring-emerald-400/20' : '',
 				data.breakpoint ? 'ring-2 ring-rose-500/40' : '',
 			].join(' ')}
-			style={
-				data.color
-					? { borderColor: data.color, boxShadow: `0 0 0 3px ${data.color}14` }
-					: undefined
-			}>
+			style={{ borderColor: data.color }}>
 			<PortHandles ports={inputs} type='target' color={effectiveColorHex} />
 
 			{/* Breakpoint indicator */}
@@ -211,7 +218,7 @@ const BaseNode = ({ id, data, selected }: NodeProps<TCanvasNode>) => {
 			{needsAuth && <NodeAuthWarning />}
 
 			<div
-				className='rounded-lg p-2.5'
+				className='rounded-2xl p-3.5 shadow-[inset_0_1px_2px_rgba(24,24,27,0.03)] dark:shadow-[inset_0_1px_2px_rgba(0,0,0,0.25)]'
 				style={{
 					backgroundColor: effectiveColorHex
 						? `${effectiveColorHex}0d`
@@ -219,9 +226,9 @@ const BaseNode = ({ id, data, selected }: NodeProps<TCanvasNode>) => {
 							? profilerColor(durationMs)
 							: undefined,
 				}}>
-				<div className='flex items-start gap-2.5'>
+				<div className='flex items-start gap-3'>
 					<div
-						className='flex h-9 w-9 shrink-0 items-center justify-center rounded-lg'
+						className='flex h-9 w-9 shrink-0 items-center justify-center rounded-xl shadow-sm'
 						style={tintStyle(effectiveColorHex)}>
 						{NodeIcon ? (
 							<NodeIcon size={17} strokeWidth={2.25} />
@@ -230,8 +237,8 @@ const BaseNode = ({ id, data, selected }: NodeProps<TCanvasNode>) => {
 						)}
 					</div>
 
-					<div className='min-w-0 flex-1'>
-						<div className='mb-0.5 flex items-center justify-between gap-2'>
+					<div className='min-w-0 flex-1 pr-7'>
+						<div className='mb-1 flex items-center justify-between gap-2'>
 							<span className='flex min-w-0 items-center gap-1'>
 								<span className='truncate text-[10px] font-semibold tracking-wide text-zinc-500 uppercase dark:text-zinc-400'>
 									{brand}
@@ -248,80 +255,81 @@ const BaseNode = ({ id, data, selected }: NodeProps<TCanvasNode>) => {
 									<Info size={10} />
 								</button>
 							</span>
-							{def?.supportsLoopMode && (
-								<NodeLoopToggle nodeId={id} active={Boolean(data.loopMode)} />
-							)}
-							<span
-								className={[
-									'inline-flex shrink-0 items-center gap-1 rounded-full px-1.5 py-0.5 text-[9px] font-semibold tracking-wide uppercase',
-									statusClass[status],
-									isActiveRunNode ? 'ring-1 ring-emerald-400/50' : '',
-								].join(' ')}>
-								{status === 'running' && (
-									<Loader2 size={9} className='animate-spin' />
+							<span className='flex shrink-0 items-center gap-1.5'>
+								{def?.supportsLoopMode && (
+									<NodeLoopToggle nodeId={id} active={Boolean(data.loopMode)} />
 								)}
-								{status === 'success' && <CheckCircle2 size={9} />}
-								{status}
-							</span>
-							{data.pinned && (
+								{data.pinned && (
+									<span
+										title='Output pinned — reused on re-run'
+										className='flex h-4 w-4 items-center justify-center rounded-full bg-amber-100 text-amber-600 dark:bg-amber-950/40 dark:text-amber-400'>
+										<Pin size={9} />
+									</span>
+								)}
 								<span
-									title='Output pinned — reused on re-run'
-									className='inline-flex shrink-0 items-center gap-1 rounded-full bg-amber-100 px-1.5 py-0.5 text-[9px] font-semibold tracking-wide text-amber-600 uppercase dark:bg-amber-950/40 dark:text-amber-400'>
-									<Pin size={9} />
-									Pinned
+									className={[
+										'inline-flex shrink-0 items-center gap-1 rounded-full px-1.5 py-0.5 text-[9px] font-semibold tracking-wide uppercase',
+										statusClass[status],
+										isActiveRunNode ? 'ring-1 ring-emerald-400/50' : '',
+									].join(' ')}>
+									{status === 'running' && (
+										<Loader2 size={9} className='animate-spin' />
+									)}
+									{status === 'success' && <CheckCircle2 size={9} />}
+									{status}
 								</span>
-							)}
+							</span>
 						</div>
-						<div className='truncate text-[13px] font-semibold tracking-tight text-zinc-900 dark:text-zinc-100'>
+						<div className='truncate text-[14px] font-bold tracking-tight text-zinc-900 dark:text-zinc-100'>
 							{data.label || def?.label || 'Node'}
 						</div>
 					</div>
+				</div>
 
-					{/* Node action buttons — visible on hover */}
-					<div className='flex shrink-0 items-center gap-0.5 opacity-0 transition-opacity duration-150 group-hover:opacity-100'>
-						<button
-							type='button'
-							title={collapsed ? 'Expand node' : 'Collapse node'}
-							onClick={(e) => {
-								e.stopPropagation();
-								dispatch({ type: 'TOGGLE_NODE_COLLAPSED', id });
-							}}
-							className='flex h-6 w-6 items-center justify-center rounded text-zinc-400 transition hover:bg-primary-100 hover:text-primary-600 dark:hover:bg-primary-900/40 dark:hover:text-primary-400'>
-							{collapsed ? <ChevronsUpDown size={13} /> : <ChevronsDownUp size={13} />}
-						</button>
-						<button
-							type='button'
-							title='Expand node configuration'
-							onClick={(e) => {
-								e.stopPropagation();
-								dispatch({ type: 'SET_NODE_EXPANDED', open: true, nodeId: id });
-							}}
-							className='flex h-6 w-6 items-center justify-center rounded text-zinc-400 transition hover:bg-primary-100 hover:text-primary-600 dark:hover:bg-primary-900/40 dark:hover:text-primary-400'>
-							<Maximize2 size={13} />
-						</button>
-						<NodeColorPicker
-							nodeId={id}
-							currentColor={data.color as string | undefined}
-						/>
-						<NodeCommentsPanel nodeId={id} comments={comments} />
-					</div>
+				{/* Node action toolbar — floats in the corner, revealed on hover */}
+				<div className='absolute top-2.5 right-2.5 z-10 flex items-center gap-0.5 rounded-xl border border-zinc-200/80 bg-white/95 p-0.5 opacity-0 shadow-sm backdrop-blur-sm transition-opacity duration-150 group-hover:opacity-100 dark:border-zinc-700/80 dark:bg-zinc-900/95'>
+					<button
+						type='button'
+						title={collapsed ? 'Expand node' : 'Collapse node'}
+						onClick={(e) => {
+							e.stopPropagation();
+							dispatch({ type: 'TOGGLE_NODE_COLLAPSED', id });
+						}}
+						className='flex h-6 w-6 items-center justify-center rounded text-zinc-400 transition hover:bg-primary-100 hover:text-primary-600 dark:hover:bg-primary-900/40 dark:hover:text-primary-400'>
+						{collapsed ? <ChevronsUpDown size={13} /> : <ChevronsDownUp size={13} />}
+					</button>
+					<button
+						type='button'
+						title='Expand node configuration'
+						onClick={(e) => {
+							e.stopPropagation();
+							dispatch({ type: 'SET_NODE_EXPANDED', open: true, nodeId: id });
+						}}
+						className='flex h-6 w-6 items-center justify-center rounded text-zinc-400 transition hover:bg-primary-100 hover:text-primary-600 dark:hover:bg-primary-900/40 dark:hover:text-primary-400'>
+						<Maximize2 size={13} />
+					</button>
+					<NodeColorPicker
+						nodeId={id}
+						currentColor={data.color as string | undefined}
+					/>
+					<NodeCommentsPanel nodeId={id} comments={comments} />
 				</div>
 
 				{!collapsed && (
-					<div className='mt-1.5 text-[10px] leading-tight text-zinc-500 dark:text-zinc-400'>
+					<div className='mt-2 text-[10px] leading-tight text-zinc-500 dark:text-zinc-400'>
 						{def?.description}
 					</div>
 				)}
 
 				{!collapsed && def && def.fields.length > 0 && (
-					<div className='mt-3'>
+					<div className='mt-4'>
 						<NodeFields nodeId={id} fields={def.fields} values={data.values} />
 					</div>
 				)}
 
 				{/* Execution profiler */}
 				{durationMs !== undefined && (
-					<div className='mt-2.5 flex items-center gap-1.5'>
+					<div className='mt-3 flex items-center gap-1.5'>
 						<Circle
 							size={7}
 							fill={
@@ -354,7 +362,7 @@ const BaseNode = ({ id, data, selected }: NodeProps<TCanvasNode>) => {
 
 
 			{isActiveRunNode && (
-				<div className='absolute inset-0 -z-10 rounded-xl bg-emerald-400/15 blur-xl' />
+				<div className='absolute inset-0 -z-10 rounded-[26px] bg-emerald-400/15 blur-xl' />
 			)}
 			<PortHandles ports={outputs} type='source' color={effectiveColorHex} />
 
@@ -378,7 +386,7 @@ const BaseNode = ({ id, data, selected }: NodeProps<TCanvasNode>) => {
 					fields={def?.fields ?? []}
 				/>
 
-				<NodeIOPanel nodeId={id} incoming={incoming} outputs={outputs} />
+				<NodeIOPanel nodeId={id} nodeColor={effectiveColorHex} incoming={incoming} outputs={outputs} />
 			</div>
 
 		</motion.div>

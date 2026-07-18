@@ -1,9 +1,11 @@
 import { getNodeDefinition } from './nodeCatalog.constants';
+import { getNodeAccentColor } from '../_partial/library/library.util';
 import type { TCanvasEdge, TCanvasNode } from '../_types/canvas.type';
 
 export type TWorkflowVariable = {
 	nodeId: string;
 	nodeLabel: string;
+	nodeColor: string;
 	outputId: string;
 	token: string;
 };
@@ -34,9 +36,11 @@ export const collectUpstreamVariables = (
 
 	return upstream.flatMap((node) => {
 		const def = getNodeDefinition(node.data.defKey, node.data.definition);
+		const nodeColor = getNodeAccentColor(node.id, node.data.color as string | undefined, def?.colorHex);
 		return (def?.outputs ?? []).map((output) => ({
 			nodeId: node.id,
 			nodeLabel: node.data.label,
+			nodeColor,
 			outputId: output.id,
 			// Id-based, stable reference the backend resolver understands
 			// (`{{ node_2.output.city }}`). The friendly label is display-only —

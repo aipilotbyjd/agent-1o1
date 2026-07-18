@@ -14,11 +14,15 @@ export type TIncomingInput = {
 	port: TNodePort;
 	/** Label of the upstream node the value comes from. */
 	sourceLabel: string;
+	/** Accent color identifying the upstream node, so its inputs read apart from other sources. */
+	sourceColor: string;
 };
 
 type Props = {
 	/** Id of the node these ports belong to — the source of dragged output tokens. */
 	nodeId: string;
+	/** This node's own accent color — tints its Outputs section. */
+	nodeColor: string;
 	/** Outputs from other nodes wired into this node's inputs. */
 	incoming: TIncomingInput[];
 	outputs: TNodePort[];
@@ -34,11 +38,21 @@ const portColor = (port: TNodePort) => PORT_TYPE_COLOR[port.type] ?? PORT_TYPE_C
 
 /** Group incoming inputs by their upstream node, preserving first-seen order. */
 const groupBySource = (incoming: TIncomingInput[]) => {
-	const groups: { sourceId: string; sourceLabel: string; items: TIncomingInput[] }[] = [];
+	const groups: {
+		sourceId: string;
+		sourceLabel: string;
+		sourceColor: string;
+		items: TIncomingInput[];
+	}[] = [];
 	for (const item of incoming) {
 		let group = groups.find((entry) => entry.sourceId === item.sourceId);
 		if (!group) {
-			group = { sourceId: item.sourceId, sourceLabel: item.sourceLabel, items: [] };
+			group = {
+				sourceId: item.sourceId,
+				sourceLabel: item.sourceLabel,
+				sourceColor: item.sourceColor,
+				items: [],
+			};
 			groups.push(group);
 		}
 		group.items.push(item);
@@ -124,7 +138,7 @@ const CountBadge = ({ count, tone }: { count: number; tone: 'in' | 'out' | 'mute
  * draggable tokens tinted by port type. Each section filters and scrolls
  * independently so a long list never floods the canvas.
  */
-const NodeIOPanel = ({ nodeId, incoming, outputs }: Props) => {
+const NodeIOPanel = ({ nodeId, nodeColor, incoming, outputs }: Props) => {
 	const [collapsed, setCollapsed] = useState<Record<string, boolean>>({});
 	const [inputQuery, setInputQuery] = useState('');
 	const [outputQuery, setOutputQuery] = useState('');
@@ -186,7 +200,7 @@ const NodeIOPanel = ({ nodeId, incoming, outputs }: Props) => {
 							{groups.length === 0 ? (
 								<NoMatch query={inputQuery} />
 							) : (
-								<div className='flex max-h-[300px] flex-col gap-3 overflow-y-auto pr-1'>
+								<div className='nowheel flex max-h-[300px] flex-col gap-3 overflow-y-auto pr-1'>
 									{groups.map((group) => {
 										const isCollapsed = collapsed[group.sourceId];
 										return (
@@ -200,6 +214,10 @@ const NodeIOPanel = ({ nodeId, incoming, outputs }: Props) => {
 														className={`shrink-0 text-zinc-400 transition-transform dark:text-zinc-500 ${
 															isCollapsed ? '' : 'rotate-90'
 														}`}
+													/>
+													<span
+														className='h-2 w-2 shrink-0 rounded-full'
+														style={{ backgroundColor: group.sourceColor }}
 													/>
 													<span className='truncate text-[10px] font-bold tracking-wide text-zinc-500 uppercase dark:text-zinc-400'>
 														{group.sourceLabel}
@@ -215,6 +233,7 @@ const NodeIOPanel = ({ nodeId, incoming, outputs }: Props) => {
 																key={id}
 																port={port}
 																sourceId={group.sourceId}
+																color={group.sourceColor}
 																title={`Drag "${portLabel(port)}" from "${group.sourceLabel}" into a field — ${port.name}: ${port.type}`}
 															/>
 														))}
@@ -264,27 +283,24 @@ const NodeIOPanel = ({ nodeId, incoming, outputs }: Props) => {
 							{filteredOutputs.length === 0 ? (
 								<NoMatch query={outputQuery} />
 							) : (
-								<div className='grid max-h-[300px] grid-cols-2 gap-1.5 overflow-y-auto pr-1'>
-									{filteredOutputs.map((port) => {
-										const color = portColor(port);
-										return (
-											<div
-												key={port.id}
-												title={`${port.name}: ${port.type}`}
-												className='relative flex items-center gap-2 overflow-hidden rounded-xl border py-2 pr-2.5 pl-3 transition'
-												style={{ borderColor: `${color}40`, backgroundColor: `${color}12` }}>
-												<span
-													className='absolute inset-y-0 left-0 w-1'
-													style={{ backgroundColor: color }}
-												/>
-												<PortTypeDot color={color} />
-												<span className='flex-1 truncate text-[11px] font-semibold text-zinc-700 dark:text-zinc-100'>
-													{portLabel(port)}
-												</span>
-												<TypeBadge port={port} />
-											</div>
-										);
-									})}
+								<div className='nowheel grid max-h-[300px] grid-cols-2 gap-1.5 overflow-y-auto pr-1'>
+									{filteredOutputs.map((port) => (
+										<div
+											key={port.id}
+											title={`${port.name}: ${port.type}`}
+											className='relative flex items-center gap-2 overflow-hidden rounded-xl border py-2 pr-2.5 pl-3 transition'
+											style={{ borderColor: `${nodeColor}40`, backgroundColor: `${nodeColor}12` }}>
+											<span
+												className='absolute inset-y-0 left-0 w-1'
+												style={{ backgroundColor: nodeColor }}
+											/>
+											<PortTypeDot color={nodeColor} />
+											<span className='flex-1 truncate text-[11px] font-semibold text-zinc-700 dark:text-zinc-100'>
+												{portLabel(port)}
+											</span>
+											<TypeBadge port={port} />
+										</div>
+									))}
 								</div>
 							)}
 						</>
@@ -299,13 +315,14 @@ const NodeIOPanel = ({ nodeId, incoming, outputs }: Props) => {
 const PortRow = ({
 	port,
 	sourceId,
+	color,
 	title,
 }: {
 	port: TNodePort;
 	sourceId: string;
+	color: string;
 	title: string;
 }) => {
-	const color = portColor(port);
 	return (
 		<div
 			draggable

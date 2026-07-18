@@ -36,7 +36,7 @@ import NodeIOPanel from './NodeIOPanel.partial';
 import NodeLoopToggle from './NodeLoopToggle.partial';
 import NodeAuthWarning from './NodeAuthWarning.partial';
 import NodeHelpTip from './NodeHelpTip.partial';
-import { tintStyle } from '../../library/library.util';
+import { tintStyle, getNodeAccentColor } from '../../library/library.util';
 
 const iconMap: Record<
 	string,
@@ -113,11 +113,17 @@ const TriggerNode = ({ id, data, selected }: NodeProps<TCanvasNode>) => {
 					? sourceDef.outputs
 					: [{ id: 'out', name: 'output', type: 'any' as const }];
 			const sourceLabel = sourceNode.data.label || sourceDef?.label || 'Node';
+			const sourceColor = getNodeAccentColor(
+				sourceId,
+				sourceNode.data.color as string | undefined,
+				sourceDef?.colorHex,
+			);
 			return sourceOutputs.map((port) => ({
 				id: `${sourceId}:${port.id}`,
 				sourceId,
 				port,
 				sourceLabel,
+				sourceColor,
 			}));
 		});
 	const nodeIndex = state.nodes.findIndex((node) => node.id === id) + 1;
@@ -159,19 +165,23 @@ const TriggerNode = ({ id, data, selected }: NodeProps<TCanvasNode>) => {
 
 	const { data: triggerDetail } = useWorkflowTriggerDetail(workspaceId, workflowId, triggerId);
 
+	const baseShadow = '0 1px 2px rgba(24,24,27,0.04), 0 12px 28px -8px rgba(24,24,27,0.14)';
+	const hoverShadow = '0 2px 4px rgba(24,24,27,0.05), 0 22px 44px -10px rgba(24,24,27,0.22)';
+
 	return (
 		<motion.div
-			whileHover={{ y: -1 }}
-			transition={{ duration: 0.14 }}
+			animate={{ boxShadow: baseShadow }}
+			whileHover={{ y: -2, boxShadow: hoverShadow }}
+			transition={{ duration: 0.18 }}
 			className={[
-				'relative w-[320px] rounded-xl border p-0.5 text-left shadow-sm transition-all duration-200 hover:shadow-md',
+				'group relative w-[320px] rounded-[26px] border p-1.5 text-left ring-1 ring-inset ring-white/60 dark:ring-white/[0.03]',
 				'bg-white text-zinc-950 dark:bg-zinc-950 dark:text-zinc-100',
 				selected
 					? 'border-primary-500 ring-2 ring-primary-500/15 dark:border-primary-500'
 					: 'border-zinc-200 dark:border-zinc-800',
 			].join(' ')}>
 			{/* Top Bar */}
-			<div className='flex items-center justify-between px-2.5 py-1.5'>
+			<div className='flex items-center justify-between px-3 py-2'>
 				<div className='flex items-center gap-1 text-[10px] font-semibold text-zinc-500'>
 					Activate as flow trigger{' '}
 					<NodeHelpTip
@@ -234,18 +244,20 @@ const TriggerNode = ({ id, data, selected }: NodeProps<TCanvasNode>) => {
 			{hasError && <NodeAuthWarning />}
 
 			{/* Main Content Area */}
-			<div className='rounded-lg p-2.5' style={{ backgroundColor: `${color}0d` }}>
+			<div
+				className='rounded-2xl p-3.5 shadow-[inset_0_1px_2px_rgba(24,24,27,0.03)] dark:shadow-[inset_0_1px_2px_rgba(0,0,0,0.25)]'
+				style={{ backgroundColor: `${color}0d` }}>
 				{/* Header */}
-				<div className='flex items-start gap-2.5'>
+				<div className='flex items-start gap-3'>
 					{/* Icon Box */}
 					<div
-						className='flex h-9 w-9 shrink-0 items-center justify-center rounded-lg'
+						className='flex h-9 w-9 shrink-0 items-center justify-center rounded-xl shadow-sm'
 						style={tintStyle(color)}>
 						<NodeIcon size={17} strokeWidth={2.25} />
 					</div>
 
 					<div className='min-w-0 flex-1'>
-						<div className='mb-0.5 flex items-center justify-between'>
+						<div className='mb-1 flex items-center justify-between'>
 							<div className='flex items-center gap-1'>
 								<span className='truncate text-[10px] font-semibold tracking-wide text-zinc-500 uppercase dark:text-zinc-400'>
 									{brand}
@@ -258,7 +270,7 @@ const TriggerNode = ({ id, data, selected }: NodeProps<TCanvasNode>) => {
 								/>
 							)}
 							</div>
-							<div className='flex items-center gap-2'>
+							<div className='flex shrink-0 items-center gap-1 rounded-md border border-zinc-200/80 bg-white/80 px-1 py-0.5 opacity-0 shadow-sm backdrop-blur-sm transition-opacity duration-150 group-hover:opacity-100 dark:border-zinc-700/80 dark:bg-zinc-900/80'>
 								{def?.supportsLoopMode && (
 									<NodeLoopToggle nodeId={id} active={Boolean(data.loopMode)} />
 								)}
@@ -270,7 +282,7 @@ const TriggerNode = ({ id, data, selected }: NodeProps<TCanvasNode>) => {
 										event.stopPropagation();
 										dispatch({ type: 'TOGGLE_NODE_COLLAPSED', id });
 									}}
-									className='nodrag text-zinc-400 transition hover:text-primary-500'>
+									className='nodrag flex h-5 w-5 items-center justify-center rounded text-zinc-400 transition hover:bg-primary-100 hover:text-primary-600 dark:hover:bg-primary-900/40 dark:hover:text-primary-400'>
 									{collapsed ? (
 										<ChevronsUpDown size={12} />
 									) : (
@@ -279,20 +291,20 @@ const TriggerNode = ({ id, data, selected }: NodeProps<TCanvasNode>) => {
 								</button>
 							</div>
 						</div>
-						<div className='truncate text-[13px] font-semibold tracking-tight text-zinc-900 dark:text-zinc-100'>
+						<div className='truncate text-[14px] font-bold tracking-tight text-zinc-900 dark:text-zinc-100'>
 							{data.label || def?.label || 'Trigger'}
 						</div>
 					</div>
 				</div>
 
 				{!collapsed && (
-					<div className='mt-1.5 text-[10px] leading-tight text-zinc-500 dark:text-zinc-400'>
+					<div className='mt-2 text-[10px] leading-tight text-zinc-500 dark:text-zinc-400'>
 						{def?.description}
 					</div>
 				)}
 
 				{!collapsed && def && def.fields.length > 0 && (
-					<div className='mt-3'>
+					<div className='mt-4'>
 						<NodeFields nodeId={id} fields={def.fields} values={data.values} />
 					</div>
 				)}
@@ -376,7 +388,7 @@ const TriggerNode = ({ id, data, selected }: NodeProps<TCanvasNode>) => {
 			)}
 
 			{selected && def && (
-				<NodeIOPanel nodeId={id} incoming={incoming} outputs={def.outputs ?? []} />
+				<NodeIOPanel nodeId={id} nodeColor={color} incoming={incoming} outputs={def.outputs ?? []} />
 			)}
 
 		</motion.div>
