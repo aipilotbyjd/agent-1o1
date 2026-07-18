@@ -72,6 +72,20 @@ import { useWorkspaceContext } from '@/context/workspaceContext';
 import { useWorkflowShellStore } from '@/store/workflowShell.store';
 import { useAgent, useCreateAgent, useUpdateAgent, useDeleteAgent } from '@/api/modules/agents';
 import { AgentService } from '@/api/modules/agents/agents.service';
+import { subscribeToAgentStream } from '@/api/modules/agents/agents.realtime';
+import { useRealtime } from '@/context/realtimeContext';
+import { XCircle, Wrench } from 'lucide-react';
+
+/** One entry in the live "scratchpad" — reasoning text or a tool call, exactly as it streamed in. */
+type TChatTimelineItem =
+	| { kind: 'text'; id: string; text: string }
+	| {
+			kind: 'tool';
+			id: string;
+			toolName: string;
+			arguments: Record<string, unknown>;
+			status: 'running' | 'done' | 'error';
+	  };
 
 interface TMessage {
 	id: string;
@@ -83,6 +97,8 @@ interface TMessage {
 	data?: any[];
 	followUp?: string;
 	actions?: { label: string; type: string }[];
+	/** What the agent did to produce this reply — kept collapsible under the finished message. */
+	timeline?: TChatTimelineItem[];
 }
 
 /** Markdown rendering for agent replies, sized for this page's chat bubble type scale. */
@@ -115,6 +131,49 @@ const mdComponents: Components = {
 	),
 };
 
+const prettifyToolName = (raw: string) =>
+	raw.replace(/[_-]+/g, ' ').replace(/\b\w/g, (letter) => letter.toUpperCase());
+
+/** One tool-call line in the live scratchpad or a finished message's collapsed steps. */
+const ToolStepLine = ({
+	item,
+}: {
+	item: Extract<TChatTimelineItem, { kind: 'tool' }>;
+}) => (
+	<div className='flex items-center gap-1.5 text-[12.5px] font-semibold text-zinc-500 dark:text-zinc-400'>
+		{item.status === 'running' && <Loader2 size={12} className='shrink-0 animate-spin text-primary-500' />}
+		{item.status === 'done' && <CheckCircle2 size={12} className='shrink-0 text-emerald-500' />}
+		{item.status === 'error' && <XCircle size={12} className='shrink-0 text-rose-500' />}
+		<Wrench size={12} className='shrink-0 opacity-60' />
+		<span>{prettifyToolName(item.toolName.replace(/Tool$/, ''))}</span>
+	</div>
+);
+
+/** Collapsible "N steps" summary shown above a finished agent reply — what it did to get there. */
+const TimelineSteps = ({ items, className = '' }: { items: TChatTimelineItem[]; className?: string }) => {
+	const [expanded, setExpanded] = useState(false);
+	const toolCount = items.filter((item) => item.kind === 'tool').length;
+
+	if (toolCount === 0) return null;
+
+	return (
+		<div className={`flex flex-col gap-1.5 pl-1 ${className}`}>
+			<button
+				type='button'
+				onClick={() => setExpanded((v) => !v)}
+				className='flex w-fit items-center gap-1 text-[11px] font-bold text-zinc-400 hover:text-zinc-600 dark:text-zinc-500 dark:hover:text-zinc-300'>
+				<ChevronRight size={11} className={`transition-transform ${expanded ? 'rotate-90' : ''}`} />
+				{toolCount} step{toolCount === 1 ? '' : 's'}
+			</button>
+			{expanded && (
+				<div className='flex flex-col gap-1'>
+					{items.map((item) => (item.kind === 'tool' ? <ToolStepLine key={item.id} item={item} /> : null))}
+				</div>
+			)}
+		</div>
+	);
+};
+
 const BuildPage = () => {
 	const { agentId: routeAgentId } = useParams<{ agentId?: string }>();
 	const navigate = useNavigate();
@@ -124,6 +183,15 @@ const BuildPage = () => {
 
 	const [currentAgentId, setCurrentAgentId] = useState<string | undefined>(routeAgentId);
 	const [conversationId, setConversationId] = useState<string | null>(null);
+	const { echo } = useRealtime();
+
+	// Live scratchpad for the reply currently streaming in — reset on every send.
+	const [streamTimeline, setStreamTimeline] = useState<TChatTimelineItem[]>([]);
+	const streamTimelineRef = useRef<TChatTimelineItem[]>([]);
+	const setTimeline = (updater: (prev: TChatTimelineItem[]) => TChatTimelineItem[]) => {
+		streamTimelineRef.current = updater(streamTimelineRef.current);
+		setStreamTimeline(streamTimelineRef.current);
+	};
 
 	const { data: existingAgent } = useAgent(workspaceId, currentAgentId ?? '');
 	const createAgentMutation = useCreateAgent(workspaceId);
@@ -455,29 +523,82 @@ const BuildPage = () => {
 
 		setChatHistory((prev) => [...prev, userMsg]);
 		setIsTyping(true);
+		setTimeline(() => []);
 
 		try {
 			const agentIdForRun = await ensureAgentPersisted();
 
-			const turn = conversationId
+			if (!echo) {
+				throw new Error('Realtime connection unavailable — check your connection and try again.');
+			}
+
+			const queued = conversationId
 				? await AgentService.sendMessage(workspaceId, agentIdForRun, conversationId, {
 						message: trimmed,
 					})
 				: await AgentService.createConversation(workspaceId, agentIdForRun, { message: trimmed });
 
-			if (!conversationId && turn.conversation_id) {
-				setConversationId(turn.conversation_id);
-			}
+			// The agent's reply streams live over agent.stream.{request_id} — see
+			// ProcessAgentMessageJob. We resolve once the terminal "ready" event lands.
+			await new Promise<void>((resolve, reject) => {
+				const unsubscribe = subscribeToAgentStream(echo, queued.request_id, {
+					onTextDelta: (event) => {
+						setTimeline((prev) => {
+							const last = prev[prev.length - 1];
+							if (last && last.kind === 'text') {
+								return [...prev.slice(0, -1), { ...last, text: last.text + event.delta }];
+							}
+							return [...prev, { kind: 'text', id: event.id, text: event.delta }];
+						});
+					},
+					onToolCall: (event) => {
+						setTimeline((prev) => [
+							...prev,
+							{
+								kind: 'tool',
+								id: event.tool_id,
+								toolName: event.tool_name,
+								arguments: event.arguments,
+								status: 'running',
+							},
+						]);
+					},
+					onToolResult: (event) => {
+						setTimeline((prev) =>
+							prev.map((item) =>
+								item.kind === 'tool' && item.id === event.tool_id
+									? { ...item, status: event.successful ? 'done' : 'error' }
+									: item,
+							),
+						);
+					},
+					onReady: (event) => {
+						unsubscribe();
 
-			const agentMsg: TMessage = {
-				id: 'agent-' + Date.now(),
-				sender: 'agent',
-				text: turn.response,
-				timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-				type: 'text',
-			};
-			setChatHistory((prev) => [...prev, agentMsg]);
-		} catch {
+						if (event.error) {
+							reject(new Error(event.error_message || 'The agent failed to respond.'));
+							return;
+						}
+
+						if (!conversationId && event.conversation_id) {
+							setConversationId(event.conversation_id);
+						}
+
+						const finishedTimeline = streamTimelineRef.current;
+						const agentMsg: TMessage = {
+							id: 'agent-' + Date.now(),
+							sender: 'agent',
+							text: event.response,
+							timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+							type: 'text',
+							timeline: finishedTimeline.length > 0 ? finishedTimeline : undefined,
+						};
+						setChatHistory((prev) => [...prev, agentMsg]);
+						resolve();
+					},
+				});
+			});
+		} catch (err) {
 			setChatHistory((prev) => [
 				...prev,
 				{
@@ -488,9 +609,10 @@ const BuildPage = () => {
 					type: 'text',
 				},
 			]);
-			toast.error('Failed to reach the agent.');
+			toast.error(err instanceof Error ? err.message : 'Failed to reach the agent.');
 		} finally {
 			setIsTyping(false);
+			setTimeline(() => []);
 		}
 	};
 
@@ -1092,6 +1214,11 @@ const BuildPage = () => {
 											)}
 
 											<div className='flex flex-col min-w-0'>
+												{/* What the agent did to produce this reply — collapsible steps */}
+												{!isUser && message.timeline && message.timeline.length > 0 && (
+													<TimelineSteps items={message.timeline} className='mb-1.5' />
+												)}
+
 												{/* Chat bubble */}
 												<div className={`rounded-2xl px-4 py-3 text-sm font-semibold leading-relaxed ${
 													isUser
@@ -1172,17 +1299,34 @@ const BuildPage = () => {
 							})
 						)}
 
-						{/* Typing indicator bubble */}
+						{/* Live scratchpad — reasoning + tool calls as they stream in, Gumloop-style */}
 						{isTyping && (
 							<div className='flex w-full justify-start'>
-								<div className='flex gap-3 max-w-[80%] flex-row'>
+								<div className='flex gap-3 max-w-[90%] sm:max-w-[80%] flex-row'>
 									<div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-zinc-950 text-white border dark:border-white/10 dark:bg-zinc-900`}>
 										<AgentIconComponent size={16} className={getIconColorClass(agentIconColor)} />
 									</div>
-									<div className='rounded-2xl px-4 py-3 bg-white border border-zinc-200/80 dark:bg-zinc-900/60 dark:border-zinc-800/85 rounded-tl-none shadow-2xs flex items-center justify-center gap-1.5'>
-										<div className='w-2.5 h-2.5 rounded-full bg-primary-400 animate-bounce [animation-delay:-0.3s]' />
-										<div className='w-2.5 h-2.5 rounded-full bg-primary-400 animate-bounce [animation-delay:-0.15s]' />
-										<div className='w-2.5 h-2.5 rounded-full bg-primary-400 animate-bounce' />
+									<div className='min-w-0 flex-1'>
+										{streamTimeline.length === 0 ? (
+											<div className='inline-flex items-center gap-1.5 rounded-2xl rounded-tl-none border border-zinc-200/80 bg-white px-4 py-3 dark:border-zinc-800/85 dark:bg-zinc-900/60 shadow-2xs'>
+												<div className='w-2.5 h-2.5 rounded-full bg-primary-400 animate-bounce [animation-delay:-0.3s]' />
+												<div className='w-2.5 h-2.5 rounded-full bg-primary-400 animate-bounce [animation-delay:-0.15s]' />
+												<div className='w-2.5 h-2.5 rounded-full bg-primary-400 animate-bounce' />
+											</div>
+										) : (
+											<div className='flex flex-col gap-1.5 rounded-2xl rounded-tl-none border border-zinc-200/80 bg-white px-4 py-3 text-sm leading-relaxed dark:border-zinc-800/85 dark:bg-zinc-900/60 shadow-2xs'>
+												{streamTimeline.map((item) =>
+													item.kind === 'text' ? (
+														<span key={item.id} className='whitespace-pre-line text-zinc-700 dark:text-zinc-300'>
+															{item.text}
+															<span className='ml-0.5 inline-block h-3.5 w-[2px] animate-pulse bg-current align-middle' />
+														</span>
+													) : (
+														<ToolStepLine key={item.id} item={item} />
+													),
+												)}
+											</div>
+										)}
 									</div>
 								</div>
 							</div>

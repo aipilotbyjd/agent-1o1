@@ -5,7 +5,7 @@ import type {
 	TAgent,
 	TAgentSkill,
 	TAgentConversation,
-	TAgentConversationTurn,
+	TAgentMessageQueued,
 	TSendAgentMessageDto,
 	TAgentTrigger,
 	TAgentSkillReference,
@@ -45,11 +45,11 @@ export const AgentService = {
 			.get<TApiResponse<TAgentConversation[]>>(E.conversations(ws, agentId), { signal })
 			.then(unwrap<TAgentConversation[]>),
 
-	/** Starts a conversation by sending its first message; agent replies inline. */
+	/** Queues a conversation's first message — reply streams live over `agent.stream.{request_id}`. */
 	createConversation: (ws: string, agentId: string, body: TSendAgentMessageDto) =>
 		axiosClient
-			.post<TApiResponse<TAgentConversationTurn>>(E.conversationCreate(ws, agentId), body)
-			.then(unwrap<TAgentConversationTurn>),
+			.post<TApiResponse<TAgentMessageQueued>>(E.conversationCreate(ws, agentId), body)
+			.then(unwrap<TAgentMessageQueued>),
 
 	conversationDetail: (ws: string, agentId: string, conversationId: string, signal?: AbortSignal) =>
 		axiosClient
@@ -59,6 +59,7 @@ export const AgentService = {
 	deleteConversation: (ws: string, agentId: string, conversationId: string) =>
 		axiosClient.delete(E.conversationDelete(ws, agentId, conversationId)).then(() => undefined),
 
+	/** Queues the next message in an existing conversation — reply streams live over `agent.stream.{request_id}`. */
 	sendMessage: (
 		ws: string,
 		agentId: string,
@@ -67,9 +68,9 @@ export const AgentService = {
 	) =>
 		axiosClient
 			.post<
-				TApiResponse<TAgentConversationTurn>
+				TApiResponse<TAgentMessageQueued>
 			>(E.sendMessage(ws, agentId, conversationId), body)
-			.then(unwrap<TAgentConversationTurn>),
+			.then(unwrap<TAgentMessageQueued>),
 
 	listTriggers: (ws: string, agentId: string, signal?: AbortSignal) =>
 		axiosClient

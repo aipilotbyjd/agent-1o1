@@ -65,10 +65,51 @@ export type TAgentSkill = {
 	updated_at: string;
 };
 
-/** What the conversation `store` / `sendMessage` endpoints actually return. */
-export type TAgentConversationTurn = {
+/** What the conversation `store` / `sendMessage` endpoints now return — the turn is queued, not resolved yet. */
+export type TAgentMessageQueued = {
+	request_id: string;
+};
+
+/** Streamed while ProcessAgentMessageJob runs, over the `agent.stream.{request_id}` private channel. */
+export type TAgentStreamTextDelta = {
+	id: string;
+	invocation_id: string;
+	type: 'text_delta';
+	message_id: string;
+	delta: string;
+	timestamp: string;
+};
+
+export type TAgentStreamToolCall = {
+	id: string;
+	invocation_id: string;
+	type: 'tool_call';
+	tool_id: string;
+	tool_name: string;
+	arguments: Record<string, unknown>;
+	reasoning_id: string | null;
+	timestamp: string;
+};
+
+export type TAgentStreamToolResult = {
+	id: string;
+	invocation_id: string;
+	type: 'tool_result';
+	tool_id: string;
+	tool_name: string;
+	result: unknown;
+	successful: boolean;
+	error: string | null;
+	timestamp: string;
+};
+
+/** Terminal event on the same channel — mirrors AgentMessageReady::broadcastWith(). */
+export type TAgentMessageReadyEvent = {
 	conversation_id: string | null;
 	response: string;
+	agent_id: string;
+	error: boolean;
+	error_message: string | null;
 };
 
 export type TAgentMessage = {
