@@ -241,9 +241,8 @@ const NodeIOPanel = ({ nodeId, incoming, outputs }: Props) => {
 						</span>
 						<span className='text-[12px] font-bold text-zinc-800 dark:text-zinc-100'>Outputs</span>
 						<CountBadge count={outputs.length} tone='out' />
-						<span className='ml-auto flex items-center gap-1 text-[9px] font-medium text-zinc-400 dark:text-zinc-500'>
-							<GripVertical size={10} />
-							drag to use
+						<span className='ml-auto text-[9px] font-medium text-zinc-400 dark:text-zinc-500'>
+							produced values
 						</span>
 					</div>
 
@@ -271,20 +270,12 @@ const NodeIOPanel = ({ nodeId, incoming, outputs }: Props) => {
 										return (
 											<div
 												key={port.id}
-												draggable
-												onDragStart={(event) =>
-													setTokenDragData(event.dataTransfer, buildOutputToken(nodeId, port.name))
-												}
-												title={`Drag "${portLabel(port)}" into a field to use it — ${port.name}: ${port.type}`}
-												className='nodrag group/out relative flex cursor-grab items-center gap-1.5 overflow-hidden rounded-xl border py-2 pr-2 pl-2.5 transition-all duration-150 hover:-translate-y-px hover:shadow-md active:translate-y-0 active:cursor-grabbing'
+												title={`${port.name}: ${port.type}`}
+												className='relative flex items-center gap-2 overflow-hidden rounded-xl border py-2 pr-2.5 pl-3 transition'
 												style={{ borderColor: `${color}40`, backgroundColor: `${color}12` }}>
 												<span
-													className='absolute inset-y-0 left-0 w-1 opacity-70 transition group-hover/out:opacity-100'
+													className='absolute inset-y-0 left-0 w-1'
 													style={{ backgroundColor: color }}
-												/>
-												<GripVertical
-													size={12}
-													className='shrink-0 text-zinc-400 opacity-40 transition group-hover/out:opacity-100 dark:text-zinc-500'
 												/>
 												<PortTypeDot color={color} />
 												<span className='flex-1 truncate text-[11px] font-semibold text-zinc-700 dark:text-zinc-100'>

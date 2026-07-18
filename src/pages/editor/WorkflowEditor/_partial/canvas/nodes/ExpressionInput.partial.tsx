@@ -16,23 +16,78 @@ type Props = {
 	className: string;
 };
 
+type TSegment = { type: 'text'; value: string } | { type: 'token'; value: string };
+
+const TOKEN_RE = /\{\{.*?\}\}/g;
+
+// Full Tailwind class strings (kept as literals so the JIT compiler emits them)
+// for the chips we inject into the contentEditable surface as raw HTML.
+const CHIP_CLS =
+	'mx-0.5 inline-flex items-center gap-1 rounded-md border border-emerald-300/70 bg-emerald-50 px-1.5 py-0.5 align-middle text-[10px] font-semibold text-emerald-700 select-none dark:border-emerald-800 dark:bg-emerald-950/50 dark:text-emerald-300';
+const CHIP_X_CLS =
+	'ml-0.5 cursor-pointer rounded-full px-0.5 text-emerald-500 hover:text-emerald-700 dark:hover:text-emerald-200';
+
+const prettify = (raw: string) =>
+	raw.replace(/[_-]+/g, ' ').replace(/\b\w/g, (letter) => letter.toUpperCase());
+
+const escapeHtml = (s: string) =>
+	s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+const escapeAttr = (s: string) => s.replace(/"/g, '&quot;');
+
+/** Split a value into literal-text and {{token}} segments, preserving order. */
+const splitSegments = (text: string): TSegment[] => {
+	const segments: TSegment[] = [];
+	let last = 0;
+	let match: RegExpExecArray | null;
+	TOKEN_RE.lastIndex = 0;
+	while ((match = TOKEN_RE.exec(text)) !== null) {
+		if (match.index > last) segments.push({ type: 'text', value: text.slice(last, match.index) });
+		segments.push({ type: 'token', value: match[0] });
+		last = match.index + match[0].length;
+	}
+	if (last < text.length) segments.push({ type: 'text', value: text.slice(last) });
+	return segments;
+};
+
+/** Serialize a contentEditable subtree back into the `{{token}}` string form. */
+const domToValue = (root: Node): string => {
+	let out = '';
+	root.childNodes.forEach((node) => {
+		if (node.nodeType === 3) {
+			out += node.textContent ?? '';
+		} else if (node.nodeName === 'BR') {
+			out += '\n';
+		} else {
+			const el = node as HTMLElement;
+			if (el.dataset && el.dataset.token !== undefined) {
+				out += el.dataset.token;
+			} else {
+				// Block wrappers the browser inserts on Enter start a new line.
+				if (el.nodeName === 'DIV' && out.length && !out.endsWith('\n')) out += '\n';
+				out += domToValue(el);
+			}
+		}
+	});
+	return out;
+};
+
 /**
- * Text/longtext input with {{variable}} autocomplete and a live resolved preview.
- * Variables come from upstream nodes; the preview resolves them against whatever
- * outputs (or pinned data) the most recent run produced.
+ * Inline expression editor. Renders `{{node.output.field}}` tokens as chips right
+ * inside an editable surface (Gumloop-style), so you can drag values in, type text
+ * around them, and delete a chip with Backspace or its ✕ — all in one field. The
+ * underlying value stays the `{{…}}` string, with a live resolved preview below.
  */
 const ExpressionInput = ({ field, value, onChange, compact, nodeId, className }: Props) => {
 	const { state } = useWorkflowEditor();
-	const ref = useRef<HTMLTextAreaElement | HTMLInputElement | null>(null);
+	const editorRef = useRef<HTMLDivElement | null>(null);
 	const blurTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-	// Start index of the fragment the autocomplete will replace on select — the
-	// `{{` for a brace trigger, or the `@` for the Gumloop-style `@` inserter.
+	// Start offset (in the value string) of the fragment autocomplete replaces —
+	// the `{{` for a brace trigger or the `@` for the Gumloop-style inserter.
 	const triggerStart = useRef<number>(-1);
 	const [query, setQuery] = useState<string | null>(null);
 	const [activeIndex, setActiveIndex] = useState(0);
 	const [dragOver, setDragOver] = useState(false);
 
-	// Clear any pending blur timer on unmount so we never setState after teardown.
 	useEffect(() => () => {
 		if (blurTimer.current) clearTimeout(blurTimer.current);
 	}, []);
@@ -44,8 +99,13 @@ const ExpressionInput = ({ field, value, onChange, compact, nodeId, className }:
 		[nodeId, state.nodes, state.edges],
 	);
 
-	// Build an id-keyed runtime context from the latest outputs / pinned data for
-	// live preview, matching the backend resolver's scope.
+	// token → upstream node label, so a chip can show where the value comes from.
+	const tokenNode = useMemo(() => {
+		const map = new Map<string, string>();
+		variables.forEach((v) => map.set(v.token, v.nodeLabel));
+		return map;
+	}, [variables]);
+
 	const runtimeCtx = useMemo(() => {
 		const outputs: TNodeOutputs = {};
 		state.nodes.forEach((node) => {
@@ -58,8 +118,6 @@ const ExpressionInput = ({ field, value, onChange, compact, nodeId, className }:
 	const matches = useMemo(() => {
 		if (query === null) return [];
 		const q = query.toLowerCase();
-		// Tokens are now id-based (opaque), so match against the friendly label
-		// and field name too — that's what the user actually types.
 		return variables
 			.filter((v) => `${v.nodeLabel} ${v.outputId} ${v.token}`.toLowerCase().includes(q))
 			.slice(0, 6);
@@ -69,11 +127,84 @@ const ExpressionInput = ({ field, value, onChange, compact, nodeId, className }:
 	const preview = hasTokens ? String(resolveExpressions(text, runtimeCtx) ?? '') : '';
 	const previewChanged = preview !== text;
 
-	const syncQuery = (el: HTMLTextAreaElement | HTMLInputElement) => {
-		const caret = el.selectionStart ?? el.value.length;
-		const before = el.value.slice(0, caret);
+	/** Build the HTML for one token chip. */
+	const chipHtml = (token: string) => {
+		const inner = token.replace(/^\{\{/, '').replace(/\}\}$/, '');
+		const name = inner.split('.').pop() ?? inner;
+		const node = tokenNode.get(token);
+		const label = prettify(name);
+		const title = `${node ? `${node} / ` : ''}${label}`;
+		return (
+			`<span data-token="${escapeAttr(token)}" contenteditable="false" title="${escapeAttr(title)}" class="${CHIP_CLS}">` +
+			(node
+				? `<span class="max-w-[80px] truncate opacity-60">${escapeHtml(node)}</span><span class="opacity-30">/</span>`
+				: '') +
+			`<span class="max-w-[120px] truncate">${escapeHtml(label)}</span>` +
+			`<span data-remove="1" class="${CHIP_X_CLS}">×</span>` +
+			`</span>`
+		);
+	};
 
-		// Primary trigger: an unclosed `{{` before the caret.
+	const valueToHtml = (v: string) =>
+		splitSegments(v)
+			.map((segment) => (segment.type === 'token' ? chipHtml(segment.value) : escapeHtml(segment.value)))
+			.join('');
+
+	// Render the value into the surface — but never while the user is typing in it,
+	// so we don't reset the caret. Runs on external changes (drop, remove, labels).
+	useEffect(() => {
+		const el = editorRef.current;
+		if (!el || document.activeElement === el) return;
+		const html = valueToHtml(text);
+		if (el.innerHTML !== html) el.innerHTML = html;
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [text, tokenNode]);
+
+	/** Serialized value of everything before the caret (tokens included). */
+	const beforeCaret = (): string | null => {
+		const el = editorRef.current;
+		const sel = window.getSelection();
+		if (!el || !sel || sel.rangeCount === 0 || !el.contains(sel.getRangeAt(0).endContainer)) {
+			return null;
+		}
+		const range = sel.getRangeAt(0);
+		const pre = document.createRange();
+		pre.selectNodeContents(el);
+		pre.setEnd(range.endContainer, range.endOffset);
+		const tmp = document.createElement('div');
+		tmp.appendChild(pre.cloneContents());
+		return domToValue(tmp);
+	};
+
+	const placeCaretAtEnd = (el: HTMLElement) => {
+		const range = document.createRange();
+		range.selectNodeContents(el);
+		range.collapse(false);
+		const sel = window.getSelection();
+		sel?.removeAllRanges();
+		sel?.addRange(range);
+	};
+
+	/** Push a new value, re-render the surface, and keep editing at the end. */
+	const commit = (next: string, keepFocus: boolean) => {
+		const el = editorRef.current;
+		if (el) {
+			el.innerHTML = valueToHtml(next);
+			if (keepFocus) {
+				el.focus();
+				placeCaretAtEnd(el);
+			}
+		}
+		onChange(next);
+	};
+
+	const updateQuery = () => {
+		const before = beforeCaret();
+		if (before === null) {
+			triggerStart.current = -1;
+			setQuery(null);
+			return;
+		}
 		const braceOpen = before.lastIndexOf('{{');
 		if (braceOpen !== -1 && before.indexOf('}}', braceOpen) === -1) {
 			triggerStart.current = braceOpen;
@@ -81,10 +212,6 @@ const ExpressionInput = ({ field, value, onChange, compact, nodeId, className }:
 			setActiveIndex(0);
 			return;
 		}
-
-		// Alternate trigger: an `@` at a word boundary (Gumloop-style inserter). The
-		// fragment after it may contain word chars/spaces so multi-word node labels
-		// like "HTTP Request" still match; if nothing matches, the menu just hides.
 		const at = before.lastIndexOf('@');
 		if (at !== -1 && (at === 0 || /\s/.test(before[at - 1]))) {
 			const fragment = before.slice(at + 1);
@@ -95,54 +222,63 @@ const ExpressionInput = ({ field, value, onChange, compact, nodeId, className }:
 				return;
 			}
 		}
-
 		triggerStart.current = -1;
 		setQuery(null);
 	};
 
 	const insertToken = (token: string) => {
-		const el = ref.current;
-		if (!el) return;
-		const caret = el.selectionStart ?? text.length;
+		const before = beforeCaret();
+		const caret = before === null ? text.length : before.length;
 		const start = triggerStart.current >= 0 ? triggerStart.current : caret;
 		const next = `${text.slice(0, start)}${token}${text.slice(caret)}`;
-		onChange(next);
-		setQuery(null);
 		triggerStart.current = -1;
-		requestAnimationFrame(() => {
-			el.focus();
-			const pos = start + token.length;
-			el.setSelectionRange(pos, pos);
-		});
+		setQuery(null);
+		commit(next, true);
 	};
 
-	/** Insert text at the current caret/selection (used when an output pill is dropped). */
-	const insertAtCaret = (insert: string) => {
-		const el = ref.current;
-		const caret = el?.selectionStart ?? text.length;
-		const end = el?.selectionEnd ?? caret;
-		const next = `${text.slice(0, caret)}${insert}${text.slice(end)}`;
-		onChange(next);
-		requestAnimationFrame(() => {
-			el?.focus();
-			const pos = caret + insert.length;
-			el?.setSelectionRange(pos, pos);
-		});
+	const onInput = () => {
+		const el = editorRef.current;
+		if (!el) return;
+		onChange(domToValue(el));
+		updateQuery();
 	};
 
-	const onDrop = (event: React.DragEvent<HTMLTextAreaElement | HTMLInputElement>) => {
+	const onEditorClick = (event: React.MouseEvent) => {
+		const target = event.target as HTMLElement;
+		const remove = target.closest('[data-remove]');
+		if (remove) {
+			event.preventDefault();
+			const chip = remove.closest('[data-token]');
+			const el = editorRef.current;
+			if (chip && el) {
+				chip.remove();
+				onChange(domToValue(el));
+			}
+			return;
+		}
+		updateQuery();
+	};
+
+	const onDrop = (event: React.DragEvent) => {
 		const token = getTokenFromDrop(event.dataTransfer);
 		if (!token) return;
-		// Own the insertion so neither the browser nor the canvas drop handler also runs.
 		event.preventDefault();
 		event.stopPropagation();
 		setDragOver(false);
-		insertAtCaret(token);
+		const before = beforeCaret();
+		let next: string;
+		if (before !== null) {
+			const caret = before.length;
+			next = `${text.slice(0, caret)}${token}${text.slice(caret)}`;
+		} else {
+			const needsSpace = text.length > 0 && !/\s$/.test(text);
+			next = `${text}${needsSpace ? ' ' : ''}${token}`;
+		}
+		commit(next, true);
 	};
 
-	const onDragOver = (event: React.DragEvent<HTMLTextAreaElement | HTMLInputElement>) => {
-		// Accept the drag unconditionally so the browser fires `onDrop` (some drags
-		// don't expose a readable `types` list until drop). We validate on drop.
+	const onDragOver = (event: React.DragEvent) => {
+		// Accept unconditionally so the browser fires `onDrop`; validate on drop.
 		event.preventDefault();
 		event.stopPropagation();
 		event.dataTransfer.dropEffect = 'copy';
@@ -153,57 +289,67 @@ const ExpressionInput = ({ field, value, onChange, compact, nodeId, className }:
 	};
 
 	const onKeyDown = (event: React.KeyboardEvent) => {
-		if (query === null || matches.length === 0) return;
-		if (event.key === 'ArrowDown') {
+		if (query !== null && matches.length > 0) {
+			if (event.key === 'ArrowDown') {
+				event.preventDefault();
+				setActiveIndex((i) => (i + 1) % matches.length);
+				return;
+			}
+			if (event.key === 'ArrowUp') {
+				event.preventDefault();
+				setActiveIndex((i) => (i - 1 + matches.length) % matches.length);
+				return;
+			}
+			if (event.key === 'Enter') {
+				event.preventDefault();
+				insertToken(matches[activeIndex].token);
+				return;
+			}
+			if (event.key === 'Escape') {
+				setQuery(null);
+				return;
+			}
+		}
+		// Single-line fields shouldn't accept newlines.
+		if (event.key === 'Enter' && !(field.kind === 'longtext' || field.kind === 'code')) {
 			event.preventDefault();
-			setActiveIndex((i) => (i + 1) % matches.length);
-		} else if (event.key === 'ArrowUp') {
-			event.preventDefault();
-			setActiveIndex((i) => (i - 1 + matches.length) % matches.length);
-		} else if (event.key === 'Enter') {
-			event.preventDefault();
-			insertToken(matches[activeIndex].token);
-		} else if (event.key === 'Escape') {
-			setQuery(null);
 		}
 	};
 
 	const isMultiline = field.kind === 'longtext' || field.kind === 'code';
-
-	const sharedProps = {
-		value: text,
-		placeholder: field.placeholder,
-		'aria-label': field.label,
-		className: `${className} ${isMultiline ? 'font-mono' : ''} ${dragOver ? 'ring-2 ring-emerald-400/60 border-emerald-400' : ''}`,
-		onChange: (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
-			onChange(event.target.value);
-			syncQuery(event.target);
-		},
-		onKeyDown,
-		onKeyUp: (event: React.KeyboardEvent<HTMLTextAreaElement | HTMLInputElement>) =>
-			syncQuery(event.currentTarget),
-		onClick: (event: React.MouseEvent<HTMLTextAreaElement | HTMLInputElement>) =>
-			syncQuery(event.currentTarget),
-		onDrop,
-		onDragOver,
-		onDragLeave: () => setDragOver(false),
-		onBlur: () => {
-			if (blurTimer.current) clearTimeout(blurTimer.current);
-			// Delay so a mousedown on a suggestion can register before the list closes.
-			blurTimer.current = setTimeout(() => setQuery(null), 120);
-		},
-	};
+	const ringClass = dragOver ? 'ring-2 ring-emerald-400/60 border-emerald-400' : '';
 
 	return (
 		<div className='relative'>
-			{isMultiline ? (
-				<textarea
-					ref={ref as React.Ref<HTMLTextAreaElement>}
-					rows={field.rows ?? (compact ? 2 : 4)}
-					{...sharedProps}
-				/>
-			) : (
-				<input ref={ref as React.Ref<HTMLInputElement>} {...sharedProps} />
+			<div
+				ref={editorRef}
+				role='textbox'
+				aria-label={field.label}
+				contentEditable
+				suppressContentEditableWarning
+				spellCheck={false}
+				onInput={onInput}
+				onKeyDown={onKeyDown}
+				onKeyUp={updateQuery}
+				onClick={onEditorClick}
+				onDrop={onDrop}
+				onDragOver={onDragOver}
+				onDragLeave={() => setDragOver(false)}
+				onBlur={() => {
+					if (blurTimer.current) clearTimeout(blurTimer.current);
+					blurTimer.current = setTimeout(() => setQuery(null), 120);
+				}}
+				className={`${className} block cursor-text break-words whitespace-pre-wrap ${
+					isMultiline ? 'min-h-[64px] font-mono' : 'min-h-[36px]'
+				} ${ringClass}`}
+			/>
+			{!text && (
+				<div
+					className={`pointer-events-none absolute left-3 text-zinc-400 dark:text-zinc-500 ${
+						compact ? 'top-1.5 text-[11px]' : 'top-2 text-sm'
+					}`}>
+					{field.placeholder}
+				</div>
 			)}
 
 			{query !== null && matches.length > 0 && (
@@ -246,7 +392,7 @@ const ExpressionInput = ({ field, value, onChange, compact, nodeId, className }:
 			{!hasTokens && query === null && variables.length > 0 && (
 				<div className='mt-1 text-[10px] text-zinc-400'>
 					Type <span className='font-mono text-zinc-500 dark:text-zinc-300'>@</span> or drag an
-					output here to insert data.
+					input here to insert data.
 				</div>
 			)}
 		</div>
