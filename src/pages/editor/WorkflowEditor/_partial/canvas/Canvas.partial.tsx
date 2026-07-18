@@ -13,10 +13,11 @@ import {
 	type OnConnectEnd,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
-import { useCallback, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Bot, Database, GitBranch, Globe2, MousePointer2, Timer, Webhook, Zap, Minus, Plus, Maximize2, ChevronDown } from 'lucide-react';
 import { useCanvasDrop } from '../../_hooks/useCanvasDrop.hook';
+import { isTypingTarget } from '../../_hooks/useEditorHotkeys.hook';
 import { useWorkflowEditor } from '../../_context/WorkflowEditorProvider.context';
 import BaseNode from './nodes/BaseNode.partial';
 import InputNode from './nodes/InputNode.partial';
@@ -96,6 +97,27 @@ const Canvas = () => {
 		flowPosition: { x: number; y: number };
 	} | null>(null);
 
+	// Figma-style: plain left-drag on empty canvas rubber-bands a selection;
+	// holding Space switches to pan-drag instead, matching Figma's space-to-pan.
+	const [spacePressed, setSpacePressed] = useState(false);
+	useEffect(() => {
+		const onKeyDown = (event: KeyboardEvent) => {
+			if (event.code !== 'Space' || isTypingTarget(event.target) || event.repeat) return;
+			if (state.ui.stepMode && state.ui.waitingForStep) return;
+			event.preventDefault();
+			setSpacePressed(true);
+		};
+		const onKeyUp = (event: KeyboardEvent) => {
+			if (event.code === 'Space') setSpacePressed(false);
+		};
+		window.addEventListener('keydown', onKeyDown);
+		window.addEventListener('keyup', onKeyUp);
+		return () => {
+			window.removeEventListener('keydown', onKeyDown);
+			window.removeEventListener('keyup', onKeyUp);
+		};
+	}, [state.ui.stepMode, state.ui.waitingForStep]);
+
 	const { onDragOver, onDragLeave, onDrop } = useCanvasDrop((event) =>
 		reactFlow.screenToFlowPosition({ x: event.clientX, y: event.clientY }),
 	);
@@ -118,7 +140,7 @@ const Canvas = () => {
 		() =>
 			state.nodes.map((node) => ({
 				...node,
-				selected: state.ui.selectedNodeId === node.id,
+				selected: state.ui.selectedNodeIds.includes(node.id),
 				draggable: !node.data.locked,
 				data: {
 					...node.data,
@@ -126,26 +148,40 @@ const Canvas = () => {
 					isActiveRunNode: state.run.currentNodeId === node.id,
 				},
 			})),
-		[issuesByNode, state.nodes, state.run.currentNodeId, state.ui.selectedNodeId],
+		[issuesByNode, state.nodes, state.run.currentNodeId, state.ui.selectedNodeIds],
 	);
 
 	const [dragPositions, setDragPositions] = useState<Map<string, { x: number; y: number }>>(
 		() => new Map(),
 	);
 
+	// Mirrors the current selection so onNodesChange can apply select-diffs without
+	// depending on (and re-creating the callback on) selection state itself.
+	const selectionRef = useRef<string[]>([]);
+	selectionRef.current = state.ui.selectedNodeIds;
+
 	const onNodesChange = useCallback(
 		(changes: NodeChange<TCanvasNode>[]) => {
 			const nextPositions = new Map<string, { x: number; y: number }>();
+			const selectChanges: { id: string; selected: boolean }[] = [];
 			changes.forEach((change) => {
 				if (change.type === 'position' && 'position' in change && change.position) {
 					nextPositions.set(change.id, change.position);
 				}
-				if (change.type === 'select' && change.selected) {
-					dispatch({ type: 'SELECT_NODE', id: change.id });
+				if (change.type === 'select') {
+					selectChanges.push({ id: change.id, selected: change.selected });
 				}
 			});
 			if (nextPositions.size) {
 				setDragPositions((previous) => new Map([...previous, ...nextPositions]));
+			}
+			if (selectChanges.length) {
+				const next = new Set(selectionRef.current);
+				selectChanges.forEach(({ id, selected }) => {
+					if (selected) next.add(id);
+					else next.delete(id);
+				});
+				dispatch({ type: 'SELECT_NODES', ids: Array.from(next) });
 			}
 		},
 		[dispatch],
@@ -272,30 +308,26 @@ const Canvas = () => {
 		[dispatch],
 	);
 
-	// Clear drag positions when drag ends and sync to store
-	const handleDragStop = useCallback(
-		(_event: unknown, node: TCanvasNode) => {
-			setIsDraggingExistingNode(false);
-			didDragNodeRef.current = false;
+	// Clear drag positions when drag ends and sync every moved node back to the
+	// store — when multiple nodes are selected, React Flow moves the whole group
+	// together and each one needs its own MOVE_NODE, not just the node the mouse
+	// grabbed.
+	const handleDragStop = useCallback(() => {
+		setIsDraggingExistingNode(false);
+		didDragNodeRef.current = false;
 
-			// Get the final position from drag positions or node
-			const finalPos = dragPositions.get(node.id) ?? node.position;
-			setDragPositions((previous) => {
-				const next = new Map(previous);
-				next.delete(node.id);
-				return next;
+		setDragPositions((previous) => {
+			previous.forEach((position, id) => {
+				dispatch({ type: 'MOVE_NODE', id, position });
 			});
-
-			// Dispatch to store
-			dispatch({ type: 'MOVE_NODE', id: node.id, position: finalPos });
-		},
-		[dispatch, dragPositions],
-	);
+			return new Map();
+		});
+	}, [dispatch]);
 
 	return (
 		<section
 			data-canvas='true'
-			className='relative min-h-0 flex-1 overflow-hidden bg-white dark:bg-[#07080b]'
+			className={`relative min-h-0 flex-1 overflow-hidden bg-white dark:bg-[#07080b] ${spacePressed ? 'cursor-grab' : ''}`}
 			onContextMenu={(event) => event.preventDefault()}
 			onDragOver={onDragOver}
 			onDragLeave={onDragLeave}
@@ -304,7 +336,8 @@ const Canvas = () => {
 				fitView
 				snapToGrid
 				snapGrid={[18, 18]}
-				selectionOnDrag
+				selectionOnDrag={!spacePressed}
+				panOnDrag={spacePressed ? true : [1, 2]}
 				multiSelectionKeyCode={['Meta', 'Shift']}
 				reconnectRadius={18}
 				connectionRadius={45}
@@ -319,12 +352,17 @@ const Canvas = () => {
 				onNodeDragStart={(_, node) => {
 					didDragNodeRef.current = true;
 					setIsDraggingExistingNode(true);
-					dispatch({ type: 'SELECT_NODE', id: node.id });
+					// Dragging a node already inside a multi-selection moves the whole
+					// group — only collapse to a single selection when grabbing a node
+					// that isn't part of the current selection.
+					if (!state.ui.selectedNodeIds.includes(node.id)) {
+						dispatch({ type: 'SELECT_NODE', id: node.id });
+					}
 				}}
 				onNodeDragStop={handleDragStop}
 				onPaneClick={() => {
 					setContextMenu(null);
-					dispatch({ type: 'SELECT_NODE', id: null });
+					dispatch({ type: 'CLEAR_NODE_SELECTION' });
 				}}
 				onPaneContextMenu={(event) => {
 					event.preventDefault();
@@ -337,13 +375,13 @@ const Canvas = () => {
 						}),
 					});
 				}}
-				onNodeClick={(_, node) => {
+				onNodeClick={() => {
 					setContextMenu(null);
 					if (didDragNodeRef.current) {
 						didDragNodeRef.current = false;
-						return;
 					}
-					dispatch({ type: 'SELECT_NODE', id: node.id });
+					// Selection itself is handled by onNodesChange's 'select' diffs —
+					// React Flow already respects multiSelectionKeyCode there.
 				}}
 				onEdgesDelete={(deletedEdges) =>
 					deletedEdges.forEach((edge) => dispatch({ type: 'REMOVE_EDGE', id: edge.id }))

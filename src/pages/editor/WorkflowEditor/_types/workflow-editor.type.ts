@@ -25,6 +25,8 @@ export type TEditorUiState = {
 	quickAddOpen: boolean;
 	importExportOpen: boolean;
 	selectedNodeId: string | null;
+	/** Full multi-select set for box-select/Cmd+click/Select All — includes selectedNodeId when non-empty. */
+	selectedNodeIds: string[];
 	emptyCanvasView?: 'ai' | 'templates' | 'chat-started';
 	// New UI state
 	shortcutsOpen: boolean;

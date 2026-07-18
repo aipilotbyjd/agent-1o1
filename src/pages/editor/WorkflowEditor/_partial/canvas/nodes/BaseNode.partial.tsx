@@ -7,6 +7,7 @@ import {
 	ChevronsUpDown,
 	Circle,
 	Clock3,
+	Coins,
 	Database,
 	GitBranch,
 	Globe2,
@@ -32,8 +33,9 @@ import NodeToolbar from './NodeToolbar.partial';
 import NodeIOPanel from './NodeIOPanel.partial';
 import NodeLoopToggle from './NodeLoopToggle.partial';
 import NodeAuthWarning from './NodeAuthWarning.partial';
+import NodeCredentialBadge from './NodeCredentialBadge.partial';
 import { tintStyle, getNodeAccentColor } from '../../library/library.util';
-import { PORT_TYPE_COLOR } from '../../../_helper/builder.constants';
+import { PORT_TYPE_COLOR, getNodeCreditCost } from '../../../_helper/builder.constants';
 import { useWorkflowEditor } from '../../../_context/WorkflowEditorProvider.context';
 import type { TCanvasNode } from '../../../_types/canvas.type';
 import type { TNodeComment, TNodePort } from '../../../_types/node.type';
@@ -163,11 +165,16 @@ const BaseNode = ({ id, data, selected }: NodeProps<TCanvasNode>) => {
 
 	const NodeIcon = iconMap[data.defKey as keyof typeof iconMap];
 	const effectiveColorHex = getNodeAccentColor(id, data.color as string | undefined, def?.colorHex);
+	const creditCost = getNodeCreditCost(def);
 
 	const brand = (def?.key.split('.')[0] ?? def?.category ?? 'node')
 		.replace(/[_-]+/g, ' ')
 		.replace(/\b\w/g, (letter) => letter.toUpperCase());
-	const needsAuth = Boolean(def?.requiresCredential) && !data.values.credential_id;
+	const credentialField = def?.fields.find((field) => field.kind === 'credential');
+	const credentialId = credentialField
+		? (data.values[credentialField.key] as string | undefined)
+		: undefined;
+	const needsAuth = Boolean(def?.requiresCredential) && !credentialId;
 
 	const durationMs = typeof data.durationMs === 'number' ? data.durationMs : undefined;
 
@@ -256,6 +263,14 @@ const BaseNode = ({ id, data, selected }: NodeProps<TCanvasNode>) => {
 								</button>
 							</span>
 							<span className='flex shrink-0 items-center gap-1.5'>
+								{creditCost > 0 && (
+									<span
+										title={`Estimated ${creditCost} credit${creditCost === 1 ? '' : 's'} per run`}
+										className='inline-flex shrink-0 items-center gap-0.5 rounded-full bg-amber-100 px-1.5 py-0.5 text-[9px] font-bold text-amber-700 dark:bg-amber-950/40 dark:text-amber-400'>
+										<Coins size={9} />
+										{creditCost}
+									</span>
+								)}
 								{def?.supportsLoopMode && (
 									<NodeLoopToggle nodeId={id} active={Boolean(data.loopMode)} />
 								)}
@@ -318,6 +333,12 @@ const BaseNode = ({ id, data, selected }: NodeProps<TCanvasNode>) => {
 				{!collapsed && (
 					<div className='mt-2 text-[10px] leading-tight text-zinc-500 dark:text-zinc-400'>
 						{def?.description}
+					</div>
+				)}
+
+				{!collapsed && credentialId && (
+					<div className='mt-2'>
+						<NodeCredentialBadge credentialId={String(credentialId)} />
 					</div>
 				)}
 

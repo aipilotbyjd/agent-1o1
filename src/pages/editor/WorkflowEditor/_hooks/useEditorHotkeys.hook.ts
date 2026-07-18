@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { useWorkflowEditor } from '../_context/WorkflowEditorProvider.context';
 import { useRunWorkflow } from '../_hooks/useRunWorkflow.hook';
 
-const isTypingTarget = (target: EventTarget | null) => {
+export const isTypingTarget = (target: EventTarget | null) => {
 	if (!(target instanceof HTMLElement)) return false;
 	return ['INPUT', 'TEXTAREA', 'SELECT'].includes(target.tagName) || target.isContentEditable;
 };
@@ -151,6 +151,13 @@ export const useEditorHotkeys = () => {
 				return;
 			}
 
+			// Select all nodes (Cmd/Ctrl+A)
+			if (mod && event.key.toLowerCase() === 'a' && !isTypingTarget(event.target)) {
+				event.preventDefault();
+				dispatch({ type: 'SELECT_ALL_NODES' });
+				return;
+			}
+
 			// Node operations
 			if (mod && event.key.toLowerCase() === 'd') {
 				event.preventDefault();
@@ -160,7 +167,7 @@ export const useEditorHotkeys = () => {
 			if (
 				!isTypingTarget(event.target) &&
 				['Backspace', 'Delete'].includes(event.key) &&
-				state.ui.selectedNodeId
+				(state.ui.selectedNodeIds.length > 0 || state.ui.selectedNodeId)
 			) {
 				event.preventDefault();
 				dispatch({ type: 'DELETE_SELECTED' });
@@ -181,6 +188,7 @@ export const useEditorHotkeys = () => {
 		dispatch,
 		state.run.status,
 		state.ui.selectedNodeId,
+		state.ui.selectedNodeIds,
 		state.ui.canvasSearchOpen,
 		state.ui.nodeDocOpen,
 		state.ui.stepMode,

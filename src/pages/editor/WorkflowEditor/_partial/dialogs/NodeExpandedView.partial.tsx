@@ -1,9 +1,11 @@
-import { X, Maximize2, Info, SlidersHorizontal, FlaskConical } from 'lucide-react';
+import { X, Maximize2, Info, SlidersHorizontal, FlaskConical, Coins } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useWorkflowEditor } from '../../_context/WorkflowEditorProvider.context';
 import { getNodeDefinition } from '../../_helper/nodeCatalog.constants';
+import { getNodeCreditCost } from '../../_helper/builder.constants';
 import NodeFields from '../canvas/nodes/NodeFields.partial';
 import NodeInlineTest from '../canvas/nodes/NodeInlineTest.partial';
+import NodeCredentialBadge from '../canvas/nodes/NodeCredentialBadge.partial';
 import ApiNodeIcon from '../library/NodeIcon.partial';
 import { tintStyle, getNodeAccentColor } from '../library/library.util';
 
@@ -21,6 +23,11 @@ const NodeExpandedView = () => {
 		.replace(/[_-]+/g, ' ')
 		.replace(/\b\w/g, (letter) => letter.toUpperCase());
 	const effectiveColorHex = getNodeAccentColor(node.id, node.data.color as string | undefined, def?.colorHex);
+	const creditCost = getNodeCreditCost(def);
+	const credentialField = def?.fields.find((field) => field.kind === 'credential');
+	const credentialId = credentialField
+		? (node.data.values[credentialField.key] as string | undefined)
+		: undefined;
 
 	return (
 		<AnimatePresence>
@@ -61,15 +68,30 @@ const NodeExpandedView = () => {
 							</div>
 
 							<div className='min-w-0 flex-1'>
-								<span className='text-[11px] font-bold tracking-wide text-zinc-500 uppercase dark:text-zinc-400'>
-									{brand}
-								</span>
+								<div className='flex items-center gap-2'>
+									<span className='text-[11px] font-bold tracking-wide text-zinc-500 uppercase dark:text-zinc-400'>
+										{brand}
+									</span>
+									{creditCost > 0 && (
+										<span
+											title={`Estimated ${creditCost} credit${creditCost === 1 ? '' : 's'} per run`}
+											className='inline-flex shrink-0 items-center gap-1 rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-bold text-amber-700 dark:bg-amber-950/40 dark:text-amber-400'>
+											<Coins size={10} />
+											{creditCost} credit{creditCost === 1 ? '' : 's'}
+										</span>
+									)}
+								</div>
 								<h2 className='mb-1 truncate text-xl font-bold tracking-tight text-zinc-900 dark:text-white'>
 									{node.data.label || def?.label || 'Node'}
 								</h2>
 								<p className='text-sm leading-snug text-zinc-500 dark:text-zinc-400'>
 									{def?.description}
 								</p>
+								{credentialId && (
+									<div className='mt-2'>
+										<NodeCredentialBadge credentialId={credentialId} />
+									</div>
+								)}
 							</div>
 						</div>
 

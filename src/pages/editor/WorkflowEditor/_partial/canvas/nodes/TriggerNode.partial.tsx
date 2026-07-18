@@ -13,10 +13,12 @@ import {
 	Database,
 	ChevronsDownUp,
 	ChevronsUpDown,
+	Coins,
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import type { TCanvasNode } from '../../../_types/canvas.type';
 import { getNodeDefinition } from '../../../_helper/nodeCatalog.constants';
+import { getNodeCreditCost } from '../../../_helper/builder.constants';
 import {
 	useWorkflowTrigger,
 	useCreateWorkflowWebhook,
@@ -35,6 +37,7 @@ import NodeToolbar from './NodeToolbar.partial';
 import NodeIOPanel from './NodeIOPanel.partial';
 import NodeLoopToggle from './NodeLoopToggle.partial';
 import NodeAuthWarning from './NodeAuthWarning.partial';
+import NodeCredentialBadge from './NodeCredentialBadge.partial';
 import NodeHelpTip from './NodeHelpTip.partial';
 import { tintStyle, getNodeAccentColor } from '../../library/library.util';
 
@@ -128,9 +131,14 @@ const TriggerNode = ({ id, data, selected }: NodeProps<TCanvasNode>) => {
 		});
 	const nodeIndex = state.nodes.findIndex((node) => node.id === id) + 1;
 	const collapsed = Boolean(data.collapsed);
-	const hasError = Boolean(def?.requiresCredential) && !data.values.credential_id;
+	const credentialField = def?.fields.find((field) => field.kind === 'credential');
+	const credentialId = credentialField
+		? (data.values[credentialField.key] as string | undefined)
+		: undefined;
+	const hasError = Boolean(def?.requiresCredential) && !credentialId;
 	const brand = brandNameMap[data.defKey] || 'Trigger';
 	const color = colorMap[data.defKey] || DEFAULT_TRIGGER_COLOR;
+	const creditCost = getNodeCreditCost(def);
 	const NodeIcon = iconMap[data.defKey] || Webhook;
 
 	const { workspaceId, workflowId } = useWorkflowRouteParams();
@@ -269,6 +277,14 @@ const TriggerNode = ({ id, data, selected }: NodeProps<TCanvasNode>) => {
 									className='text-primary-500'
 								/>
 							)}
+								{creditCost > 0 && (
+									<span
+										title={`Estimated ${creditCost} credit${creditCost === 1 ? '' : 's'} per run`}
+										className='ml-1 inline-flex shrink-0 items-center gap-0.5 rounded-full bg-amber-100 px-1.5 py-0.5 text-[9px] font-bold text-amber-700 dark:bg-amber-950/40 dark:text-amber-400'>
+										<Coins size={9} />
+										{creditCost}
+									</span>
+								)}
 							</div>
 							<div className='flex shrink-0 items-center gap-1 rounded-md border border-zinc-200/80 bg-white/80 px-1 py-0.5 opacity-0 shadow-sm backdrop-blur-sm transition-opacity duration-150 group-hover:opacity-100 dark:border-zinc-700/80 dark:bg-zinc-900/80'>
 								{def?.supportsLoopMode && (
@@ -300,6 +316,12 @@ const TriggerNode = ({ id, data, selected }: NodeProps<TCanvasNode>) => {
 				{!collapsed && (
 					<div className='mt-2 text-[10px] leading-tight text-zinc-500 dark:text-zinc-400'>
 						{def?.description}
+					</div>
+				)}
+
+				{!collapsed && credentialId && (
+					<div className='mt-2'>
+						<NodeCredentialBadge credentialId={credentialId} />
 					</div>
 				)}
 

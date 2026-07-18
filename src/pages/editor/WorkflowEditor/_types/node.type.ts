@@ -70,6 +70,8 @@ export type TNodeDefinition = {
 	fields: TNodeField[];
 	supportsLoopMode?: boolean;
 	requiresCredential?: boolean;
+	/** Estimated credits charged per run. Falls back to a per-category default when unset. */
+	creditCost?: number;
 };
 
 export type TNodeRunStatus = 'idle' | 'queued' | 'running' | 'success' | 'error' | 'skipped';

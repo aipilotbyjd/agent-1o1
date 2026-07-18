@@ -33,6 +33,9 @@ export type TWorkflowEditorAction =
 	| { type: 'ADD_TEMPLATE'; defKeys: string[]; name: string }
 	| { type: 'MOVE_NODE'; id: string; position: TCanvasPosition }
 	| { type: 'SELECT_NODE'; id: string | null }
+	| { type: 'SELECT_NODES'; ids: string[] }
+	| { type: 'SELECT_ALL_NODES' }
+	| { type: 'CLEAR_NODE_SELECTION' }
 	| { type: 'UPDATE_NODE_VALUE'; id: string; fieldKey: string; value: unknown }
 	| { type: 'RENAME_NODE'; id: string; label: string }
 	| { type: 'CONFIGURE_NODE_FIELDS'; id: string; fields: TNodeField[] }
@@ -149,6 +152,7 @@ export const initialWorkflowEditorState: TWorkflowEditorState = {
 		quickAddOpen: false,
 		importExportOpen: false,
 		selectedNodeId: null,
+		selectedNodeIds: [],
 		emptyCanvasView: 'ai',
 		shortcutsOpen: false,
 		canvasSearchOpen: false,
@@ -235,7 +239,7 @@ export const workflowEditorReducer = (
 			return {
 				...next,
 				nodes: [...next.nodes, node],
-				ui: { ...next.ui, selectedNodeId: node.id },
+				ui: { ...next.ui, selectedNodeId: node.id, selectedNodeIds: [node.id] },
 			};
 		}
 		case 'ADD_TEMPLATE': {
@@ -267,7 +271,11 @@ export const workflowEditorReducer = (
 				workflow: { ...next.workflow, name: action.name, savingState: 'dirty' },
 				nodes,
 				edges,
-				ui: { ...next.ui, selectedNodeId: nodes[0]?.id ?? null },
+				ui: {
+					...next.ui,
+					selectedNodeId: nodes[0]?.id ?? null,
+					selectedNodeIds: nodes[0] ? [nodes[0].id] : [],
+				},
 			};
 		}
 		case 'MOVE_NODE': {
@@ -282,7 +290,32 @@ export const workflowEditorReducer = (
 		case 'SELECT_NODE':
 			return {
 				...state,
-				ui: { ...state.ui, selectedNodeId: action.id },
+				ui: {
+					...state.ui,
+					selectedNodeId: action.id,
+					selectedNodeIds: action.id ? [action.id] : [],
+				},
+			};
+		case 'SELECT_NODES':
+			return {
+				...state,
+				ui: {
+					...state.ui,
+					selectedNodeIds: action.ids,
+					selectedNodeId: action.ids[action.ids.length - 1] ?? null,
+				},
+			};
+		case 'SELECT_ALL_NODES': {
+			const ids = state.nodes.map((node) => node.id);
+			return {
+				...state,
+				ui: { ...state.ui, selectedNodeIds: ids, selectedNodeId: ids[ids.length - 1] ?? null },
+			};
+		}
+		case 'CLEAR_NODE_SELECTION':
+			return {
+				...state,
+				ui: { ...state.ui, selectedNodeIds: [], selectedNodeId: null },
 			};
 		case 'UPDATE_NODE_VALUE':
 			return {
@@ -314,29 +347,45 @@ export const workflowEditorReducer = (
 				),
 			};
 		case 'DELETE_SELECTED': {
-			const id = state.ui.selectedNodeId;
-			if (!id) return state;
+			const ids = new Set(
+				state.ui.selectedNodeIds.length > 0
+					? state.ui.selectedNodeIds
+					: state.ui.selectedNodeId
+						? [state.ui.selectedNodeId]
+						: [],
+			);
+			if (ids.size === 0) return state;
 			const next = withHistory(state);
 			return {
 				...next,
-				nodes: next.nodes.filter((node) => node.id !== id),
-				edges: next.edges.filter((edge) => edge.source !== id && edge.target !== id),
-				ui: { ...next.ui, selectedNodeId: null },
+				nodes: next.nodes.filter((node) => !ids.has(node.id)),
+				edges: next.edges.filter((edge) => !ids.has(edge.source) && !ids.has(edge.target)),
+				ui: { ...next.ui, selectedNodeId: null, selectedNodeIds: [] },
 			};
 		}
 		case 'DUPLICATE_SELECTED': {
-			const node = state.nodes.find((item) => item.id === state.ui.selectedNodeId);
-			if (!node) return state;
-			const clone: TCanvasNode = {
+			const ids =
+				state.ui.selectedNodeIds.length > 0
+					? state.ui.selectedNodeIds
+					: state.ui.selectedNodeId
+						? [state.ui.selectedNodeId]
+						: [];
+			const nodesToClone = state.nodes.filter((item) => ids.includes(item.id));
+			if (nodesToClone.length === 0) return state;
+			const clones: TCanvasNode[] = nodesToClone.map((node) => ({
 				...structuredClone(node),
 				id: createId('node'),
 				position: { x: node.position.x + 32, y: node.position.y + 32 },
-			};
+			}));
 			const next = withHistory(state);
 			return {
 				...next,
-				nodes: [...next.nodes, clone],
-				ui: { ...next.ui, selectedNodeId: clone.id },
+				nodes: [...next.nodes, ...clones],
+				ui: {
+					...next.ui,
+					selectedNodeId: clones[clones.length - 1].id,
+					selectedNodeIds: clones.map((clone) => clone.id),
+				},
 			};
 		}
 		case 'ADD_EDGE': {
@@ -518,6 +567,7 @@ export const workflowEditorReducer = (
 				ui: {
 					...state.ui,
 					selectedNodeId: null,
+					selectedNodeIds: [],
 					importExportOpen: false,
 					emptyCanvasView: 'ai',
 					leftPanelOpen: false,
@@ -543,7 +593,7 @@ export const workflowEditorReducer = (
 				nodes: action.nodes,
 				edges: action.edges,
 				workflow: { ...next.workflow, savingState: 'dirty' },
-				ui: { ...next.ui, selectedNodeId: null },
+				ui: { ...next.ui, selectedNodeId: null, selectedNodeIds: [] },
 			};
 		}
 		case 'SET_NODE_COLOR': {
