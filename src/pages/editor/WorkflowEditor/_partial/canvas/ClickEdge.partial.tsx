@@ -27,38 +27,92 @@ const ClickEdge = ({
 
 	const stroke = (style?.stroke as string) ?? 'rgb(139 92 246)';
 	const arrowId = `edge-arrow-${id}`;
+	const glowId = `edge-glow-${id}`;
+	const pathId = `edge-path-${id}`;
+	const isEmphasized = Boolean(selected || data?.isActive);
+	const strokeWidth = isEmphasized ? 7 : 5;
+	const dotDelays = [0, 0.55, 1.1];
 
 	return (
 		<>
 			<defs>
 				<marker
 					id={arrowId}
-					viewBox='0 0 10 10'
-					refX='8'
-					refY='5'
-					markerWidth='6'
-					markerHeight='6'
+					viewBox='0 0 20 20'
+					refX='15'
+					refY='10'
+					markerWidth='13'
+					markerHeight='13'
+					markerUnits='userSpaceOnUse'
 					orient='auto-start-reverse'>
-					<path d='M 0 0 L 10 5 L 0 10 z' fill={stroke} />
+					<path
+						d='M3 4 L16 10 L3 16'
+						fill='none'
+						stroke={stroke}
+						strokeWidth='3.5'
+						strokeLinecap='round'
+						strokeLinejoin='round'
+					/>
 				</marker>
+				<filter id={glowId} x='-75%' y='-75%' width='250%' height='250%'>
+					<feGaussianBlur stdDeviation='5' result='blur' />
+					<feMerge>
+						<feMergeNode in='blur' />
+						<feMergeNode in='SourceGraphic' />
+					</feMerge>
+				</filter>
 			</defs>
-			{/* Solid colored base line */}
-			<BaseEdge
-				path={edgePath}
-				markerEnd={`url(#${arrowId})`}
-				style={{ ...style, stroke, strokeWidth: 3 }}
-				interactionWidth={20}
-			/>
-			{/* Animated flowing dash on top of the line */}
+
+			{/* Hidden reference path — flow dots travel along this exact geometry */}
+			<path id={pathId} d={edgePath} fill='none' stroke='none' />
+
+			{/* Soft glowing halo behind the line for depth */}
 			<path
 				d={edgePath}
 				fill='none'
-				stroke='rgba(255,255,255,0.85)'
-				strokeWidth={2}
+				stroke={stroke}
+				strokeWidth={strokeWidth + 10}
 				strokeLinecap='round'
-				strokeDasharray='6 18'
-				className='workflow-edge-flow pointer-events-none'
+				opacity={isEmphasized ? 0.22 : 0.12}
+				className='pointer-events-none blur-[4px] transition-opacity duration-150'
 			/>
+
+			{/* Solid colored base line — thickens and glows when selected or actively running */}
+			<BaseEdge
+				path={edgePath}
+				markerEnd={`url(#${arrowId})`}
+				style={{
+					...style,
+					stroke,
+					strokeWidth,
+					strokeLinecap: 'round',
+					filter: isEmphasized ? `url(#${glowId})` : undefined,
+					transition: 'stroke-width 150ms ease, filter 150ms ease',
+				}}
+				interactionWidth={24}
+			/>
+
+			{/* Big flowing data pulses travelling along the connection */}
+			{dotDelays.map((delay) => (
+				<g key={delay} className='pointer-events-none'>
+					<circle r={isEmphasized ? 11 : 9} fill={stroke} opacity={0.3} className='blur-[3px]'>
+						<animateMotion dur='1.8s' repeatCount='indefinite' begin={`-${delay}s`} rotate='auto'>
+							<mpath href={`#${pathId}`} />
+						</animateMotion>
+					</circle>
+					<circle r={isEmphasized ? 6 : 5} fill={stroke} opacity={0.9}>
+						<animateMotion dur='1.8s' repeatCount='indefinite' begin={`-${delay}s`} rotate='auto'>
+							<mpath href={`#${pathId}`} />
+						</animateMotion>
+					</circle>
+					<circle r={isEmphasized ? 3 : 2.5} fill='white'>
+						<animateMotion dur='1.8s' repeatCount='indefinite' begin={`-${delay}s`} rotate='auto'>
+							<mpath href={`#${pathId}`} />
+						</animateMotion>
+					</circle>
+				</g>
+			))}
+
 			<EdgeLabelRenderer>
 				<div
 					className={[

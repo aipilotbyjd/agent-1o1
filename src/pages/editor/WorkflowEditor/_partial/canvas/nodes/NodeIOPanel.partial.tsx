@@ -155,7 +155,7 @@ const NodeIOPanel = ({ nodeId, incoming, outputs }: Props) => {
 	const groups = useMemo(() => groupBySource(filteredIncoming), [filteredIncoming]);
 
 	return (
-		<div className='pointer-events-none absolute top-0 left-[368px] z-10 flex w-[380px] flex-col'>
+		<div className='pointer-events-none absolute top-0 left-[348px] z-10 flex w-[380px] flex-col'>
 			{/* Transparent hover bridge so moving from node → panel keeps the reveal open */}
 			<span className='pointer-events-auto absolute top-0 -left-6 h-full w-6' />
 			{/* Connector nub linking the panel back to the node */}
@@ -344,7 +344,7 @@ const EmptyState = ({
 			{icon}
 		</span>
 		<span className='text-[11px] font-bold text-zinc-700 dark:text-zinc-300'>{title}</span>
-		<p className='max-w-[200px] text-[10px] leading-normal font-medium text-zinc-450 dark:text-zinc-500'>
+		<p className='max-w-[200px] text-[10px] leading-normal font-medium text-zinc-400 dark:text-zinc-500'>
 			{hint}
 		</p>
 	</div>
@@ -352,7 +352,7 @@ const EmptyState = ({
 
 /** Shown when a filter query matches nothing. */
 const NoMatch = ({ query }: { query: string }) => (
-	<p className='px-0.5 py-2 text-center text-[10px] font-medium text-zinc-450 dark:text-zinc-500'>
+	<p className='px-0.5 py-2 text-center text-[10px] font-medium text-zinc-400 dark:text-zinc-500'>
 		Nothing matches “{query}”.
 	</p>
 );

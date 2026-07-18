@@ -466,16 +466,6 @@ layer(base);
 	background: radial-gradient(circle at 0% 0%, transparent 16px, var(--corner-bg) 16.5px);
 }
 
-/* Workflow connection: animated flowing dash along the edge */
-@keyframes workflow-edge-flow {
-	to {
-		stroke-dashoffset: -24;
-	}
-}
-.workflow-edge-flow {
-	animation: workflow-edge-flow 0.7s linear infinite;
-}
-
 /* Fix Tailwind color override side-effects for backgrounds and borders in dark mode */
 .dark {
 	/* Background overrides */
