@@ -160,7 +160,25 @@ const brandNameMap: Record<string, string> = {
 const TriggerNode = ({ id, data, selected }: NodeProps<TCanvasNode>) => {
 	const { state, dispatch } = useWorkflowEditor();
 	const def = getNodeDefinition(data.defKey, data.definition);
-	const hasIncoming = state.edges.some((edge) => edge.target === id);
+
+	/** Every output of each upstream node wired into this one — all become available inputs. */
+	const incoming = Array.from(new Set(state.edges.filter((edge) => edge.target === id).map((edge) => edge.source)))
+		.flatMap((sourceId) => {
+			const sourceNode = state.nodes.find((node) => node.id === sourceId);
+			if (!sourceNode) return [];
+			const sourceDef = getNodeDefinition(sourceNode.data.defKey, sourceNode.data.definition);
+			const sourceOutputs =
+				sourceDef?.outputs && sourceDef.outputs.length > 0
+					? sourceDef.outputs
+					: [{ id: 'out', name: 'output', type: 'any' as const }];
+			const sourceLabel = sourceNode.data.label || sourceDef?.label || 'Node';
+			return sourceOutputs.map((port) => ({
+				id: `${sourceId}:${port.id}`,
+				sourceId,
+				port,
+				sourceLabel,
+			}));
+		});
 	const nodeIndex = state.nodes.findIndex((node) => node.id === id) + 1;
 	const collapsed = Boolean(data.collapsed);
 	const hasError = Boolean(def?.requiresCredential) && !data.values.credential_id;
@@ -431,12 +449,7 @@ const TriggerNode = ({ id, data, selected }: NodeProps<TCanvasNode>) => {
 			)}
 
 			{selected && def && (
-				<NodeIOPanel
-					nodeId={id}
-					inputs={def.inputs ?? []}
-					outputs={def.outputs ?? []}
-					hasIncoming={hasIncoming}
-				/>
+				<NodeIOPanel nodeId={id} incoming={incoming} outputs={def.outputs ?? []} />
 			)}
 
 		</motion.div>

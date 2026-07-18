@@ -127,12 +127,9 @@ const FieldInput = ({ field, value, onChange, compact, nodeId }: FieldInputProps
 		return <PickerFieldInput field={field} value={value} onChange={onChange} compact={compact} />;
 	}
 
-	// Fields that opt into {{variables}} get the expression editor with autocomplete.
-	if (
-		field.supportsVariables &&
-		nodeId &&
-		(field.kind === 'text' || field.kind === 'longtext')
-	) {
+	// Every text-like field gets the expression editor so upstream values can be
+	// dropped in as {{variables}} (Gumloop-style), with autocomplete + live preview.
+	if (nodeId && (field.kind === 'text' || field.kind === 'longtext' || field.kind === 'code')) {
 		return (
 			<ExpressionInput
 				field={field}

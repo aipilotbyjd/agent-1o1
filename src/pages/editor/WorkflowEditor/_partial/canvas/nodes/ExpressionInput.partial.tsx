@@ -133,18 +133,23 @@ const ExpressionInput = ({ field, value, onChange, compact, nodeId, className }:
 	const onDrop = (event: React.DragEvent<HTMLTextAreaElement | HTMLInputElement>) => {
 		const token = getTokenFromDrop(event.dataTransfer);
 		if (!token) return;
-		// Own the insertion so the browser doesn't also paste the text/plain fallback.
+		// Own the insertion so neither the browser nor the canvas drop handler also runs.
 		event.preventDefault();
+		event.stopPropagation();
 		setDragOver(false);
 		insertAtCaret(token);
 	};
 
 	const onDragOver = (event: React.DragEvent<HTMLTextAreaElement | HTMLInputElement>) => {
-		if (event.dataTransfer.types.includes(TOKEN_DND_MIME)) {
-			event.preventDefault();
-			event.dataTransfer.dropEffect = 'copy';
-			if (!dragOver) setDragOver(true);
-		}
+		// Accept the drag unconditionally so the browser fires `onDrop` (some drags
+		// don't expose a readable `types` list until drop). We validate on drop.
+		event.preventDefault();
+		event.stopPropagation();
+		event.dataTransfer.dropEffect = 'copy';
+		const isToken =
+			event.dataTransfer.types.includes(TOKEN_DND_MIME) ||
+			event.dataTransfer.types.includes('text/plain');
+		if (isToken && !dragOver) setDragOver(true);
 	};
 
 	const onKeyDown = (event: React.KeyboardEvent) => {

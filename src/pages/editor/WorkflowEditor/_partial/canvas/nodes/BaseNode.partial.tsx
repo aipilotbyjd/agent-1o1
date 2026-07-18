@@ -120,7 +120,25 @@ export const PortHandles = ({
 const BaseNode = ({ id, data, selected }: NodeProps<TCanvasNode>) => {
 	const { state, dispatch } = useWorkflowEditor();
 	const def = getNodeDefinition(data.defKey, data.definition);
-	const hasIncoming = state.edges.some((edge) => edge.target === id);
+
+	/** Every output of each upstream node wired into this one — all become available inputs. */
+	const incoming = Array.from(new Set(state.edges.filter((edge) => edge.target === id).map((edge) => edge.source)))
+		.flatMap((sourceId) => {
+			const sourceNode = state.nodes.find((node) => node.id === sourceId);
+			if (!sourceNode) return [];
+			const sourceDef = getNodeDefinition(sourceNode.data.defKey, sourceNode.data.definition);
+			const sourceOutputs =
+				sourceDef?.outputs && sourceDef.outputs.length > 0
+					? sourceDef.outputs
+					: [{ id: 'out', name: 'output', type: 'any' as const }];
+			const sourceLabel = sourceNode.data.label || sourceDef?.label || 'Node';
+			return sourceOutputs.map((port) => ({
+				id: `${sourceId}:${port.id}`,
+				sourceId,
+				port,
+				sourceLabel,
+			}));
+		});
 	const nodeIndex = state.nodes.findIndex((node) => node.id === id) + 1;
 	const collapsed = Boolean(data.collapsed);
 	const status = data.status ?? 'idle';
@@ -348,18 +366,23 @@ const BaseNode = ({ id, data, selected }: NodeProps<TCanvasNode>) => {
 				{nodeIndex}
 			</div>
 
-			{selected && (
+			{/* Toolbar + IO panels: always shown while selected, revealed on hover otherwise */}
+			<div
+				className={[
+					'transition-opacity duration-150',
+					selected
+						? 'opacity-100'
+						: 'pointer-events-none opacity-0 group-hover:pointer-events-auto group-hover:opacity-100',
+				].join(' ')}>
 				<NodeToolbar
 					nodeId={id}
 					defKey={data.defKey}
 					label={data.label || def?.label || 'Node'}
 					fields={def?.fields ?? []}
 				/>
-			)}
 
-			{selected && (
-				<NodeIOPanel nodeId={id} inputs={inputs} outputs={outputs} hasIncoming={hasIncoming} />
-			)}
+				<NodeIOPanel nodeId={id} incoming={incoming} outputs={outputs} />
+			</div>
 
 		</motion.div>
 	);
