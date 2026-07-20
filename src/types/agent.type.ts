@@ -151,3 +151,214 @@ export type TAgentTrigger = {
 
 export type TAgentSortBy = 'name' | 'created_at' | 'updated_at' | 'conversations_count';
 export type TSortOrder = 'asc' | 'desc';
+
+// ─────────────────────────────────────────────────────────────
+// Message request polling — non-WebSocket fallback for a queued turn.
+// GET {agent}/requests/{requestId} — see AgentMessageRequestResource.
+// ─────────────────────────────────────────────────────────────
+export type TAgentMessageRequestStatus = 'pending' | 'processing' | 'completed' | 'failed';
+
+export type TAgentMessageRequest = {
+	request_id: string;
+	status: TAgentMessageRequestStatus;
+	conversation_id: string | null;
+	agent_run_id: string | null;
+	created_at: string;
+	updated_at: string;
+};
+
+// ─────────────────────────────────────────────────────────────
+// Run history & step traces — GET {agent}/runs, GET {agent}/runs/{run}.
+// See AgentRunResource / AiAgentStepResource.
+// ─────────────────────────────────────────────────────────────
+export type TAgentRunSource = 'conversation' | 'trigger' | 'manual' | string;
+export type TAgentRunStatus = 'pending' | 'running' | 'completed' | 'failed' | string;
+
+export type TAiAgentStep = {
+	id: string;
+	step_number: number;
+	action: string | null;
+	tool_name: string | null;
+	tool_input: Record<string, unknown> | null;
+	tool_output: unknown;
+	llm_reasoning: string | null;
+	tokens_used: number | null;
+	duration_ms: number | null;
+	created_at: string;
+};
+
+export type TAgentRun = {
+	id: string;
+	agent_id: string;
+	conversation_id: string | null;
+	trigger_id: string | null;
+	source: TAgentRunSource;
+	status: TAgentRunStatus;
+	input: unknown;
+	output: unknown;
+	error: string | null;
+	provider: string | null;
+	model: string | null;
+	prompt_tokens: number | null;
+	completion_tokens: number | null;
+	total_tokens: number | null;
+	duration_ms: number | null;
+	metadata: Record<string, unknown> | null;
+	started_at: string | null;
+	finished_at: string | null;
+	steps_count?: number;
+	steps?: TAiAgentStep[];
+	created_at: string;
+};
+
+export type TAgentRunsFilters = {
+	status?: TAgentRunStatus;
+	source?: TAgentRunSource;
+	per_page?: number;
+	page?: number;
+};
+
+// ─────────────────────────────────────────────────────────────
+// Usage analytics — GET {agent}/analytics.
+// See AgentAnalyticsController::show().
+// ─────────────────────────────────────────────────────────────
+export type TAgentAnalyticsDay = {
+	day: string;
+	runs: number;
+	tokens: number;
+	failed: number;
+};
+
+export type TAgentAnalytics = {
+	range: { from: string; to: string };
+	totals: {
+		total_runs: number;
+		completed: number;
+		failed: number;
+		running: number;
+		success_rate: number | null;
+	};
+	tokens: {
+		total: number;
+		prompt: number;
+		completion: number;
+		avg_per_run: number;
+	};
+	latency: {
+		avg_duration_ms: number;
+		max_duration_ms: number;
+	};
+	by_source: Record<string, number>;
+	by_day: TAgentAnalyticsDay[];
+};
+
+export type TAgentAnalyticsFilters = {
+	from?: string;
+	to?: string;
+};
+
+// ─────────────────────────────────────────────────────────────
+// Knowledge base (RAG grounding) — {agent}/knowledge CRUD.
+// See AgentKnowledgeResource / Store|UpdateAgentKnowledgeRequest.
+// ─────────────────────────────────────────────────────────────
+export type TAgentKnowledgeSourceType = 'text' | 'file' | 'url';
+
+export type TAgentKnowledge = {
+	id: string;
+	agent_id: string;
+	title: string;
+	content: string;
+	source_type: TAgentKnowledgeSourceType;
+	source_url: string | null;
+	file_path: string | null;
+	tokens: number;
+	is_active: boolean;
+	sort_order: number;
+	metadata: Record<string, unknown> | null;
+	created_at: string;
+	updated_at: string;
+};
+
+export type TCreateAgentKnowledgeDto = {
+	title: string;
+	content: string;
+	source_type?: TAgentKnowledgeSourceType;
+	source_url?: string | null;
+	file_path?: string | null;
+	is_active?: boolean;
+	sort_order?: number;
+	metadata?: Record<string, unknown> | null;
+};
+
+export type TUpdateAgentKnowledgeDto = Partial<TCreateAgentKnowledgeDto>;
+
+export type TAgentKnowledgeFilters = {
+	is_active?: boolean;
+	search?: string;
+	per_page?: number;
+	page?: number;
+};
+
+// ─────────────────────────────────────────────────────────────
+// Persistent memory — {agent}/memories.
+// See AgentMemoryResource / StoreAgentMemoryRequest.
+// ─────────────────────────────────────────────────────────────
+export type TAgentMemoryScope = 'agent' | 'user';
+
+export type TAgentMemory = {
+	id: string;
+	agent_id: string;
+	user_id: number | null;
+	key: string;
+	value: string;
+	type: string;
+	metadata: Record<string, unknown> | null;
+	created_at: string;
+	updated_at: string;
+};
+
+export type TCreateAgentMemoryDto = {
+	key: string;
+	value: string;
+	type?: string;
+	scope?: TAgentMemoryScope;
+	metadata?: Record<string, unknown> | null;
+};
+
+// ─────────────────────────────────────────────────────────────
+// Builder metadata — agents/meta/* discovery catalogs.
+// See AgentMetadataService.
+// ─────────────────────────────────────────────────────────────
+export type TAgentMetaProvider = {
+	value: string;
+	label: string;
+	driver: string;
+	has_models: boolean;
+};
+
+export type TAgentMetaModelGroup = {
+	provider: string;
+	models: string[];
+};
+
+export type TAgentMetaTool = {
+	node_type: string;
+	name: string;
+	description: string | null;
+	icon: string | null;
+	color: string | null;
+	credential_type: string | null;
+	input_schema: Record<string, unknown> | null;
+	is_premium: boolean;
+};
+
+export type TAgentMetaCategory = {
+	value: string;
+	label: string;
+};
+
+export type TAgentMetaTriggerType = {
+	value?: string;
+	label?: string;
+	[key: string]: unknown;
+};

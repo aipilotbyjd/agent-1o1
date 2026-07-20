@@ -6,7 +6,7 @@ import ConfigureInputsDialog from '../../dialogs/ConfigureInputsDialog.partial';
 import type { TNodeField } from '../../../_types/node.type';
 
 const buttonClass =
-	'flex items-center gap-1 rounded px-1.5 py-0.5 text-zinc-500 hover:bg-zinc-50 hover:text-zinc-800 dark:hover:bg-zinc-800 dark:hover:text-white';
+	'flex items-center gap-1 rounded px-1.5 py-0.5 text-zinc-500 hover:bg-zinc-50 hover:text-zinc-800 dark:hover:bg-white/10! dark:hover:text-white';
 
 type Props = {
 	nodeId: string;
@@ -112,7 +112,7 @@ const NodeToolbar = ({ nodeId, defKey, label, fields }: Props) => {
 								event.stopPropagation();
 								dispatch({ type: 'DELETE_SELECTED' });
 							}}
-							className='flex items-center gap-1 rounded px-1.5 py-0.5 text-rose-500 hover:bg-rose-50 hover:text-rose-700 dark:hover:bg-rose-950/30'>
+							className='flex items-center gap-1 rounded px-1.5 py-0.5 text-rose-500 hover:bg-rose-50 hover:text-rose-700 dark:hover:bg-rose-950/30! dark:hover:text-rose-300'>
 							<Trash2 size={13} strokeWidth={2.5} />
 							<span>Delete</span>
 						</button>

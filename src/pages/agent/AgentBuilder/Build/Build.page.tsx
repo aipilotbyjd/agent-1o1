@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router';
 import { motion, AnimatePresence } from 'framer-motion';
 import ReactMarkdown, { type Components } from 'react-markdown';
@@ -84,12 +84,14 @@ import {
 	useUpdateAgentTrigger,
 	useDeleteAgentTrigger,
 	useFireAgentTrigger,
+	useAgentMetaModels,
 } from '@/api/modules/agents';
 import type { TAgentTriggerType } from '@/types/agent.type';
 import { AgentService } from '@/api/modules/agents/agents.service';
 import { subscribeToAgentStream } from '@/api/modules/agents/agents.realtime';
 import { useRealtime } from '@/context/realtimeContext';
 import { XCircle, Wrench } from 'lucide-react';
+import AgentDataPanel from './_partial/AgentDataPanel.partial';
 
 /** One entry in the live "scratchpad" — reasoning text or a tool call, exactly as it streamed in. */
 type TChatTimelineItem =
@@ -229,6 +231,29 @@ const BuildPage = () => {
 	const deleteTriggerMutation = useDeleteAgentTrigger(workspaceId, currentAgentId ?? '');
 	const fireTriggerMutation = useFireAgentTrigger(workspaceId, currentAgentId ?? '');
 	const [isTriggerPanelOpen, setIsTriggerPanelOpen] = useState(false);
+
+	// Live model catalog from the backend (agents/meta/models). Only models the
+	// workspace actually has a configured provider for are returned — merge them
+	// with the static option metadata (label/tier/description) where names match,
+	// and fall back to the static list when the catalog is empty/unconfigured.
+	const { data: metaModelGroups } = useAgentMetaModels(workspaceId);
+	const modelOptions = useMemo(() => {
+		const liveIds = (metaModelGroups ?? []).flatMap((group) => group.models);
+		if (liveIds.length === 0) return agentModelOptions;
+		return liveIds.map((id) => {
+			const known = agentModelOptions.find((m) => m.id === id);
+			return (
+				known ?? {
+					id,
+					provider: 'anyapi' as const,
+					label: id.includes('/') ? id.split('/').slice(1).join('/') : id,
+					tier: 'Available',
+					description: id,
+				}
+			);
+		});
+	}, [metaModelGroups]);
+
 	const [newTriggerType, setNewTriggerType] = useState<TAgentTriggerType>('schedule');
 	const [newTriggerCron, setNewTriggerCron] = useState('0 9 * * *');
 	const [newTriggerEventName, setNewTriggerEventName] = useState('');
@@ -266,7 +291,9 @@ const BuildPage = () => {
 
 	// Sidebar settings panel states
 	const [isSettingsOpen, setIsSettingsOpen] = useState(false);
-	const [activeSidebarTab, setActiveSidebarTab] = useState<'agent' | 'settings' | 'chatDetails'>('agent');
+	const [activeSidebarTab, setActiveSidebarTab] = useState<
+		'agent' | 'settings' | 'chatDetails' | 'data'
+	>('agent');
 	const [agentInstructions, setAgentInstructions] = useState('');
 	const [agentModel, setAgentModel] = useState(
 		agentModelOptions.find((m) => m.label === 'Sonnet 5')?.id ?? agentModelOptions[0].id,
@@ -1675,6 +1702,18 @@ const BuildPage = () => {
 										<MessageSquare size={14} />
 										<span>Chat Details</span>
 									</button>
+									{/* Tab: Data (knowledge / memory / runs / analytics) */}
+									<button
+										onClick={() => setActiveSidebarTab('data')}
+										className={`flex items-center gap-1.5 px-3 pb-4 text-xs font-bold transition-all border-b-2 ${
+											activeSidebarTab === 'data'
+												? 'text-primary-600 border-primary-600 dark:text-primary-400 dark:border-primary-400'
+												: 'text-zinc-400 border-transparent hover:text-zinc-600 dark:text-zinc-500 dark:hover:text-zinc-300'
+										}`}
+									>
+										<Database size={14} />
+										<span>Data</span>
+									</button>
 								</div>
 
 								{/* Top Right Action (Back/Undo & Save) */}
@@ -1728,7 +1767,7 @@ const BuildPage = () => {
 													<div className='flex flex-col text-left'>
 														<span className='text-[10px] font-black tracking-wide text-zinc-400 uppercase'>Model</span>
 														<span className='text-xs font-black text-zinc-800 dark:text-zinc-200'>
-															{agentModelOptions.find((m) => m.id === agentModel)?.label ?? agentModel}
+															{modelOptions.find((m) => m.id === agentModel)?.label ?? agentModel}
 														</span>
 													</div>
 												</div>
@@ -1739,7 +1778,7 @@ const BuildPage = () => {
 												<>
 													<div className='fixed inset-0 z-10' onClick={() => setIsModelPickerOpen(false)} />
 													<div className='absolute left-0 right-0 z-20 mt-1.5 rounded-xl border border-zinc-200 bg-white p-1.5 shadow-lg dark:border-zinc-800 dark:bg-zinc-900'>
-														{agentModelOptions.map((option) => (
+														{modelOptions.map((option) => (
 															<button
 																key={option.id}
 																type='button'
@@ -2418,6 +2457,10 @@ const BuildPage = () => {
 										Once this agent runs inside a production environment, conversation logs, token usage, and execution stats will be displayed here.
 									</p>
 								</div>
+							)}
+
+							{activeSidebarTab === 'data' && (
+								<AgentDataPanel ws={workspaceId} agentId={currentAgentId} />
 							)}
 
 						</motion.div>

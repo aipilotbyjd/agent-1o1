@@ -1,6 +1,6 @@
 import { axiosClient } from '@/api/client';
 import { unwrap } from '@/api/core';
-import type { TApiResponse } from '@/api/core';
+import type { TApiResponse, TPaginatedResponse } from '@/api/core';
 import type {
 	TAgent,
 	TAgentSkill,
@@ -10,6 +10,23 @@ import type {
 	TAgentTrigger,
 	TAgentSkillReference,
 	TAgentSkillScript,
+	TAgentMessageRequest,
+	TAgentRun,
+	TAgentRunsFilters,
+	TAgentAnalytics,
+	TAgentAnalyticsFilters,
+	TAgentKnowledge,
+	TAgentKnowledgeFilters,
+	TCreateAgentKnowledgeDto,
+	TUpdateAgentKnowledgeDto,
+	TAgentMemory,
+	TAgentMemoryScope,
+	TCreateAgentMemoryDto,
+	TAgentMetaProvider,
+	TAgentMetaModelGroup,
+	TAgentMetaTool,
+	TAgentMetaCategory,
+	TAgentMetaTriggerType,
 } from '@/types/agent.type';
 import { AgentEndpoints as E, AgentSkillEndpoints as S } from './agents.endpoints';
 
@@ -94,6 +111,125 @@ export const AgentService = {
 		axiosClient
 			.post<TApiResponse<unknown>>(E.triggerFire(ws, agentId, triggerId), body)
 			.then(unwrap<unknown>),
+
+	// ── Message request polling (WebSocket fallback) ──────────
+	/** Polls a queued turn's status — pending/processing/completed/failed + resolved ids. */
+	requestStatus: (ws: string, agentId: string, requestId: string, signal?: AbortSignal) =>
+		axiosClient
+			.get<TApiResponse<TAgentMessageRequest>>(E.requestStatus(ws, agentId, requestId), { signal })
+			.then(unwrap<TAgentMessageRequest>),
+
+	// ── Run history & step traces ─────────────────────────────
+	listRuns: (ws: string, agentId: string, filters?: TAgentRunsFilters, signal?: AbortSignal) =>
+		axiosClient
+			.get<TPaginatedResponse<TAgentRun>>(E.runs(ws, agentId), { params: filters, signal })
+			.then((r) => r.data),
+
+	runDetail: (ws: string, agentId: string, runId: string, signal?: AbortSignal) =>
+		axiosClient
+			.get<TApiResponse<TAgentRun>>(E.runDetail(ws, agentId, runId), { signal })
+			.then(unwrap<TAgentRun>),
+
+	// ── Usage analytics ───────────────────────────────────────
+	analytics: (
+		ws: string,
+		agentId: string,
+		filters?: TAgentAnalyticsFilters,
+		signal?: AbortSignal,
+	) =>
+		axiosClient
+			.get<TApiResponse<TAgentAnalytics>>(E.analytics(ws, agentId), { params: filters, signal })
+			.then(unwrap<TAgentAnalytics>),
+
+	// ── Knowledge base (RAG grounding) ────────────────────────
+	listKnowledge: (
+		ws: string,
+		agentId: string,
+		filters?: TAgentKnowledgeFilters,
+		signal?: AbortSignal,
+	) =>
+		axiosClient
+			.get<TPaginatedResponse<TAgentKnowledge>>(E.knowledge(ws, agentId), {
+				params: filters,
+				signal,
+			})
+			.then((r) => r.data),
+
+	knowledgeDetail: (ws: string, agentId: string, knowledgeId: string, signal?: AbortSignal) =>
+		axiosClient
+			.get<TApiResponse<TAgentKnowledge>>(E.knowledgeDetail(ws, agentId, knowledgeId), { signal })
+			.then(unwrap<TAgentKnowledge>),
+
+	createKnowledge: (ws: string, agentId: string, body: TCreateAgentKnowledgeDto) =>
+		axiosClient
+			.post<TApiResponse<TAgentKnowledge>>(E.knowledgeCreate(ws, agentId), body)
+			.then(unwrap<TAgentKnowledge>),
+
+	updateKnowledge: (
+		ws: string,
+		agentId: string,
+		knowledgeId: string,
+		body: TUpdateAgentKnowledgeDto,
+	) =>
+		axiosClient
+			.put<
+				TApiResponse<TAgentKnowledge>
+			>(E.knowledgeUpdate(ws, agentId, knowledgeId), body)
+			.then(unwrap<TAgentKnowledge>),
+
+	deleteKnowledge: (ws: string, agentId: string, knowledgeId: string) =>
+		axiosClient.delete(E.knowledgeDelete(ws, agentId, knowledgeId)).then(() => undefined),
+
+	// ── Persistent memory ─────────────────────────────────────
+	listMemories: (ws: string, agentId: string, scope?: TAgentMemoryScope, signal?: AbortSignal) =>
+		axiosClient
+			.get<
+				TApiResponse<TAgentMemory[]>
+			>(E.memories(ws, agentId), { params: scope ? { scope } : undefined, signal })
+			.then(unwrap<TAgentMemory[]>),
+
+	createMemory: (ws: string, agentId: string, body: TCreateAgentMemoryDto) =>
+		axiosClient
+			.post<TApiResponse<TAgentMemory>>(E.memoryCreate(ws, agentId), body)
+			.then(unwrap<TAgentMemory>),
+
+	deleteMemory: (ws: string, agentId: string, memoryId: string) =>
+		axiosClient.delete(E.memoryDelete(ws, agentId, memoryId)).then(() => undefined),
+
+	clearMemories: (ws: string, agentId: string, scope?: TAgentMemoryScope) =>
+		axiosClient
+			.delete(E.memoriesClear(ws, agentId), { params: scope ? { scope } : undefined })
+			.then(() => undefined),
+
+	// ── Builder metadata ──────────────────────────────────────
+	metaProviders: (ws: string, signal?: AbortSignal) =>
+		axiosClient
+			.get<TApiResponse<{ providers: TAgentMetaProvider[] }>>(E.metaProviders(ws), { signal })
+			.then((r) => r.data.data.providers),
+
+	metaModels: (ws: string, provider?: string, signal?: AbortSignal) =>
+		axiosClient
+			.get<
+				TApiResponse<{ providers: TAgentMetaModelGroup[] }>
+			>(E.metaModels(ws), { params: provider ? { provider } : undefined, signal })
+			.then((r) => r.data.data.providers),
+
+	metaTools: (ws: string, signal?: AbortSignal) =>
+		axiosClient
+			.get<TApiResponse<{ tools: TAgentMetaTool[] }>>(E.metaTools(ws), { signal })
+			.then((r) => r.data.data.tools),
+
+	metaCategories: (ws: string, signal?: AbortSignal) =>
+		axiosClient
+			.get<TApiResponse<{ categories: TAgentMetaCategory[] }>>(E.metaCategories(ws), { signal })
+			.then((r) => r.data.data.categories),
+
+	metaTriggerTypes: (ws: string, signal?: AbortSignal) =>
+		axiosClient
+			.get<
+				TApiResponse<{ trigger_types: TAgentMetaTriggerType[] }>
+			>(E.metaTriggerTypes(ws), { signal })
+			.then((r) => r.data.data.trigger_types),
 };
 
 export const AgentSkillService = {

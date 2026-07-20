@@ -7,6 +7,13 @@ import type {
 	TAgentTrigger,
 	TAgentSkillReference,
 	TAgentSkillScript,
+	TAgentRunsFilters,
+	TAgentAnalyticsFilters,
+	TAgentKnowledgeFilters,
+	TCreateAgentKnowledgeDto,
+	TUpdateAgentKnowledgeDto,
+	TAgentMemoryScope,
+	TCreateAgentMemoryDto,
 } from '@/types/agent.type';
 import { AgentService, AgentSkillService } from './agents.service';
 import { agentKeys, agentSkillKeys } from './agents.keys';
@@ -343,3 +350,192 @@ export const useRemoveAgentSkillScript = (ws: string, skillId: string) => {
 		onError: notify.fromError('Failed to remove script'),
 	});
 };
+
+// ── Message request polling (WebSocket fallback) ─────
+/**
+ * Polls a queued turn's status for clients that can't hold the
+ * `agent.stream.{request_id}` socket. Auto-stops once terminal (completed/failed).
+ */
+export const useAgentMessageRequest = (
+	ws: string,
+	agentId: string,
+	requestId: string | null | undefined,
+	options?: { enabled?: boolean; intervalMs?: number },
+) =>
+	useQuery({
+		queryKey: agentKeys.messageRequest(ws, agentId, requestId ?? ''),
+		queryFn: ({ signal }) => AgentService.requestStatus(ws, agentId, requestId as string, signal),
+		enabled: !!ws && !!agentId && !!requestId && (options?.enabled ?? true),
+		refetchInterval: (query) => {
+			const status = query.state.data?.status;
+			if (status === 'completed' || status === 'failed') return false;
+			return options?.intervalMs ?? 2000;
+		},
+	});
+
+// ── Run history & step traces ────────────────────────
+export const useAgentRuns = (ws: string, agentId: string, filters?: TAgentRunsFilters) =>
+	useQuery({
+		queryKey: agentKeys.runs(ws, agentId, filters),
+		queryFn: ({ signal }) => AgentService.listRuns(ws, agentId, filters, signal),
+		enabled: !!ws && !!agentId,
+	});
+
+export const useAgentRun = (ws: string, agentId: string, runId: string | null | undefined) =>
+	useQuery({
+		queryKey: agentKeys.run(ws, agentId, runId ?? ''),
+		queryFn: ({ signal }) => AgentService.runDetail(ws, agentId, runId as string, signal),
+		enabled: !!ws && !!agentId && !!runId,
+	});
+
+// ── Usage analytics ──────────────────────────────────
+export const useAgentAnalytics = (
+	ws: string,
+	agentId: string,
+	filters?: TAgentAnalyticsFilters,
+) =>
+	useQuery({
+		queryKey: agentKeys.analytics(ws, agentId, filters),
+		queryFn: ({ signal }) => AgentService.analytics(ws, agentId, filters, signal),
+		enabled: !!ws && !!agentId,
+	});
+
+// ── Knowledge base ───────────────────────────────────
+export const useAgentKnowledge = (
+	ws: string,
+	agentId: string,
+	filters?: TAgentKnowledgeFilters,
+) =>
+	useQuery({
+		queryKey: agentKeys.knowledge(ws, agentId, filters),
+		queryFn: ({ signal }) => AgentService.listKnowledge(ws, agentId, filters, signal),
+		enabled: !!ws && !!agentId,
+	});
+
+export const useCreateAgentKnowledge = (ws: string, agentId: string) => {
+	const qc = useQueryClient();
+	return useMutation({
+		mutationFn: (body: TCreateAgentKnowledgeDto) =>
+			AgentService.createKnowledge(ws, agentId, body),
+		onSuccess: () => {
+			qc.invalidateQueries({ queryKey: ['agents', ws, agentId, 'knowledge'] });
+			notify.success('Knowledge added');
+		},
+		onError: notify.fromError('Failed to add knowledge'),
+	});
+};
+
+export const useUpdateAgentKnowledge = (ws: string, agentId: string) => {
+	const qc = useQueryClient();
+	return useMutation({
+		mutationFn: ({
+			knowledgeId,
+			body,
+		}: {
+			knowledgeId: string;
+			body: TUpdateAgentKnowledgeDto;
+		}) => AgentService.updateKnowledge(ws, agentId, knowledgeId, body),
+		onSuccess: () => {
+			qc.invalidateQueries({ queryKey: ['agents', ws, agentId, 'knowledge'] });
+			notify.success('Knowledge updated');
+		},
+		onError: notify.fromError('Failed to update knowledge'),
+	});
+};
+
+export const useDeleteAgentKnowledge = (ws: string, agentId: string) => {
+	const qc = useQueryClient();
+	return useMutation({
+		mutationFn: (knowledgeId: string) => AgentService.deleteKnowledge(ws, agentId, knowledgeId),
+		onSuccess: () => {
+			qc.invalidateQueries({ queryKey: ['agents', ws, agentId, 'knowledge'] });
+			notify.success('Knowledge deleted');
+		},
+		onError: notify.fromError('Failed to delete knowledge'),
+	});
+};
+
+// ── Persistent memory ────────────────────────────────
+export const useAgentMemories = (ws: string, agentId: string, scope?: TAgentMemoryScope) =>
+	useQuery({
+		queryKey: agentKeys.memories(ws, agentId, scope),
+		queryFn: ({ signal }) => AgentService.listMemories(ws, agentId, scope, signal),
+		enabled: !!ws && !!agentId,
+	});
+
+export const useCreateAgentMemory = (ws: string, agentId: string) => {
+	const qc = useQueryClient();
+	return useMutation({
+		mutationFn: (body: TCreateAgentMemoryDto) => AgentService.createMemory(ws, agentId, body),
+		onSuccess: () => {
+			qc.invalidateQueries({ queryKey: ['agents', ws, agentId, 'memories'] });
+			notify.success('Memory saved');
+		},
+		onError: notify.fromError('Failed to save memory'),
+	});
+};
+
+export const useDeleteAgentMemory = (ws: string, agentId: string) => {
+	const qc = useQueryClient();
+	return useMutation({
+		mutationFn: (memoryId: string) => AgentService.deleteMemory(ws, agentId, memoryId),
+		onSuccess: () => {
+			qc.invalidateQueries({ queryKey: ['agents', ws, agentId, 'memories'] });
+			notify.success('Memory deleted');
+		},
+		onError: notify.fromError('Failed to delete memory'),
+	});
+};
+
+export const useClearAgentMemories = (ws: string, agentId: string) => {
+	const qc = useQueryClient();
+	return useMutation({
+		mutationFn: (scope?: TAgentMemoryScope) => AgentService.clearMemories(ws, agentId, scope),
+		onSuccess: () => {
+			qc.invalidateQueries({ queryKey: ['agents', ws, agentId, 'memories'] });
+			notify.success('Memories cleared');
+		},
+		onError: notify.fromError('Failed to clear memories'),
+	});
+};
+
+// ── Builder metadata ─────────────────────────────────
+export const useAgentMetaProviders = (ws: string) =>
+	useQuery({
+		queryKey: agentKeys.meta(ws, 'providers'),
+		queryFn: ({ signal }) => AgentService.metaProviders(ws, signal),
+		enabled: !!ws,
+		staleTime: 5 * 60 * 1000,
+	});
+
+export const useAgentMetaModels = (ws: string, provider?: string) =>
+	useQuery({
+		queryKey: agentKeys.meta(ws, 'models', provider),
+		queryFn: ({ signal }) => AgentService.metaModels(ws, provider, signal),
+		enabled: !!ws,
+		staleTime: 5 * 60 * 1000,
+	});
+
+export const useAgentMetaTools = (ws: string) =>
+	useQuery({
+		queryKey: agentKeys.meta(ws, 'tools'),
+		queryFn: ({ signal }) => AgentService.metaTools(ws, signal),
+		enabled: !!ws,
+		staleTime: 5 * 60 * 1000,
+	});
+
+export const useAgentMetaCategories = (ws: string) =>
+	useQuery({
+		queryKey: agentKeys.meta(ws, 'categories'),
+		queryFn: ({ signal }) => AgentService.metaCategories(ws, signal),
+		enabled: !!ws,
+		staleTime: 5 * 60 * 1000,
+	});
+
+export const useAgentMetaTriggerTypes = (ws: string) =>
+	useQuery({
+		queryKey: agentKeys.meta(ws, 'trigger-types'),
+		queryFn: ({ signal }) => AgentService.metaTriggerTypes(ws, signal),
+		enabled: !!ws,
+		staleTime: 5 * 60 * 1000,
+	});

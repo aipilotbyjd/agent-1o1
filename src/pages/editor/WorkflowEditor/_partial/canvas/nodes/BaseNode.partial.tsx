@@ -31,7 +31,9 @@ import NodeInlineTest from './NodeInlineTest.partial';
 import NodeRunIO from './NodeRunIO.partial';
 import NodeToolbar from './NodeToolbar.partial';
 import NodeIOPanel from './NodeIOPanel.partial';
+import NodeOptionsPanel from './NodeOptionsPanel.partial';
 import NodeLoopToggle from './NodeLoopToggle.partial';
+import NodeFlowTriggerToggle from './NodeFlowTriggerToggle.partial';
 import NodeAuthWarning from './NodeAuthWarning.partial';
 import NodeCredentialBadge from './NodeCredentialBadge.partial';
 import { tintStyle, getNodeAccentColor } from '../../library/library.util';
@@ -175,6 +177,10 @@ const BaseNode = ({ id, data, selected }: NodeProps<TCanvasNode>) => {
 		? (data.values[credentialField.key] as string | undefined)
 		: undefined;
 	const needsAuth = Boolean(def?.requiresCredential) && !credentialId;
+	// Integration-style nodes (and anything explicitly flagged) can be promoted to
+	// the flow's entry trigger — Gumloop's "Activate as flow trigger" strip.
+	const canBeTrigger = Boolean(def?.supportsTrigger || def?.requiresCredential);
+	const isFlowTrigger = Boolean(data.activateAsTrigger);
 
 	const durationMs = typeof data.durationMs === 'number' ? data.durationMs : undefined;
 
@@ -222,10 +228,18 @@ const BaseNode = ({ id, data, selected }: NodeProps<TCanvasNode>) => {
 				</div>
 			)}
 
+			{canBeTrigger && (
+				<NodeFlowTriggerToggle nodeId={id} active={isFlowTrigger} />
+			)}
+
 			{needsAuth && <NodeAuthWarning />}
 
 			<div
-				className='rounded-2xl p-3.5 shadow-[inset_0_1px_2px_rgba(24,24,27,0.03)] dark:shadow-[inset_0_1px_2px_rgba(0,0,0,0.25)]'
+				className={[
+					'p-3.5 shadow-[inset_0_1px_2px_rgba(24,24,27,0.03)] dark:shadow-[inset_0_1px_2px_rgba(0,0,0,0.25)]',
+					// Square the top when a strip sits above so they read as one stacked card.
+					canBeTrigger || needsAuth ? 'rounded-b-2xl' : 'rounded-2xl',
+				].join(' ')}
 				style={{
 					backgroundColor: effectiveColorHex
 						? `${effectiveColorHex}0d`
@@ -274,6 +288,17 @@ const BaseNode = ({ id, data, selected }: NodeProps<TCanvasNode>) => {
 								{def?.supportsLoopMode && (
 									<NodeLoopToggle nodeId={id} active={Boolean(data.loopMode)} />
 								)}
+								<button
+									type='button'
+									title={collapsed ? 'Expand node' : 'Collapse node'}
+									onPointerDown={(event) => event.stopPropagation()}
+									onClick={(event) => {
+										event.stopPropagation();
+										dispatch({ type: 'TOGGLE_NODE_COLLAPSED', id });
+									}}
+									className='nodrag flex size-4 shrink-0 items-center justify-center rounded text-zinc-400 transition hover:text-primary-500 dark:hover:text-primary-400'>
+									{collapsed ? <ChevronsUpDown size={12} /> : <ChevronsDownUp size={12} />}
+								</button>
 								{data.pinned && (
 									<span
 										title='Output pinned — reused on re-run'
@@ -302,7 +327,7 @@ const BaseNode = ({ id, data, selected }: NodeProps<TCanvasNode>) => {
 				</div>
 
 				{/* Node action toolbar — floats in the corner, revealed on hover */}
-				<div className='absolute top-2.5 right-2.5 z-10 flex items-center gap-0.5 rounded-xl border border-zinc-200/80 bg-white/95 p-0.5 opacity-0 shadow-sm backdrop-blur-sm transition-opacity duration-150 group-hover:opacity-100 dark:border-zinc-700/80 dark:bg-zinc-900/95'>
+				<div className='absolute top-2.5 right-2.5 z-10 flex items-center gap-0.5 rounded-xl border border-zinc-200/80 bg-white/95 p-0.5 shadow-sm backdrop-blur-sm dark:border-zinc-700/80 dark:bg-zinc-900/95'>
 					<button
 						type='button'
 						title={collapsed ? 'Expand node' : 'Collapse node'}
@@ -408,6 +433,12 @@ const BaseNode = ({ id, data, selected }: NodeProps<TCanvasNode>) => {
 				/>
 
 				<NodeIOPanel nodeId={id} nodeColor={effectiveColorHex} incoming={incoming} outputs={outputs} />
+				<NodeOptionsPanel
+					nodeId={id}
+					fields={def?.fields ?? []}
+					credentialField={credentialField}
+					credentialId={credentialId ? String(credentialId) : undefined}
+				/>
 			</div>
 
 		</motion.div>

@@ -35,6 +35,7 @@ import NodeFields from './NodeFields.partial';
 import { PortHandles } from './BaseNode.partial';
 import NodeToolbar from './NodeToolbar.partial';
 import NodeIOPanel from './NodeIOPanel.partial';
+import NodeOptionsPanel from './NodeOptionsPanel.partial';
 import NodeLoopToggle from './NodeLoopToggle.partial';
 import NodeAuthWarning from './NodeAuthWarning.partial';
 import NodeCredentialBadge from './NodeCredentialBadge.partial';
@@ -286,7 +287,7 @@ const TriggerNode = ({ id, data, selected }: NodeProps<TCanvasNode>) => {
 									</span>
 								)}
 							</div>
-							<div className='flex shrink-0 items-center gap-1 rounded-md border border-zinc-200/80 bg-white/80 px-1 py-0.5 opacity-0 shadow-sm backdrop-blur-sm transition-opacity duration-150 group-hover:opacity-100 dark:border-zinc-700/80 dark:bg-zinc-900/80'>
+							<div className='flex shrink-0 items-center gap-1 rounded-md border border-zinc-200/80 bg-white/80 px-1 py-0.5 shadow-sm backdrop-blur-sm dark:border-zinc-700/80 dark:bg-zinc-900/80'>
 								{def?.supportsLoopMode && (
 									<NodeLoopToggle nodeId={id} active={Boolean(data.loopMode)} />
 								)}
@@ -411,6 +412,15 @@ const TriggerNode = ({ id, data, selected }: NodeProps<TCanvasNode>) => {
 
 			{selected && def && (
 				<NodeIOPanel nodeId={id} nodeColor={color} incoming={incoming} outputs={def.outputs ?? []} />
+			)}
+
+			{selected && (
+				<NodeOptionsPanel
+					nodeId={id}
+					fields={def?.fields ?? []}
+					credentialField={credentialField}
+					credentialId={credentialId ? String(credentialId) : undefined}
+				/>
 			)}
 
 		</motion.div>

@@ -96,6 +96,7 @@ export type TWorkflowEditorAction =
 	| { type: 'SET_NODE_COLOR'; id: string; color: string | null }
 	| { type: 'TOGGLE_NODE_BREAKPOINT'; id: string }
 	| { type: 'TOGGLE_NODE_LOOP_MODE'; id: string }
+	| { type: 'TOGGLE_NODE_FLOW_TRIGGER'; id: string }
 	| { type: 'TOGGLE_NODE_COLLAPSED'; id: string }
 	| { type: 'ADD_NODE_COMMENT'; id: string; text: string }
 	| { type: 'REMOVE_NODE_COMMENT'; id: string; commentId: string }
@@ -692,6 +693,21 @@ export const workflowEditorReducer = (
 						: node,
 				),
 			};
+		case 'TOGGLE_NODE_FLOW_TRIGGER': {
+			// A flow has a single entry trigger — enabling one clears the rest.
+			const enabling = !state.nodes.find((node) => node.id === action.id)?.data.activateAsTrigger;
+			return {
+				...state,
+				workflow: { ...state.workflow, savingState: 'dirty', updatedAt: Date.now() },
+				nodes: state.nodes.map((node) =>
+					node.id === action.id
+						? { ...node, data: { ...node.data, activateAsTrigger: enabling } }
+						: enabling && node.data.activateAsTrigger
+							? { ...node, data: { ...node.data, activateAsTrigger: false } }
+							: node,
+				),
+			};
+		}
 		case 'TOGGLE_NODE_COLLAPSED':
 			return {
 				...state,
