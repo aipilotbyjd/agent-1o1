@@ -238,7 +238,9 @@ const BuildPage = () => {
 	// and fall back to the static list when the catalog is empty/unconfigured.
 	const { data: metaModelGroups } = useAgentMetaModels(workspaceId);
 	const modelOptions = useMemo(() => {
-		const liveIds = (metaModelGroups ?? []).flatMap((group) => group.models);
+		const liveIds = (metaModelGroups ?? [])
+			.flatMap((group) => group.models)
+			.filter((id): id is string => typeof id === 'string');
 		if (liveIds.length === 0) return agentModelOptions;
 		return liveIds.map((id) => {
 			const known = agentModelOptions.find((m) => m.id === id);
