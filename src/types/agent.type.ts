@@ -48,11 +48,24 @@ export type TAgentSkillScript = {
 	updated_at: string;
 };
 
+export type TAgentSkillCategory =
+	| 'General'
+	| 'Research'
+	| 'Data'
+	| 'Communication'
+	| 'Automation'
+	| 'Development'
+	| 'Content';
+
 export type TAgentSkill = {
 	id: string;
 	name: string;
 	slug: string;
 	description: string | null;
+	category?: TAgentSkillCategory | string | null;
+	icon?: string | null;
+	color?: string | null;
+	tags?: string[] | null;
 	instructions: string;
 	is_shared: boolean;
 	version: number;
@@ -63,6 +76,23 @@ export type TAgentSkill = {
 	scripts_count?: number;
 	created_at: string;
 	updated_at: string;
+};
+
+export type TSkillFilters = {
+	search?: string;
+	category?: string;
+	is_shared?: boolean;
+};
+
+export type TGenerateSkillDto = {
+	prompt: string;
+};
+
+export type TGeneratedSkillDraft = {
+	name: string;
+	description: string | null;
+	category: string;
+	instructions: string;
 };
 
 /** What the conversation `store` / `sendMessage` endpoints now return — the turn is queued, not resolved yet. */

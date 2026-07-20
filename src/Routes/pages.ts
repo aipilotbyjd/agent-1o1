@@ -266,6 +266,12 @@ const app = {
 			text: 'Agents',
 			icon: 'Robot01' as TIcons,
 		},
+		skills: {
+			id: 'skills',
+			to: '/skills',
+			text: 'Skills',
+			icon: 'Puzzle' as TIcons,
+		},
 		apps: {
 			id: 'apps',
 			to: '/integrations',

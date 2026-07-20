@@ -27,6 +27,7 @@ export const agentKeys = {
 
 export const agentSkillKeys = {
 	all: (ws: string) => ['agent-skills', ws] as const,
-	list: (ws: string) => ['agent-skills', ws, 'list'] as const,
+	list: (ws: string, filters?: Record<string, unknown>) =>
+		['agent-skills', ws, 'list', filters ?? {}] as const,
 	detail: (ws: string, skillId: string) => ['agent-skills', ws, 'detail', skillId] as const,
 };

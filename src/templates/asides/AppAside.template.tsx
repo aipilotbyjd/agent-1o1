@@ -81,6 +81,7 @@ const AppAsideTemplate = () => {
 						}
 					/>
 					<NavItem {...pages.app.subPages.agents} />
+					<NavItem {...pages.app.subPages.skills} />
 					<NavItem {...pages.app.subPages.apps} />
 					<NavItem
 						{...pages.app.subPages.templates}

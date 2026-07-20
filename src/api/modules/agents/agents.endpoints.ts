@@ -69,6 +69,7 @@ export const AgentEndpoints = {
 export const AgentSkillEndpoints = {
 	list: (ws: string) => `/workspaces/${ws}/agent-skills`,
 	create: (ws: string) => `/workspaces/${ws}/agent-skills`,
+	generate: (ws: string) => `/workspaces/${ws}/agent-skills/generate`,
 	detail: (ws: string, skillId: string) => `/workspaces/${ws}/agent-skills/${skillId}`,
 	update: (ws: string, skillId: string) => `/workspaces/${ws}/agent-skills/${skillId}`,
 	delete: (ws: string, skillId: string) => `/workspaces/${ws}/agent-skills/${skillId}`,

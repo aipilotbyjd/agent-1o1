@@ -10,6 +10,9 @@ import type {
 	TAgentTrigger,
 	TAgentSkillReference,
 	TAgentSkillScript,
+	TSkillFilters,
+	TGenerateSkillDto,
+	TGeneratedSkillDraft,
 	TAgentMessageRequest,
 	TAgentRun,
 	TAgentRunsFilters,
@@ -233,9 +236,9 @@ export const AgentService = {
 };
 
 export const AgentSkillService = {
-	list: (ws: string, signal?: AbortSignal) =>
+	list: (ws: string, filters?: TSkillFilters, signal?: AbortSignal) =>
 		axiosClient
-			.get<TApiResponse<TAgentSkill[]>>(S.list(ws), { signal })
+			.get<TApiResponse<TAgentSkill[]>>(S.list(ws), { params: filters, signal })
 			.then(unwrap<TAgentSkill[]>),
 
 	detail: (ws: string, skillId: string, signal?: AbortSignal) =>
@@ -245,6 +248,13 @@ export const AgentSkillService = {
 
 	create: (ws: string, body: Partial<TAgentSkill>) =>
 		axiosClient.post<TApiResponse<TAgentSkill>>(S.create(ws), body).then(unwrap<TAgentSkill>),
+
+	generate: (ws: string, body: TGenerateSkillDto) =>
+		axiosClient
+			.post<
+				TApiResponse<TGeneratedSkillDraft>
+			>(S.generate(ws), body, { timeout: 60_000 })
+			.then(unwrap<TGeneratedSkillDraft>),
 
 	update: (ws: string, skillId: string, body: Partial<TAgentSkill>) =>
 		axiosClient

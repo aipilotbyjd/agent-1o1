@@ -11,6 +11,9 @@ const AgentBuilderPage = lazy(() => import('@/pages/agent/AgentBuilder/AgentBuil
 const AgentsLayout = lazy(() => import('@/pages/app/Agents/_layouts/Agents.layout'));
 const AgentsListPage = lazy(() => import('@/pages/app/Agents/AgentsList.page'));
 
+const SkillsLayout = lazy(() => import('@/pages/app/Skills/_layouts/Skills.layout'));
+const SkillsListPage = lazy(() => import('@/pages/app/Skills/SkillsList.page'));
+
 const AppsLayout = lazy(() => import('@/pages/app/Apps/_layouts/Apps.layout'));
 const AppsListPage = lazy(() => import('@/pages/app/Apps/AppsList.page'));
 
@@ -51,6 +54,16 @@ const AppPages = [
 			{
 				path: pages.app.subPages.agents.to,
 				element: <AgentsListPage />,
+			},
+		],
+	},
+	{
+		path: pages.app.subPages.skills.to,
+		element: <SkillsLayout />,
+		children: [
+			{
+				path: pages.app.subPages.skills.to,
+				element: <SkillsListPage />,
 			},
 		],
 	},

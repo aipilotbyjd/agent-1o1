@@ -7,6 +7,8 @@ import type {
 	TAgentTrigger,
 	TAgentSkillReference,
 	TAgentSkillScript,
+	TSkillFilters,
+	TGenerateSkillDto,
 	TAgentRunsFilters,
 	TAgentAnalyticsFilters,
 	TAgentKnowledgeFilters,
@@ -116,10 +118,10 @@ export const useDetachAgentSkill = (ws: string) => {
 };
 
 // ── Skills ───────────────────────────────────────────
-export const useAgentSkills = (ws: string) =>
+export const useAgentSkills = (ws: string, filters?: TSkillFilters) =>
 	useQuery({
-		queryKey: agentSkillKeys.list(ws),
-		queryFn: ({ signal }) => AgentSkillService.list(ws, signal),
+		queryKey: agentSkillKeys.list(ws, filters),
+		queryFn: ({ signal }) => AgentSkillService.list(ws, filters, signal),
 		enabled: !!ws,
 	});
 
@@ -147,6 +149,12 @@ export const useUpdateAgentSkill = (ws: string) => {
 		onError: notify.fromError('Failed to update skill'),
 	});
 };
+
+export const useGenerateSkill = (ws: string) =>
+	useMutation({
+		mutationFn: (body: TGenerateSkillDto) => AgentSkillService.generate(ws, body),
+		onError: notify.fromError('Failed to generate skill'),
+	});
 
 export const useDeleteAgentSkill = (ws: string) => {
 	const qc = useQueryClient();
