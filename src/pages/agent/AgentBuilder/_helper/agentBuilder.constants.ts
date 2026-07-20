@@ -4,14 +4,18 @@ import type { TAgentTemplate } from '../_types/agentBuilder.type';
 /**
  * Models available to agents, cheapest/fastest first.
  *
- * Routed entirely through the 'anyapi' provider (App\Ai\AnyApiProvider) — the
- * only gateway with a configured key in this environment (ANYAPI_API_KEY).
- * Model ids are vendor-prefixed OpenRouter-style ('openai/…', 'anthropic/…',
+ * Most entries route through the 'anyapi' provider (App\Ai\AnyApiProvider),
+ * with model ids vendor-prefixed OpenRouter-style ('openai/…', 'anthropic/…',
  * 'google/…'), per config('ai.providers.anyapi.models').
+ *
+ * DeepSeek entries route through 'digitalocean' (DigitalOcean Model Access
+ * Keys / Gradient AI Platform inference) instead — ids match DigitalOcean's
+ * model catalog exactly. Requires a configured DigitalOcean model access key
+ * on the backend.
  */
 export const agentModelOptions: {
 	id: string;
-	provider: 'anyapi';
+	provider: 'anyapi' | 'digitalocean';
 	label: string;
 	tier: string;
 	description: string;
@@ -36,6 +40,35 @@ export const agentModelOptions: {
 		label: 'DeepSeek Chat',
 		tier: 'Very cheap',
 		description: 'DeepSeek-V3. Extremely low cost per token, strong for coding and reasoning tasks.',
+	},
+	{
+		id: 'deepseek-3.2',
+		provider: 'digitalocean',
+		label: 'DeepSeek 3.2',
+		tier: 'Very cheap',
+		description: 'DeepSeek 3.2 via DigitalOcean Model Access Keys. Low cost, strong general-purpose reasoning.',
+	},
+	{
+		id: 'deepseek-r1-distill-llama-70b',
+		provider: 'digitalocean',
+		label: 'DeepSeek R1 Distill Llama 70B',
+		tier: 'Cheap',
+		description:
+			'DeepSeek R1 reasoning distilled onto Llama 70B via DigitalOcean. Good balance of reasoning quality and cost.',
+	},
+	{
+		id: 'deepseek-4-flash',
+		provider: 'digitalocean',
+		label: 'DeepSeek V4 Flash',
+		tier: 'Fast & cheap',
+		description: 'DeepSeek V4 Flash via DigitalOcean Model Access Keys. Optimized for low-latency responses.',
+	},
+	{
+		id: 'deepseek-v4-pro',
+		provider: 'digitalocean',
+		label: 'DeepSeek V4 Pro',
+		tier: 'Most capable',
+		description: 'DeepSeek V4 Pro via DigitalOcean Model Access Keys. Highest-capability DeepSeek model.',
 	},
 	{
 		id: 'moonshotai/kimi-k2',
