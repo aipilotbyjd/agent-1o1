@@ -133,6 +133,16 @@ export type TAgentStreamToolResult = {
 	timestamp: string;
 };
 
+/** Broadcast right after ExportArtifactTool produces a result — see ProcessAgentMessageJob::broadcastArtifact(). */
+export type TAgentStreamArtifact = {
+	id: string;
+	group_id: string;
+	filename: string;
+	version: number;
+	mime_type: string;
+	size: number;
+};
+
 /** Terminal event on the same channel — mirrors AgentMessageReady::broadcastWith(). */
 export type TAgentMessageReadyEvent = {
 	conversation_id: string | null;

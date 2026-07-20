@@ -89,8 +89,9 @@ import {
 import type { TAgentTriggerType } from '@/types/agent.type';
 import { AgentService } from '@/api/modules/agents/agents.service';
 import { subscribeToAgentStream } from '@/api/modules/agents/agents.realtime';
+import { useDownloadArtifact } from '@/api/modules/artifacts';
 import { useRealtime } from '@/context/realtimeContext';
-import { XCircle, Wrench } from 'lucide-react';
+import { XCircle, Wrench, FileDown } from 'lucide-react';
 import AgentDataPanel from './_partial/AgentDataPanel.partial';
 
 /** One entry in the live "scratchpad" — reasoning text or a tool call, exactly as it streamed in. */
@@ -102,6 +103,14 @@ type TChatTimelineItem =
 			toolName: string;
 			arguments: Record<string, unknown>;
 			status: 'running' | 'done' | 'error';
+	  }
+	| {
+			kind: 'artifact';
+			id: string;
+			filename: string;
+			version: number;
+			mimeType: string;
+			size: number;
 	  };
 
 interface TMessage {
@@ -165,6 +174,44 @@ const ToolStepLine = ({
 		<span>{prettifyToolName(item.toolName.replace(/Tool$/, ''))}</span>
 	</div>
 );
+
+const formatArtifactSize = (bytes: number): string => {
+	if (bytes === 0) return '0 B';
+	const units = ['B', 'KB', 'MB', 'GB'];
+	const exponent = Math.min(Math.floor(Math.log(bytes) / Math.log(1024)), units.length - 1);
+	const value = bytes / 1024 ** exponent;
+	return `${exponent === 0 ? value : value.toFixed(1)} ${units[exponent]}`;
+};
+
+/** Rich, always-visible card for a file an agent exported mid-conversation. */
+const ArtifactCard = ({
+	item,
+	ws,
+}: {
+	item: Extract<TChatTimelineItem, { kind: 'artifact' }>;
+	ws: string;
+}) => {
+	const downloadMutation = useDownloadArtifact(ws);
+
+	return (
+		<div className='flex items-center gap-3 rounded-2xl border border-zinc-200/80 bg-white px-4 py-3 shadow-2xs dark:border-zinc-800/85 dark:bg-zinc-900/60'>
+			<div className='flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-primary-400/10 text-primary-600 dark:text-primary-400'>
+				<FileDown size={16} />
+			</div>
+			<div className='min-w-0 flex-1'>
+				<p className='truncate text-xs font-bold text-zinc-800 dark:text-zinc-200'>{item.filename}</p>
+				<p className='text-[10px] font-semibold text-zinc-400 dark:text-zinc-500'>
+					v{item.version} · {formatArtifactSize(item.size)}
+				</p>
+			</div>
+			<button
+				onClick={() => downloadMutation.mutate({ artifactId: item.id, filename: item.filename })}
+				className='flex h-8 w-8 shrink-0 cursor-pointer items-center justify-center rounded-lg border border-zinc-200 text-zinc-500 hover:bg-zinc-50 dark:border-zinc-800 dark:text-zinc-400 dark:hover:bg-zinc-800'>
+				<Download size={13} />
+			</button>
+		</div>
+	);
+};
 
 /** Collapsible "N steps" summary shown above a finished agent reply — what it did to get there. */
 const TimelineSteps = ({ items, className = '' }: { items: TChatTimelineItem[]; className?: string }) => {
@@ -707,6 +754,19 @@ const BuildPage = () => {
 									: item,
 							),
 						);
+					},
+					onArtifact: (event) => {
+						setTimeline((prev) => [
+							...prev,
+							{
+								kind: 'artifact',
+								id: event.id,
+								filename: event.filename,
+								version: event.version,
+								mimeType: event.mime_type,
+								size: event.size,
+							},
+						]);
 					},
 					onReady: (event) => {
 						unsubscribe();
@@ -1355,6 +1415,17 @@ const BuildPage = () => {
 													<TimelineSteps items={message.timeline} className='mb-1.5' />
 												)}
 
+												{/* Files the agent exported — always shown, never collapsed */}
+												{!isUser && message.timeline && message.timeline.length > 0 && (
+													<div className='mb-1.5 flex flex-col gap-1.5'>
+														{message.timeline.map((item) =>
+															item.kind === 'artifact' ? (
+																<ArtifactCard key={item.id} item={item} ws={workspaceId} />
+															) : null,
+														)}
+													</div>
+												)}
+
 												{/* Chat bubble */}
 												<div className={`rounded-2xl px-4 py-3 text-sm font-semibold leading-relaxed ${
 													isUser
@@ -1450,18 +1521,33 @@ const BuildPage = () => {
 												<div className='w-2.5 h-2.5 rounded-full bg-primary-400 animate-bounce' />
 											</div>
 										) : (
-											<div className='flex flex-col gap-1.5 rounded-2xl rounded-tl-none border border-zinc-200/80 bg-white px-4 py-3 text-sm leading-relaxed dark:border-zinc-800/85 dark:bg-zinc-900/60 shadow-2xs'>
-												{streamTimeline.map((item) =>
-													item.kind === 'text' ? (
-														<span key={item.id} className='whitespace-pre-line text-zinc-700 dark:text-zinc-300'>
-															{item.text}
-															<span className='ml-0.5 inline-block h-3.5 w-[2px] animate-pulse bg-current align-middle' />
-														</span>
-													) : (
-														<ToolStepLine key={item.id} item={item} />
-													),
+											<>
+												<div className='flex flex-col gap-1.5 rounded-2xl rounded-tl-none border border-zinc-200/80 bg-white px-4 py-3 text-sm leading-relaxed dark:border-zinc-800/85 dark:bg-zinc-900/60 shadow-2xs'>
+													{streamTimeline.map((item) => {
+														if (item.kind === 'text') {
+															return (
+																<span key={item.id} className='whitespace-pre-line text-zinc-700 dark:text-zinc-300'>
+																	{item.text}
+																	<span className='ml-0.5 inline-block h-3.5 w-[2px] animate-pulse bg-current align-middle' />
+																</span>
+															);
+														}
+														if (item.kind === 'tool') {
+															return <ToolStepLine key={item.id} item={item} />;
+														}
+														return null;
+													})}
+												</div>
+												{streamTimeline.some((item) => item.kind === 'artifact') && (
+													<div className='mt-1.5 flex flex-col gap-1.5'>
+														{streamTimeline.map((item) =>
+															item.kind === 'artifact' ? (
+																<ArtifactCard key={item.id} item={item} ws={workspaceId} />
+															) : null,
+														)}
+													</div>
 												)}
-											</div>
+											</>
 										)}
 									</div>
 								</div>

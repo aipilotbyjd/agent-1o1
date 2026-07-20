@@ -15,7 +15,7 @@ type TWorkflowShellState = {
 		| 'dashboard'
 		| 'agents'
 		| 'skills'
-		| 'files'
+		| 'artifacts'
 		| 'apps'
 		| 'history'
 		| 'workflows'

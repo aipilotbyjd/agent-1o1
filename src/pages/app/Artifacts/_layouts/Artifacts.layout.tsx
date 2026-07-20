@@ -9,7 +9,7 @@ export interface OutletContextType {
 	setHeaderLeft: Dispatch<SetStateAction<ReactNode>>;
 }
 
-const FilesLayout = () => {
+const ArtifactsLayout = () => {
 	const [headerLeft, setHeaderLeft] = useState('');
 
 	return (
@@ -26,4 +26,4 @@ const FilesLayout = () => {
 	);
 };
 
-export default FilesLayout;
+export default ArtifactsLayout;

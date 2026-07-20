@@ -1,5 +1,6 @@
 import pages from '@/Routes/pages';
 import { lazy } from 'react';
+import { Navigate } from 'react-router';
 
 const DashboardLayout = lazy(() => import('@/pages/app/Dashboard/_layouts/Dashboard.layout'));
 const DashboardPage = lazy(() => import('@/pages/app/Dashboard/Dashboard.page'));
@@ -17,8 +18,8 @@ const SkillsListPage = lazy(() => import('@/pages/app/Skills/SkillsList.page'));
 const AppsLayout = lazy(() => import('@/pages/app/Apps/_layouts/Apps.layout'));
 const AppsListPage = lazy(() => import('@/pages/app/Apps/AppsList.page'));
 
-const FilesLayout = lazy(() => import('@/pages/app/Files/_layouts/Files.layout'));
-const FilesListPage = lazy(() => import('@/pages/app/Files/FilesList.page'));
+const ArtifactsLayout = lazy(() => import('@/pages/app/Artifacts/_layouts/Artifacts.layout'));
+const ArtifactsListPage = lazy(() => import('@/pages/app/Artifacts/ArtifactsList.page'));
 
 const HistoryLayout = lazy(() => import('@/pages/app/History/_layouts/History.layout'));
 const HistoryListPage = lazy(() => import('@/pages/app/History/HistoryList.page'));
@@ -78,14 +79,18 @@ const AppPages = [
 		],
 	},
 	{
-		path: pages.app.subPages.files.to,
-		element: <FilesLayout />,
+		path: pages.app.subPages.artifacts.to,
+		element: <ArtifactsLayout />,
 		children: [
 			{
-				path: pages.app.subPages.files.to,
-				element: <FilesListPage />,
+				path: pages.app.subPages.artifacts.to,
+				element: <ArtifactsListPage />,
 			},
 		],
+	},
+	{
+		path: '/files',
+		element: <Navigate to={pages.app.subPages.artifacts.to} replace />,
 	},
 	{
 		path: pages.app.subPages.history.to,

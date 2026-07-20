@@ -278,11 +278,11 @@ const app = {
 			text: 'Apps',
 			icon: 'Plug01' as TIcons,
 		},
-		files: {
-			id: 'files',
-			to: '/files',
-			text: 'Files',
-			icon: 'Folder01' as TIcons,
+		artifacts: {
+			id: 'artifacts',
+			to: '/artifacts',
+			text: 'Artifacts',
+			icon: 'FileDownload' as TIcons,
 		},
 		history: {
 			id: 'history',

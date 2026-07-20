@@ -12,7 +12,7 @@ type TWorkspaceView =
 	| 'dashboard'
 	| 'agents'
 	| 'skills'
-	| 'files'
+	| 'artifacts'
 	| 'apps'
 	| 'history'
 	| 'workflows'

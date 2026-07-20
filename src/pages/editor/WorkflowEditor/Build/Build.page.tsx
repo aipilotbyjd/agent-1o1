@@ -17,7 +17,7 @@ import ActionBar from '../_partial/shell/ActionBar.partial';
 import AgentBuilderPage from '@/pages/agent/AgentBuilder/AgentBuilder.page';
 import WorkspaceSettingsPage from '@/pages/settings/Workspace/Workspace.page';
 import ConnectedAppsPage from '@/pages/app/Apps/AppsList.page';
-import FilesPage from '@/pages/app/Files/FilesList.page';
+import ArtifactsPage from '@/pages/app/Artifacts/ArtifactsList.page';
 import HistoryPage from '@/pages/app/History/HistoryList.page';
 import Topbar from '../_partial/shell/Topbar.partial';
 import WorkflowsPage from '@/pages/app/Workflows/WorkflowsList.page';
@@ -110,8 +110,8 @@ const BuildPage = () => {
 				<WorkflowsPage />
 			) : resolvedView === 'agents' ? (
 				<AgentBuilderPage />
-			) : resolvedView === 'files' ? (
-				<FilesPage />
+			) : resolvedView === 'artifacts' ? (
+				<ArtifactsPage />
 			) : resolvedView === 'apps' || resolvedView === 'integrations' ? (
 				<ConnectedAppsPage />
 			) : resolvedView === 'history' ? (

@@ -3,6 +3,7 @@ import type {
 	TAgentStreamTextDelta,
 	TAgentStreamToolCall,
 	TAgentStreamToolResult,
+	TAgentStreamArtifact,
 } from '@/types/agent.type';
 import type { IEchoLike } from '@/api/modules/workflow-builder/workflow-builder.realtime';
 
@@ -17,12 +18,14 @@ export const AGENT_MESSAGE_READY_EVENT = '.agent.message.ready';
 export const AGENT_TEXT_DELTA_EVENT = '.text_delta';
 export const AGENT_TOOL_CALL_EVENT = '.tool_call';
 export const AGENT_TOOL_RESULT_EVENT = '.tool_result';
+export const AGENT_ARTIFACT_EVENT = '.artifact';
 
 export interface ISubscribeAgentStreamOptions {
 	onReady: (event: TAgentMessageReadyEvent) => void;
 	onTextDelta?: (event: TAgentStreamTextDelta) => void;
 	onToolCall?: (event: TAgentStreamToolCall) => void;
 	onToolResult?: (event: TAgentStreamToolResult) => void;
+	onArtifact?: (event: TAgentStreamArtifact) => void;
 }
 
 /**
@@ -33,7 +36,7 @@ export interface ISubscribeAgentStreamOptions {
 export function subscribeToAgentStream(
 	echo: IEchoLike,
 	requestId: string,
-	{ onReady, onTextDelta, onToolCall, onToolResult }: ISubscribeAgentStreamOptions,
+	{ onReady, onTextDelta, onToolCall, onToolResult, onArtifact }: ISubscribeAgentStreamOptions,
 ): () => void {
 	const channelName = agentStreamChannelName(requestId);
 	const instance = echo.private(channelName);
@@ -55,6 +58,11 @@ export function subscribeToAgentStream(
 	if (onToolResult) {
 		instance.listen(AGENT_TOOL_RESULT_EVENT, (payload) => {
 			onToolResult(payload as TAgentStreamToolResult);
+		});
+	}
+	if (onArtifact) {
+		instance.listen(AGENT_ARTIFACT_EVENT, (payload) => {
+			onArtifact(payload as TAgentStreamArtifact);
 		});
 	}
 

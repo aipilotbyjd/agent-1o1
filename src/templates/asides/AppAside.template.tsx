@@ -87,7 +87,7 @@ const AppAsideTemplate = () => {
 						{...pages.app.subPages.templates}
 						isActiveOverwrite={location.pathname.startsWith('/templates')}
 					/>
-					<NavItem {...pages.app.subPages.files} />
+					<NavItem {...pages.app.subPages.artifacts} />
 					<NavItem {...pages.app.subPages.history} />
 
 					<NavTitle className='mt-4'>SHORTCUTS</NavTitle>

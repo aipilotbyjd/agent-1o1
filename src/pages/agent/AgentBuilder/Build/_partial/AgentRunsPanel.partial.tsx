@@ -10,9 +10,38 @@ import {
 	MessageSquare,
 	Play,
 	Wrench,
+	FileDown,
+	Download,
 } from 'lucide-react';
 import { useAgentRuns, useAgentRun } from '@/api/modules/agents';
-import type { TAgentRun, TAgentRunStatus } from '@/types/agent.type';
+import { useDownloadArtifact } from '@/api/modules/artifacts';
+import type { TAgentRun, TAgentRunStatus, TAiAgentStep } from '@/types/agent.type';
+
+type TArtifactStepOutput = { id: string; filename: string; version: number };
+
+const isArtifactStep = (step: TAiAgentStep): step is TAiAgentStep & { tool_output: TArtifactStepOutput } =>
+	step.tool_name === 'ExportArtifactTool' &&
+	!!step.tool_output &&
+	typeof step.tool_output === 'object' &&
+	'filename' in step.tool_output;
+
+/** Compact download chip for a step that exported an artifact — replaces the generic wrench row. */
+const ArtifactStepRow = ({ ws, output }: { ws: string; output: TArtifactStepOutput }) => {
+	const downloadMutation = useDownloadArtifact(ws);
+	return (
+		<div className='flex items-center gap-2 rounded-lg bg-white p-2 dark:bg-zinc-900/40'>
+			<FileDown size={14} className='shrink-0 text-primary-500' />
+			<span className='min-w-0 flex-1 truncate text-[10px] font-black text-zinc-700 dark:text-zinc-300'>
+				{output.filename} <span className='font-semibold text-zinc-400'>v{output.version}</span>
+			</span>
+			<button
+				onClick={() => downloadMutation.mutate({ artifactId: output.id, filename: output.filename })}
+				className='shrink-0 cursor-pointer text-zinc-400 hover:text-primary-500'>
+				<Download size={12} />
+			</button>
+		</div>
+	);
+};
 
 type TProps = {
 	ws: string;
@@ -94,33 +123,37 @@ const RunRow = ({ ws, agentId, run }: { ws: string; agentId: string; run: TAgent
 							{(detail?.steps ?? []).length === 0 ? (
 								<p className='text-[10px] font-semibold text-zinc-400'>No step trace recorded.</p>
 							) : (
-								(detail?.steps ?? []).map((step) => (
-									<div
-										key={step.id}
-										className='flex items-start gap-2 rounded-lg bg-white p-2 dark:bg-zinc-900/40'>
-										<span className='mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-md bg-zinc-100 text-[9px] font-black text-zinc-500 dark:bg-zinc-800'>
-											{step.step_number}
-										</span>
-										<div className='min-w-0 flex-1'>
-											<div className='flex items-center gap-1.5'>
-												{step.tool_name && <Wrench size={10} className='text-primary-500' />}
-												<span className='truncate text-[10px] font-black text-zinc-700 dark:text-zinc-300'>
-													{step.tool_name ?? step.action ?? 'step'}
-												</span>
+								(detail?.steps ?? []).map((step) =>
+									isArtifactStep(step) ? (
+										<ArtifactStepRow key={step.id} ws={ws} output={step.tool_output} />
+									) : (
+										<div
+											key={step.id}
+											className='flex items-start gap-2 rounded-lg bg-white p-2 dark:bg-zinc-900/40'>
+											<span className='mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-md bg-zinc-100 text-[9px] font-black text-zinc-500 dark:bg-zinc-800'>
+												{step.step_number}
+											</span>
+											<div className='min-w-0 flex-1'>
+												<div className='flex items-center gap-1.5'>
+													{step.tool_name && <Wrench size={10} className='text-primary-500' />}
+													<span className='truncate text-[10px] font-black text-zinc-700 dark:text-zinc-300'>
+														{step.tool_name ?? step.action ?? 'step'}
+													</span>
+												</div>
+												{step.llm_reasoning && (
+													<p className='mt-0.5 line-clamp-2 text-[9px] font-semibold text-zinc-400'>
+														{step.llm_reasoning}
+													</p>
+												)}
 											</div>
-											{step.llm_reasoning && (
-												<p className='mt-0.5 line-clamp-2 text-[9px] font-semibold text-zinc-400'>
-													{step.llm_reasoning}
-												</p>
+											{step.tokens_used != null && (
+												<span className='shrink-0 text-[9px] font-bold text-zinc-400'>
+													{step.tokens_used} tok
+												</span>
 											)}
 										</div>
-										{step.tokens_used != null && (
-											<span className='shrink-0 text-[9px] font-bold text-zinc-400'>
-												{step.tokens_used} tok
-											</span>
-										)}
-									</div>
-								))
+									),
+								)
 							)}
 						</div>
 					)}
