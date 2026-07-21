@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { Handle, Position, type NodeProps } from '@xyflow/react';
 import {
 	Bot,
@@ -130,29 +131,34 @@ const BaseNode = ({ id, data, selected }: NodeProps<TCanvasNode>) => {
 	const def = getNodeDefinition(data.defKey, data.definition);
 
 	/** Every output of each upstream node wired into this one — all become available inputs. */
-	const incoming = Array.from(new Set(state.edges.filter((edge) => edge.target === id).map((edge) => edge.source)))
-		.flatMap((sourceId) => {
-			const sourceNode = state.nodes.find((node) => node.id === sourceId);
-			if (!sourceNode) return [];
-			const sourceDef = getNodeDefinition(sourceNode.data.defKey, sourceNode.data.definition);
-			const sourceOutputs =
-				sourceDef?.outputs && sourceDef.outputs.length > 0
-					? sourceDef.outputs
-					: [{ id: 'out', name: 'output', type: 'any' as const }];
-			const sourceLabel = sourceNode.data.label || sourceDef?.label || 'Node';
-			const sourceColor = getNodeAccentColor(
-				sourceId,
-				sourceNode.data.color as string | undefined,
-				sourceDef?.colorHex,
-			);
-			return sourceOutputs.map((port) => ({
-				id: `${sourceId}:${port.id}`,
-				sourceId,
-				port,
-				sourceLabel,
-				sourceColor,
-			}));
-		});
+	// Memoized so React Flow's per-frame drag re-renders don't re-scan every edge/node.
+	const incoming = useMemo(
+		() =>
+			Array.from(new Set(state.edges.filter((edge) => edge.target === id).map((edge) => edge.source)))
+				.flatMap((sourceId) => {
+					const sourceNode = state.nodes.find((node) => node.id === sourceId);
+					if (!sourceNode) return [];
+					const sourceDef = getNodeDefinition(sourceNode.data.defKey, sourceNode.data.definition);
+					const sourceOutputs =
+						sourceDef?.outputs && sourceDef.outputs.length > 0
+							? sourceDef.outputs
+							: [{ id: 'out', name: 'output', type: 'any' as const }];
+					const sourceLabel = sourceNode.data.label || sourceDef?.label || 'Node';
+					const sourceColor = getNodeAccentColor(
+						sourceId,
+						sourceNode.data.color as string | undefined,
+						sourceDef?.colorHex,
+					);
+					return sourceOutputs.map((port) => ({
+						id: `${sourceId}:${port.id}`,
+						sourceId,
+						port,
+						sourceLabel,
+						sourceColor,
+					}));
+				}),
+		[state.edges, state.nodes, id],
+	);
 	const nodeIndex = state.nodes.findIndex((node) => node.id === id) + 1;
 	const collapsed = Boolean(data.collapsed);
 	const status = data.status ?? 'idle';
@@ -184,9 +190,15 @@ const BaseNode = ({ id, data, selected }: NodeProps<TCanvasNode>) => {
 
 	const durationMs = typeof data.durationMs === 'number' ? data.durationMs : undefined;
 
-	const colorRing = data.color ? `, 0 0 0 3px ${data.color}14` : '';
-	const baseShadow = `0 1px 2px rgba(24,24,27,0.04), 0 12px 28px -8px rgba(24,24,27,0.14)${colorRing}`;
-	const hoverShadow = `0 2px 4px rgba(24,24,27,0.05), 0 22px 44px -10px rgba(24,24,27,0.22)${colorRing}`;
+	// Stable string identities so framer-motion's boxShadow animation isn't re-fired
+	// on every render (React Flow re-renders this node on each drag frame).
+	const { baseShadow, hoverShadow } = useMemo(() => {
+		const colorRing = data.color ? `, 0 0 0 3px ${data.color}14` : '';
+		return {
+			baseShadow: `0 1px 2px rgba(24,24,27,0.04), 0 12px 28px -8px rgba(24,24,27,0.14)${colorRing}`,
+			hoverShadow: `0 2px 4px rgba(24,24,27,0.05), 0 22px 44px -10px rgba(24,24,27,0.22)${colorRing}`,
+		};
+	}, [data.color]);
 
 	return (
 		<motion.div

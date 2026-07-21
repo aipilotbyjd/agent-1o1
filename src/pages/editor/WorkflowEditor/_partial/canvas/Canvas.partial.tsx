@@ -335,7 +335,7 @@ const Canvas = () => {
 			<ReactFlow
 				fitView
 				snapToGrid
-				snapGrid={[18, 18]}
+				snapGrid={[4, 4]}
 				selectionOnDrag={!spacePressed}
 				panOnDrag={spacePressed ? true : [1, 2]}
 				multiSelectionKeyCode={['Meta', 'Shift']}

@@ -107,29 +107,34 @@ const TriggerNode = ({ id, data, selected }: NodeProps<TCanvasNode>) => {
 	const def = getNodeDefinition(data.defKey, data.definition);
 
 	/** Every output of each upstream node wired into this one — all become available inputs. */
-	const incoming = Array.from(new Set(state.edges.filter((edge) => edge.target === id).map((edge) => edge.source)))
-		.flatMap((sourceId) => {
-			const sourceNode = state.nodes.find((node) => node.id === sourceId);
-			if (!sourceNode) return [];
-			const sourceDef = getNodeDefinition(sourceNode.data.defKey, sourceNode.data.definition);
-			const sourceOutputs =
-				sourceDef?.outputs && sourceDef.outputs.length > 0
-					? sourceDef.outputs
-					: [{ id: 'out', name: 'output', type: 'any' as const }];
-			const sourceLabel = sourceNode.data.label || sourceDef?.label || 'Node';
-			const sourceColor = getNodeAccentColor(
-				sourceId,
-				sourceNode.data.color as string | undefined,
-				sourceDef?.colorHex,
-			);
-			return sourceOutputs.map((port) => ({
-				id: `${sourceId}:${port.id}`,
-				sourceId,
-				port,
-				sourceLabel,
-				sourceColor,
-			}));
-		});
+	// Memoized so React Flow's per-frame drag re-renders don't re-scan every edge/node.
+	const incoming = useMemo(
+		() =>
+			Array.from(new Set(state.edges.filter((edge) => edge.target === id).map((edge) => edge.source)))
+				.flatMap((sourceId) => {
+					const sourceNode = state.nodes.find((node) => node.id === sourceId);
+					if (!sourceNode) return [];
+					const sourceDef = getNodeDefinition(sourceNode.data.defKey, sourceNode.data.definition);
+					const sourceOutputs =
+						sourceDef?.outputs && sourceDef.outputs.length > 0
+							? sourceDef.outputs
+							: [{ id: 'out', name: 'output', type: 'any' as const }];
+					const sourceLabel = sourceNode.data.label || sourceDef?.label || 'Node';
+					const sourceColor = getNodeAccentColor(
+						sourceId,
+						sourceNode.data.color as string | undefined,
+						sourceDef?.colorHex,
+					);
+					return sourceOutputs.map((port) => ({
+						id: `${sourceId}:${port.id}`,
+						sourceId,
+						port,
+						sourceLabel,
+						sourceColor,
+					}));
+				}),
+		[state.edges, state.nodes, id],
+	);
 	const nodeIndex = state.nodes.findIndex((node) => node.id === id) + 1;
 	const collapsed = Boolean(data.collapsed);
 	const credentialField = def?.fields.find((field) => field.kind === 'credential');
