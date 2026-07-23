@@ -660,9 +660,9 @@ const WorkflowsListPage = () => {
 				)}
 			</AnimatePresence>
 
-			<div className='relative z-10 mx-auto w-full max-w-7xl space-y-6 p-4 sm:p-6 md:p-8'>
+			<div className='relative z-10 mx-auto w-full max-w-7xl space-y-5 p-4 sm:p-5 md:p-6'>
 				{/* Header */}
-				<header className='relative mt-4 sm:mt-0 flex flex-col justify-between gap-6 overflow-hidden rounded-3xl border border-border-main bg-bg-card p-6 shadow-sm transition-all duration-300 lg:flex-row lg:items-center dark:border-border-main dark:bg-bg-card'>
+				<header className='relative mt-4 sm:mt-0 flex flex-col justify-between gap-5 overflow-hidden rounded-2xl border border-border-main bg-bg-card p-5 shadow-sm transition-all duration-300 lg:flex-row lg:items-center dark:border-border-main dark:bg-bg-card'>
 					{/* Banner background glow effect */}
 					<div className='absolute -top-24 -right-24 h-48 w-48 rounded-full bg-primary-400/5 blur-3xl' />
 					<div className='absolute -bottom-24 -left-24 h-48 w-48 rounded-full bg-primary-400/5 blur-3xl' />
@@ -704,8 +704,8 @@ const WorkflowsListPage = () => {
 							whileTap={{ scale: 0.98 }}
 							onClick={() => setIsCreateFolderOpen(true)}
 							disabled={!hasWorkspace}
-							className='flex h-10 cursor-pointer items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 text-xs font-bold text-slate-700 shadow-sm transition-all hover:border-slate-300 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-60 dark:border-border-main dark:bg-bg-card dark:text-white dark:hover:bg-zinc-950/20'>
-							<Folder size={14} className='text-primary-450 dark:text-[#CFF54A]' />
+							className='flex h-10 cursor-pointer items-center justify-center gap-2 rounded-[10px] border border-slate-200 bg-white px-4 text-xs font-bold text-slate-700 shadow-sm transition-all hover:border-slate-300 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-60 dark:border-border-main dark:bg-bg-card dark:text-white dark:hover:bg-zinc-950/20'>
+							<Folder size={15} strokeWidth={2} className='text-primary-450 dark:text-[#CFF54A]' />
 							New Folder
 						</motion.button>
 						<motion.button
@@ -714,15 +714,15 @@ const WorkflowsListPage = () => {
 							whileTap={{ scale: 0.98 }}
 							onClick={handleQuickCreateWorkflow}
 							disabled={!hasWorkspace || createWorkflowMutation.isPending}
-							className='flex h-10 cursor-pointer items-center justify-center gap-2 rounded-xl bg-[#CFF54A] px-4.5 text-xs font-black text-black shadow-md shadow-primary-500/10 transition-all hover:bg-[#B7E52F] disabled:cursor-not-allowed disabled:opacity-60 dark:bg-[#CFF54A] dark:text-black dark:hover:bg-[#B7E52F]'>
-							<Plus size={15} strokeWidth={2.5} />
+							className='flex h-10 cursor-pointer items-center justify-center gap-2 rounded-[10px] bg-[#CFF54A] px-4.5 text-xs font-black text-black shadow-md shadow-primary-500/10 transition-all hover:bg-[#B7E52F] disabled:cursor-not-allowed disabled:opacity-60 dark:bg-[#CFF54A] dark:text-black dark:hover:bg-[#B7E52F]'>
+							<Plus size={15} strokeWidth={2} />
 							New Workflow
 						</motion.button>
 					</div>
 				</header>
 
 				{/* Summary Stats */}
-				<section className='grid grid-cols-2 gap-4 lg:grid-cols-4'>
+				<section className='grid grid-cols-2 gap-3 lg:grid-cols-4'>
 					{[
 						{
 							label: 'Workflows',
@@ -755,21 +755,21 @@ const WorkflowsListPage = () => {
 								key={stat.label}
 								whileHover={{ y: -4, scale: 1.01 }}
 								transition={{ type: 'spring', stiffness: 400, damping: 25 }}
-								className='relative flex items-center justify-between overflow-hidden rounded-2xl border border-border-main bg-bg-card p-5 shadow-xs transition-all duration-300 dark:border-border-main dark:bg-bg-card group hover:shadow-sm hover:border-primary-300/60'
+								className='relative flex items-center justify-between overflow-hidden rounded-2xl border border-border-main bg-bg-card p-4 shadow-xs transition-all duration-300 dark:border-border-main dark:bg-bg-card group hover:shadow-sm hover:border-primary-300/60'
 							>
 								<div>
-									<div className='text-[10px] font-black tracking-wider uppercase text-slate-800 dark:text-white'>
+									<div className='text-[10px] font-bold tracking-wider uppercase text-slate-400 dark:text-zinc-500'>
 										{stat.label}
 									</div>
-									<div className='text-3.5xl mt-1 font-black tracking-tight text-slate-900 dark:text-white'>
+									<div className='text-4xl mt-0.5 font-black tracking-tight text-slate-900 dark:text-white'>
 										{stat.value}
 									</div>
 									<div className='mt-0.5 text-[10px] font-semibold text-slate-400 dark:text-zinc-400'>
 										{stat.desc}
 									</div>
 								</div>
-								<div className='flex h-12 w-12 items-center justify-center rounded-xl bg-primary-100/50 text-primary-800 dark:bg-primary-950/40 dark:text-primary-400 transition-all duration-300 group-hover:scale-105'>
-									<IconComponent size={20} />
+								<div className='flex h-11 w-11 items-center justify-center rounded-[10px] bg-primary-100/50 text-primary-800 dark:bg-primary-950/40 dark:text-primary-400 transition-all duration-300 group-hover:scale-105'>
+									<IconComponent size={20} strokeWidth={2} />
 								</div>
 							</motion.div>
 						);
@@ -777,7 +777,7 @@ const WorkflowsListPage = () => {
 				</section>
 
 				{/* Controls */}
-				<section className='flex flex-col gap-4 pt-2 lg:flex-row lg:items-center lg:justify-between'>
+				<section className='flex flex-col gap-3 pt-1 lg:flex-row lg:items-center lg:justify-between'>
 					<div className='flex items-center gap-6 border-b border-slate-200/40 pb-0.5 dark:border-zinc-800/40'>
 						<button
 							type='button'
@@ -845,32 +845,32 @@ const WorkflowsListPage = () => {
 								type='button'
 								aria-label='Grid view'
 								onClick={() => setIsGridView(true)}
-								className={`flex h-10 w-10 cursor-pointer items-center justify-center rounded-xl border transition-all duration-300 ${
+								className={`flex h-10 w-10 cursor-pointer items-center justify-center rounded-[10px] border transition-all duration-300 ${
 									isGridView
 										? 'border-primary-400 bg-primary-100/10 text-slate-900 dark:border-primary-400 dark:bg-primary-950/20 dark:text-white'
 										: 'border-border-main bg-bg-card text-slate-400 hover:text-slate-655 dark:border-border-main dark:bg-bg-card dark:text-zinc-500'
 								}`}
 							>
-								<LayoutGrid size={16} />
+								<LayoutGrid size={16} strokeWidth={2} />
 							</button>
 							<button
 								type='button'
 								aria-label='List view'
 								onClick={() => setIsGridView(false)}
-								className={`flex h-10 w-10 cursor-pointer items-center justify-center rounded-xl border transition-all duration-300 ${
+								className={`flex h-10 w-10 cursor-pointer items-center justify-center rounded-[10px] border transition-all duration-300 ${
 									!isGridView
 										? 'border-primary-400 bg-primary-100/10 text-slate-900 dark:border-primary-400 dark:bg-primary-950/20 dark:text-white'
 										: 'border-border-main bg-bg-card text-slate-400 hover:text-slate-[#655] dark:border-border-main dark:bg-bg-card dark:text-zinc-500'
 								}`}
 							>
-								<List size={16} />
+								<List size={16} strokeWidth={2} />
 							</button>
 						</div>
 					</div>
 				</section>
 
 				{/* Workflow groups */}
-				<div className='space-y-6'>
+				<div className='space-y-5'>
 					{workflowGroups.map((folder) => {
 						const groupedItems = folderGrouped[folder.id] || [];
 						const isRootGroup = folder.id === ROOT_FOLDER_ID;
@@ -878,10 +878,10 @@ const WorkflowsListPage = () => {
 						return (
 							<div key={folder.id} className='space-y-3.5'>
 								{isRootGroup ? (
-									<div className='shadow-sm flex items-center justify-between gap-3 rounded-2xl border border-border-main bg-bg-card px-5 py-4 transition-all duration-300 dark:border-border-main dark:bg-bg-card'>
+									<div className='shadow-sm flex items-center justify-between gap-3 rounded-2xl border border-border-main bg-bg-card px-5 py-3.5 transition-all duration-300 dark:border-border-main dark:bg-bg-card'>
 										<div className='flex min-w-0 items-center gap-3'>
-											<div className='text-primary-800 flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary-100/50 shadow-xs dark:bg-primary-950/40 dark:text-primary-400'>
-												<Workflow size={17} />
+											<div className='text-primary-800 flex h-10 w-10 shrink-0 items-center justify-center rounded-[10px] bg-primary-100/50 shadow-xs dark:bg-primary-950/40 dark:text-primary-400'>
+												<Workflow size={17} strokeWidth={2} />
 											</div>
 											<div className='min-w-0'>
 												<h2 className='text-xs font-extrabold text-slate-800 dark:text-white'>
@@ -991,7 +991,7 @@ const WorkflowsListPage = () => {
 																	);
 																}
 															}}
-															className='group relative flex min-h-[220px] cursor-pointer flex-col justify-between rounded-2xl border border-border-main bg-bg-card p-5.5 shadow-xs transition-all duration-300 hover:-translate-y-1 hover:border-primary-300/85 hover:shadow-md dark:border-border-main dark:bg-bg-card'>
+															className='group relative flex min-h-[196px] cursor-pointer flex-col justify-between rounded-2xl border border-border-main bg-bg-card p-5 shadow-xs transition-all duration-300 hover:-translate-y-1 hover:border-primary-300/85 hover:shadow-md dark:border-border-main dark:bg-bg-card'>
 															{/* Bottom interactive line */}
 															<div className='absolute right-0 bottom-0 left-0 h-1.5 rounded-b-2xl bg-primary-400 opacity-0 transition-opacity duration-300 group-hover:opacity-10' />
 
@@ -1062,7 +1062,7 @@ const WorkflowsListPage = () => {
 																						</button>
 																					</div>
 																				) : (
-																					<h3 className='truncate text-sm font-black tracking-wide text-slate-900 transition-colors duration-200 group-hover:text-primary-600 dark:text-white dark:group-hover:text-primary-400'>
+																					<h3 className='truncate text-[15px] font-black tracking-tight text-slate-900 transition-colors duration-200 group-hover:text-primary-600 dark:text-white dark:group-hover:text-primary-400'>
 																						{wf.title}
 																					</h3>
 																				)}
@@ -1538,12 +1538,12 @@ const WorkflowsListPage = () => {
 									<button
 										type='button'
 										onClick={() => setIsCreateWorkflowOpen(false)}
-										className='dark:hover:bg-zinc-800 h-9.5 cursor-pointer rounded-xl border border-slate-200 bg-white px-4 text-xs font-bold text-slate-500 hover:bg-slate-50 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-400'>
+										className='dark:hover:bg-zinc-800 h-9.5 cursor-pointer rounded-[10px] border border-slate-200 bg-white px-4 text-xs font-bold text-slate-500 hover:bg-slate-50 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-400'>
 										Cancel
 									</button>
 									<button
 										type='submit'
-										className='h-9.5 cursor-pointer rounded-xl bg-gradient-to-r from-primary-400 to-primary-400 px-5 text-xs font-bold text-primary-950 shadow-sm shadow-[#7c3aed]/10 transition-all hover:brightness-110'>
+										className='h-9.5 cursor-pointer rounded-[10px] bg-gradient-to-r from-primary-400 to-primary-400 px-5 text-xs font-bold text-primary-950 shadow-sm shadow-[#7c3aed]/10 transition-all hover:brightness-110'>
 										Create Workflow
 									</button>
 								</div>
@@ -1615,12 +1615,12 @@ const WorkflowsListPage = () => {
 									<button
 										type='button'
 										onClick={() => setIsCreateFolderOpen(false)}
-										className='dark:hover:bg-zinc-800 h-9.5 cursor-pointer rounded-xl border border-slate-200 bg-white px-4 text-xs font-bold text-slate-500 hover:bg-slate-50 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-400'>
+										className='dark:hover:bg-zinc-800 h-9.5 cursor-pointer rounded-[10px] border border-slate-200 bg-white px-4 text-xs font-bold text-slate-500 hover:bg-slate-50 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-400'>
 										Cancel
 									</button>
 									<button
 										type='submit'
-										className='h-9.5 cursor-pointer rounded-xl bg-gradient-to-r from-primary-400 to-primary-400 px-5 text-xs font-bold text-primary-950 shadow-sm shadow-primary-500/10 transition-all hover:brightness-110'>
+										className='h-9.5 cursor-pointer rounded-[10px] bg-gradient-to-r from-primary-400 to-primary-400 px-5 text-xs font-bold text-primary-950 shadow-sm shadow-primary-500/10 transition-all hover:brightness-110'>
 										Create Folder
 									</button>
 								</div>
@@ -1691,12 +1691,12 @@ const WorkflowsListPage = () => {
 									<button
 										type='button'
 										onClick={() => setEditingFolder(null)}
-										className='dark:hover:bg-zinc-800 h-9.5 cursor-pointer rounded-xl border border-slate-200 bg-white px-4 text-xs font-bold text-slate-500 hover:bg-slate-50 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-400'>
+										className='dark:hover:bg-zinc-800 h-9.5 cursor-pointer rounded-[10px] border border-slate-200 bg-white px-4 text-xs font-bold text-slate-500 hover:bg-slate-50 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-400'>
 										Cancel
 									</button>
 									<button
 										type='submit'
-										className='h-9.5 cursor-pointer rounded-xl bg-gradient-to-r from-primary-400 to-primary-400 px-5 text-xs font-bold text-primary-950 shadow-sm shadow-primary-500/10 transition-all hover:brightness-110'>
+										className='h-9.5 cursor-pointer rounded-[10px] bg-gradient-to-r from-primary-400 to-primary-400 px-5 text-xs font-bold text-primary-950 shadow-sm shadow-primary-500/10 transition-all hover:brightness-110'>
 										Save Changes
 									</button>
 								</div>

@@ -233,11 +233,11 @@ const DashboardPage = () => {
 					initial={{ opacity: 0, y: -15 }}
 					animate={{ opacity: 1, y: 0 }}
 					transition={{ duration: 0.4 }}
-					className='dark:border-zinc-800 relative overflow-hidden rounded-3xl border border-primary-500/20 bg-gradient-to-r from-primary-400 via-primary-500 to-primary-600 p-6 shadow-xl shadow-primary-500/20 md:p-8 dark:from-[#111315] dark:via-[#141619] dark:to-[#0d0e10] dark:border-zinc-800/80'>
+					className='dark:border-zinc-800 relative overflow-hidden rounded-3xl border border-primary-500/20 bg-gradient-to-r from-primary-400 via-primary-500 to-primary-600 p-5 shadow-xl shadow-primary-500/20 md:p-6 dark:from-[#111315] dark:via-[#141619] dark:to-[#0d0e10] dark:border-zinc-800/80'>
 					<div className='pointer-events-none absolute inset-0 bg-[radial-gradient(rgba(255,255,255,0.03)_1px,transparent_1px)] [background-size:16px_16px] opacity-60' />
 
-					<div className='relative flex flex-col justify-between gap-6 md:flex-row md:items-center'>
-						<div className='flex-1 space-y-4'>
+					<div className='relative flex flex-col justify-between gap-5 md:flex-row md:items-center'>
+						<div className='flex-1 space-y-3'>
 							<h1 className='flex flex-wrap items-center gap-2 text-2xl font-black tracking-tight text-slate-900 md:text-3xl dark:text-white'>
 								Welcome back,{' '}
 								<span className='text-slate-955 dark:bg-gradient-to-r dark:from-primary-400 dark:to-primary-300 dark:bg-clip-text dark:text-transparent'>
@@ -282,11 +282,11 @@ const DashboardPage = () => {
 
 							<div className='flex flex-wrap items-center gap-2.5 pt-1'>
 								{/* Active Workspace */}
-								<div className='flex items-center gap-1.5 rounded-full border border-white/20 bg-white/40 px-3 py-1 text-[11px] font-bold text-slate-900 shadow-xs dark:border-white/10 dark:bg-slate-900/60 dark:text-white/95'>
-									<span className='text-[10px] font-extrabold tracking-wider text-slate-800/80 uppercase dark:text-zinc-400'>
+								<div className='flex items-center gap-1.5 rounded-full border border-slate-900/10 bg-white/25 px-3 py-1 text-[11px] font-bold text-slate-700 shadow-xs dark:border-white/10 dark:bg-slate-900/60 dark:text-zinc-300'>
+									<span className='text-[10px] font-extrabold tracking-wider text-slate-600 uppercase dark:text-zinc-400'>
 										Workspace
 									</span>
-									<span className='text-slate-900/40 dark:text-zinc-500'>|</span>
+									<span className='text-slate-900/25 dark:text-zinc-500'>|</span>
 									{activeWorkspace?.color && (
 										<div
 											className={`h-2 w-2 rounded-full ${activeWorkspace.color} ring-2 ring-white/10`}
@@ -305,8 +305,8 @@ const DashboardPage = () => {
 								<div
 									className={`flex items-center gap-1.5 rounded-full border px-3 py-1 text-[11px] font-bold ${
 										failedCount > 0
-											? 'border-white/20 bg-white/40 text-rose-800 dark:border-rose-500/30 dark:bg-[#2a0e12]/85 dark:text-rose-300'
-											: 'border-white/20 bg-white/40 text-emerald-800 dark:border-emerald-500/30 dark:bg-[#0e2a27]/85 dark:text-emerald-300'
+											? 'border-rose-300/70 bg-rose-100/80 text-rose-700 dark:border-rose-500/30 dark:bg-[#2a0e12]/85 dark:text-rose-300'
+											: 'border-emerald-300/60 bg-emerald-100/70 text-emerald-800 dark:border-emerald-500/30 dark:bg-[#0e2a27]/85 dark:text-emerald-300'
 									}`}>
 									<span className='relative flex h-1.5 w-1.5'>
 										<span
@@ -322,7 +322,7 @@ const DashboardPage = () => {
 						</div>
 
 						{/* Center-Right: Floating Cards Illustration */}
-						<div className='relative mr-4 hidden h-28 w-60 items-center justify-center select-none lg:flex'>
+						<div className='relative mr-4 hidden h-24 w-60 items-center justify-center select-none lg:flex'>
 							{/* Left Floating Badge (Purple Lightning) */}
 							<motion.div
 								initial={{ y: 5, rotate: 12 }}
