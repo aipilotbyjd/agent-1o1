@@ -3,6 +3,7 @@ import {
 	BackgroundVariant,
 	MiniMap,
 	ReactFlow,
+	useNodesState,
 	useReactFlow,
 	useViewport,
 	type Connection,
@@ -90,7 +91,6 @@ const Canvas = () => {
 	const { userData } = useAuth();
 	const { zoom } = useViewport();
 	const didDragNodeRef = useRef(false);
-	const [isDraggingExistingNode, setIsDraggingExistingNode] = useState(false);
 	const [contextMenu, setContextMenu] = useState<{
 		x: number;
 		y: number;
@@ -151,9 +151,34 @@ const Canvas = () => {
 		[issuesByNode, state.nodes, state.run.currentNodeId, state.ui.selectedNodeIds],
 	);
 
-	const [dragPositions, setDragPositions] = useState<Map<string, { x: number; y: number }>>(
-		() => new Map(),
-	);
+	// React Flow owns the live node state so it can drive drag + measurement
+	// smoothly. The reducer store stays the source of truth: we sync store → RF
+	// below, and commit final positions RF → store on drag stop. Letting RF own
+	// the transient drag frames avoids the flicker/disappearing that a controlled
+	// position side-channel caused (RF hides a node until it is measured, and a
+	// per-frame prop override fought its internal drag state).
+	const [nodes, setNodes, onNodesChangeInternal] = useNodesState<TCanvasNode>(storeNodes);
+
+	// Sync store → RF whenever the store nodes change (data, selection, add/remove).
+	// Preserve RF-owned transient fields (measured size, live drag position) so an
+	// in-flight drag is never yanked back by a store-driven re-render.
+	useEffect(() => {
+		setNodes((current) => {
+			const byId = new Map(current.map((node) => [node.id, node]));
+			return storeNodes.map((node) => {
+				const previous = byId.get(node.id);
+				if (!previous) return node;
+				return {
+					...node,
+					measured: previous.measured,
+					width: previous.width,
+					height: previous.height,
+					dragging: previous.dragging,
+					position: previous.dragging ? previous.position : node.position,
+				};
+			});
+		});
+	}, [storeNodes, setNodes]);
 
 	// Mirrors the current selection so onNodesChange can apply select-diffs without
 	// depending on (and re-creating the callback on) selection state itself.
@@ -162,19 +187,16 @@ const Canvas = () => {
 
 	const onNodesChange = useCallback(
 		(changes: NodeChange<TCanvasNode>[]) => {
-			const nextPositions = new Map<string, { x: number; y: number }>();
+			// Let RF apply position/dimension/select changes to its own node state.
+			onNodesChangeInternal(changes);
+			// Mirror selection diffs back into the store so the rest of the editor
+			// (side panels, hotkeys) sees the same selection.
 			const selectChanges: { id: string; selected: boolean }[] = [];
 			changes.forEach((change) => {
-				if (change.type === 'position' && 'position' in change && change.position) {
-					nextPositions.set(change.id, change.position);
-				}
 				if (change.type === 'select') {
 					selectChanges.push({ id: change.id, selected: change.selected });
 				}
 			});
-			if (nextPositions.size) {
-				setDragPositions((previous) => new Map([...previous, ...nextPositions]));
-			}
 			if (selectChanges.length) {
 				const next = new Set(selectionRef.current);
 				selectChanges.forEach(({ id, selected }) => {
@@ -184,23 +206,8 @@ const Canvas = () => {
 				dispatch({ type: 'SELECT_NODES', ids: Array.from(next) });
 			}
 		},
-		[dispatch],
+		[dispatch, onNodesChangeInternal],
 	);
-
-	// Create the nodes array that includes drag positions during active drag
-	const nodes = useMemo(() => {
-		return storeNodes.map((node) => {
-			// Use drag position if available, otherwise use store position
-			const dragPos = dragPositions.get(node.id);
-			if (isDraggingExistingNode && dragPos) {
-				return {
-					...node,
-					position: dragPos,
-				};
-			}
-			return node;
-		});
-	}, [storeNodes, isDraggingExistingNode, dragPositions]);
 
 	const edges = useMemo(
 		() =>
@@ -308,21 +315,18 @@ const Canvas = () => {
 		[dispatch],
 	);
 
-	// Clear drag positions when drag ends and sync every moved node back to the
-	// store — when multiple nodes are selected, React Flow moves the whole group
-	// together and each one needs its own MOVE_NODE, not just the node the mouse
-	// grabbed.
-	const handleDragStop = useCallback(() => {
-		setIsDraggingExistingNode(false);
-		didDragNodeRef.current = false;
-
-		setDragPositions((previous) => {
-			previous.forEach((position, id) => {
-				dispatch({ type: 'MOVE_NODE', id, position });
+	// Commit final positions back to the store when a drag ends — when multiple
+	// nodes are selected, React Flow moves the whole group together, so every
+	// dragged node needs its own MOVE_NODE, not just the one the mouse grabbed.
+	const handleDragStop = useCallback(
+		(_event: unknown, _node: TCanvasNode, draggedNodes: TCanvasNode[]) => {
+			didDragNodeRef.current = false;
+			draggedNodes.forEach((node) => {
+				dispatch({ type: 'MOVE_NODE', id: node.id, position: node.position });
 			});
-			return new Map();
-		});
-	}, [dispatch]);
+		},
+		[dispatch],
+	);
 
 	return (
 		<section
@@ -351,7 +355,6 @@ const Canvas = () => {
 				isValidConnection={isValidConnection}
 				onNodeDragStart={(_, node) => {
 					didDragNodeRef.current = true;
-					setIsDraggingExistingNode(true);
 					// Dragging a node already inside a multi-selection moves the whole
 					// group — only collapse to a single selection when grabbing a node
 					// that isn't part of the current selection.

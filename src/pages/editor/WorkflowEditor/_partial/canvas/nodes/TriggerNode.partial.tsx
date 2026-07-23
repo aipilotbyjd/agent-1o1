@@ -185,7 +185,7 @@ const TriggerNode = ({ id, data, selected }: NodeProps<TCanvasNode>) => {
 	return (
 		<motion.div
 			animate={{ boxShadow: baseShadow }}
-			whileHover={{ y: -2, boxShadow: hoverShadow }}
+			whileHover={{ boxShadow: hoverShadow }}
 			transition={{ duration: 0.18 }}
 			className={[
 				'group relative w-[320px] rounded-[26px] border p-1.5 text-left ring-1 ring-inset ring-white/60 dark:ring-white/[0.03]',
