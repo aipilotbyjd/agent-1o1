@@ -10,10 +10,12 @@ export const ArtifactService = {
 			.get<TApiResponse<TArtifact[]>>(E.list(ws), { params: filters, signal })
 			.then(unwrap<TArtifact[]>),
 
+	// Backend key: ArtifactController@show -> { artifact: {...} }
 	detail: (ws: string, artifactId: string, signal?: AbortSignal) =>
 		axiosClient
-			.get<TApiResponse<TArtifact>>(E.detail(ws, artifactId), { signal })
-			.then(unwrap<TArtifact>),
+			.get<TApiResponse<{ artifact: TArtifact }>>(E.detail(ws, artifactId), { signal })
+			.then(unwrap<{ artifact: TArtifact }>)
+			.then((data) => data.artifact),
 
 	remove: (ws: string, artifactId: string) =>
 		axiosClient.delete(E.delete(ws, artifactId)).then(() => undefined),
